@@ -19,13 +19,17 @@ namespace VecinoBuildingMangement.Models
             get { return pollId; }
             set { pollId = value; }
         }
-        [Required(ErrorMessage = "Poll Title Can not be empty")]
+
+
+        [Required(ErrorMessage = "Poll Title can not be empty")]
+        [StringLength(100,MinimumLength =10,ErrorMessage = "Poll Title needs to be at least 10 characters")]
         public string PollTitle
         { 
             get { return pollTitle; } 
             set { pollTitle = value; }
         }
-        [Required]
+
+        [Date(ErrorMessage = "Date needs to be a valid date")]
         public string PollDate
         {
             get { return pollDate; }

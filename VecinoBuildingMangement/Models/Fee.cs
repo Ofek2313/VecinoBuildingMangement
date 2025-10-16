@@ -30,6 +30,7 @@ namespace VecinoBuildingMangement.Models
         }
 
         [Required(ErrorMessage = "Fee Amount can not be empty")]
+        [IsDigit(ErrorMessage = "Fee Amount Must Be A valid Number")]
         public double FeeAmount
         {
             get { return this.feeAmount; }

@@ -44,7 +44,7 @@ namespace VecinoBuildingMangement.Models
             set { eventDescription = value; }
         }
 
-        [RegularExpression(@"[0-9]", ErrorMessage = "Event Type Id Must Be Digits")]
+        
         [NotZero(ErrorMessage ="Event Type Id needs to be bigger than 0")]
         [Required(ErrorMessage = "Event Type Id can not be empty")]
         public string EventTypeId
