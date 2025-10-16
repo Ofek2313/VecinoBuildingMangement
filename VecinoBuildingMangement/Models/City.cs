@@ -12,9 +12,7 @@ namespace VecinoBuildingMangement.Models
         string cityId;
         string cityName;
 
-        [Required(ErrorMessage = "City Id is required")]
-        [RegularExpression(@"[0-9]", ErrorMessage = "City Id Must Be Digits")]
-        [NotZero(ErrorMessage ="City Id must be bigger than zero")]
+  
         public string CityId
         {
             get { return  cityId; }

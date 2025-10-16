@@ -40,6 +40,7 @@ namespace VecinoBuildingMangement.Models
         [StringLength(15,MinimumLength =8,ErrorMessage ="Password Must Be At Least 8 Characters")]
         [CapitalLetter(ErrorMessage ="Password Must Include At Least 1 Capital Letter")]
         [ContainSymbol(ErrorMessage = "Password Must Include At Least 1 Symbol")]
+       
         public string ResidentPassword
         {
             get { return residentPassword; }

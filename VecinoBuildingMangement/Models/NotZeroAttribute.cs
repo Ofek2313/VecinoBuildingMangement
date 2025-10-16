@@ -7,15 +7,11 @@ using System.Threading.Tasks;
 
 namespace VecinoBuildingMangement.Models
 {
-    public class DateAttribute :ValidationAttribute
+    public class NotZeroAttribute : ValidationAttribute
     {
         public override bool IsValid(object? value)
         {
-            if (value == null) return false;
-
-            return DateTime.TryParse(value.ToString(), out _);
-
-
+            return Convert.ToInt32(value) > 0;
         }
     }
 }

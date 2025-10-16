@@ -33,7 +33,7 @@ namespace VecinoBuildingMangement.Models
         {
             get { return residentId; }
             set { residentId = value; }
-        }
+        }   
         public string PollId
         {
             get { return pollId; }

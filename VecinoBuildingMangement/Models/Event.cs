@@ -36,6 +36,7 @@ namespace VecinoBuildingMangement.Models
             get { return eventTitle; }
             set { eventTitle = value; }
         }
+
         [StringLength(70, MinimumLength = 5, ErrorMessage = "Description must be between 5-70 characters")]
         [Required(ErrorMessage = "Event Description can not be empty")]
         public string EventDescription
@@ -45,17 +46,14 @@ namespace VecinoBuildingMangement.Models
         }
 
         
-        [NotZero(ErrorMessage ="Event Type Id needs to be bigger than 0")]
-        [Required(ErrorMessage = "Event Type Id can not be empty")]
+       
         public string EventTypeId
         {
             get { return eventTypeId; }
             set { eventTypeId = value; }
         }
 
-        [RegularExpression(@"[0-9]", ErrorMessage = "Building Id Must Be Digits")]
-        [Required(ErrorMessage = "Building Id can not be empty")]
-        [NotZero(ErrorMessage = "Building Id needs to be bigger than 0")]
+   
         public string BuildingId
         {
             get { return buildingId; }

@@ -24,9 +24,6 @@ namespace VecinoBuildingMangement.Models
         }
 
 
-        [Required(ErrorMessage = "City Id Can Not Be Empty")]
-        [RegularExpression(@"[0-9]",ErrorMessage ="City Id Must Be Digits")]
-        
         public string CityId
         { 
             get { return cityId; }
@@ -40,6 +37,7 @@ namespace VecinoBuildingMangement.Models
             get { return address; }
             set { address = value; }
         }
+
         [Required(ErrorMessage = "Entrance Code Can Not Be Empty")]
         public string EntranceCode
         {
@@ -60,6 +58,7 @@ namespace VecinoBuildingMangement.Models
             set { floors = value; }
 
         }
+
         [Required(ErrorMessage = "Join Code Can Not Be Empty")]
         public string JoinCode
         {
