@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace VecinoBuildingMangement.Models
 {
-    public class Resident
+    public class Resident : Model
     {
 
         string residentId;
@@ -17,14 +17,16 @@ namespace VecinoBuildingMangement.Models
         string residentPhone;
         string residentEmail;
         int unitNumber;
-        int buildingId;
+        string buildingId;
 
 
 
         public string ResidentId
         {
             get { return residentId; }
-            set { residentId = value; }
+            set { residentId = value;
+                
+            }
         }
 
         [Required(ErrorMessage = "Name Can Not Be Empty")]
@@ -33,7 +35,9 @@ namespace VecinoBuildingMangement.Models
         public string ResidentName
         {
             get { return residentName; }
-            set { residentName = value; }
+            set { residentName = value;
+                ValidateProperty(value, "ResidentName");
+            }
         }
 
         [Required(ErrorMessage ="Password Can Not Be Empty")]
@@ -44,7 +48,9 @@ namespace VecinoBuildingMangement.Models
         public string ResidentPassword
         {
             get { return residentPassword; }
-            set { residentPassword = value; }
+            set { residentPassword = value;
+                ValidateProperty(value, "ResidentPassword");
+            }
         }
 
         [Required(ErrorMessage = "Phone Number Can Not Be Empty")]
@@ -52,7 +58,9 @@ namespace VecinoBuildingMangement.Models
         public string ResidentPhone
         {
             get { return residentPhone; }
-            set { residentPhone = value; }
+            set { residentPhone = value;
+                ValidateProperty(value, "ResidentPhone");
+            }
 
         }
         [Required(ErrorMessage = "Email Address Can Not Be Empty")]
@@ -60,16 +68,20 @@ namespace VecinoBuildingMangement.Models
         public string ResidentEmail
         {
             get { return residentEmail; }
-            set { residentEmail = value; }
+            set { residentEmail = value;
+                ValidateProperty(value, "ResidentEmail");
+            }
         }
 
         [Required(ErrorMessage ="Unit Number Can Not Be Empty")]
         public int UnitNumber
         {
             get { return unitNumber; }
-            set { unitNumber = value; }
+            set { unitNumber = value;
+                ValidateProperty(value, "UnitNumber");
+            }
         }
-        public int BuildingId
+        public string BuildingId
         {
             get { return buildingId; }
             set { buildingId = value; }

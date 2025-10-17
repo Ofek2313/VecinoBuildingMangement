@@ -16,9 +16,10 @@ namespace VecinoBuildingMangement.Models
         {
             get { return requestTypeId; }
             set { requestTypeId = value; }
-        }
+        }   
         [Required(ErrorMessage ="Request Type Name can not be empty")]
         [StringLength(30,MinimumLength =3,ErrorMessage ="Request Type name needs to be between 3-30 characters")]
+        [FirstLetterCapital()]
         public string RequestTypeName 
         {
             get { return requestTypeName; }

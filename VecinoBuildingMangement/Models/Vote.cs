@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace VecinoBuildingMangement.Models
 {
-    public class Vote
+    public class Vote : Model
     {
         string voteId;
         string voteChoice;
@@ -17,7 +17,7 @@ namespace VecinoBuildingMangement.Models
         public string VoteId
         {
             get { return voteId; }
-            set { voteId = value; }
+            set { voteId = value;}
         }
         public string VoteChoice
         {

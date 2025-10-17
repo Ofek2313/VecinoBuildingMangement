@@ -9,6 +9,8 @@ namespace VecinoBuildingMangement.ViewModels
 {
     public class ServiceRequestViewModel
     {
+
+        public List<RequestTypes> RequestTypes { get; set; }
         public List<ServiceRequest> serviceRequests { get; set; }
     }
 }

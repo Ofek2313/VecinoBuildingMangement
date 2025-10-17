@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace VecinoBuildingMangement.Models
 {
-    public class ServiceRequest
+    public class ServiceRequest : Model
     {
         string requestId;
         string requestTitle;
@@ -28,7 +28,9 @@ namespace VecinoBuildingMangement.Models
         public string RequestTitle 
         {  
             get { return requestTitle; }
-            set { requestTitle = value; }
+            set { requestTitle = value;
+                ValidateProperty(value, "RequestTitle");
+            }
         }
 
         [Required(ErrorMessage = "Message can not be empty")]
@@ -36,11 +38,12 @@ namespace VecinoBuildingMangement.Models
         public string RequestMessage
         {
             get { return requestMessage; }
-            set { requestMessage = value; }
+            set { requestMessage = value;
+                ValidateProperty(value, "RequestMessage");
+            }
         }
 
-        [Required(ErrorMessage = "Request Type Id can not be empty")]
-        [RegularExpression(@"[0-9]", ErrorMessage = "Request Type Id Must Be Digits")]
+  
         public string RequestTypeId
         { 
             get { return requestTypeId; }
@@ -52,17 +55,21 @@ namespace VecinoBuildingMangement.Models
         public string RequestDate
         {
             get { return requestDate; }
-            set { requestDate = value; }
+            set { requestDate = value;
+                ValidateProperty(value, "RequestDate");
+            }
         }
 
         [Required(ErrorMessage = "Request Status can not be empty")]
         public string RequestStatus
         {
             get { return requestStatus; }
-            set { requestStatus = value; }
+            set { requestStatus = value;
+                ValidateProperty(value, "RequestStatus");
+            }
         }
 
-        [Required(ErrorMessage = "ResidentId can not be empty")]
+      
         public string ResidentId
         {
             get { return residentId; }
