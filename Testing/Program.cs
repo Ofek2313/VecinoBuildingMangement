@@ -49,7 +49,7 @@ namespace Testing
                 RequestUri = new Uri("https://currency-conversion-and-exchange-rates.p.rapidapi.com/convert?from=USD&to=EUR&amount=750"),
                 Headers =
     {
-        { "x-rapidapi-key", "2e7ae9391bmsh986aa861799c8eap1309edjsn48487fbebaa3" },
+        { "" },
         { "x-rapidapi-host", "currency-conversion-and-exchange-rates.p.rapidapi.com" },
     },
             };
