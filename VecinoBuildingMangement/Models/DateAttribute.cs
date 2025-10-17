@@ -21,6 +21,7 @@ namespace VecinoBuildingMangement.Models
         }
         public override bool IsValid(object? value)
         {
+
             string date = value.ToString();
             string[] dates = date.Split('/');
 
