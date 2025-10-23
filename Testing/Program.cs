@@ -9,8 +9,9 @@ namespace Testing
 
         static void Main(string[] args)
         {
-
-            TopicList();
+            Console.WriteLine("Enter City Name: ");
+            string city = Console.ReadLine();
+            CurrentWeather(city);
             Console.ReadLine();
         }
         static void TestResident()
@@ -37,32 +38,29 @@ namespace Testing
             }
 
         }
-        static async Task TopicList()
+
+        static async Task CurrentWeather(string city)
         {
-
-
-
             var client = new HttpClient();
             var request = new HttpRequestMessage
             {
                 Method = HttpMethod.Get,
-                RequestUri = new Uri("https://currency-conversion-and-exchange-rates.p.rapidapi.com/convert?from=USD&to=EUR&amount=750"),
+                RequestUri = new Uri($"https://open-weather13.p.rapidapi.com/city?city={city}&lang=EN"),
                 Headers =
     {
-        { "" },
-        { "x-rapidapi-host", "currency-conversion-and-exchange-rates.p.rapidapi.com" },
+        { "x-rapidapi-key", "2e7ae9391bmsh986aa861799c8eap1309edjsn48487fbebaa3" },
+        { "x-rapidapi-host", "open-weather13.p.rapidapi.com" },
     },
             };
             using (var response = await client.SendAsync(request))
             {
-
                 response.EnsureSuccessStatusCode();
                 var body = await response.Content.ReadAsStringAsync();
+  
+                WeatherResponse weatherResponse = JsonSerializer.Deserialize<WeatherResponse>(body);
 
-                Currency curr = JsonSerializer.Deserialize<Currency>(body);
-                Console.WriteLine($"{curr.query.amount} {curr.query.from} = {curr.result}{curr.query.to}");
+                Console.WriteLine($"Weather: {weatherResponse.weather[0].main}, {weatherResponse.weather[0].description}, Tempeture: {Math.Round((weatherResponse.main.temp-32)/1.8)}");
             }
-
         }
     }
 }
