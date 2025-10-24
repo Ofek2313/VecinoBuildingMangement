@@ -16,6 +16,7 @@ namespace Testing
         }
         static void TestResident()
         {
+
             Resident resident = new Resident();
             resident.ResidentId = "1";
             resident.ResidentName = "Ofek Cohen";
