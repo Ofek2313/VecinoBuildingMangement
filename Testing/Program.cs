@@ -9,6 +9,7 @@ namespace Testing
 
         static void Main(string[] args)
         {
+
             Console.WriteLine("Enter City Name: ");
             string city = Console.ReadLine();
             CurrentWeather(city);
