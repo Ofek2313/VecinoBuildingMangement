@@ -1,0 +1,6 @@
+@VecinoBuildingMangementWebService_HostAddress = http://localhost:5269
+
+GET {{VecinoBuildingMangementWebService_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

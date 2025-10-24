@@ -2,20 +2,42 @@
 using System.Net.Http.Headers;
 using System.Runtime.InteropServices;
 using System.Text.Json;
+using VecinoBuildingMangementWebService;
 namespace Testing
 {
     internal class Program
     {
+        static void CheckInsert()
+        {
+            Console.WriteLine("Enter City Name");
+            string city = Console.ReadLine();
+            DbHelperOleDb dbHelperOleDb = new DbHelperOleDb();
+            string sql = $"Insert into Cities(CityName) Values('{city}')";
+            dbHelperOleDb.OpenConnection();
+            
+            dbHelperOleDb.Insert(sql);
+            
+            
+            dbHelperOleDb.CloseConnection();
+        }
 
         static void Main(string[] args)
         {
 
+            CheckInsert();
 
-            Console.WriteLine("Enter City Name: ");
-            string city = Console.ReadLine();
-            CurrentWeather(city);
+            //Console.WriteLine("Enter City Name: ");
+            //string city = Console.ReadLine();
+            //CurrentWeather(city);
             Console.ReadLine();
+
+
+
+
+
+
         }
+
         static void TestResident()
         {
 
