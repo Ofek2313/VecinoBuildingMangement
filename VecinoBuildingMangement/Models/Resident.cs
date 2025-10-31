@@ -63,6 +63,8 @@ namespace VecinoBuildingMangement.Models
             }
 
         }
+
+
         [Required(ErrorMessage = "Email Address Can Not Be Empty")]
         [EmailAddress(ErrorMessage ="Email Addreess Must Be Valid")]
         public string ResidentEmail

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace VecinoBuildingMangement.Models
 {
-    public class Event
+    public class Event : Model
     {
         string eventId;
         string eventDate;
@@ -27,14 +27,16 @@ namespace VecinoBuildingMangement.Models
         public string EventDate
         {
             get { return eventDate; }
-            set { eventDate = value; }
+            set { eventDate = value;}
         }
         [StringLength(50,MinimumLength =5,ErrorMessage ="Title must be between 5-50 characters")]
         [Required(ErrorMessage = "Event Title can not be empty")]
         public string EventTitle
         {
             get { return eventTitle; }
-            set { eventTitle = value; }
+            set { eventTitle = value;
+                ValidateProperty(value, "EventTitle");
+            }
         }
 
         [StringLength(70, MinimumLength = 5, ErrorMessage = "Description must be between 5-70 characters")]
@@ -42,7 +44,9 @@ namespace VecinoBuildingMangement.Models
         public string EventDescription
         {
             get { return eventDescription; }
-            set { eventDescription = value; }
+            set { eventDescription = value;
+                ValidateProperty(value, "EventDescription");
+            }
         }
 
         

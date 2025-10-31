@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace VecinoBuildingMangement.Models
 {
-    public class EventTypes
+    public class EventTypes : Model
     {
         string eventTypeId;
         string eventTypeName;

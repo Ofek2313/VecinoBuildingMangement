@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace VecinoBuildingMangement.Models
 {
-    public class Notification
+    public class Notification : Model
     {
         string notificationId;
         string notificationTitle;
@@ -19,7 +19,9 @@ namespace VecinoBuildingMangement.Models
         public string NotificationId
         {
             get { return notificationId; }
-            set { notificationId = value; }
+            set { notificationId = value;
+                
+            }
         }
 
         [StringLength(60,MinimumLength =5,ErrorMessage ="Title must be between 5-20 characters")]
@@ -27,14 +29,18 @@ namespace VecinoBuildingMangement.Models
         public string NotificationTitle
         {
             get { return notificationTitle; }
-            set { notificationTitle = value; }
+            set { notificationTitle = value;
+                ValidateProperty(value, "NotificationTitle");
+            }
         }
         [StringLength(200, MinimumLength = 5, ErrorMessage = "Message must be between 5-100 characters")]
         [Required(ErrorMessage = "Message can not be empty")]
         public string NotificationMessage
         {
             get { return notificationMessage; }
-            set { notificationMessage = value; }
+            set { notificationMessage = value;
+                ValidateProperty(value, "NotificationMessage");
+            }
         }
 
         [Required(ErrorMessage = "Date can not be empty")]

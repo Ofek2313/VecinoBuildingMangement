@@ -7,13 +7,14 @@ using System.Threading.Tasks;
 
 namespace VecinoBuildingMangement.Models
 {
-    public class Fee
+    public class Fee : Model
     {
         string feeId;
         string feeTitle;
         double feeAmount;
         string feeDueDate;
         bool isPaid;
+        string residentId;
 
         public string FeeId
         {
@@ -26,7 +27,10 @@ namespace VecinoBuildingMangement.Models
         public string FeeTitle
         {
             get { return this.feeTitle; }
-            set { this.feeTitle = value; }
+            set { this.feeTitle = value;
+                ValidateProperty(value, "FeeTitle");
+            }
+            
         }
 
         [Required(ErrorMessage = "Fee Amount can not be empty")]
@@ -34,7 +38,9 @@ namespace VecinoBuildingMangement.Models
         public double FeeAmount
         {
             get { return this.feeAmount; }
-            set { this.feeAmount = value; }
+            set { this.feeAmount = value;
+                ValidateProperty(value, "FeeAmount");
+            }
         }
 
         [Required(ErrorMessage = "Fee Due Date can not be empty")]
@@ -42,7 +48,9 @@ namespace VecinoBuildingMangement.Models
         public string FeeDueDate
         {
             get { return this.feeDueDate; }
-            set { this.feeDueDate = value; }
+            set { this.feeDueDate = value;
+                ValidateProperty(value, "FeeAmount");
+            }
         }
 
         [Required(ErrorMessage = "Is Paid can not be empty")]
@@ -50,6 +58,11 @@ namespace VecinoBuildingMangement.Models
         { 
             get { return this.isPaid; }
             set { this.isPaid = value; }
+        }
+        public string ResidentId
+        {
+            get { return this.residentId; }
+            set { this.residentId = value; }
         }
     }
 }

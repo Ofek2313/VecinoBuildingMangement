@@ -3,12 +3,28 @@ using System.Net.Http.Headers;
 using System.Runtime.InteropServices;
 using System.Text.Json;
 using VecinoBuildingMangementWebService;
+using System.Data.SqlTypes;
+using System.Data;
 namespace Testing
 {
     internal class Program
     {
+        static void CheckCreator()
+        {
+            string sql = "Select * from Resident where ResidentId = 1";
+            DbHelperOleDb dbHelperOleDb = new DbHelperOleDb();
+            dbHelperOleDb.OpenConnection();
+            IDataReader dataReader = dbHelperOleDb.Select(sql);
+            dataReader.Read();
+            ModelCreators modelCreators = new ModelCreators();
+            Resident resident = modelCreators.ResidentCreator.CreateModel(dataReader);
+            dbHelperOleDb.CloseConnection();
+            Console.WriteLine($"{resident.ResidentName}, {resident.ResidentEmail}");
+
+        }
         static void CheckInsert()
         {
+
             Console.WriteLine("Enter City Name");
             string city = Console.ReadLine();
             DbHelperOleDb dbHelperOleDb = new DbHelperOleDb();
@@ -24,8 +40,8 @@ namespace Testing
         static void Main(string[] args)
         {
 
-            CheckInsert();
 
+            CheckCreator();
             //Console.WriteLine("Enter City Name: ");
             //string city = Console.ReadLine();
             //CurrentWeather(city);
@@ -62,7 +78,7 @@ namespace Testing
                 }
             }
 
-        }
+        }   
 
         static async Task CurrentWeather(string city)
         {

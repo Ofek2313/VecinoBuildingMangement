@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace VecinoBuildingMangement.Models
 {
-    public class Poll
+    public class Poll : Model
     {
         string pollId;
         string pollTitle;
@@ -26,7 +26,9 @@ namespace VecinoBuildingMangement.Models
         public string PollTitle
         { 
             get { return pollTitle; } 
-            set { pollTitle = value; }
+            set { pollTitle = value;
+                ValidateProperty(value, "PollTitle");
+            }
         }
 
         [Date(ErrorMessage = "Date needs to be a valid date")]

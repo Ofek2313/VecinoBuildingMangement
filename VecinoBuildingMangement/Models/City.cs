@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace VecinoBuildingMangement.Models
 {
-    public class City
+    public class City : Model
     {
         string cityId;
         string cityName;

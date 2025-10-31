@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace VecinoBuildingMangement.Models
 {
-    public class RequestTypes
+    public class RequestTypes : Model
     {
         public string requestTypeId;
         public string requestTypeName;

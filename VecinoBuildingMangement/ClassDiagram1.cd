@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="VecinoBuildingMangement.Models.Building">
+    <Position X="3.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAABAAAAAAgAAAAIAAAAAIIACACCAQgAAAEAAAA=</HashCode>
+      <FileName>Models\Building.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VecinoBuildingMangement.Models.City">
+    <Position X="14.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEgAAABIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\City.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VecinoBuildingMangement.Models.Event">
+    <Position X="5.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAIgAAACAAAAAAAAAAgAAAAAAAAAAUAAAIlAAAI=</HashCode>
+      <FileName>Models\Event.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VecinoBuildingMangement.Models.EventTypes">
+    <Position X="10.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAAAAgAAAAABAAAAAAAAAgAAAA=</HashCode>
+      <FileName>Models\EventTypes.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VecinoBuildingMangement.Models.Fee">
+    <Position X="17" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EADAABAAAAAEAAAEAADAAAAAAAAAAQAAAAEAAAQAAAQ=</HashCode>
+      <FileName>Models\Fee.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VecinoBuildingMangement.Models.Poll">
+    <Position X="19.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAQAAEAEAABAAIAAAACAQAAAAEAAAA=</HashCode>
+      <FileName>Models\Poll.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VecinoBuildingMangement.Models.RequestTypes">
+    <Position X="21.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAEAAAAFAAAABAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\RequestTypes.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VecinoBuildingMangement.Models.Resident">
+    <Position X="23.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>FAEAABQBAAAEAAAABAAAAAQAAABEAAAAQQAAAAEAAAA=</HashCode>
+      <FileName>Models\Resident.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VecinoBuildingMangement.Models.ServiceRequest">
+    <Position X="8" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EABAABAABAAAAAQAAAEAAEABAABAAAQAAAAMAAAASAA=</HashCode>
+      <FileName>Models\ServiceRequest.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VecinoBuildingMangement.Models.Vote">
+    <Position X="12.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAABAAAACAAAAAgAEAAAABAAAgAAAAIAAAAAAAAAA=</HashCode>
+      <FileName>Models\Vote.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VecinoBuildingMangement.Model" Collapsed="true">
+    <Position X="13.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAEiACAABIAkAAAAAAAEAAAAIAAAAAAABIAA=</HashCode>
+      <FileName>Models\Model.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

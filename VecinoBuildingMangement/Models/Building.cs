@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace VecinoBuildingMangement.Models
 {
-    public class Building
+    public class Building : Model
     {
         string buildingId;
         string cityId;
@@ -35,27 +35,35 @@ namespace VecinoBuildingMangement.Models
         public string Address
         {
             get { return address; }
-            set { address = value; }
+            set { address = value;
+                ValidateProperty(value, "Address");
+            }
         }
 
         [Required(ErrorMessage = "Entrance Code Can Not Be Empty")]
         public string EntranceCode
         {
             get { return entranceCode; }
-            set { entranceCode = value; }
+            set { entranceCode = value;
+                ValidateProperty(value, "EntranceCode");
+            }
         }
         [Required(ErrorMessage = "Total Units Can Not Be Empty")]
         public int TotalUnits
         {
             get { return totalUnits; }
-            set { totalUnits = value; }
+            set { totalUnits = value;
+                ValidateProperty(value, "TotalUnits");
+            }
         }
         [Required(ErrorMessage = "Number Of Floors Can Not Be Empty")]
         [Range(1,200,ErrorMessage = "Number Of Floors Must Be Bettwen 1-200")]
         public int Floors
         {
             get { return floors; }
-            set { floors = value; }
+            set { floors = value;
+                ValidateProperty(value, "Floors");
+            }
 
         }
 
@@ -63,7 +71,9 @@ namespace VecinoBuildingMangement.Models
         public string JoinCode
         {
             get { return joinCode; }
-            set { joinCode = value; }
+            set { joinCode = value;
+                ValidateProperty(value, "JoinCode");
+            }
         }
     }
 }
