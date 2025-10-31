@@ -28,6 +28,7 @@ namespace VecinoBuildingMangementWebService
 
         public Resident GetById(string id)
         {
+
             throw new NotImplementedException();
         }
 
