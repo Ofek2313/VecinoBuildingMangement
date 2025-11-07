@@ -2,29 +2,29 @@
 
 namespace VecinoBuildingMangementWebService
 {
-    public class EventRepository : Repository, IRepository<Event>
+    public class VoteRepository : Repository, IRepository<Vote>
     {
-        public bool Create()
+        public bool Create(Vote model)
         {
             throw new NotImplementedException();
         }
 
-        public bool Delete()
+        public bool Delete(Vote model)
         {
             throw new NotImplementedException();
         }
 
-        public List<Event> GetAll()
+        public List<Vote> GetAll()
         {
             throw new NotImplementedException();
         }
 
-        public Event GetById(string id)
+        public Vote GetById(string id)
         {
             throw new NotImplementedException();
         }
 
-        public bool Update()
+        public bool Update(Vote model)
         {
             throw new NotImplementedException();
         }

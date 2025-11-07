@@ -4,12 +4,12 @@ namespace VecinoBuildingMangementWebService
 {
     public class RequestTypeRepository : Repository, IRepository<RequestTypes>
     {
-        public bool Create()
+        public bool Create(RequestTypes model)
         {
             throw new NotImplementedException();
         }
 
-        public bool Delete()
+        public bool Delete(RequestTypes model)
         {
             throw new NotImplementedException();
         }
@@ -24,7 +24,7 @@ namespace VecinoBuildingMangementWebService
             throw new NotImplementedException();
         }
 
-        public bool Update()
+        public bool Update(RequestTypes model)
         {
             throw new NotImplementedException();
         }

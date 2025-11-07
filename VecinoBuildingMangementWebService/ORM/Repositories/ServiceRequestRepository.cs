@@ -2,30 +2,29 @@
 
 namespace VecinoBuildingMangementWebService
 {
-    
-    public class BuldingRepository : Repository, IRepository<Building>
+    public class ServiceRequestRepository : Repository, IRepository<ServiceRequest>
     {
-        public bool Create()
+        public bool Create(ServiceRequest model)
         {
             throw new NotImplementedException();
         }
 
-        public bool Delete()
+        public bool Delete(ServiceRequest model)
         {
             throw new NotImplementedException();
         }
 
-        public List<Building> GetAll()
+        public List<ServiceRequest> GetAll()
         {
             throw new NotImplementedException();
         }
 
-        public Building GetById(string id)
+        public ServiceRequest GetById(string id)
         {
             throw new NotImplementedException();
         }
 
-        public bool Update()
+        public bool Update(ServiceRequest model)
         {
             throw new NotImplementedException();
         }

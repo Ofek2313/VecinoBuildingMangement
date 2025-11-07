@@ -28,6 +28,7 @@ namespace VecinoBuildingMangementWebService
 
         public void CloseConnection()
         {
+           
            this.oleDbConnection.Close();
         }
 
@@ -39,17 +40,22 @@ namespace VecinoBuildingMangementWebService
         public int Delete(string sql)
         {
             this.dbCommand.CommandText = sql;
-            return this.dbCommand.ExecuteNonQuery();
+            int records = this.dbCommand.ExecuteNonQuery();
+            this.dbCommand.Parameters.Clear();
+            return records;
         }
 
         public int Insert(string sql)
         {
             this.dbCommand.CommandText = sql;
-            return this.dbCommand.ExecuteNonQuery();
+            int records = this.dbCommand.ExecuteNonQuery();
+            this.dbCommand.Parameters.Clear();
+            return records;
         }
 
         public void OpenConnection()
         {
+       
             this.oleDbConnection.Open();
         }
 
@@ -66,13 +72,21 @@ namespace VecinoBuildingMangementWebService
         public IDataReader Select(string sql)
         {
             this.dbCommand.CommandText = sql;
-            return this.dbCommand.ExecuteReader();
+            IDataReader dataReader = this.dbCommand.ExecuteReader();
+            this.dbCommand.Parameters.Clear();
+            return dataReader;
         }
 
         public int Update(string sql)
         {
             this.dbCommand.CommandText = sql;
-            return this.dbCommand.ExecuteNonQuery();
+            int records = this.dbCommand.ExecuteNonQuery();
+            this.dbCommand.Parameters.Clear();
+            return records;
+        }
+        public void AddParameter(string name, string value)
+        {
+            this.dbCommand.Parameters.Add(new OleDbParameter(name, value));
         }
     }
 }
