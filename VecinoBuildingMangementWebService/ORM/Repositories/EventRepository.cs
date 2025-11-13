@@ -28,7 +28,7 @@ namespace VecinoBuildingMangementWebService
 
         public List<Event> GetAll()
         {
-            string sql = "Select * From Cities";
+            string sql = "Select * From Events";
 
             List<Event> events = new List<Event>();
             using (IDataReader reader = this.dbHelperOleDb.Select(sql))

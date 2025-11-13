@@ -58,7 +58,8 @@ namespace VecinoBuildingMangementWebService
 
         public bool Update(Fee model)
         {
-            string sql = @$"Update Fee set FeeTitle=@FeeTitle,FeeAmount=@FeeAmount,FeeDueDate";
+            string sql = @$"Update Fee set FeeTitle=@FeeTitle,FeeAmount=@FeeAmount,FeeDueDate=@FeeDueDate,
+                            IsPaid=@IsPaid,ResidentId=@ResidentId";
             this.dbHelperOleDb.AddParameter("@FeeTitle", model.FeeTitle);
             this.dbHelperOleDb.AddParameter("@FeeAmount", model.FeeAmount.ToString());
             this.dbHelperOleDb.AddParameter("@FeeDueDate", model.FeeDueDate);
@@ -67,7 +68,7 @@ namespace VecinoBuildingMangementWebService
 
             return this.dbHelperOleDb.Update(sql) > 0;
         }
-        public List<Fee> GetUnPaidFee(string id)
+        public List<Fee> GetUnPaidFeeById(string id)
         {
             string sql = "SELECT FeeTitle, FeeAmount, FeeDueDate FROM Fee WHERE IsPaid = False And ResidentId = @ResidentId";
             this.dbHelperOleDb.AddParameter("@ResidentId",id);
@@ -85,7 +86,7 @@ namespace VecinoBuildingMangementWebService
 
             return fees;
         }
-        public List<Fee> ViewPaidFees(string id)
+        public List<Fee> ViewPaidFeesById(string id)
         {
             string sql = "Select FeeTitle,FeeAmount From Fee Where IsPaid=True And ResidentId = @ResidentId";
             this.dbHelperOleDb.AddParameter("@ResidentId", id);

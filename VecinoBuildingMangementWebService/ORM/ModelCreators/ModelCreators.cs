@@ -1,4 +1,6 @@
-﻿namespace VecinoBuildingMangementWebService
+﻿using VecinoBuildingMangementWebService.ORM.ModelCreators;
+
+namespace VecinoBuildingMangementWebService
 {
     public class ModelCreators
     {
@@ -14,6 +16,7 @@
         ResidentCreator residentCreator;
         ServiceRequestCreator serviceRequestCreator;
         VoteCreator voteCreator;
+ 
 
         public BuildingCreator BuildingCreator
         {
@@ -119,6 +122,7 @@
                 return this.voteCreator;
             }
         }
+     
 
     }
 }

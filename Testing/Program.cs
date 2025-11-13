@@ -36,12 +36,29 @@ namespace Testing
             
             dbHelperOleDb.CloseConnection();
         }
-
+        static void CheckCreate()
+        {
+            Repository<Resident> repository = new Repository<Resident>();
+            Resident r = new Resident
+            {
+                ResidentId = "1",
+                ResidentName = "Ofek",
+                ResidentEmail = "ofekcohen1981@gmail.com",
+                ResidentPassword = "password",
+                ResidentPhone = "12345",
+                UnitNumber = 1,
+                BuildingId = "2"
+                
+            };
+            Repository<Resident> repository1 = new Repository<Resident>();
+            repository1.Update(r);
+           
+        }
         static void Main(string[] args)
         {
 
-
-            CheckCreator();
+            CheckCreate();
+            //CheckCreator();
             //Console.WriteLine("Enter City Name: ");
             //string city = Console.ReadLine();
             //CurrentWeather(city);
