@@ -5,6 +5,8 @@ namespace VecinoBuildingMangementWebService
 {
     public class EventTypeRepository : Repository, IRepository<EventTypes>
     {
+        public EventTypeRepository(DbHelperOleDb dbHelperOleDb, ModelCreators modelCreators)
+            : base(dbHelperOleDb, modelCreators) { }
         public bool Create(EventTypes model)
         {
             string sql = @$"Insert Into EventTypes(EventTypeName)

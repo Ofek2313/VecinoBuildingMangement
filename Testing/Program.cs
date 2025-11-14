@@ -38,20 +38,24 @@ namespace Testing
         }
         static void CheckCreate()
         {
-            Repository<Resident> repository = new Repository<Resident>();
+            RepositoryUOW repositoryUOW = new RepositoryUOW();
+
+           
             Resident r = new Resident
             {
-                ResidentId = "1",
+                ResidentId = "12",
                 ResidentName = "Ofek",
                 ResidentEmail = "ofekcohen1981@gmail.com",
                 ResidentPassword = "password",
                 ResidentPhone = "12345",
                 UnitNumber = 1,
                 BuildingId = "2"
-                
             };
-            Repository<Resident> repository1 = new Repository<Resident>();
-            repository1.Update(r);
+            repositoryUOW.DbHelperOleDb.OpenConnection();
+            Resident resident = repositoryUOW.ResidentRepository.GetById("1");
+            Console.WriteLine(resident.ResidentName);
+            repositoryUOW.DbHelperOleDb.CloseConnection();
+            
            
         }
         static void Main(string[] args)

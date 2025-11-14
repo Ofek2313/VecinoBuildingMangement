@@ -5,6 +5,8 @@ namespace VecinoBuildingMangementWebService
 {
     public class RequestTypeRepository : Repository, IRepository<RequestTypes>
     {
+        public RequestTypeRepository(DbHelperOleDb dbHelperOleDb, ModelCreators modelCreators)
+            : base(dbHelperOleDb, modelCreators) { }
         public bool Create(RequestTypes model)
         {
 

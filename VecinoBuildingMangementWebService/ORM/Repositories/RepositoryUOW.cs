@@ -14,12 +14,26 @@
         ServiceRequestRepository serviceRequestRepository;
         VoteRepository voteRepository;
 
+        DbHelperOleDb dbHelperOleDb;
+        ModelCreators modelCreators;
+
+        public RepositoryUOW()
+        {
+            this.dbHelperOleDb = new DbHelperOleDb();
+            this.modelCreators = new ModelCreators();
+        }
+        public DbHelperOleDb DbHelperOleDb
+        {
+            get { return this.dbHelperOleDb; }
+
+        }
+
         public BuildingRepository BuildingRepository
         {
             get
             {
                 if(buildingRepository == null)
-                    buildingRepository = new BuildingRepository();
+                    buildingRepository = new BuildingRepository(this.dbHelperOleDb,this.modelCreators);
                 return buildingRepository;
             }
         }
@@ -29,7 +43,7 @@
             get
             {
                 if (cityRepository == null)
-                    cityRepository = new CityRepository();
+                    cityRepository = new CityRepository(this.dbHelperOleDb, this.modelCreators);
                 return cityRepository;
             }
         }
@@ -39,7 +53,7 @@
             get
             {
                 if (eventRepository == null)
-                    eventRepository = new EventRepository();
+                    eventRepository = new EventRepository(this.dbHelperOleDb, this.modelCreators);
                 return eventRepository;
             }
         }
@@ -49,7 +63,7 @@
             get
             {
                 if (eventTypeRepository == null)
-                    eventTypeRepository = new EventTypeRepository();
+                    eventTypeRepository = new EventTypeRepository(this.dbHelperOleDb, this.modelCreators);
                 return eventTypeRepository;
             }
         }
@@ -59,7 +73,7 @@
             get
             {
                 if (feeRepository == null)
-                    feeRepository = new FeeRepository();
+                    feeRepository = new FeeRepository(this.dbHelperOleDb, this.modelCreators);
                 return feeRepository;
             }
         }
@@ -69,7 +83,7 @@
             get
             {
                 if (notificationRepository == null)
-                    notificationRepository = new NotificationRepository();
+                    notificationRepository = new NotificationRepository(this.dbHelperOleDb, this.modelCreators);
                 return notificationRepository;
             }
         }
@@ -79,7 +93,7 @@
             get
             {
                 if (pollRepository == null)
-                    pollRepository = new PollRepository();
+                    pollRepository = new PollRepository(this.dbHelperOleDb, this.modelCreators);
                 return pollRepository;
             }
         }
@@ -89,7 +103,7 @@
             get
             {
                 if (requestTypeRepository == null)
-                    requestTypeRepository = new RequestTypeRepository();
+                    requestTypeRepository = new RequestTypeRepository(this.dbHelperOleDb, this.modelCreators);
                 return requestTypeRepository;
             }
         }
@@ -99,7 +113,7 @@
             get
             {
                 if (residentRepository == null)
-                    residentRepository = new ResidentRepository();
+                    residentRepository = new ResidentRepository(this.dbHelperOleDb, this.modelCreators);
                 return residentRepository;
             }
         }
@@ -109,7 +123,7 @@
             get
             {
                 if (serviceRequestRepository == null)
-                    serviceRequestRepository = new ServiceRequestRepository();
+                    serviceRequestRepository = new ServiceRequestRepository(this.dbHelperOleDb, this.modelCreators);
                 return serviceRequestRepository;
             }
         }
@@ -119,7 +133,7 @@
             get
             {
                 if (voteRepository == null)
-                    voteRepository = new VoteRepository();
+                    voteRepository = new VoteRepository(this.dbHelperOleDb, this.modelCreators);
                 return voteRepository;
             }
         }

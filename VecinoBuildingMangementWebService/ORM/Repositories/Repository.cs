@@ -11,10 +11,10 @@ namespace VecinoBuildingMangementWebService
         protected DbHelperOleDb dbHelperOleDb;
         protected ModelCreators modelCreators;
        
-        public Repository()
+        public Repository(DbHelperOleDb dbHelperOleDb, ModelCreators modelCreators)
         {
-            this.dbHelperOleDb = new DbHelperOleDb();
-            this.modelCreators = new ModelCreators();
+            this.dbHelperOleDb = dbHelperOleDb;
+            this.modelCreators = modelCreators;
         }
     }
 }

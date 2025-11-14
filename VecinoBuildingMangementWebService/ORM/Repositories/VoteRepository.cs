@@ -5,6 +5,8 @@ namespace VecinoBuildingMangementWebService
 {
     public class VoteRepository : Repository, IRepository<Vote>
     {
+        public VoteRepository(DbHelperOleDb dbHelperOleDb, ModelCreators modelCreators)
+            : base(dbHelperOleDb, modelCreators) { }
         public bool Create(Vote model)
         {
             string sql = @$"Insert Into Vote(VoteChoice,VoteDate,ResidentId,PollId)

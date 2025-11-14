@@ -5,6 +5,8 @@ namespace VecinoBuildingMangementWebService
 {
     public class EventRepository : Repository, IRepository<Event>
     {
+        public EventRepository(DbHelperOleDb dbHelperOleDb, ModelCreators modelCreators)
+            : base(dbHelperOleDb, modelCreators) { }
         public bool Create(Event model)
         {
             string sql = @$"Insert Into Event(EventDate,EventTitle,EventDescription,EventTypeId,BuildingId)

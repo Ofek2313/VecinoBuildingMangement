@@ -8,12 +8,10 @@ namespace VecinoBuildingMangementWebService
     {
 
         protected DbHelperOleDb dbHelperOleDb;
-        protected ModelCreators modelCreators;
 
-        public GenericRepository()
+        public GenericRepository(DbHelperOleDb dbHelperOleDb)
         {
             this.dbHelperOleDb = new DbHelperOleDb();
-            this.modelCreators = new ModelCreators();
         }
         private ModelCreator<T> modelCreator;
         private ModelCreator<T> ModelCreator
@@ -102,7 +100,10 @@ namespace VecinoBuildingMangementWebService
             string sql = $@"Update {type.Name} set ";
             string val = string.Join(", ", properties.Select(p => $@"{p.Name} = @{p.Name}"));
 
+            PropertyInfo id = type.GetProperties().Where(p => !ignore.Contains(p.Name)).ToArray()[0];
             sql += val;
+            sql += @$"WHERE {id.Name} = @{id.Name}";
+            this.dbHelperOleDb.AddParameter($@"@{id.Name}", id.GetValue(model).ToString());
 
             foreach (PropertyInfo property in properties)
             {
@@ -113,4 +114,4 @@ namespace VecinoBuildingMangementWebService
         }
     }
 }
-}
+

@@ -5,6 +5,8 @@ namespace VecinoBuildingMangementWebService
 {
     public class CityRepository : Repository, IRepository<City>
     {
+        public CityRepository(DbHelperOleDb dbHelperOleDb, ModelCreators modelCreators)
+            : base(dbHelperOleDb, modelCreators) { }
         public bool Create(City model)
         {
             string sql = @$"Insert Into Cities(CityName)

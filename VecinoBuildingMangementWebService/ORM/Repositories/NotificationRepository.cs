@@ -5,6 +5,8 @@ namespace VecinoBuildingMangementWebService
 {
     public class NotificationRepository : Repository, IRepository<Notification>
     {
+        public NotificationRepository(DbHelperOleDb dbHelperOleDb, ModelCreators modelCreators)
+            : base(dbHelperOleDb, modelCreators) { }
         public bool Create(Notification model)
         {
             string sql = @$"Insert Into Notification(NotificationMessage,NotificationTitle,NotificationDate)

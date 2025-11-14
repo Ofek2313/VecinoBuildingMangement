@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using Swashbuckle.AspNetCore.SwaggerUI;
+using System.Data;
 using VecinoBuildingMangement.Models;
 
 namespace VecinoBuildingMangementWebService
@@ -6,6 +7,9 @@ namespace VecinoBuildingMangementWebService
 
     public class BuildingRepository : Repository, IRepository<Building>
     {
+        public BuildingRepository(DbHelperOleDb dbHelperOleDb, ModelCreators modelCreators)
+            : base(dbHelperOleDb, modelCreators) { }
+
         public bool Create(Building model)
         {
             string sql = @$"Insert Into Building(CityId,Address,EntranceCode,TotalUnits,Floors,JoinCode)

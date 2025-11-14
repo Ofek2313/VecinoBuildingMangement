@@ -5,6 +5,8 @@ namespace VecinoBuildingMangementWebService
 {
     public class PollRepository : Repository, IRepository<Poll>
     {
+        public PollRepository(DbHelperOleDb dbHelperOleDb, ModelCreators modelCreators)
+            : base(dbHelperOleDb, modelCreators) { }
         public bool Create(Poll model)
         {
             string sql = @$"Insert Into Notification(PollTitle,PollDate,BuildingId)

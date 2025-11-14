@@ -6,6 +6,8 @@ namespace VecinoBuildingMangementWebService
 {
     public class ResidentRepository : Repository, IRepository<Resident>
     {
+        public ResidentRepository(DbHelperOleDb dbHelperOleDb, ModelCreators modelCreators)
+            : base(dbHelperOleDb, modelCreators) { }
         public bool Create(Resident model)
         {
             //string sql = @$"Insert Into Resident(ResidentName,ResidentPassword,ResidentPhone,ResidentEmail,UnitNumber,BuildingId)

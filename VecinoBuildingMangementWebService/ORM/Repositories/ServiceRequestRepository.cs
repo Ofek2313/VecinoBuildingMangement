@@ -5,6 +5,8 @@ namespace VecinoBuildingMangementWebService
 {
     public class ServiceRequestRepository : Repository, IRepository<ServiceRequest>
     {
+        public ServiceRequestRepository(DbHelperOleDb dbHelperOleDb, ModelCreators modelCreators)
+            : base(dbHelperOleDb, modelCreators) { }
         public bool Create(ServiceRequest model)
         {
             //string sql = @$"Insert Into Resident(ResidentName,ResidentPassword,ResidentPhone,ResidentEmail,UnitNumber,BuildingId)
@@ -27,7 +29,7 @@ namespace VecinoBuildingMangementWebService
         {
 
             string sql = @"Delete from ServiceRequest where RequestId=@RequestId";
-            this.dbHelperOleDb.AddParameter("@ServiceRequest", id);
+            this.dbHelperOleDb.AddParameter("@RequestId", id);
             return this.dbHelperOleDb.Delete(sql) > 0;
         }
 
@@ -51,6 +53,7 @@ namespace VecinoBuildingMangementWebService
         public List<ServiceRequest> GetByStatus(string status)
         {
             string sql = @$"select * From ServiceRequest Where RequestStatus=@RequestStatus";
+            this.dbHelperOleDb.AddParameter("@RequestStatus", status);
             List<ServiceRequest> serviceRequests = new List<ServiceRequest>();
             using (IDataReader reader = this.dbHelperOleDb.Select(sql))
             {

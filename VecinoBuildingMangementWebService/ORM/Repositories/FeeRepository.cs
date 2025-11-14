@@ -5,6 +5,8 @@ namespace VecinoBuildingMangementWebService
 {
     public class FeeRepository : Repository, IRepository<Fee>
     {
+        public FeeRepository(DbHelperOleDb dbHelperOleDb, ModelCreators modelCreators)
+            : base(dbHelperOleDb, modelCreators) { }
         public bool Create(Fee model)
         {
             string sql = @$"Insert Into Fee(FeeTitle,FeeAmount,FeeDueDate,IsPaid,ResidentId)
