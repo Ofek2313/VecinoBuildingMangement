@@ -11,6 +11,7 @@ namespace VecinoBuildingMangementWebService
             fee.FeeId = Convert.ToString(dataReader["FeeId"]);
             fee.FeeTitle = Convert.ToString(dataReader["FeeTitle"]);
             fee.FeeDueDate = Convert.ToString(dataReader["FeeDueDate"]);
+            fee.FeeAmount = Convert.ToDouble(dataReader["FeeAmount"]);
             fee.IsPaid = Convert.ToBoolean(dataReader["IsPaid"]);
             fee.ResidentId = Convert.ToString(dataReader["ResidentId"]);
 

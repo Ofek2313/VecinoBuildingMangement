@@ -13,9 +13,9 @@ namespace VecinoBuildingMangementWebService
                             Values(@FeeTitle,@FeeAmount,@FeeDueDate,
                                    @IsPaid,@ResidentId)";
             this.dbHelperOleDb.AddParameter("@FeeTitle", model.FeeTitle);
-            this.dbHelperOleDb.AddParameter("@FeeAmount", model.FeeAmount.ToString());
+            this.dbHelperOleDb.AddParameter("@FeeAmount", model.FeeAmount);
             this.dbHelperOleDb.AddParameter("@FeeDueDate", model.FeeDueDate);
-            this.dbHelperOleDb.AddParameter("@IsPaid", model.IsPaid.ToString());
+            this.dbHelperOleDb.AddParameter("@IsPaid", model.IsPaid);
             this.dbHelperOleDb.AddParameter("@ResidentId", model.ResidentId);
            
             return this.dbHelperOleDb.Insert(sql) > 0;
@@ -63,16 +63,16 @@ namespace VecinoBuildingMangementWebService
             string sql = @$"Update Fee set FeeTitle=@FeeTitle,FeeAmount=@FeeAmount,FeeDueDate=@FeeDueDate,
                             IsPaid=@IsPaid,ResidentId=@ResidentId";
             this.dbHelperOleDb.AddParameter("@FeeTitle", model.FeeTitle);
-            this.dbHelperOleDb.AddParameter("@FeeAmount", model.FeeAmount.ToString());
+            this.dbHelperOleDb.AddParameter("@FeeAmount", model.FeeAmount);
             this.dbHelperOleDb.AddParameter("@FeeDueDate", model.FeeDueDate);
-            this.dbHelperOleDb.AddParameter("@IsPaid", model.IsPaid.ToString());
+            this.dbHelperOleDb.AddParameter("@IsPaid", model.IsPaid);
             this.dbHelperOleDb.AddParameter("@ResidentId", model.ResidentId);
 
             return this.dbHelperOleDb.Update(sql) > 0;
         }
         public List<Fee> GetUnPaidFeeById(string id)
         {
-            string sql = "SELECT FeeTitle, FeeAmount, FeeDueDate FROM Fee WHERE IsPaid = False And ResidentId = @ResidentId";
+            string sql = "SELECT * FROM Fee WHERE IsPaid = False And ResidentId = @ResidentId";
             this.dbHelperOleDb.AddParameter("@ResidentId",id);
 
             List<Fee> fees = new List<Fee>();

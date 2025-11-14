@@ -11,10 +11,10 @@ namespace VecinoBuildingMangementWebService
 
         public GenericRepository(DbHelperOleDb dbHelperOleDb)
         {
-            this.dbHelperOleDb = new DbHelperOleDb();
+            this.dbHelperOleDb = dbHelperOleDb;
         }
-        private ModelCreator<T> modelCreator;
-        private ModelCreator<T> ModelCreator
+        protected ModelCreator<T> modelCreator;
+        protected ModelCreator<T> ModelCreator
         {
             get
             {

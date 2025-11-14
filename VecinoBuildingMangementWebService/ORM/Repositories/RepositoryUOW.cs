@@ -113,7 +113,7 @@
             get
             {
                 if (residentRepository == null)
-                    residentRepository = new ResidentRepository(this.dbHelperOleDb, this.modelCreators);
+                    residentRepository = new ResidentRepository(this.dbHelperOleDb);
                 return residentRepository;
             }
         }

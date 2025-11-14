@@ -8,7 +8,7 @@ namespace VecinoBuildingMangementWebService
     public class BuildingRepository : Repository, IRepository<Building>
     {
         public BuildingRepository(DbHelperOleDb dbHelperOleDb, ModelCreators modelCreators)
-            : base(dbHelperOleDb, modelCreators) { }
+            : base(dbHelperOleDb, modelCreators) { } 
 
         public bool Create(Building model)
         {
@@ -18,8 +18,8 @@ namespace VecinoBuildingMangementWebService
             this.dbHelperOleDb.AddParameter("@CityId", model.CityId);
             this.dbHelperOleDb.AddParameter("@Address", model.Address);
             this.dbHelperOleDb.AddParameter("@EntranceCode", model.EntranceCode);
-            this.dbHelperOleDb.AddParameter("@TotalUnits", model.TotalUnits.ToString());
-            this.dbHelperOleDb.AddParameter("@Floors", model.Floors.ToString());
+            this.dbHelperOleDb.AddParameter("@TotalUnits", model.TotalUnits);
+            this.dbHelperOleDb.AddParameter("@Floors", model.Floors);
             this.dbHelperOleDb.AddParameter("@JoinCode", model.JoinCode);
             return this.dbHelperOleDb.Insert(sql) > 0;
         }
@@ -68,8 +68,8 @@ namespace VecinoBuildingMangementWebService
             this.dbHelperOleDb.AddParameter("@CityId", model.CityId);
             this.dbHelperOleDb.AddParameter("@Address", model.Address);
             this.dbHelperOleDb.AddParameter("@EntranceCode", model.EntranceCode);
-            this.dbHelperOleDb.AddParameter("@TotalUnits", model.TotalUnits.ToString());
-            this.dbHelperOleDb.AddParameter("@Floors", model.Floors.ToString());
+            this.dbHelperOleDb.AddParameter("@TotalUnits", model.TotalUnits);
+            this.dbHelperOleDb.AddParameter("@Floors", model.Floors);
             this.dbHelperOleDb.AddParameter("@JoinCode", model.JoinCode);
             return this.dbHelperOleDb.Update(sql) > 0;
         }

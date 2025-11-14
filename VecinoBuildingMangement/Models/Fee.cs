@@ -49,7 +49,7 @@ namespace VecinoBuildingMangement.Models
         {
             get { return this.feeDueDate; }
             set { this.feeDueDate = value;
-                ValidateProperty(value, "FeeAmount");
+                ValidateProperty(value, "FeeDueDate");
             }
         }
 

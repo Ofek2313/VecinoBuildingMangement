@@ -40,20 +40,22 @@ namespace Testing
         {
             RepositoryUOW repositoryUOW = new RepositoryUOW();
 
-           
-            Resident r = new Resident
+
+            Fee fee = new Fee
             {
-                ResidentId = "12",
-                ResidentName = "Ofek",
-                ResidentEmail = "ofekcohen1981@gmail.com",
-                ResidentPassword = "password",
-                ResidentPhone = "12345",
-                UnitNumber = 1,
-                BuildingId = "2"
+                FeeId = "11",
+                FeeTitle = "Test2   ",
+                FeeAmount = 200.5,
+                FeeDueDate = "5/5/2026",
+                IsPaid = true,
+                ResidentId = "10"
             };
             repositoryUOW.DbHelperOleDb.OpenConnection();
-            Resident resident = repositoryUOW.ResidentRepository.GetById("1");
-            Console.WriteLine(resident.ResidentName);
+            List<Resident> residents = repositoryUOW.ResidentRepository.GetResidentByBuilding("1");
+            foreach(Resident res in residents)
+            {
+                Console.WriteLine($"{res.ResidentName}, {res.UnitNumber}");
+            }
             repositoryUOW.DbHelperOleDb.CloseConnection();
             
            
