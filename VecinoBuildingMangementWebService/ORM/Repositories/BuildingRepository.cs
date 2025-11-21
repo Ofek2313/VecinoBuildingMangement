@@ -91,5 +91,11 @@ namespace VecinoBuildingMangementWebService
 
             return buildings;
         }
+        public List<Building> GetBuildingByPage(int page)
+        {
+            int buildingPerPage = 10;
+            List<Building> buildings = this.GetAll();
+            return buildings.Skip(buildingPerPage * (page-1)).Take(buildingPerPage).ToList();
+        }
     }
 }

@@ -103,7 +103,7 @@ namespace VecinoBuildingMangementWebService
                 while (reader.Read())
                 {
 
-                    residents.Add(this.ModelCreator.CreateModel(reader));
+                    residents.Add(this.modelCreators.ResidentCreator.CreateModel(reader));
 
                 }
             }

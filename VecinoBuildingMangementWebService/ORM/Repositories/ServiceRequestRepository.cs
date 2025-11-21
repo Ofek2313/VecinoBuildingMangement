@@ -67,6 +67,7 @@ namespace VecinoBuildingMangementWebService
 
             return serviceRequests;
         }
+        
         public ServiceRequest GetById(string id)
         {
 
@@ -93,6 +94,24 @@ namespace VecinoBuildingMangementWebService
             this.dbHelperOleDb.AddParameter("@RequestStatus", model.RequestStatus);
             this.dbHelperOleDb.AddParameter("@ResidentId", model.ResidentId);
             return this.dbHelperOleDb.Update(sql) > 0;
+        }
+        public List<ServiceRequest> GetServiceRequestsByResidentId(string residentId)
+        {
+            string sql = "Select * From ServiceRequest WHERE ResidentId=@ResidentId";
+            this.dbHelperOleDb.AddParameter("@ResidentId", residentId);
+
+            List<ServiceRequest> serviceRequests = new List<ServiceRequest>();
+            using (IDataReader reader = this.dbHelperOleDb.Select(sql))
+            {
+                while (reader.Read())
+                {
+
+                    serviceRequests.Add(this.modelCreators.ServiceRequestCreator.CreateModel(reader));
+
+                }
+            }
+
+            return serviceRequests;
         }
     }
 }
