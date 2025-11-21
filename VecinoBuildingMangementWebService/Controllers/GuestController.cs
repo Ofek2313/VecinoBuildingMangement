@@ -34,6 +34,17 @@ namespace VecinoBuildingMangementWebService.Controllers
                 {
                     buildingCatalouge.Buildings = this.repositoryUOW.BuildingRepository.GetByCityId(CityId);
                 }
+                else if(CityId == null && page != 0)
+                {
+                    buildingCatalouge.Buildings = this.repositoryUOW.BuildingRepository.GetBuildingByPage(page);
+                }
+                else if(CityId != null && page != 0)
+                {
+                    int buildingPerPage = 2;
+                    buildingCatalouge.Buildings = this.repositoryUOW.BuildingRepository.GetByCityId(CityId);
+                    buildingCatalouge.Buildings.Skip(buildingPerPage * (page - 1)).Take(buildingPerPage).ToList();
+
+                }
                
                 return buildingCatalouge;
             }
@@ -48,6 +59,24 @@ namespace VecinoBuildingMangementWebService.Controllers
            
         }
 
+        [HttpPost]
+        public bool Register(Resident resident)
+        {
+            try
+            {
+                this.repositoryUOW.DbHelperOleDb.OpenConnection();
+                return repositoryUOW.ResidentRepository.Create(resident);
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+            finally
+            {
+                this.repositoryUOW.DbHelperOleDb.CloseConnection();
+            }
+            
+        }
 
     }
 }
