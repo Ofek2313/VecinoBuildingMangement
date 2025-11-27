@@ -113,5 +113,12 @@ namespace VecinoBuildingMangementWebService
 
             return serviceRequests;
         }
+        public bool UpdateStatus(string status,string requestId)
+        {
+            string sql = @"Update ServiceRequest set RequestStatus=@RequestStatus where RequestId=@RequestId";
+            this.dbHelperOleDb.AddParameter("@RequestStatus", status);
+            this.dbHelperOleDb.AddParameter("@RequestId", requestId);
+            return this.dbHelperOleDb.Update(sql) > 0;
+        }
     }
 }

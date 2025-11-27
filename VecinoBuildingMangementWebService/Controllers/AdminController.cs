@@ -1,62 +1,35 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using VecinoBuildingMangement.ViewModels;
+using Microsoft.Extensions.Logging;
 using VecinoBuildingMangement.Models;
+using VecinoBuildingMangement.ViewModels;
 
 namespace VecinoBuildingMangementWebService.Controllers
 {
     [Route("api/[controller]/[action]")]
-    [ApiController] 
-    public class ResidentController : ControllerBase
+    [ApiController]
+
+   
+    public class AdminController : ControllerBase
     {
         RepositoryUOW repositoryUOW;
 
-        public ResidentController()
+        public AdminController()
         {
             this.repositoryUOW = new RepositoryUOW();
         }
 
-        [HttpGet]
-        public ManagePaymentViewModel GetManagePayment(string ResidentId)
+
+        [HttpPost]
+        public bool SendNotification(Notification notification)
         {
-            ManagePaymentViewModel viewModel = new ManagePaymentViewModel();
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
-                viewModel.Fees = repositoryUOW.FeeRepository.ViewPaidFeesById(ResidentId);
-                List<Fee> UnPaid = repositoryUOW.FeeRepository.GetUnPaidFeeById(ResidentId);
-                viewModel.UnPaidFees = UnPaid;
-                double totalFee = 0;
-                foreach (Fee fee in UnPaid)
-                {
-                    totalFee += fee.FeeAmount;
-                }
-                viewModel.TotalFees = totalFee;
-                return viewModel;
+                return this.repositoryUOW.NotificationRepository.Create(notification);
             }
             catch (Exception ex)
             {
-                return null;
-            }
-            finally
-            {
-                this.repositoryUOW.DbHelperOleDb.CloseConnection();
-            }
-            
-
-        }
-
-        [HttpPut]
-        public bool PayFee(string feeId)
-        {
-            try
-            {
-                this.repositoryUOW.DbHelperOleDb.OpenConnection();
-                return this.repositoryUOW.FeeRepository.PayFee(feeId);
-            }
-            catch(Exception ex)
-            {
-
                 return false;
             }
             finally
@@ -65,66 +38,169 @@ namespace VecinoBuildingMangementWebService.Controllers
             }
         }
 
-
         [HttpGet]
-        public ServiceRequestViewModel GetServiceRequest(string ResidentId)
+        public ManageEventViewModel ManageEvent()
         {
-            ServiceRequestViewModel serviceRequestViewModel = new ServiceRequestViewModel();
+            ManageEventViewModel manageEventViewModel = new ManageEventViewModel();
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
-                serviceRequestViewModel.serviceRequests = repositoryUOW.ServiceRequestRepository.GetServiceRequestsByResidentId(ResidentId);
-                serviceRequestViewModel.RequestTypes = repositoryUOW.RequestTypeRepository.GetAll();
-
-                return serviceRequestViewModel;
-
+                manageEventViewModel.Events = this.repositoryUOW.EventRepository.GetAll();
+                manageEventViewModel.CurrentMonth = DateTime.Now.ToString("MMMM");
+                return manageEventViewModel;
             }
             catch (Exception ex)
             {
                 return null;
             }
-            finally 
+            finally
             {
                 this.repositoryUOW.DbHelperOleDb.CloseConnection();
             }
         }
-      
 
+        [HttpPost]
+        public bool AddUpComingEvent(Event @event)
+        {
+            try
+            {
+                this.repositoryUOW.DbHelperOleDb.OpenConnection();
+                return this.repositoryUOW.EventRepository.Create(@event);
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+            finally
+            {
+                this.repositoryUOW.DbHelperOleDb.CloseConnection();
+            }
+        }
+
+        [HttpDelete]
+        public bool RemoveEvent(string eventId)
+        {
+            try
+            {
+                this.repositoryUOW.DbHelperOleDb.OpenConnection();
+                return this.repositoryUOW.EventRepository.Delete(eventId);
+            }
+            catch(Exception ex)
+            {
+                return false;
+            }
+            finally
+            {
+                this.repositoryUOW.DbHelperOleDb.CloseConnection();
+            }
+        }
 
         [HttpGet]
         public ManageServiceRequestViewModel ManageServiceRequest()
         {
             ManageServiceRequestViewModel manageServiceRequestViewModel = new ManageServiceRequestViewModel();
-            int requests = 0;
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
                 manageServiceRequestViewModel.serviceRequests = this.repositoryUOW.ServiceRequestRepository.GetAll();
-                foreach (ServiceRequest serviceRequest in manageServiceRequestViewModel.serviceRequests)
+                int count = 0;
+                foreach(ServiceRequest serviceRequest in manageServiceRequestViewModel.serviceRequests)
                 {
-                    requests++;
+                    count++;
                 }
-                manageServiceRequestViewModel.ServiceRequestNumber = requests;
+                manageServiceRequestViewModel.ServiceRequestNumber = count;
                 return manageServiceRequestViewModel;
             }
+            catch (Exception ex)
+            {
+                return null;
+            }
+            finally
+            {
+                this.repositoryUOW.DbHelperOleDb.CloseConnection();
+            }
+        }
+
+        [HttpDelete]
+        public bool DeleteServiceRequest(string requestId)
+        {
+            try
+            {
+                this.repositoryUOW.DbHelperOleDb.OpenConnection();
+                return this.repositoryUOW.ServiceRequestRepository.Delete(requestId);
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+            finally
+            {
+                this.repositoryUOW.DbHelperOleDb.CloseConnection();
+            }
+        }
+
+        [HttpPut]
+        public bool ChangeRequestStatus(string status,string requestId)
+        {
+            try
+            {
+                this.repositoryUOW.DbHelperOleDb.OpenConnection();
+                return this.repositoryUOW.ServiceRequestRepository.UpdateStatus(status, requestId);
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+            finally
+            {
+                this.repositoryUOW.DbHelperOleDb.CloseConnection();
+            }
+        }
+
+        [HttpGet]
+        public ManageResidentViewModel ManageResident()
+        {
+            ManageResidentViewModel viewModel = new ManageResidentViewModel();
+            try
+            {
+                this.repositoryUOW.DbHelperOleDb.OpenConnection();
+                viewModel.Residents = this.repositoryUOW.ResidentRepository.GetAll();
+                viewModel.TotalResidents = viewModel.Residents.Count;
+                return viewModel;
+            }
             catch(Exception ex)
             {
                 return null;
             }
             finally
             {
-                this.repositoryUOW.DbHelperOleDb.CloseConnection();    
+                this.repositoryUOW.DbHelperOleDb.CloseConnection();
             }
-
         }
-
+        [HttpPut]
+        public bool RemoveResident(string residentId)
+        {
+            try
+            {
+                this.repositoryUOW.DbHelperOleDb.OpenConnection();
+                return this.repositoryUOW.ResidentRepository.UpdateResidentBuilding(residentId,"0");
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+            finally
+            {
+                this.repositoryUOW.DbHelperOleDb.CloseConnection();
+            }
+        }
         [HttpPost]
-        public bool OpenServiceRequest(ServiceRequest serviceRequest)
+        public bool CreateFee(Fee fee)
         {
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
-                return repositoryUOW.ServiceRequestRepository.Create(serviceRequest);
+                return this.repositoryUOW.FeeRepository.Create(fee);
             }
             catch (Exception ex)
             {
@@ -134,17 +210,14 @@ namespace VecinoBuildingMangementWebService.Controllers
             {
                 this.repositoryUOW.DbHelperOleDb.CloseConnection();
             }
-
         }
-
         [HttpGet]
-        public string Login(string email, string password)
+        public List<Fee> viewPaidFees()
         {
-
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
-                return this.repositoryUOW.ResidentRepository.Login(email, password);
+                return this.repositoryUOW.FeeRepository.ViewPaidFees();
             }
             catch(Exception ex)
             {
@@ -154,37 +227,14 @@ namespace VecinoBuildingMangementWebService.Controllers
             {
                 this.repositoryUOW.DbHelperOleDb.CloseConnection();
             }
-
-
         }
-
-        [HttpGet]
-        public List<Event> ViewEvents()
-        {
-            List<Event> events = new List<Event>();
-            try
-            {
-                this.repositoryUOW.DbHelperOleDb.OpenConnection();
-                events = this.repositoryUOW.EventRepository.GetAll();
-                Console.WriteLine(events.Count);
-                return events;
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
-            finally
-            {
-                this.repositoryUOW.DbHelperOleDb.CloseConnection();
-            }
-        }
-        [HttpPut]
-        public bool JoinBuilding(string residentId, string buildingId)
+        [HttpPost]
+        public bool CreateBuilding(Building building)
         {
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
-                return this.repositoryUOW.ResidentRepository.UpdateResidentBuilding(residentId, buildingId);
+                return this.repositoryUOW.BuildingRepository.Create(building);
             }
             catch (Exception ex)
             {
@@ -196,45 +246,8 @@ namespace VecinoBuildingMangementWebService.Controllers
             }
         }
 
-        [HttpPut]
-        public bool LeaveBuilding(string residentId)
-        {
-
-            try
-            {
-                this.repositoryUOW.DbHelperOleDb.OpenConnection();
-                return this.repositoryUOW.ResidentRepository.UpdateResidentBuilding(residentId, "0");
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
-            finally
-            {
-                this.repositoryUOW.DbHelperOleDb.CloseConnection();
-            }
-        }
-        [HttpGet]
-        public List<Notification> GetNotifications(string residentId)
-        {
-            List<Notification> list = new List<Notification>();
-            try
-            {
-                this.repositoryUOW.DbHelperOleDb.OpenConnection();
-                list = this.repositoryUOW.NotificationRepository.GetNotificationsByResidentId(residentId);
-                return list;
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
-            finally
-            {
-                this.repositoryUOW.DbHelperOleDb.CloseConnection();
-            }
-        }
-
+       
 
     }
-
 }
+

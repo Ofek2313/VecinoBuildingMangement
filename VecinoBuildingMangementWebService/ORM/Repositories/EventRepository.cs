@@ -30,7 +30,7 @@ namespace VecinoBuildingMangementWebService
 
         public List<Event> GetAll()
         {
-            string sql = "Select * From Events";
+            string sql = "Select * From Event";
 
             List<Event> events = new List<Event>();
             using (IDataReader reader = this.dbHelperOleDb.Select(sql))

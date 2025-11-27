@@ -61,13 +61,13 @@ namespace VecinoBuildingMangementWebService
         public bool Update(Fee model)
         {
             string sql = @$"Update Fee set FeeTitle=@FeeTitle,FeeAmount=@FeeAmount,FeeDueDate=@FeeDueDate,
-                            IsPaid=@IsPaid,ResidentId=@ResidentId";
+                            IsPaid=@IsPaid,ResidentId=@ResidentId WHERE FeeId=@FeeId";
             this.dbHelperOleDb.AddParameter("@FeeTitle", model.FeeTitle);
             this.dbHelperOleDb.AddParameter("@FeeAmount", model.FeeAmount);
             this.dbHelperOleDb.AddParameter("@FeeDueDate", model.FeeDueDate);
             this.dbHelperOleDb.AddParameter("@IsPaid", model.IsPaid);
             this.dbHelperOleDb.AddParameter("@ResidentId", model.ResidentId);
-
+            this.dbHelperOleDb.AddParameter("@FeeId", model.FeeId);
             return this.dbHelperOleDb.Update(sql) > 0;
         }
         public List<Fee> GetUnPaidFeeById(string id)
@@ -104,6 +104,29 @@ namespace VecinoBuildingMangementWebService
             }
 
             return fees;
+        }
+        public List<Fee> ViewPaidFees()
+        {
+            string sql = "Select * From Fee WHERE IsPaid=True";
+
+            List<Fee> fees = new List<Fee>();
+            using (IDataReader reader = this.dbHelperOleDb.Select(sql))
+            {
+                while (reader.Read())
+                {
+
+                    fees.Add(this.modelCreators.FeeCreator.CreateModel(reader));
+
+                }
+            }
+
+            return fees;
+        }
+        public bool PayFee(string feeId)
+        {
+            string sql = @"UPDATE Fee SET IsPaid = True WHERE FeeId = @FeeId";
+            this.dbHelperOleDb.AddParameter("@FeeId", feeId);
+            return this.dbHelperOleDb.Update(sql) > 0;
         }
     }
 }

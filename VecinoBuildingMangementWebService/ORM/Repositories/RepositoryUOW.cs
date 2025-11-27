@@ -33,8 +33,8 @@
             get
             {
                 if(buildingRepository == null)
-                    buildingRepository = new BuildingRepository(this.dbHelperOleDb,this.modelCreators);
-                return buildingRepository;
+                        buildingRepository = new BuildingRepository(this.dbHelperOleDb,this.modelCreators);
+                    return buildingRepository;
             }
         }
 
@@ -113,7 +113,7 @@
             get
             {
                 if (residentRepository == null)
-                    residentRepository = new ResidentRepository(this.dbHelperOleDb,this.modelCreators);
+                    residentRepository = new ResidentRepository(this.dbHelperOleDb);
                 return residentRepository;
             }
         }

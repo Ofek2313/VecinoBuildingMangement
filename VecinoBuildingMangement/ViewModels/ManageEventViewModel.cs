@@ -10,5 +10,6 @@ namespace VecinoBuildingMangement.ViewModels
     public class ManageEventViewModel
     {
         public List<Event> Events { get; set; }
+        public string CurrentMonth { get; set; }
     }
 }

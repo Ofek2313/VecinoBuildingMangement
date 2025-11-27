@@ -41,15 +41,7 @@ namespace Testing
             RepositoryUOW repositoryUOW = new RepositoryUOW();
 
 
-            Fee fee = new Fee
-            {
-                FeeId = "11",
-                FeeTitle = "Test2   ",
-                FeeAmount = 200.5,
-                FeeDueDate = "5/5/2026",
-                IsPaid = true,
-                ResidentId = "10"
-            };
+            
             repositoryUOW.DbHelperOleDb.OpenConnection();
             List<Resident> residents = repositoryUOW.ResidentRepository.GetResidentByBuilding("1");
             foreach(Resident res in residents)

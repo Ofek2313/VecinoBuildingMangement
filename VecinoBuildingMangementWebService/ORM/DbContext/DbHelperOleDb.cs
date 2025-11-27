@@ -18,7 +18,7 @@ namespace VecinoBuildingMangementWebService
         public DbHelperOleDb()
         {
             this.oleDbConnection = new OleDbConnection();
-            this.oleDbConnection.ConnectionString = $@"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\Users\USER\source\repos\VecinoBuildingMangement\VecinoBuildingMangementWebService\App_Data\BuildingMangement.accdb;Persist Security Info=True";
+            this.oleDbConnection.ConnectionString = $@"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\Users\Ofek\source\repos\VecinoBuildingMangement\VecinoBuildingMangementWebService\App_Data\BuildingMangement.accdb";
 
 
             //this.oleDbConnection.ConnectionString = $@"Provider=Microsoft.ACE.OLEDB.12.0;Data Source={Directory.GetCurrentDirectory()}\App_Data\\BuildingMangement.accdb;Persist Security Info=True";

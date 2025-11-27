@@ -66,6 +66,25 @@ namespace VecinoBuildingMangementWebService
             return this.dbHelperOleDb.Update(sql) > 0;
         }
 
+        public List<Notification> GetNotificationsByResidentId(string residentId)
+        {
+            string sql = "SELECT * FROM Notification INNER JOIN ResidentNotification rn ON Notification.NotificationId = rn.NotificationId WHERE rn.ResidentId = @ResidentId";
+            this.dbHelperOleDb.AddParameter("@ResidentId", residentId);
+
+            List<Notification> notifications = new List<Notification>();
+            using (IDataReader reader = this.dbHelperOleDb.Select(sql))
+            {
+                while (reader.Read())
+                {
+
+                    notifications.Add(this.modelCreators.NotificationCreator.CreateModel(reader));
+
+                }
+            }
+
+            return notifications;
+        }
+
    
     }
 }

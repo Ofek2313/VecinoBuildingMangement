@@ -40,7 +40,7 @@ namespace VecinoBuildingMangementWebService.Controllers
                 }
                 else if(CityId != null && page != 0)
                 {
-                    int buildingPerPage = 2;
+                    int buildingPerPage = 10;
                     buildingCatalouge.Buildings = this.repositoryUOW.BuildingRepository.GetByCityId(CityId);
                     buildingCatalouge.Buildings.Skip(buildingPerPage * (page - 1)).Take(buildingPerPage).ToList();
 
