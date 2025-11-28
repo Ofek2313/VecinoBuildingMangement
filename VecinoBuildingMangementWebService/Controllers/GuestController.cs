@@ -17,7 +17,6 @@ namespace VecinoBuildingMangementWebService.Controllers
         }
 
         [HttpGet]
-        
         public BuildingCatalouge GetBuildingCatalogue(string CityId=null,int page=0)
         {
             

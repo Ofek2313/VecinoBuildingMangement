@@ -9,7 +9,7 @@ namespace VecinoBuildingMangementWebService
             : base(dbHelperOleDb, modelCreators) { }
         public bool Create(Poll model)
         {
-            string sql = @$"Insert Into Notification(PollTitle,PollDate,BuildingId)
+            string sql = @$"Insert Into Poll(PollTitle,PollDate,BuildingId)
                             Values(@PollTitle,@PollDate,@BuildingId)";
             this.dbHelperOleDb.AddParameter("@PollTitle", model.PollTitle);
             this.dbHelperOleDb.AddParameter("@PollDate", model.PollDate);
@@ -58,6 +58,25 @@ namespace VecinoBuildingMangementWebService
         public bool Update(Poll model)
         {
             throw new NotImplementedException();
+        }
+
+        public List<Poll> GetPollByBuildingId(string buildingId)
+        {
+            string sql = "Select * From Poll where BuildingId = @BuildingId";
+            this.dbHelperOleDb.AddParameter("@BuildingId", buildingId);
+
+            List<Poll> polls = new List<Poll>();
+            using (IDataReader reader = this.dbHelperOleDb.Select(sql))
+            {
+                while (reader.Read())
+                {
+
+                    polls.Add(this.modelCreators.PollCreator.CreateModel(reader));
+
+                }
+            }
+
+            return polls;
         }
     }
 }

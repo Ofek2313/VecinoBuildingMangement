@@ -56,6 +56,7 @@ namespace VecinoBuildingMangementWebService
             return this.dbHelperOleDb.Delete(sql) > 0;
         }
 
+
         public List<T> GetAll()
         {
             Type type = typeof(T);

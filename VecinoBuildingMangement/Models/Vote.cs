@@ -9,7 +9,7 @@ namespace VecinoBuildingMangement.Models
     public class Vote : Model
     {
         string voteId;
-        string voteChoice;
+        string optionId;
         string voteDate;
         string residentId;
         string pollId;
@@ -19,10 +19,10 @@ namespace VecinoBuildingMangement.Models
             get { return voteId; }
             set { voteId = value;}
         }
-        public string VoteChoice
+        public string OptionId
         {
-            get { return voteChoice; }
-            set { voteChoice = value; }
+            get { return optionId; }
+            set { optionId = value; }
         }
         public string VoteDate
         {

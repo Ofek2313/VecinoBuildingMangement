@@ -9,9 +9,9 @@ namespace VecinoBuildingMangementWebService
             : base(dbHelperOleDb, modelCreators) { }
         public bool Create(Vote model)
         {
-            string sql = @$"Insert Into Vote(VoteChoice,VoteDate,ResidentId,PollId)
-                            Values(@VoteChoice,@VoteDate,@ResidentId,@PollId)";
-            this.dbHelperOleDb.AddParameter("@VoteChoice", model.VoteChoice);
+            string sql = @$"Insert Into Vote(OptionId,VoteDate,ResidentId,PollId)
+                            Values(@OptionId,@VoteDate,@ResidentId,@PollId)";
+            this.dbHelperOleDb.AddParameter("@OptionId", model.OptionId);
             this.dbHelperOleDb.AddParameter("@VoteDate", model.VoteDate);
             this.dbHelperOleDb.AddParameter("@ResidentId", model.ResidentId);
             this.dbHelperOleDb.AddParameter("@PollId", model.PollId);
@@ -60,12 +60,27 @@ namespace VecinoBuildingMangementWebService
         {
             string sql = @"Update Vote set VoteChoice = @VoteChoice,VoteDate = @VoteDate
                            ResidentId = @ResidentId,PollId = @PollId";
-            this.dbHelperOleDb.AddParameter("@VoteChoice", model.VoteChoice);
+            this.dbHelperOleDb.AddParameter("@OptionId", model.OptionId);
             this.dbHelperOleDb.AddParameter("@VoteDate", model.VoteDate);
             this.dbHelperOleDb.AddParameter("@ResidentId", model.ResidentId);
             this.dbHelperOleDb.AddParameter("@PollId", model.PollId);
             
             return this.dbHelperOleDb.Update(sql) > 0;
+        }
+        public int CountVoteByOption(string optionId)
+        {
+            string sql = "SELECT COUNT(*) FROM Vote where OptionId=@OptionId";
+            this.dbHelperOleDb.AddParameter("@OptionId", optionId);
+            using (IDataReader reader = this.dbHelperOleDb.Select(sql))
+            {
+                while (reader.Read())
+                {
+
+                    return Convert.ToInt32(reader[0]);
+
+                }
+            }
+            return 0;
         }
     }
 }

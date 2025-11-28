@@ -93,9 +93,20 @@ namespace VecinoBuildingMangementWebService
         }
         public List<Building> GetBuildingByPage(int page)
         {
-            int buildingPerPage = 2;
+            int buildingPerPage = 10;
             List<Building> buildings = this.GetAll();
             return buildings.Skip(buildingPerPage * (page-1)).Take(buildingPerPage).ToList();
+        }
+        public Building GetBuildingByResidentId(string residentId)
+        {
+            string sql = "SELECT b.BuildingId, b.CityId,b.Address,b.EntranceCode,b.TotalUnits,b.Floors,b.JoinCode FROM Building b INNER JOIN Resident ON b.BuildingId = Resident.BuildingId WHERE Resident.ResidentId = @ResidentId;";
+            dbHelperOleDb.AddParameter("@ResidentId", residentId);
+
+            using (IDataReader dataReader = this.dbHelperOleDb.Select(sql))
+            {
+                dataReader.Read();
+                return this.modelCreators.BuildingCreator.CreateModel(dataReader);
+            }
         }
     }
 }

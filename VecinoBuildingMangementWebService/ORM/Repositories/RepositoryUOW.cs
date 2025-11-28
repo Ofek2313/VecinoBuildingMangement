@@ -1,4 +1,6 @@
-﻿namespace VecinoBuildingMangementWebService
+﻿using VecinoBuildingMangementWebService.ORM.Repositories;
+
+namespace VecinoBuildingMangementWebService
 {
     public class RepositoryUOW
     {
@@ -13,6 +15,7 @@
         ResidentRepository residentRepository;
         ServiceRequestRepository serviceRequestRepository;
         VoteRepository voteRepository;
+        OptionRepository optionRepository;
 
         DbHelperOleDb dbHelperOleDb;
         ModelCreators modelCreators;
@@ -53,7 +56,7 @@
             get
             {
                 if (eventRepository == null)
-                    eventRepository = new EventRepository(this.dbHelperOleDb, this.modelCreators);
+                    eventRepository = new EventRepository(this.dbHelperOleDb);
                 return eventRepository;
             }
         }
@@ -73,7 +76,7 @@
             get
             {
                 if (feeRepository == null)
-                    feeRepository = new FeeRepository(this.dbHelperOleDb, this.modelCreators);
+                    feeRepository = new FeeRepository(this.dbHelperOleDb);
                 return feeRepository;
             }
         }
@@ -83,7 +86,7 @@
             get
             {
                 if (notificationRepository == null)
-                    notificationRepository = new NotificationRepository(this.dbHelperOleDb, this.modelCreators);
+                    notificationRepository = new NotificationRepository(this.dbHelperOleDb);
                 return notificationRepository;
             }
         }
@@ -135,6 +138,15 @@
                 if (voteRepository == null)
                     voteRepository = new VoteRepository(this.dbHelperOleDb, this.modelCreators);
                 return voteRepository;
+            }
+        }
+        public OptionRepository OptionRepository
+        {
+            get
+            {
+                if (optionRepository == null)
+                    optionRepository = new OptionRepository(this.dbHelperOleDb);
+                return optionRepository;
             }
         }
 

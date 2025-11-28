@@ -103,12 +103,8 @@ namespace VecinoBuildingMangementWebService.Controllers
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
                 manageServiceRequestViewModel.serviceRequests = this.repositoryUOW.ServiceRequestRepository.GetAll();
-                int count = 0;
-                foreach(ServiceRequest serviceRequest in manageServiceRequestViewModel.serviceRequests)
-                {
-                    count++;
-                }
-                manageServiceRequestViewModel.ServiceRequestNumber = count;
+              
+                manageServiceRequestViewModel.ServiceRequestNumber = manageServiceRequestViewModel.serviceRequests.Count;
                 return manageServiceRequestViewModel;
             }
             catch (Exception ex)
@@ -139,7 +135,7 @@ namespace VecinoBuildingMangementWebService.Controllers
             }
         }
 
-        [HttpPut]
+        [HttpPost]
         public bool ChangeRequestStatus(string status,string requestId)
         {
             try
@@ -177,7 +173,9 @@ namespace VecinoBuildingMangementWebService.Controllers
                 this.repositoryUOW.DbHelperOleDb.CloseConnection();
             }
         }
-        [HttpPut]
+
+
+        [HttpPost]
         public bool RemoveResident(string residentId)
         {
             try
@@ -228,6 +226,7 @@ namespace VecinoBuildingMangementWebService.Controllers
                 this.repositoryUOW.DbHelperOleDb.CloseConnection();
             }
         }
+
         [HttpPost]
         public bool CreateBuilding(Building building)
         {
@@ -246,7 +245,85 @@ namespace VecinoBuildingMangementWebService.Controllers
             }
         }
 
+       [HttpGet]
+       public Building AdminMainPage(string BuildingId)
+        {
+            Building building = new Building();
+            try
+            {
+                this.repositoryUOW.DbHelperOleDb.OpenConnection();
+                building = this.repositoryUOW.BuildingRepository.GetById(BuildingId);
+                return building;
+            }
+            catch(Exception ex)
+            {
+                return null;
+            }
+            finally
+            {
+                this.repositoryUOW.DbHelperOleDb.CloseConnection();
+            }
        
+        }
+
+        [HttpGet]
+        //public ManagePolls ManagePolls(string buildingId)
+        //{
+        //    ManagePolls managePolls = new ManagePolls();
+        //    try
+        //    {
+        //        this.repositoryUOW.DbHelperOleDb.OpenConnection();
+        //        managePolls.Polls = this.repositoryUOW.PollRepository.GetPollByBuildingId(buildingId);
+        //        managePolls.PollNumbers = managePolls.Polls.Count;
+        //        managePolls.Votes = this.repositoryUOW.VoteRepository.GetAll();
+        //        managePolls.ParticipationRate = 50;
+        //        return managePolls;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return null;
+        //    }
+        //    finally
+        //    {
+        //        this.repositoryUOW.DbHelperOleDb.CloseConnection();
+        //    }
+        //}
+
+        [HttpPost]
+        public bool CreatePoll(Poll poll)
+        {
+            try
+            {
+                this.repositoryUOW.DbHelperOleDb.OpenConnection();
+                return this.repositoryUOW.PollRepository.Create(poll);
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+            finally
+            {
+                this.repositoryUOW.DbHelperOleDb.CloseConnection();
+            }
+        }
+
+        [HttpDelete]
+        public bool DeletePoll(string pollId)
+        {
+            try
+            {
+                this.repositoryUOW.DbHelperOleDb.OpenConnection();
+                return this.repositoryUOW.PollRepository.Delete(pollId);
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+            finally
+            {
+                this.repositoryUOW.DbHelperOleDb.CloseConnection();
+            }
+        }
 
     }
 }

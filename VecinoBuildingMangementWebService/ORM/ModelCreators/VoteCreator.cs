@@ -9,7 +9,7 @@ namespace VecinoBuildingMangementWebService
         {
             Vote vote = new Vote();
             vote.VoteId = Convert.ToString(dataReader["VoteId"]);
-            vote.VoteChoice = Convert.ToString(dataReader["VoteChoice"]);
+            vote.OptionId = Convert.ToString(dataReader["OptionId"]);
             vote.VoteDate = Convert.ToString(dataReader["VoteDate"]);
             vote.ResidentId = Convert.ToString(dataReader["ResidentId"]);
             vote.PollId = Convert.ToString(dataReader["PollId"]);
