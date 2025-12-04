@@ -8,6 +8,7 @@ namespace VecinoBuildingMangementWebService
     {
         public VoteRepository(DbHelperOleDb dbHelperOleDb)
             : base(dbHelperOleDb) { }
+
         public new bool Create(Vote model)
         {
 

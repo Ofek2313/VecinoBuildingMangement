@@ -60,7 +60,7 @@ namespace VecinoBuildingMangementWebService
                 while (reader.Read())
                 {
 
-                    serviceRequests.Add(this.modelCreators.ServiceRequestCreator.CreateModel(reader));
+                    serviceRequests.Add(this.ModelCreator.CreateModel(reader));
 
                 }
             }
@@ -106,7 +106,7 @@ namespace VecinoBuildingMangementWebService
                 while (reader.Read())
                 {
 
-                    serviceRequests.Add(this.modelCreators.ServiceRequestCreator.CreateModel(reader));
+                    serviceRequests.Add(this.ModelCreator.CreateModel(reader));
 
                 }
             }

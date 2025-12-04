@@ -48,7 +48,7 @@ namespace VecinoBuildingMangementWebService.Controllers
 
         }
 
-        [HttpPut]
+        [HttpPost]
         public bool PayFee(string feeId)
         {
             try
@@ -180,7 +180,7 @@ namespace VecinoBuildingMangementWebService.Controllers
                 this.repositoryUOW.DbHelperOleDb.CloseConnection();
             }
         }
-        [HttpPut]
+        [HttpPost]
         public bool JoinBuilding(string residentId, string buildingId)
         {
             try
@@ -207,8 +207,11 @@ namespace VecinoBuildingMangementWebService.Controllers
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
                 this.repositoryUOW.DbHelperOleDb.OpenTransaction();
 
-                //Deletes all services request that are realted onces the resident left the building
+                //Deletes all services request that are related onces the resident left the building
                 this.repositoryUOW.ServiceRequestRepository.DeleteByResidentId(residentId);
+
+                //Deletes all notifications that are related to the resident
+                this.repositoryUOW.NotificationRepository.DeleteByResidentId(residentId);
 
                 //Set BuildingId to 0 to indicate that resident is not in any building
                 this.repositoryUOW.ResidentRepository.UpdateResidentBuilding(residentId, "0");
