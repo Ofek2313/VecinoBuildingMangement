@@ -25,5 +25,11 @@ namespace VecinoBuildingMangementWebService.ORM.Repositories
             }
            return options;
         }
+        public bool DeleteByPollId(string pollId)
+        {
+            string sql = @"Delete from Option where PollId=@PollId";
+            this.dbHelperOleDb.AddParameter("@PollId", pollId);
+            return this.dbHelperOleDb.Delete(sql) > 0;
+        }
     }
 }

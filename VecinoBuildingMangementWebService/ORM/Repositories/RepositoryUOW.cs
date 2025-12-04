@@ -36,7 +36,7 @@ namespace VecinoBuildingMangementWebService
             get
             {
                 if(buildingRepository == null)
-                        buildingRepository = new BuildingRepository(this.dbHelperOleDb,this.modelCreators);
+                        buildingRepository = new BuildingRepository(this.dbHelperOleDb);
                     return buildingRepository;
             }
         }
@@ -96,7 +96,7 @@ namespace VecinoBuildingMangementWebService
             get
             {
                 if (pollRepository == null)
-                    pollRepository = new PollRepository(this.dbHelperOleDb, this.modelCreators);
+                    pollRepository = new PollRepository(this.dbHelperOleDb);
                 return pollRepository;
             }
         }
@@ -126,7 +126,7 @@ namespace VecinoBuildingMangementWebService
             get
             {
                 if (serviceRequestRepository == null)
-                    serviceRequestRepository = new ServiceRequestRepository(this.dbHelperOleDb, this.modelCreators);
+                    serviceRequestRepository = new ServiceRequestRepository(this.dbHelperOleDb);
                 return serviceRequestRepository;
             }
         }
@@ -136,7 +136,7 @@ namespace VecinoBuildingMangementWebService
             get
             {
                 if (voteRepository == null)
-                    voteRepository = new VoteRepository(this.dbHelperOleDb, this.modelCreators);
+                    voteRepository = new VoteRepository(this.dbHelperOleDb);
                 return voteRepository;
             }
         }

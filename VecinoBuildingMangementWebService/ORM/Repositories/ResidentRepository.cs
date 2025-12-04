@@ -119,5 +119,20 @@ namespace VecinoBuildingMangementWebService
             this.dbHelperOleDb.AddParameter("@ResidentId", residentId);
             return this.dbHelperOleDb.Update(sql) > 0;
         }
+        public int CountResidentByBuildingId(string buildingId)
+        {
+            string sql = "SELECT COUNT(*) FROM Resident where BuildingId=@BuildingId";
+            this.dbHelperOleDb.AddParameter("@BuildingId", buildingId);
+            using (IDataReader reader = this.dbHelperOleDb.Select(sql))
+            {
+                while (reader.Read())
+                {
+
+                    return Convert.ToInt32(reader[0]);
+
+                }
+            }
+            return 0;
+        }
     }
 }

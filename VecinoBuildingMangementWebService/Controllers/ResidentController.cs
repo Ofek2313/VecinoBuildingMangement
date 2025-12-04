@@ -198,17 +198,27 @@ namespace VecinoBuildingMangementWebService.Controllers
             }
         }
 
-        [HttpPut]
+        [HttpPost]
         public bool LeaveBuilding(string residentId)
         {
 
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
-                return this.repositoryUOW.ResidentRepository.UpdateResidentBuilding(residentId, "0");
+                this.repositoryUOW.DbHelperOleDb.OpenTransaction();
+
+                //Deletes all services request that are realted onces the resident left the building
+                this.repositoryUOW.ServiceRequestRepository.DeleteByResidentId(residentId);
+
+                //Set BuildingId to 0 to indicate that resident is not in any building
+                this.repositoryUOW.ResidentRepository.UpdateResidentBuilding(residentId, "0");
+
+                this.repositoryUOW.DbHelperOleDb.Commit();
+                return true;
             }
             catch (Exception ex)
             {
+                this.repositoryUOW.DbHelperOleDb.RollBack();
                 return false;
             }
             finally
@@ -265,7 +275,7 @@ namespace VecinoBuildingMangementWebService.Controllers
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
-                List<Poll> polls = this.repositoryUOW.PollRepository.GetPollByBuildingId(buildingId);
+                List<Poll> polls = this.repositoryUOW.PollRepository.GetActivePollsByBuilding(buildingId);
                 foreach (Poll poll in polls)
                 {
                     PollViewModel viewModel = new PollViewModel();
@@ -297,15 +307,25 @@ namespace VecinoBuildingMangementWebService.Controllers
             }
         }
 
-        private int CalcVote(List<Option> options,string optionId)
+       
+        
+
+        [HttpPost]
+        public bool VoteInPoll(Vote vote)
         {
-            int vote = 0;
-            foreach (Option option in options)
+            try
             {
-                if (option.OptionId == optionId)
-                    vote++;
+                this.repositoryUOW.DbHelperOleDb.OpenConnection();
+                return this.repositoryUOW.VoteRepository.Create(vote);
             }
-            return vote;
+            catch (Exception ex)
+            {
+                return false;
+            }
+            finally
+            {
+                this.repositoryUOW.DbHelperOleDb.CloseConnection();
+            }
         }
 
     }

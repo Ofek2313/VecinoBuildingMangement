@@ -11,6 +11,7 @@ namespace VecinoBuildingMangement.Models
     {
         string pollId;
         string pollTitle;
+        bool  isActive;
         string pollDate;
         string buildingId;
 
@@ -29,6 +30,16 @@ namespace VecinoBuildingMangement.Models
             set { pollTitle = value;
                 ValidateProperty(value, "PollTitle");
             }
+        }
+
+        [Required(ErrorMessage = "The status must be either Active or Inactive")]
+        public bool IsActive
+        {
+            get { return isActive; }
+            set { isActive = value;
+                ValidateProperty(value, "IsActive");
+            }
+
         }
 
         [Date(ErrorMessage = "Date needs to be a valid date")]

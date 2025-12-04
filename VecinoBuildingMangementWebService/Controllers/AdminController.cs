@@ -267,27 +267,54 @@ namespace VecinoBuildingMangementWebService.Controllers
         }
 
         [HttpGet]
-        //public ManagePolls ManagePolls(string buildingId)
-        //{
-        //    ManagePolls managePolls = new ManagePolls();
-        //    try
-        //    {
-        //        this.repositoryUOW.DbHelperOleDb.OpenConnection();
-        //        managePolls.Polls = this.repositoryUOW.PollRepository.GetPollByBuildingId(buildingId);
-        //        managePolls.PollNumbers = managePolls.Polls.Count;
-        //        managePolls.Votes = this.repositoryUOW.VoteRepository.GetAll();
-        //        managePolls.ParticipationRate = 50;
-        //        return managePolls;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return null;
-        //    }
-        //    finally
-        //    {
-        //        this.repositoryUOW.DbHelperOleDb.CloseConnection();
-        //    }
-        //}
+        public ManagePolls ManagePolls(string buildingId)
+        {
+            ManagePolls managePolls = new ManagePolls();
+            List<PollViewModel> pollviewModel = new List<PollViewModel>();
+
+            try
+            {
+                this.repositoryUOW.DbHelperOleDb.OpenConnection();
+                List<Poll> polls = this.repositoryUOW.PollRepository.GetPollByBuildingId(buildingId);
+                foreach (Poll poll in polls)
+                {
+                    PollViewModel viewModel = new PollViewModel();
+
+                    viewModel.poll = poll;
+                    List<Option> options = this.repositoryUOW.OptionRepository.GetOptionsByPollId(poll.PollId);
+                    foreach (Option option in options)
+                    {
+                        OptionViewModel optionViewModel = new OptionViewModel();
+                        optionViewModel.option = option;
+                        optionViewModel.voted = this.repositoryUOW.VoteRepository.CountVoteByOption(option.OptionId);
+                        //optionViewModel.voted = CalcVote(options, option.OptionId);
+                        viewModel.options.Add(optionViewModel);
+                    }
+                    pollviewModel.Add(viewModel);
+
+
+                }
+                managePolls.PollviewModel = pollviewModel;
+                managePolls.PollNumbers = pollviewModel.Count;
+
+                int residents = this.repositoryUOW.ResidentRepository.CountResidentByBuildingId(buildingId);
+                int votes = this.repositoryUOW.VoteRepository.CountVotesByBuilding(buildingId);
+
+                double participationRate = 0;
+              
+                managePolls.ParticipationRate = participationRate;
+
+                return managePolls;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+            finally
+            {
+                this.repositoryUOW.DbHelperOleDb.CloseConnection();
+            }
+        }
 
         [HttpPost]
         public bool CreatePoll(Poll poll)
@@ -313,10 +340,18 @@ namespace VecinoBuildingMangementWebService.Controllers
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
-                return this.repositoryUOW.PollRepository.Delete(pollId);
+                this.repositoryUOW.DbHelperOleDb.OpenTransaction();
+
+                this.repositoryUOW.PollRepository.Delete(pollId); //delete Poll
+                this.repositoryUOW.VoteRepository.DeleteByPollId(pollId); // delete all votes that are realted to the poll
+                this.repositoryUOW.OptionRepository.DeleteByPollId(pollId); // delete all options that are realted to the poll
+
+                this.repositoryUOW.DbHelperOleDb.Commit();
+                return true;
             }
             catch (Exception ex)
             {
+                this.repositoryUOW.DbHelperOleDb.RollBack();
                 return false;
             }
             finally
