@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Data;
+using System.Security.Cryptography;
+using System.Text;
 using VecinoBuildingMangement.Models;
 
 namespace VecinoBuildingMangementWebService
@@ -10,24 +12,37 @@ namespace VecinoBuildingMangementWebService
             :base(dbHelperOleDb) { }
         //public ResidentRepository(DbHelperOleDb dbHelperOleDb,ModelCreators modelCreators)
         //    : base(dbHelperOleDb,modelCreators) { }
-        //public bool Create(Resident model)
-        //{
-        //    //string sql = @$"Insert Into Resident(ResidentName,ResidentPassword,ResidentPhone,ResidentEmail,UnitNumber,BuildingId)
-        //    //                Values('{model.ResidentName}','{model.ResidentPassword}','{model.ResidentPhone}',
-        //    //                       '{model.ResidentEmail}',{model.UnitNumber},{model.BuildingId})";
+        public override bool Create(Resident model)
+        {
+            //string sql = @$"Insert Into Resident(ResidentName,ResidentPassword,ResidentPhone,ResidentEmail,UnitNumber,BuildingId)
+            //                Values('{model.ResidentName}','{model.ResidentPassword}','{model.ResidentPhone}',
+            //                       '{model.ResidentEmail}',{model.UnitNumber},{model.BuildingId})";
 
-        //    string sql = @$"Insert Into Resident(ResidentName,ResidentPassword,ResidentPhone,ResidentEmail,UnitNumber,BuildingId)
-        //                    Values(@ResidentName,@ResidentPassword,@ResidentPhone,
-        //                           @ResidentEmail,@UnitNumber,@BuildingId)";
-        //    this.dbHelperOleDb.AddParameter("@ResidentName", model.ResidentName);
-        //    this.dbHelperOleDb.AddParameter("@ResidentPassword", model.ResidentPassword);
-        //    this.dbHelperOleDb.AddParameter("@ResidentPhone", model.ResidentPhone);
-        //    this.dbHelperOleDb.AddParameter("@ResidentEmail", model.ResidentEmail);
-        //    this.dbHelperOleDb.AddParameter("@UnitNumber", model.UnitNumber);
-        //    this.dbHelperOleDb.AddParameter("@BuildingId", model.BuildingId);
-        //    return this.dbHelperOleDb.Insert(sql) > 0;
+            string sql = @$"Insert Into Resident(ResidentName,ResidentPassword,ResidentPhone,ResidentEmail,UnitNumber,BuildingId,ResidentSalt)
+                            Values(@ResidentName,@ResidentPassword,@ResidentPhone,
+                                   @ResidentEmail,@UnitNumber,@BuildingId)";
+            this.dbHelperOleDb.AddParameter("@ResidentName", model.ResidentName);
+            this.dbHelperOleDb.AddParameter("@ResidentPhone", model.ResidentPhone);
+            this.dbHelperOleDb.AddParameter("@ResidentEmail", model.ResidentEmail);
+            this.dbHelperOleDb.AddParameter("@UnitNumber", model.UnitNumber);
+            this.dbHelperOleDb.AddParameter("@BuildingId", model.BuildingId);
+            string salt = GetSalt(GetRandomNumber());
+            this.dbHelperOleDb.AddParameter("@ResidentSalt",salt);
+            this.dbHelperOleDb.AddParameter("@ResidentPassword", GetHash(model.ResidentPassword,salt));
 
-        //}
+            return this.dbHelperOleDb.Insert(sql) > 0;
+
+        }
+        private string GetHash(string password, string salt)
+        {
+            string combine = password + salt;
+            byte[] bytes = Encoding.UTF8.GetBytes(combine);
+            using (SHA256 sha256 = SHA256.Create())
+            {
+                byte[] hash = sha256.ComputeHash(bytes);
+                return Convert.ToBase64String(hash);
+            }
+        }
 
         //public bool Delete(string id)
         //{
@@ -81,15 +96,19 @@ namespace VecinoBuildingMangementWebService
         //}
         public string Login(string email, string password)
         {
-            string sql = "Select ResidentId From Resident where ResidentEmail = @ResidentEmail and ResidentPassword = @ResidentPassword";
+            string sql = "Select ResidentSalt,ResidentId,ResidentPassword From Resident";
             this.dbHelperOleDb.AddParameter("@ResidentEmail", email);
-            this.dbHelperOleDb.AddParameter("@ResidentPassword", password);
+         
             using(IDataReader dataReader = this.dbHelperOleDb.Select(sql))
             {
               
                 if (dataReader.Read())
                 {
-                    return dataReader["ResidentId"].ToString();
+                    string salt = dataReader["ResidentSalt"].ToString();
+                    string hash = dataReader["ResidentPassword"].ToString();
+                    string calcHash = GetHash(password, salt);
+                    if(calcHash == hash)
+                        return dataReader["ResidentId"].ToString();
                 }
                 return null;
                   
@@ -133,6 +152,17 @@ namespace VecinoBuildingMangementWebService
                 }
             }
             return 0;
+        }
+        private string GetSalt(int length)
+        {
+            byte[] bytes = new byte[length];
+            RandomNumberGenerator.Fill(bytes);
+            return Convert.ToBase64String(bytes);
+        }
+        private int GetRandomNumber()
+        {
+            Random rand = new Random();
+            return rand.Next(8,16);
         }
     }
 }

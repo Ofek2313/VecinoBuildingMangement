@@ -27,7 +27,7 @@ namespace VecinoBuildingMangementWebService
 
 
 
-        public bool Create(T model)
+        public virtual bool Create(T model)
         {
             string sql = "";
             Type type = typeof(T);

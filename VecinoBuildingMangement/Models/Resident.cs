@@ -18,6 +18,7 @@ namespace VecinoBuildingMangement.Models
         string residentEmail;
         int unitNumber;
         string buildingId;
+        public string ResidentSalt { get; set; }
 
 
 

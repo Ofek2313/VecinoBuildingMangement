@@ -5,6 +5,8 @@ using System.Text.Json;
 using VecinoBuildingMangementWebService;
 using System.Data.SqlTypes;
 using System.Data;
+using System.Security.Cryptography;
+using System.Text;
 namespace Testing
 {
     internal class Program
@@ -49,17 +51,47 @@ namespace Testing
                 Console.WriteLine($"{res.ResidentName}, {res.UnitNumber}");
             }
             repositoryUOW.DbHelperOleDb.CloseConnection();
-            
-           
+
+
+        }
+        static string GetSalt(int length)
+        {
+            byte[] bytes = new byte[length];
+            RandomNumberGenerator.Fill(bytes);
+
+            return Convert.ToBase64String(bytes);
+        }
+        static string GetHash(string password, string salt)
+        {
+            string combine = password + salt;
+            byte[] bytes = Encoding.UTF8.GetBytes(combine);
+            using (SHA256 sha256 = SHA256.Create())
+            {
+                byte[] hash = sha256.ComputeHash(bytes);
+                return Convert.ToBase64String(hash);
+            }
+        }
+        static int GetRandomNumber()
+        {
+            Random rand = new Random();
+            return rand.Next(8, 16);
         }
         static void Main(string[] args)
         {
 
-            CheckCreate();
+            //CheckCreate();
             //CheckCreator();
             //Console.WriteLine("Enter City Name: ");
             //string city = Console.ReadLine();
             //CurrentWeather(city);
+            for (int i = 1; i <= 10; i++) {
+                Console.WriteLine("Insert password");
+                string password = Console.ReadLine();
+                string salt = GetSalt(GetRandomNumber());
+                string hash = GetHash(password, salt);
+                Console.WriteLine("salt: " + salt);
+                Console.WriteLine("hash: " + hash);
+            }
             Console.ReadLine();
 
 
