@@ -1,5 +1,7 @@
-﻿using System.Data;
+﻿using Microsoft.AspNetCore.Hosting.Server;
+using System.Data;
 using System.Data.OleDb;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 
 namespace VecinoBuildingMangementWebService
@@ -18,10 +20,14 @@ namespace VecinoBuildingMangementWebService
         public DbHelperOleDb()
         {
             this.oleDbConnection = new OleDbConnection();
-            this.oleDbConnection.ConnectionString = $@"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\Users\Ofek\source\repos\VecinoBuildingMangement\VecinoBuildingMangementWebService\App_Data\BuildingMangement.accdb";
+
+            oleDbConnection.ConnectionString =
+            this.oleDbConnection.ConnectionString = $@"Provider=Microsoft.ACE.OLEDB.12.0;Data Source={Directory.GetCurrentDirectory()}\App_Data\\BuildingMangement.accdb;Persist Security Info=True";
 
 
-            //this.oleDbConnection.ConnectionString = $@"Provider=Microsoft.ACE.OLEDB.12.0;Data Source={Directory.GetCurrentDirectory()}\App_Data\\BuildingMangement.accdb;Persist Security Info=True";
+            // Set the Connection String statically
+            //this.oleDbConnection.ConnectionString =
+            //    $@"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\Users\USER\source\repos\VecinoBuildingMangement\VecinoBuildingMangementWebService\App_Data\BuildingMangement.accdb;Persist Security Info=False";
             this.dbCommand = new OleDbCommand();
             this.dbCommand.Connection = this.oleDbConnection;
         }
@@ -62,6 +68,7 @@ namespace VecinoBuildingMangementWebService
         public void OpenTransaction()
         {
             this.dbTransaction = this.oleDbConnection.BeginTransaction();
+            this.dbCommand.Transaction = this.dbTransaction;
         }
 
         public void RollBack()
@@ -88,5 +95,15 @@ namespace VecinoBuildingMangementWebService
         {
             this.dbCommand.Parameters.Add(new OleDbParameter(name, value));
         }
+        public void ClearParameters()
+        {
+            this.dbCommand.Parameters.Clear();
+        }
+        public string GetLastId(string sql)
+        {
+            this.dbCommand.CommandText = sql;
+            return this.dbCommand.ExecuteScalar().ToString();
+        }
+       
     }
 }

@@ -21,15 +21,38 @@ namespace VecinoBuildingMangementWebService.Controllers
 
 
         [HttpPost]
-        public bool SendNotification(Notification notification)
+        public bool SendNotification(SendNotificationViewModel sendNotificationViewModel)
         {
             try
             {
+
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
-                return this.repositoryUOW.NotificationRepository.Create(notification);
+                this.repositoryUOW.DbHelperOleDb.OpenTransaction();
+                this.repositoryUOW.NotificationRepository.Create(sendNotificationViewModel.Notification);
+                string id = this.repositoryUOW.NotificationRepository.GetLastId();
+
+                foreach (string residentId in sendNotificationViewModel.ResidentIds)
+                {
+                   
+                    string sql = @"Insert Into ResidentNotification(ResidentId,NotificationId) Values(@ResidentId,@NotificationId)";
+                    this.repositoryUOW.DbHelperOleDb.AddParameter("@ResidentId", residentId);
+                    this.repositoryUOW.DbHelperOleDb.AddParameter("@NotificationId", id);
+                    int rows = this.repositoryUOW.DbHelperOleDb.Insert(sql);
+                    if (rows != 1)
+                    {
+                        this.repositoryUOW.DbHelperOleDb.RollBack();
+                        return false;
+                    }
+                        
+                    this.repositoryUOW.DbHelperOleDb.ClearParameters();
+
+                }
+                this.repositoryUOW.DbHelperOleDb.Commit();
+                return true;
             }
             catch (Exception ex)
             {
+                this.repositoryUOW.DbHelperOleDb.RollBack();
                 return false;
             }
             finally
@@ -342,10 +365,10 @@ namespace VecinoBuildingMangementWebService.Controllers
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
                 this.repositoryUOW.DbHelperOleDb.OpenTransaction();
 
-                this.repositoryUOW.PollRepository.Delete(pollId); //delete Poll
+               
                 this.repositoryUOW.VoteRepository.DeleteByPollId(pollId); // delete all votes that are realted to the poll
                 this.repositoryUOW.OptionRepository.DeleteByPollId(pollId); // delete all options that are realted to the poll
-
+                 this.repositoryUOW.PollRepository.Delete(pollId); //delete Poll
                 this.repositoryUOW.DbHelperOleDb.Commit();
                 return true;
             }

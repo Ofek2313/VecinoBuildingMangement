@@ -113,6 +113,12 @@ namespace VecinoBuildingMangementWebService
             Console.WriteLine(sql);
             return this.dbHelperOleDb.Update(sql) > 0;
         }
+
+        public string GetLastId()
+        {
+            string sql = "Select @@Identity";
+            return this.dbHelperOleDb.GetLastId(sql);
+        }
     }
 }
 
