@@ -84,17 +84,7 @@ namespace Testing
             //Console.WriteLine("Enter City Name: ");
             //string city = Console.ReadLine();
             //CurrentWeather(city);
-            for (int i = 1; i <= 10; i++) {
-                Console.WriteLine("Insert password");
-                string password = Console.ReadLine();
-                string salt = GetSalt(GetRandomNumber());
-                string hash = GetHash(password, salt);
-                Console.WriteLine("salt: " + salt);
-                Console.WriteLine("hash: " + hash);
-            }
-            Console.ReadLine();
-
-
+          
 
 
 

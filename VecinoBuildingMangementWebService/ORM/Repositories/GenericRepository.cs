@@ -35,11 +35,12 @@ namespace VecinoBuildingMangementWebService
             PropertyInfo[] properties = type.GetProperties().Skip(1).Where(p => !ignore.Contains(p.Name)).ToArray();
             string prop = string.Join(",", properties.Select(p => p.Name));
             string val = string.Join(",", properties.Select(p => "@" + p.Name));
+            
             sql = @$"Insert Into {type.Name}({prop})
                             Values({val})";
             foreach (PropertyInfo property in properties)
             {
-                dbHelperOleDb.AddParameter(@$"@{property.Name}", property.GetValue(model).ToString());
+                dbHelperOleDb.AddParameter(@$"@{property.Name}", property.GetValue(model));
             }
             Console.WriteLine(sql);
             return this.dbHelperOleDb.Insert(sql) > 0;

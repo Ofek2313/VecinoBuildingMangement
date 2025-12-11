@@ -8,6 +8,15 @@ namespace VecinoBuildingMangementWebService.ORM.Repositories
         public OptionRepository(DbHelperOleDb dbHelperOleDb)
             : base(dbHelperOleDb) { }
 
+        public override bool Create(Option model)
+        {
+            string sql = @$"Insert Into [Option](PollId,OptionText)
+                            Values(@PollId,@OptionText)";
+            this.dbHelperOleDb.AddParameter("@PollId", model.PollId);
+            this.dbHelperOleDb.AddParameter("@OptionText", model.OptionText);
+            return this.dbHelperOleDb.Insert(sql) > 0;
+        }
+
         public List<Option> GetOptionsByPollId(string pollId)
         {
             string sql = "SELECT Option.OptionId,Option.PollId,Option.OptionText FROM Poll INNER JOIN [Option] ON Poll.PollId = Option.PollId WHERE Option.PollId = @PollId";

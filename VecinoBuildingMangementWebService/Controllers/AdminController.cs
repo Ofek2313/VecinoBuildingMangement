@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
+using System.Security.Cryptography;
+using VecinoBuildingMangement;
 using VecinoBuildingMangement.Models;
 using VecinoBuildingMangement.ViewModels;
 
@@ -33,9 +36,12 @@ namespace VecinoBuildingMangementWebService.Controllers
 
                 foreach (string residentId in sendNotificationViewModel.ResidentIds)
                 {
+                    System.Diagnostics.Debug.WriteLine($"Attempting to link ResidentId: {residentId} to NotificationId: {id}");
+
                    
+
                     string sql = @"Insert Into ResidentNotification(ResidentId,NotificationId) Values(@ResidentId,@NotificationId)";
-                    this.repositoryUOW.DbHelperOleDb.AddParameter("@ResidentId", residentId);
+                    this.repositoryUOW.DbHelperOleDb.AddParameter("@ResidentId", residentId)    ;
                     this.repositoryUOW.DbHelperOleDb.AddParameter("@NotificationId", id);
                     int rows = this.repositoryUOW.DbHelperOleDb.Insert(sql);
                     if (rows != 1)
@@ -44,7 +50,7 @@ namespace VecinoBuildingMangementWebService.Controllers
                         return false;
                     }
                         
-                    this.repositoryUOW.DbHelperOleDb.ClearParameters();
+                   
 
                 }
                 this.repositoryUOW.DbHelperOleDb.Commit();
@@ -340,15 +346,31 @@ namespace VecinoBuildingMangementWebService.Controllers
         }
 
         [HttpPost]
-        public bool CreatePoll(Poll poll)
+        public bool CreatePoll(CreatePollViewModel createPollViewModel)
         {
+
+            if (createPollViewModel.Options == null || createPollViewModel.Options < 2)
+                return false;
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
-                return this.repositoryUOW.PollRepository.Create(poll);
+                this.repositoryUOW.DbHelperOleDb.OpenTransaction();
+                this.repositoryUOW.PollRepository.Create(createPollViewModel.Poll);
+                string pollId = this.repositoryUOW.PollRepository.GetLastId();
+                foreach(Option option in createPollViewModel.Options)
+                {
+                    option.PollId = pollId;
+                    this.repositoryUOW.OptionRepository.Create(option);
+                }
+
+                
+                this.repositoryUOW.DbHelperOleDb.Commit();
+                return true;
             }
             catch (Exception ex)
             {
+                this.repositoryUOW.DbHelperOleDb.RollBack();
+                Console.WriteLine(ex);
                 return false;
             }
             finally
@@ -381,6 +403,32 @@ namespace VecinoBuildingMangementWebService.Controllers
             {
                 this.repositoryUOW.DbHelperOleDb.CloseConnection();
             }
+        }
+        [HttpPost]
+        public bool GenerateNewBuildingCode(string buildingId)
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            Random rand = new Random();
+            string code = "";
+            for (int i = 0; i < 5; i++)
+            {
+                code += chars[rand.Next(0, chars.Length)];
+            }
+            try
+            {
+                this.repositoryUOW.DbHelperOleDb.OpenConnection();
+                return this.repositoryUOW.BuildingRepository.UpdateJoinCode(code, buildingId);
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+            finally
+            {
+                this.repositoryUOW.DbHelperOleDb.CloseConnection();
+            }
+           
+
         }
 
 

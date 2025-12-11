@@ -181,12 +181,16 @@ namespace VecinoBuildingMangementWebService.Controllers
             }
         }
         [HttpPost]
-        public bool JoinBuilding(string residentId, string buildingId)
+        public bool JoinBuilding(string residentId, string buildingCode)
         {
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
-                return this.repositoryUOW.ResidentRepository.UpdateResidentBuilding(residentId, buildingId);
+                string buildingId = this.repositoryUOW.BuildingRepository.GetBuildingIdByCode(buildingCode);
+                if (buildingId != null)
+                    return this.repositoryUOW.ResidentRepository.UpdateResidentBuilding(residentId, buildingId);
+                else
+                    return false;
             }
             catch (Exception ex)
             {
@@ -319,10 +323,14 @@ namespace VecinoBuildingMangementWebService.Controllers
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
-                return this.repositoryUOW.VoteRepository.Create(vote);
+                if (!this.repositoryUOW.VoteRepository.hasVoted(vote.ResidentId, vote.PollId))
+                    return this.repositoryUOW.VoteRepository.Create(vote);
+                else
+                    return false;
             }
             catch (Exception ex)
             {
+                
                 return false;
             }
             finally

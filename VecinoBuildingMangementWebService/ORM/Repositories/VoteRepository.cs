@@ -108,5 +108,21 @@ namespace VecinoBuildingMangementWebService
             }
             return 0;
         }
+        public bool hasVoted(string residentId, string pollId)
+        {
+            string sql = @"SELECT COUNT(*) FROM Vote WHERE ResidentId = @ResidentId AND PollId=@PollId";
+            this.dbHelperOleDb.AddParameter("@ResidentId", residentId);
+            this.dbHelperOleDb.AddParameter("@PollId", pollId);
+            int count = 0;
+            using (IDataReader reader = this.dbHelperOleDb.Select(sql))
+            {
+                if (reader.Read())
+                {
+                    count = Convert.ToInt32(reader[0]);
+                }
+            }
+            return count > 0;
+        }
     }
+   
 }

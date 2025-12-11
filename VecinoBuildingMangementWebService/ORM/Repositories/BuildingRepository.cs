@@ -108,5 +108,26 @@ namespace VecinoBuildingMangementWebService
                 return this.ModelCreator.CreateModel(dataReader);
             }
         }
+        public bool UpdateJoinCode(string code,string buildingId)
+        {
+            string sql = @"UPDATE Building set JoinCode=@JoinCode Where BuildingId = @BuildingId";
+            this.dbHelperOleDb.AddParameter("@JoinCode", code);
+            this.dbHelperOleDb.AddParameter("@BuildingId", buildingId);
+            return this.dbHelperOleDb.Update(sql) > 0;
+        }
+        public string GetBuildingIdByCode(string buildingCode)
+        {
+            string sql = "Select * From Building Where JoinCode=@JoinCode";
+            dbHelperOleDb.AddParameter("@JoinCode", buildingCode);
+
+            using (IDataReader dataReader = this.dbHelperOleDb.Select(sql))
+            {
+                if(dataReader.Read())
+                    return dataReader["BuildingId"].ToString();
+                else
+                    return null;
+            }
+
+        }
     }
 }
