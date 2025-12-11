@@ -349,7 +349,7 @@ namespace VecinoBuildingMangementWebService.Controllers
         public bool CreatePoll(CreatePollViewModel createPollViewModel)
         {
 
-            if (createPollViewModel.Options == null || createPollViewModel.Options < 2)
+            if (createPollViewModel.Options == null || createPollViewModel.Options.Count < 2)
                 return false;
             try
             {
