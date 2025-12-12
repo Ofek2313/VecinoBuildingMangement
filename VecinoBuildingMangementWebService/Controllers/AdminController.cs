@@ -36,9 +36,8 @@ namespace VecinoBuildingMangementWebService.Controllers
 
                 foreach (string residentId in sendNotificationViewModel.ResidentIds)
                 {
-                    System.Diagnostics.Debug.WriteLine($"Attempting to link ResidentId: {residentId} to NotificationId: {id}");
 
-                   
+                 
 
                     string sql = @"Insert Into ResidentNotification(ResidentId,NotificationId) Values(@ResidentId,@NotificationId)";
                     this.repositoryUOW.DbHelperOleDb.AddParameter("@ResidentId", residentId)    ;

@@ -12,7 +12,8 @@ namespace VecinoBuildingMangement.Models
         string cityId;
         string cityName;
 
-  
+        public City() { }
+
         public string CityId
         {
             get { return  cityId; }

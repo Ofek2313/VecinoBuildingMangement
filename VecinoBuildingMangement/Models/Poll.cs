@@ -15,6 +15,8 @@ namespace VecinoBuildingMangement.Models
         string pollDate;
         string buildingId;
 
+        public Poll() { }
+
         public string PollId
         {
             get { return pollId; }

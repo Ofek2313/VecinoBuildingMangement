@@ -11,6 +11,7 @@ namespace VecinoBuildingMangement.Models
     {
         public string requestTypeId;
         public string requestTypeName;
+        public RequestTypes() { }
 
         public string RequestTypeId
         {

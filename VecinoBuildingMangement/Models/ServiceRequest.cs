@@ -17,6 +17,8 @@ namespace VecinoBuildingMangement.Models
         string requestStatus;
         string residentId;
 
+        public ServiceRequest() { }
+
         public string RequestId
         {
             get { return requestId; }

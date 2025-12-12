@@ -15,6 +15,7 @@ namespace VecinoBuildingMangement.Models
         string notificationMessage;
         string notificationDate;
 
+        public Notification() { }
 
         public string NotificationId
         {

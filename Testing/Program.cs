@@ -7,6 +7,9 @@ using System.Data.SqlTypes;
 using System.Data;
 using System.Security.Cryptography;
 using System.Text;
+using BuildingManagementWsClient;
+using VecinoBuildingMangement.ViewModels;
+
 namespace Testing
 {
     internal class Program
@@ -76,15 +79,30 @@ namespace Testing
             Random rand = new Random();
             return rand.Next(8, 16);
         }
+        static void TestVecinoClient()
+        {
+           //ApiClient<List<Notification>> apiClient = new ApiClient<List<Notification>>();
+           // apiClient.Scheme = "http";
+           // apiClient.Host = "localhost";
+           // apiClient.Port = 5269;
+           // apiClient.Path = "api/Resident/GetNotifications";
+           // apiClient.AddParameter("residentId","1");
+           // List<Notification> notifications =  apiClient.GetAsync().Result;
+           // foreach(Notification notification in notifications)
+           // {
+           //     Console.WriteLine(notification.NotificationMessage);
+           // }
+           
+        }
+
         static void Main(string[] args)
         {
 
-            //CheckCreate();
-            //CheckCreator();
-            //Console.WriteLine("Enter City Name: ");
-            //string city = Console.ReadLine();
-            //CurrentWeather(city);
-          
+
+
+            Console.ReadLine();
+            TestVecinoClient();
+            Console.ReadLine();
 
 
 

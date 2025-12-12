@@ -7,12 +7,13 @@ using System.Threading.Tasks;
 
 namespace VecinoBuildingMangement.Models
 {
-    public class Option
+    public class Option :Model
     {
         string optionId;
         string pollId;
         string optionText;
 
+        public Option() { }
         public string OptionId
         {
             get { return this.optionId; }

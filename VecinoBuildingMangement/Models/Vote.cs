@@ -14,6 +14,8 @@ namespace VecinoBuildingMangement.Models
         string residentId;
         string pollId;
 
+        public Vote() { }
+
         public string VoteId
         {
             get { return voteId; }

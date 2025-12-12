@@ -12,6 +12,8 @@ namespace VecinoBuildingMangement.Models
         string eventTypeId;
         string eventTypeName;
 
+        public EventTypes() { }
+
         public string EventTypeId 
         {
             get { return eventTypeId; }

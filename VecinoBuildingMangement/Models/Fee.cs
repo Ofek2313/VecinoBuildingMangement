@@ -16,6 +16,7 @@ namespace VecinoBuildingMangement.Models
         bool isPaid;
         string residentId;
 
+        public Fee() { }
         public string FeeId
         {
             get { return this.feeId; }

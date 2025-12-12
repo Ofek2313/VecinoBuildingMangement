@@ -19,14 +19,14 @@ namespace VecinoBuildingMangementWebService.Controllers
         }
 
         [HttpGet]
-        public ManagePaymentViewModel GetManagePayment(string ResidentId)
+        public ManagePaymentViewModel GetManagePayment(string residentId)
         {
             ManagePaymentViewModel viewModel = new ManagePaymentViewModel();
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
-                viewModel.Fees = repositoryUOW.FeeRepository.ViewPaidFeesById(ResidentId);
-                List<Fee> UnPaid = repositoryUOW.FeeRepository.GetUnPaidFeeById(ResidentId);
+                viewModel.Fees = repositoryUOW.FeeRepository.ViewPaidFeesById(residentId);
+                List<Fee> UnPaid = repositoryUOW.FeeRepository.GetUnPaidFeeById(residentId);
                 viewModel.UnPaidFees = UnPaid;
                 double totalFee = 0;
                 foreach (Fee fee in UnPaid)
@@ -69,13 +69,13 @@ namespace VecinoBuildingMangementWebService.Controllers
 
 
         [HttpGet]
-        public ServiceRequestViewModel GetServiceRequest(string ResidentId)
+        public ServiceRequestViewModel GetServiceRequest(string residentId)
         {
             ServiceRequestViewModel serviceRequestViewModel = new ServiceRequestViewModel();
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
-                serviceRequestViewModel.serviceRequests = repositoryUOW.ServiceRequestRepository.GetServiceRequestsByResidentId(ResidentId);
+                serviceRequestViewModel.serviceRequests = repositoryUOW.ServiceRequestRepository.GetServiceRequestsByResidentId(residentId);
                 serviceRequestViewModel.RequestTypes = repositoryUOW.RequestTypeRepository.GetAll();
 
                 return serviceRequestViewModel;
