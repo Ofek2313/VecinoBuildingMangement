@@ -93,32 +93,6 @@ namespace VecinoBuildingMangementWebService.Controllers
       
 
 
-        [HttpGet]
-        public ManageServiceRequestViewModel ManageServiceRequest()
-        {
-            ManageServiceRequestViewModel manageServiceRequestViewModel = new ManageServiceRequestViewModel();
-            int requests = 0;
-            try
-            {
-                this.repositoryUOW.DbHelperOleDb.OpenConnection();
-                manageServiceRequestViewModel.serviceRequests = this.repositoryUOW.ServiceRequestRepository.GetAll();
-                foreach (ServiceRequest serviceRequest in manageServiceRequestViewModel.serviceRequests)
-                {
-                    requests++;
-                }
-                manageServiceRequestViewModel.ServiceRequestNumber = requests;
-                return manageServiceRequestViewModel;
-            }
-            catch(Exception ex)
-            {
-                return null;
-            }
-            finally
-            {
-                this.repositoryUOW.DbHelperOleDb.CloseConnection();    
-            }
-
-        }
 
         [HttpPost]
         public bool OpenServiceRequest(ServiceRequest serviceRequest)

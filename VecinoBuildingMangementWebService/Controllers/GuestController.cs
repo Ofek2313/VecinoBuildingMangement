@@ -17,30 +17,30 @@ namespace VecinoBuildingMangementWebService.Controllers
         }
 
         [HttpGet]
-        public BuildingCatalouge GetBuildingCatalogue(string CityId=null,int page=0)
+        public BuildingCatalouge GetBuildingCatalogue(string cityId=null,int page=0)
         {
             
             BuildingCatalouge buildingCatalouge = new BuildingCatalouge();
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
-                if (CityId == null && page == 0)
+                if (cityId == null && page == 0)
                 {
                     buildingCatalouge.Buildings = this.repositoryUOW.BuildingRepository.GetAll();
 
                 }
-                else if (CityId != null && page == 0)
+                else if (cityId != null && page == 0)
                 {
-                    buildingCatalouge.Buildings = this.repositoryUOW.BuildingRepository.GetByCityId(CityId);
+                    buildingCatalouge.Buildings = this.repositoryUOW.BuildingRepository.GetByCityId(cityId);
                 }
-                else if(CityId == null && page != 0)
+                else if(cityId == null && page != 0)
                 {
                     buildingCatalouge.Buildings = this.repositoryUOW.BuildingRepository.GetBuildingByPage(page);
                 }
-                else if(CityId != null && page != 0)
+                else if(cityId != null && page != 0)
                 {
                     int buildingPerPage = 10;
-                    buildingCatalouge.Buildings = this.repositoryUOW.BuildingRepository.GetByCityId(CityId);
+                    buildingCatalouge.Buildings = this.repositoryUOW.BuildingRepository.GetByCityId(cityId);
                     buildingCatalouge.Buildings.Skip(buildingPerPage * (page - 1)).Take(buildingPerPage).ToList();
 
                 }

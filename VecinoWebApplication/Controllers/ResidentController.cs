@@ -2,18 +2,14 @@
 using VecinoBuildingMangement;
 using BuildingManagementWsClient;
 using VecinoBuildingMangement.ViewModels;
+using VecinoBuildingMangement.Models;
 
 namespace VecinoWebApplication.Controllers
 {
     public class ResidentController : Controller
     {
-        [HttpGet]
-        public IActionResult ResidentBuildingPage(string residentId)
-        {
-
-            return View();
-        }
-
+     
+    
         [HttpGet]
         public async Task<IActionResult> ViewSerivceRequests(string residentId)
         {
@@ -26,6 +22,7 @@ namespace VecinoWebApplication.Controllers
             ServiceRequestViewModel serviceRequestViewModel = await client.GetAsync();
             return View(serviceRequestViewModel);
         }
+        [HttpGet]
         public async Task<IActionResult> ViewManagePayment(string residentId)
         {
             ApiClient<ManagePaymentViewModel> client = new ApiClient<ManagePaymentViewModel>();
@@ -36,9 +33,78 @@ namespace VecinoWebApplication.Controllers
             client.Path = "api/Resident/GetManagePayment";
             client.AddParameter("residentId", residentId);
             ManagePaymentViewModel managePaymentViewModel = await client.GetAsync();
+            
             return View(managePaymentViewModel);
 
 
+        }
+        [HttpGet]
+        public IActionResult CreateServiceRequest()
+        {
+            ServiceRequest serviceRequest = new ServiceRequest();
+            return View(serviceRequest);
+
+        }
+        [HttpPost]
+        public async Task<IActionResult> CreateServiceRequest(ServiceRequest serviceRequest)
+        {
+            ApiClient<ServiceRequest> client = new ApiClient<ServiceRequest>();
+            client.Scheme = "http";
+            client.Host = "localhost";
+            client.Port = 5269;
+            client.Path = "api/Resident/OpenServiceRequest";
+
+            bool response = await client.PostAsync(serviceRequest);
+            
+            if(response)
+                return RedirectToAction("ViewSerivceRequests", new {residentid = serviceRequest.ResidentId});
+
+            return View(serviceRequest);
+        }
+        [HttpGet]
+        public async Task<IActionResult> ViewPolls(string buildingId)
+        {
+            ApiClient<List<PollViewModel>> client = new ApiClient<List<PollViewModel>>();
+
+            client.Scheme = "http";
+            client.Host = "localhost";
+            client.Port = 5269;
+            client.Path = "api/Resident/PollViewModel";
+            client.AddParameter("buildingId", buildingId);
+            List<PollViewModel> polls = await client.GetAsync();
+            return View(polls);
+        }
+        [HttpGet]
+        public async Task<IActionResult> ViewDashboard(string residentId)
+        {
+            ApiClient<MainpageViewModel> client = new ApiClient<MainpageViewModel>();
+            client.Scheme = "http";
+            client.Host = "localhost";
+            client.Port = 5269;
+            client.Path = "api/Resident/MainpageViewModel";
+            client.AddParameter("residentId", residentId);
+            MainpageViewModel mainpage = await client.GetAsync();
+            return View(mainpage);
+
+        }
+        [HttpPost]
+        public async Task<IActionResult> JoinBuilding(string residentId,string buildingCode)
+        {
+            if(string.IsNullOrEmpty(buildingCode)) return BadRequest();
+            ApiClient<object> client = new ApiClient<object>();
+            client.Scheme = "http";
+            client.Host = "localhost";
+            client.Port = 5269;
+            client.Path = "api/Resident/JoinBuilding";
+
+            client.AddParameter("residentId", residentId);
+            client.AddParameter("JoinBuilding", buildingCode);
+
+            bool response = await client.PostAsync(null);
+
+            if (response) return RedirectToAction("ViewDashboard", new { residentId = residentId });
+
+            return View();
         }
     }
 }
