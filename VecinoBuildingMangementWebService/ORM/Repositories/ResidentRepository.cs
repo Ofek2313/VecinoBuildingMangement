@@ -96,7 +96,7 @@ namespace VecinoBuildingMangementWebService
         //}
         public string Login(string email, string password)
         {
-            string sql = "Select ResidentSalt,ResidentId,ResidentPassword From Resident";
+            string sql = "Select ResidentSalt,ResidentId,ResidentPassword From Resident where ResidentEmail=@ResidentEmail";
             this.dbHelperOleDb.AddParameter("@ResidentEmail", email);
          
             using(IDataReader dataReader = this.dbHelperOleDb.Select(sql))
@@ -107,6 +107,7 @@ namespace VecinoBuildingMangementWebService
                     string salt = dataReader["ResidentSalt"].ToString();
                     string hash = dataReader["ResidentPassword"].ToString();
                     string calcHash = GetHash(password, salt);
+                    Console.WriteLine(calcHash);
                     if(calcHash == hash)
                         return dataReader["ResidentId"].ToString();
                 }

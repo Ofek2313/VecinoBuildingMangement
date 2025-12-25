@@ -79,20 +79,23 @@ namespace Testing
             Random rand = new Random();
             return rand.Next(8, 16);
         }
-        static void TestVecinoClient()
+        static async void TestVecinoClient(string residentId,string buildingCode)
         {
-           //ApiClient<List<Notification>> apiClient = new ApiClient<List<Notification>>();
-           // apiClient.Scheme = "http";
-           // apiClient.Host = "localhost";
-           // apiClient.Port = 5269;
-           // apiClient.Path = "api/Resident/GetNotifications";
-           // apiClient.AddParameter("residentId","1");
-           // List<Notification> notifications =  apiClient.GetAsync().Result;
-           // foreach(Notification notification in notifications)
-           // {
-           //     Console.WriteLine(notification.NotificationMessage);
-           // }
            
+            ApiClient<object> client = new ApiClient<object>();
+            client.Scheme = "http";
+            client.Host = "localhost";
+            client.Port = 5269;
+            client.Path = "api/Resident/JoinBuilding";
+
+            client.AddParameter("residentId", residentId);
+            client.AddParameter("JoinBuilding", buildingCode);
+
+            bool response = await client.PostAsync(null);
+
+
+            Console.WriteLine(response);
+
         }
 
         static void Main(string[] args)
@@ -100,12 +103,11 @@ namespace Testing
 
 
 
+
+
             Console.ReadLine();
-            TestVecinoClient();
+            TestVecinoClient("11", "1CD34");
             Console.ReadLine();
-
-
-
 
         }
 

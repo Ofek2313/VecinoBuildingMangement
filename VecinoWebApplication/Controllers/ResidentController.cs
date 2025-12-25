@@ -104,7 +104,40 @@ namespace VecinoWebApplication.Controllers
 
             if (response) return RedirectToAction("ViewDashboard", new { residentId = residentId });
 
+            return View(); 
+        }
+        public IActionResult LoginForm()
+        {
             return View();
         }
+        [HttpPost]
+        public async Task<IActionResult> ResidentLogIn(string email, string password)
+        {
+            ApiClient<string> client = new ApiClient<string>();
+            client.Scheme = "http";
+            client.Host = "localhost";
+            client.Port = 5269;
+            client.Path = "api/Resident/Login";
+            client.AddParameter("email", email);
+            client.AddParameter("password", password);
+            string residentId = await client.GetAsync();
+            if(residentId != null)
+            {
+                HttpContext.Session.SetString("residentId", residentId);
+                TempData["residentId"] = residentId;
+                return RedirectToAction("ViewDashboard", new { residentId = residentId });
+            }
+            return View("LoginForm");
+        }
+        //[HttpPost]
+        //public async Task<IActionResult> LeaveBuilding(string residentId)
+        //{
+        //    ApiClient<Resident> client = new ApiClient<Resident>();
+        //    client.Scheme = "http";
+        //    client.Host = "localhost";
+        //    client.Port = 5269;
+        //    client.Path = "api/Resident/LeaveBuilding";
+        //    client.AddParameter("residentId", residentId);
+        //}
     }
 }

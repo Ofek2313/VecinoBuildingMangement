@@ -26,24 +26,36 @@ namespace VecinoWebApplication.Controllers
             return View(buildingCatalouge);
         }
         [HttpGet]
-        public IActionResult Register()
+        public IActionResult RegisterForm()
         {
             Resident resident = new Resident();
             return View(resident);
         }
 
-        //[HttpPost] - Fix Needed
-        //public async Task<IActionResult> Register(Resident resident)
-        //{
-        //    ApiClient<Resident> client = new ApiClient<Resident>();
-        //    client.Scheme = "http";
-        //    client.Host = "localhost";
-        //    client.Port = 5269;
-        //    client.Path = "api/Resident/Register";
+        [HttpPost]
+        public async Task<IActionResult> Register(Resident resident)
+        {
+            ApiClient<Resident> client = new ApiClient<Resident>();
+            client.Scheme = "http";
+            client.Host = "localhost";
+            client.Port = 5269;
+            client.Path = "api/Resident/Register";
 
-        //    bool response = await client.PostAsync(resident);
+            bool residentAddedResponse = await client.PostAsync(resident);
+            if(residentAddedResponse)
+            {
+                ApiClient<string> client2 = new ApiClient<string>();
+                client2.Scheme = "http";
+                client2.Host = "localhost";
+                client2.Port = 5269;
+                client2.Path = "api/Resident/Login";
+                client2.AddParameter("email", resident.ResidentEmail);
+                client2.AddParameter("password", resident.ResidentPassword);
+                string residentId = await client2.GetAsync();
+                return RedirectToAction("ViewDashboard", new { residentId = residentId });
+            }
+            return View("RegisterForm");
 
-         
-        //}
+        }
     }
 }
