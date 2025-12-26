@@ -1,0 +1,122 @@
+.box{
+    height: 80vh;
+    width: 50%;
+
+}
+.main{
+    display: flex;
+}
+.send{
+   width:120%;
+
+}
+*{
+     font-family: Roboto;
+     color: #1f2937;
+}
+.send h1{
+    text-align: center;
+    font-size: 2.5rem;
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+.send p{
+    text-align: center;
+}
+.send form{
+    margin-top: 7%;
+    margin-left: 5%;
+}
+#Subject{
+    width: 35%;
+    height: 4vh;
+    border-radius: 10px;
+    padding-left: 1%;
+    font-size: 0.8rem;
+    font-weight: 500;
+    border: solid rgb(227, 227, 227);
+}
+.Title{
+    padding-top: 2.5%;
+    padding-left: 0.5%;
+    font-size: 1rem;
+    font-weight: 500;
+}
+select{
+    width: 30%;
+    height: 4vh;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    border: solid rgb(227, 227, 227);
+}
+#desc{
+    width: 80%;
+    height: 30vh;
+    border-radius: 10px;
+    border: solid rgb(227, 227, 227);
+    vertical-align: top;
+}
+.sub-wrap{
+    display: flex;
+    flex-direction: column;
+    align-items: baseline;
+}
+.btn{
+    margin-left: 2%;
+    width: 25%;
+    height: 4vh;
+    font-size: 1.2em;
+    border-radius: 10px;
+    border: 1px solid rgb(227, 227, 227);
+    color: white;
+    font-weight: bold;
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+}
+.btnwrap{
+   display: flex;
+   justify-content: flex-start;
+}
+.header{
+    text-align: center;
+    
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+   font-size: 2.2rem !important;
+}
+.History{
+    list-style-type: none;
+    margin-top: 10%;
+    margin-left: 10%;
+}
+.Date{
+    font-weight: lighter;
+}
+.Subject{
+    font-size: 1.5rem;
+}
+.Status{
+    margin-top: 100px;
+    background-color: black;
+    padding: 3px;
+    border-radius: 20px;
+}
+.History li{
+    margin-top: 10%;
+}
+.Pro{
+    background-color: rgba(253, 253, 4, 0.3);
+    color: rgba(157, 160, 0, 0.869);
+}
+.Com{
+      background-color: rgba(0, 255, 64, 0.3);
+    color: rgba(0, 150, 18, 0.869);
+}
+@media(max-width:1000px){
+    .box{
+        width: 60vw;
+    }
+}

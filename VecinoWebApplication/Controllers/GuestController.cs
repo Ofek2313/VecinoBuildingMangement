@@ -7,24 +7,26 @@ namespace VecinoWebApplication.Controllers
 {
     public class GuestController : Controller
     {
-        public IActionResult Index()
+        public IActionResult HomePage()
         {
             return View();
         }
 
         [HttpGet]
-        public async Task<IActionResult> ViewBuildingCatalogue(string cityId = null,string page = "0")
+        public async Task<IActionResult> ViewBuildingCatalogue(string cityId = null,int page = 0)
         {
             ApiClient<BuildingCatalouge> client = new ApiClient<BuildingCatalouge>();
             client.Scheme = "http";
             client.Host = "localhost";
             client.Port = 5269;
-            client.Path = "api/Resident/GetServiceRequest";
-            client.AddParameter("cityId", cityId);
-            client.AddParameter("page", page);
+            client.Path = "api/Guest/GetBuildingCatalogue";
+            if (cityId != null) 
+                client.AddParameter("cityId", cityId);
+            client.AddParameter("page", page.ToString());
             BuildingCatalouge buildingCatalouge = await client.GetAsync();
             return View(buildingCatalouge);
         }
+
         [HttpGet]
         public IActionResult RegisterForm()
         {

@@ -129,5 +129,15 @@ namespace VecinoBuildingMangementWebService
             }
 
         }
+        public int GetBuildingCount()
+        {
+            string sql = "Select Count(*) From Building";
+            using (IDataReader dataReader = this.dbHelperOleDb.Select(sql))
+            {
+                dataReader.Read();
+                return Convert.ToInt32(dataReader[0]);
+            }
+        }
     }
+    
 }

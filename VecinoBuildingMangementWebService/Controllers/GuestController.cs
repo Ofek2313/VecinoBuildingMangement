@@ -17,7 +17,7 @@ namespace VecinoBuildingMangementWebService.Controllers
         }
 
         [HttpGet]
-        public BuildingCatalouge GetBuildingCatalogue(string cityId=null,int page=0)
+        public BuildingCatalouge GetBuildingCatalogue(string cityId=null,int page=0) // Reminder To Fix - Also Fix Website
         {
             
             BuildingCatalouge buildingCatalouge = new BuildingCatalouge();
@@ -39,12 +39,15 @@ namespace VecinoBuildingMangementWebService.Controllers
                 }
                 else if(cityId != null && page != 0)
                 {
-                    int buildingPerPage = 10;
+                    int buildingPerPage = 5;
                     buildingCatalouge.Buildings = this.repositoryUOW.BuildingRepository.GetByCityId(cityId);
                     buildingCatalouge.Buildings.Skip(buildingPerPage * (page - 1)).Take(buildingPerPage).ToList();
 
                 }
-               
+                int buildingCount = this.repositoryUOW.BuildingRepository.GetBuildingCount();
+                buildingCatalouge.PageCount = buildingCount / 5;
+                if (buildingCount % 5 > 0)
+                    buildingCatalouge.PageCount++;
                 return buildingCatalouge;
             }
             catch (Exception ex)

@@ -1,0 +1,161 @@
+
+.Main{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: repeat(4,1fr);
+    gap: 20px;
+    height: 100vh;
+
+}
+.box1{
+  
+    background-color: white;
+    border-radius: 20px;
+   
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    grid-column: 1/3;
+    grid-row: 3/4;
+    height: 60vh;
+}
+.long {
+
+  grid-column: 3/4;  
+  height: auto;
+}
+*{
+    font-family: Roboto;
+     color: #1f2937;
+}
+h1{
+    font-family: Roboto;
+    color: #1f2937;
+    padding-left: 10%;
+    padding-top:2%;
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.Fee{
+    font-size: 3.5em;
+    margin-left: 5%;
+    margin-top: 5%;
+}
+.Money{
+    font-size: 4em;
+    text-align: center;
+    transition: font-size 0.3s ease;
+    font-weight: bold;
+    padding-top: 5%;
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    
+}
+.Money:hover{
+    font-size:4vw;
+}
+.NumberFee{
+    font-size: 1.5rem;
+    text-align: center;
+    color: #718096;
+    font-weight: lighter;
+}
+.Icon{
+    width: 200px;
+    height: 200px;
+    margin-left: 60%;
+    margin-top:-50%;
+}
+.History{
+    list-style-type: none;
+    margin-left: 15%;
+    margin-top: 15%;
+    height: 100%;
+}
+.Fees{
+    font-weight: lighter;
+    text-align: center;
+    font-size: 1.5rem;
+    margin-bottom: 1%;
+    color: #718096
+}
+.selectbox{
+   
+    width: 80%;
+    height: 40px;
+    border-radius: 8px;
+    border: 3px solid rgb(208, 208, 208);
+    font-size: 1.3rem;
+    
+}
+.wrapselect{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 15vh;
+    height: 25%;
+    gap: 10px;
+
+}
+.wrapselect h2{
+    
+    
+    font-size:1.5em;
+}
+.btn{
+    width: 100%;
+    height: 65%;
+    border-radius: 10px;
+    font-size: 1.2em;
+    border: 1px solid rgb(208, 208, 208);
+    text-align: center;
+    padding-bottom: 4%;
+    font-weight: bold;
+    background:linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    color: white;
+}
+.btn-wrap{
+    margin: 0;
+    display: flex;
+    gap: 5px;
+    width: 80%;
+}
+.Date{
+    font-weight: lighter;
+
+}
+.Amount{
+    font-size: 1.2rem;
+    font-weight: 500;
+}
+.Status{
+    background-color: black;
+    border-radius: 20px;
+    padding: 2px;
+}
+.History li{
+    margin-top: 15%;
+}
+.Pen{
+    background-color: rgba(253, 253, 4, 0.3);
+    color: rgba(157, 160, 0, 0.869);
+}
+.Com{
+     background-color: rgba(0, 255, 64, 0.3);
+    color: rgba(0, 150, 18, 0.869);
+}
+.Can{
+    background-color: rgba(255, 7, 7, 0.3);
+    color: rgba(234, 0, 0, 0.869);
+}
+.long h1{
+    font-size: 2rem;
+
+}
+@media(max-width:1000px){
+    .History{
+        margin-bottom: 5%;
+        font-size: 1.5em;
+    }
+}

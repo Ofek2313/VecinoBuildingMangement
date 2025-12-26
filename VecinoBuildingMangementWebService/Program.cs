@@ -24,7 +24,7 @@ namespace VecinoBuildingMangementWebService
             }
 
             app.UseAuthorization();
-
+            app.UseStaticFiles();
 
             app.MapControllers();
 

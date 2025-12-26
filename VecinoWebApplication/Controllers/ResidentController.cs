@@ -39,7 +39,7 @@ namespace VecinoWebApplication.Controllers
 
         }
         [HttpGet]
-        public IActionResult CreateServiceRequest()
+        public IActionResult CreateServiceRequestForm()
         {
             ServiceRequest serviceRequest = new ServiceRequest();
             return View(serviceRequest);
@@ -48,6 +48,7 @@ namespace VecinoWebApplication.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateServiceRequest(ServiceRequest serviceRequest)
         {
+
             ApiClient<ServiceRequest> client = new ApiClient<ServiceRequest>();
             client.Scheme = "http";
             client.Host = "localhost";
@@ -57,7 +58,7 @@ namespace VecinoWebApplication.Controllers
             bool response = await client.PostAsync(serviceRequest);
             
             if(response)
-                return RedirectToAction("ViewSerivceRequests", new {residentid = serviceRequest.ResidentId});
+                return RedirectToAction("CreateServiceRequestForm", new {residentid = serviceRequest.ResidentId});
 
             return View(serviceRequest);
         }
@@ -87,57 +88,80 @@ namespace VecinoWebApplication.Controllers
             return View(mainpage);
 
         }
-        [HttpPost]
+
+        public IActionResult JoinBuildingForm()
+        {
+            return View();
+        }
+
+        [HttpGet]
         public async Task<IActionResult> JoinBuilding(string residentId,string buildingCode)
         {
-            if(string.IsNullOrEmpty(buildingCode)) return BadRequest();
-            ApiClient<object> client = new ApiClient<object>();
+            
+            ApiClient<bool> client = new ApiClient<bool>();
             client.Scheme = "http";
             client.Host = "localhost";
             client.Port = 5269;
             client.Path = "api/Resident/JoinBuilding";
 
             client.AddParameter("residentId", residentId);
-            client.AddParameter("JoinBuilding", buildingCode);
+            client.AddParameter("buildingCode", buildingCode);
 
-            bool response = await client.PostAsync(null);
+            bool response = await client.GetAsync();
 
             if (response) return RedirectToAction("ViewDashboard", new { residentId = residentId });
 
-            return View(); 
+
+            ViewBag["Error"] = true;
+            return RedirectToAction("JoinBuildingForm"); 
         }
+
+        [HttpGet]
         public IActionResult LoginForm()
         {
             return View();
         }
-        [HttpPost]
-        public async Task<IActionResult> ResidentLogIn(string email, string password)
-        {
-            ApiClient<string> client = new ApiClient<string>();
-            client.Scheme = "http";
-            client.Host = "localhost";
-            client.Port = 5269;
-            client.Path = "api/Resident/Login";
-            client.AddParameter("email", email);
-            client.AddParameter("password", password);
-            string residentId = await client.GetAsync();
-            if(residentId != null)
-            {
-                HttpContext.Session.SetString("residentId", residentId);
-                TempData["residentId"] = residentId;
-                return RedirectToAction("ViewDashboard", new { residentId = residentId });
-            }
-            return View("LoginForm");
-        }
+
         //[HttpPost]
-        //public async Task<IActionResult> LeaveBuilding(string residentId)
+        //public async Task<IActionResult> ResidentLogIn(LogInViewModel logInViewModel)
         //{
-        //    ApiClient<Resident> client = new ApiClient<Resident>();
+        //    ApiClient<bool> client = new ApiClient<bool>();
         //    client.Scheme = "http";
         //    client.Host = "localhost";
         //    client.Port = 5269;
-        //    client.Path = "api/Resident/LeaveBuilding";
-        //    client.AddParameter("residentId", residentId);
+        //    client.Path = "api/Resident/Login";
+           
+        //    bool response = await client.PostAsync();
+        //    if(residentId != null)
+        //    {
+        //        HttpContext.Session.SetString("residentId", residentId);
+        
+        //        TempData["residentId"] = residentId;
+        //        return RedirectToAction("ViewDashboard", new { residentId = residentId });
+        //    }
+
+        //    ViewBag["Error"] = true;
+        //    return RedirectToAction("LoginForm");
         //}
+
+        [HttpGet]
+        public async Task<IActionResult> LeaveBuilding(string residentId)
+        {
+            ApiClient<bool> client = new ApiClient<bool>();
+            client.Scheme = "http";
+            client.Host = "localhost";
+            client.Port = 5269;
+            client.Path = "api/Resident/LeaveBuilding";
+            client.AddParameter("residentId", residentId);
+
+            bool leftBuilding = await client.GetAsync();
+
+            if(leftBuilding) return RedirectToAction("ViewDashboard", new { residentId = residentId });
+
+            ViewBag["Error"] = true;
+            return RedirectToAction("JoinBuildingForm");
+
+
+        }
     }
 }

@@ -1,0 +1,109 @@
+.box{
+    width: 180%;
+    height: 80vh;
+
+}
+h1{
+    text-align: center;
+    font-weight: 500;
+    padding-top: 2%;
+    font-size: 2.3rem;
+   
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    
+
+}
+.polls{
+    margin-top: 5%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 40px;
+
+}
+.poll{
+    border: 3px solid rgb(238, 247, 255);
+    border-radius: 20px;
+    width: 70%;
+    height: 20vh;
+}
+.poll h2{
+    font-size: 100%;
+    padding-left: 2%;
+    padding-top: 1%;
+    font-weight: 500;
+}
+.options{
+    padding-left: 2%;
+}
+.option{
+    background-color:  rgba(238, 247, 255,0.7);
+    padding: 1%;
+    border-radius: 10px;
+    margin-top: 1%;
+    width: 70%;
+    display: flex;
+    position:relative;
+
+}
+.option .bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: #c9d9ff;
+    border-radius: 10px;
+
+}
+.option span{
+    z-index: 1;
+}
+.precent{
+    text-align: right;
+    width: 100%;
+}
+.votes{
+    padding-left: 2%;
+    display: flex;
+    align-items: baseline;
+    gap: 2px;
+    margin-top: 1%;
+    margin-bottom: 1%;
+    width: 70%;
+   
+}
+input{
+    margin-right: 2%;
+}
+
+.btn{
+    margin-left: auto;
+    width: 10vw;
+    height: 3vh;
+    border-radius: 5px;
+    border: 2px solid whitesmoke;
+    font-weight: bold;
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    color: white;
+    padding: 2px;
+    cursor: pointer;
+    font-size: 100%;
+}
+.poll{
+    transition: all 0.3s ease;
+}
+.poll:hover{
+    transform: scale(1.03);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+@media(max-width:1000px){
+    .main{
+        display: grid !important;
+        margin:0 auto;
+        margin-left: 25vw;
+    }
+    
+}

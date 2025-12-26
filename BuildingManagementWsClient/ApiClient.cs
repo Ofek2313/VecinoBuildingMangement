@@ -88,32 +88,51 @@ namespace BuildingManagementWsClient
              
             }
         }
+        //public async Task<T> PostAsyncReturn(T model)
+        //{
 
-        public async Task<bool> PostAsync(T model, FileStream file)
-        {
-            using (HttpRequestMessage httpRequest = new HttpRequestMessage())
+        //    using (HttpRequestMessage httpRequest = new HttpRequestMessage())
+        //    {
+        //        httpRequest.Method = HttpMethod.Post;
+        //        httpRequest.RequestUri = this.uriBuilder.Uri;
+        //        string json = JsonSerializer.Serialize<T>(model);
+        //        StringContent content = new StringContent(json);
+        //        httpRequest.Content = content;
+        //        using (HttpResponseMessage httpResponse = await this.httpClient.SendAsync(httpRequest))
+        //        {
+        //            if(httpResponse.IsSuccessStatusCode)
+        //            {
+        //                string id = httpResponse.
+        //            }
+        //        }
+
+        //    }
+        //}
+            public async Task<bool> PostAsync(T model, Stream file)
             {
-                httpRequest.Method = HttpMethod.Post;
-                httpRequest.RequestUri = this.uriBuilder.Uri;
-                MultipartFormDataContent multipartFormDataContent = new MultipartFormDataContent();
-                string json = JsonSerializer.Serialize<T>(model);
-               
-                StringContent modelContent = new StringContent(json);
-                multipartFormDataContent.Add(modelContent,"model");
-
-                StreamContent streamContent = new StreamContent(file); // Streamcontent becaues of the file stream
-                multipartFormDataContent.Add(streamContent, "file", file.Name);
-
-                httpRequest.Content = multipartFormDataContent;
-                using (HttpResponseMessage httpResponse = await this.httpClient.SendAsync(httpRequest))
+                using (HttpRequestMessage httpRequest = new HttpRequestMessage())
                 {
-                    return httpResponse.IsSuccessStatusCode;
-                }
+                    httpRequest.Method = HttpMethod.Post;
+                    httpRequest.RequestUri = this.uriBuilder.Uri;
+                    MultipartFormDataContent multipartFormDataContent = new MultipartFormDataContent();
+                    string json = JsonSerializer.Serialize<T>(model);
+               
+                    StringContent modelContent = new StringContent(json);
+                    multipartFormDataContent.Add(modelContent,"model");
 
-            }
+                    StreamContent streamContent = new StreamContent(file); // Streamcontent becaues of the file stream
+                    multipartFormDataContent.Add(streamContent, "file", "file");
+
+                    httpRequest.Content = multipartFormDataContent;
+                    using (HttpResponseMessage httpResponse = await this.httpClient.SendAsync(httpRequest))
+                    {
+                        return httpResponse.IsSuccessStatusCode;
+                    }
+
+                }
             
-        }
-        public async Task<bool> PostAsync(T model, List<FileStream> files)
+            }
+        public async Task<bool> PostAsync(T model, List<Stream> files)
         {
             using (HttpRequestMessage httpRequest = new HttpRequestMessage())
             {
@@ -126,10 +145,10 @@ namespace BuildingManagementWsClient
                 multipartFormDataContent.Add(modelContent, "model");
 
                  
-                foreach (FileStream file in files)
+                foreach (Stream file in files)
                 {
                     StreamContent streamContent = new StreamContent(file);
-                    multipartFormDataContent.Add(streamContent, "file", file.Name);
+                    multipartFormDataContent.Add(streamContent, "file", "file");
                 }
               
 

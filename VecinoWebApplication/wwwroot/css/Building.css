@@ -1,0 +1,45 @@
+.box1{
+    height: 10rem;
+    width: 15rem;
+    background-color: white;
+    border-radius: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    padding: 2rem;
+    background: linear-gradient(145deg, #f0f4ff, #e0e8ff);
+}
+.Buidlings{
+    margin-top: 8rem;
+    display: flex;
+    gap:30px;
+    list-style-type: none;
+}
+h2{
+    margin: 0;
+    text-align: center;
+    font-weight: 500;
+}
+h3{
+    margin: 0;
+    font-weight: 300;
+    text-align: center;
+}
+.stats{
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    
+}
+.info{
+    display: flex;
+    gap: 100px;
+margin-left:5%;
+   margin-top: 20%;
+}
+.number{
+    font-size: 1.5rem;
+    color: rgb(57, 152, 255);
+    font-weight: 700;
+}
+.stats{
+    font-size: 1.5em;
+}

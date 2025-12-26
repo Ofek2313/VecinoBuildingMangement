@@ -1,0 +1,66 @@
+.box1{
+    height: 85vh;
+    background-color: white;
+    border-radius: 20px;
+   
+     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+.box1 h1{
+    font-family: Roboto;
+    padding-left: 5%;
+    padding-top: 2%;
+    color: #1f2937;
+    display: flex;
+    align-items: baseline;
+    font-size: 1.8em;
+}
+.box1 img{
+    height: 30px;
+    width: 30px;
+    margin-right: 3%;
+
+}
+.Anc{
+    list-style-type: none;
+    font-family: Roboto;
+    font-size: 1.5em;
+    margin-left: 5%;
+    margin-top: 5%;
+    font-weight: 500;
+}
+.Anc li{
+    margin-top: 5%;
+    
+}
+.Anc img{
+    width: 27px;
+    height: 27px;
+
+
+}
+.Update p{
+    font-size: 0.7em;
+    font-weight: 300;
+}
+
+.Update{
+    padding-right: 1%;
+    font-size: 1em;
+}
+.Time{
+    font-size: 1em;
+}
+@media(max-width:700px){
+    *{
+        font-size: 0.9em;
+    }
+    .box1{
+        height: 50vh;
+    }
+    .main{
+        width: 70vw;
+        margin: 0;
+        margin-left: 10%;
+      
+    }
+}

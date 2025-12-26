@@ -11,5 +11,9 @@ namespace VecinoBuildingMangement.ViewModels
     {
         public List<Building> Buildings { get; set; }
         public int Page { get; set; }
+
+        public int BuildingsPerPage { get; set; }
+
+        public int PageCount { get; set; }
     }
 }
