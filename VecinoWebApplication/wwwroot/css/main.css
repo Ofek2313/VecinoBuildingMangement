@@ -24,7 +24,7 @@ a{
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: auto auto;        
     gap: 20px;
-    margin-left: 15vw;
+   
     padding-right: 10rem;
     max-width: 1300px;
     margin-top: 5vw;
@@ -62,18 +62,19 @@ html{
     gap: 10px; 
     margin-top: 10%;
     transition: all 0.3s ease;
+    padding: 10px;
 }
 .nav-bar{
     background-color: white;
     padding-left: 2%;
-    width: 13%;
     height: 100vh;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    position: fixed;
-    top: 0;
-    
-   
 
+    position: sticky;
+    top: 0;
+
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    padding-left:1rem;
+    padding-right:2rem;
 }
 .leave{
     margin-top: 100%;
@@ -183,7 +184,7 @@ html{
        
         margin:  0 auto;
         padding-top: 10vh;
-        margin-left: 15vw;
+        
         
     }
 }
@@ -209,4 +210,11 @@ html{
     .main{
         width: 60vw;
     }
+}
+.app-layout {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    grid-template-rows: auto;
+    min-height: 100vh;
+    gap: 2.5rem;
 }

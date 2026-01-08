@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using System.Text;
 using VecinoBuildingMangement.Models;
 
 namespace VecinoBuildingMangementWebService
@@ -70,5 +71,23 @@ namespace VecinoBuildingMangementWebService
 
         //    return this.dbHelperOleDb.Update(sql) > 0;
         //}
+        public List<Event> GetEventByBuildingId(string buildingId)
+        {
+            string sql = "Select * From Event Where BuildingId = @BuildingId";
+            this.dbHelperOleDb.AddParameter("@BuildingId", buildingId);
+
+            List<Event> events = new List<Event>();
+            using (IDataReader reader = this.dbHelperOleDb.Select(sql))
+            {
+                while (reader.Read())
+                {
+
+                    events.Add(this.ModelCreator.CreateModel(reader));
+
+                }
+            }
+
+            return events;
+        }
     }
 }

@@ -1,0 +1,94 @@
+﻿@using VecinoBuildingMangement.ViewModels
+@using VecinoBuildingMangement.Models
+@model ServiceRequestViewModel
+@{
+    ViewData["Title"] = "ViewSerivceRequests";
+    ViewData["Active"] = "servicerequest";
+    Layout = "~/Views/Shared/MasterResidentPage.cshtml";
+}
+<link rel="stylesheet" href="~/css/Service.css">
+<main class="requests">
+    <h1>Service Requests</h1>
+    <h2 class="desc">Sumbit Your Service Requests</h2>
+    <section class="UpperWrapper">
+        <button class="request-button" id="openbtn">New Request</button>
+    </section>
+
+    <section class="stats-grid">
+
+
+        <div class="stat-card Pending">
+            <span class="stat pend">Pending</span>
+            <span class="count">@Model.Pending</span>
+
+        </div>
+        <div class="stat-card Progress">
+            <span class="stat prog">In Progress</span>
+            <span class="count">@Model.InProgress</span>
+
+        </div>
+        <div class="stat-card Completed">
+            <span class="stat comp">Completed</span>
+            <span class="count">@Model.Completed</span>
+
+        </div>
+    </section>
+    <section class="previous">
+        @if(Model.serviceRequests != null)
+        {
+            
+        
+            @foreach(ServiceRequest request in Model.serviceRequests)
+            {
+            
+        
+                <div class="request">
+                    <div class="imgwraper prog">
+                        <img src="../Images/InProgress.png" class="requestimg">
+                    </div>
+
+                    <div class="requestwraper">
+                        <span class="RequestTitle">@request.RequestTitle</span>
+                        <span class="Description">@request.RequestMessage</span>
+
+                    </div>
+                    <div class="typewraper">
+                        <span>@request.RequestTypeId</span>
+                        <span>@request.RequestDate</span>
+                    </div>
+                </div>
+            }
+        }
+    </section>
+    <div class="overlay" id="overlay"></div>
+    <div class="PopOut" id="popout">
+        <h2>Submit A request</h2>
+        <form class="request-submit">
+
+            <input type="text" class="input title" placeholder="Request Title">
+            <textarea class="input description" placeholder="Request Description"></textarea>
+            <Select class="input select">
+                <option value="test"> Test</option>
+            </Select>
+            <button class="sumbitbtn">Submit</button>
+        </form>
+     
+    </div>
+</main>
+<script>
+    const popout = document.getElementById('popout');
+    const overlay = document.getElementById('overlay');
+    const openbtn = document.getElementById('openbtn');
+    openbtn.addEventListener('click',function()
+    {
+        popout.style.display = 'block';
+        overlay.style.display = 'block';
+    }
+
+    );
+    overlay.addEventListener('click', function()  {
+        overlay.style.display = 'none';
+        popout.style.display = 'none';
+    });
+</script>
+

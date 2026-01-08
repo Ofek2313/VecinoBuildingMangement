@@ -18,7 +18,7 @@ namespace VecinoWebApplication.Controllers
             client.Host = "localhost";
             client.Port = 5269;
             client.Path = "api/Resident/GetServiceRequest";
-            client.AddParameter("residentId", residentId);
+            client.AddParameter("residentId", "1");
             ServiceRequestViewModel serviceRequestViewModel = await client.GetAsync();
             return View(serviceRequestViewModel);
         }
@@ -31,12 +31,24 @@ namespace VecinoWebApplication.Controllers
             client.Host = "localhost";
             client.Port = 5269;
             client.Path = "api/Resident/GetManagePayment";
-            client.AddParameter("residentId", residentId);
+            client.AddParameter("residentId", "1");
             ManagePaymentViewModel managePaymentViewModel = await client.GetAsync();
             
             return View(managePaymentViewModel);
 
 
+        }
+        [HttpGet]
+        public async Task<IActionResult> ViewEvents(string residentId)
+        {
+            ApiClient<List<Event>> client = new ApiClient<List<Event>>();
+            client.Scheme = "http";
+            client.Host = "localhost";
+            client.Port = 5269;
+            client.Path = "api/Resident/ViewEvents";
+            client.AddParameter("residentId", "1");
+            List<Event> events = await client.GetAsync();
+            return View(events);
         }
         [HttpGet]
         public IActionResult CreateServiceRequestForm()
@@ -71,7 +83,7 @@ namespace VecinoWebApplication.Controllers
             client.Host = "localhost";
             client.Port = 5269;
             client.Path = "api/Resident/PollViewModel";
-            client.AddParameter("buildingId", buildingId);
+            client.AddParameter("buildingId", "1");
             List<PollViewModel> polls = await client.GetAsync();
             return View(polls);
         }
@@ -82,8 +94,8 @@ namespace VecinoWebApplication.Controllers
             client.Scheme = "http";
             client.Host = "localhost";
             client.Port = 5269;
-            client.Path = "api/Resident/MainpageViewModel";
-            client.AddParameter("residentId", residentId);
+            client.Path = "api/Resident/Mainpage";
+            client.AddParameter("residentId", "1");
             MainpageViewModel mainpage = await client.GetAsync();
             return View(mainpage);
 

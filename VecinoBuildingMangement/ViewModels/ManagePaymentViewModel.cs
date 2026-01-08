@@ -10,7 +10,7 @@ namespace VecinoBuildingMangement.ViewModels
     public class ManagePaymentViewModel
     {
         public double TotalFees { get; set; }
-        public List<Fee> Fees{ get; set; }
-        public List<Fee> UnPaidFees { get; set; }
+        public List<Fee> Fees{ get; set; } = new List<Fee>();
+        public List<Fee> UnPaidFees { get; set; } = new List<Fee>();
     }
 }

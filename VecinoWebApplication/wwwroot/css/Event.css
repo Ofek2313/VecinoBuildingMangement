@@ -1,108 +1,62 @@
-.box{
-    height: 80vh;
-    max-width: 55vw;
-}
-.events{
-    max-width: 20vw;
-}
-h1{
-    padding-top: 2%;
-   text-align: center;
-   font-weight: 500;
-   font-size: 2.5em;
-    background:linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-.weekday{
-    display: flex;
 
-    list-style-type: none;
-    
-}
-.days{
-    display: flex;
-    list-style: none;
-   
-}
-.Calendar{
-    border-radius: 15px;
-    width: 100%;
-    margin-top: 10%;
+.event-box{
+background: #fff;
+  border-radius: 16px;
+  padding: 1rem;
+  display: flex;
 
-
-    table-layout: fixed;
-    
+  flex-direction: column;
+  gap: 0.4rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+  height: 15rem;
+  width: 20rem;
 }
-.wrap{
+.event-grid{
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: 1fr 1fr 1fr;
+  
+}
+.main{
     display: flex;
-    justify-content: center;
-    width: 100%;
+    flex-direction: column;
 }
-td{
+
+.event-title{
+    font-size: 1.7rem;
+}
+.event-desc{
+    font-size: 1.1rem;
+}
+.details{
+    padding-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+.side-image{
+    height: 1rem;
+    padding-right: 0.2rem;
+}
+.event-type{
+  background: rgba(59, 130, 246, 0.12);
+  color: #1d4ed8;
+  width: 50%;
+  border-radius: 5px;
+}
+.event-date{
+ background: rgba(59, 130, 246, 0.12);
+  color: #1d4ed8;
+  width: 50%;
+  border-radius: 5px;
+}
+.event-time{
+  background: rgba(59, 130, 246, 0.12);
+  color: #1d4ed8;
+  width: 50%;
+  border-radius: 5px;
+}
+h2{
     font-weight: 500;
-    vertical-align: top;
-    padding: 8px 4px;
-
-}
-th{
-    padding: 8px 4px;
-}
-
-.event{
-    background-color: rgba(251, 255, 0, 0.5);
-    border-radius: 15px;
-    padding: 2px;
-    
-}
-.Upcoming{
-    list-style-type: none;
-}
-.date{
-    font-size: 1.3em;
-    font-weight: lighter;
-}
-.name{
-    font-size: 1.8em;
-    font-weight: 500;
-}
-.Upcoming li{
-    margin-left: 5%;
-    margin-top: 10%;
-}
-.desc{
-    font-weight: lighter;
-    text-align: center;
-    font-size: 1.2em;
-}
-@media(max-width:1500px){
-  th{
-    font-size: 0.6em;
-  }
-  .event{
-    font-size: 0.7em;
-    padding: 1px;
-    width: 115%;
-  }
-  .events{
-    width: 100vw;
-  }
-  .Upcoming{
-    font-size: 0.8em;
-  }
-    
-}
-
-@media(max-width:700px){
-  th{
-    font-size: 0.55em;
-    
-  }
-  .event {
-        font-size: 0.6rem;
-        padding: 1px 2px;
-        border-radius: 8px;
-        width: 115%;
-    }
-    
+    margin-bottom: 1rem;
 }

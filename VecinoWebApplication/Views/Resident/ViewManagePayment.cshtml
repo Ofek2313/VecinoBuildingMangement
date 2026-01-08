@@ -1,0 +1,62 @@
+﻿@using VecinoBuildingMangement.Models
+@using VecinoBuildingMangement.ViewModels
+@model ManagePaymentViewModel
+@{
+    ViewData["Title"] = "ViewManagePayment";
+    ViewData["Active"] = "payment";
+    Layout = "~/Views/Shared/MasterResidentPage.cshtml";
+}
+
+<link rel="stylesheet" href="../css/Pay.css">
+<div class="main">
+    <div class="box1">
+
+        <p class="Money">@Model.TotalFees₪</p>
+        <p class="Fees">Total Fees</p>
+        @if(Model.UnPaidFees.Count == 1)
+        {
+            <p class="NumberFee">@Model.UnPaidFees.Count Fee</p>
+        }
+        else
+        {
+            <p class="NumberFee">@Model.UnPaidFees.Count Fees</p>
+        }
+
+        <div class="wrapselect">
+            <h2>Payment</h2>
+            <select class="selectbox">
+                <option>All Fees</option>
+                @foreach(Fee fee in Model.UnPaidFees)
+                {
+                    <option>@fee.FeeTitle @fee.FeeAmount₪</option>
+                }
+                
+               
+            </select>
+            <div class="btn-wrap">
+                <button class="btn">Pay</button>
+                <button class="btn">Reset</button>
+
+            </div>
+
+        </div>
+
+
+
+    </div>
+
+    <div class="box1 long">
+        <h1>Payment History</h1>
+        <ul class="History">
+            @foreach(Fee fee1 in Model.Fees)
+            {
+                <li> <span class="Date">@fee1.FeeDueDate </span><br> <span class="Amount">@fee1.FeeAmount₪ </span> <br> <span class="Status Pen">Pending</span><br> </li>
+            }
+            
+            <li> <span class="Date">September 5, 2025 </span><br> <span class="Amount">250₪ </span> <br> <span class="Status Com">Completed</span><br> </li>
+            <li> <span class="Date">September 2, 2025 </span><br> <span class="Amount">250₪ </span> <br> <span class="Status Can">Cancled</span><br> </li>
+
+        </ul>
+    </div>
+</div>
+

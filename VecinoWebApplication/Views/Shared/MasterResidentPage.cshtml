@@ -8,7 +8,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href=" ~/css/main.css">
+    <link rel="stylesheet" href="~/css/main.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
@@ -18,19 +18,20 @@
     </style>
 </head>
 <body>
-   
+    <div class="app-layout">
     <ul class="nav-bar">
       
-        <li class="logo"><img src=" ~/Images/Untitled-4.png" class="logo"></li>
-        <li class="nav">  <img src=" ~/Images/dashboard.svg" class="Current"><a href="Resident_Homepage.html" class="Current">Dashboard</a></li>
-        <li class="nav"> <img src=" ~/Images/big-megaphone.svg"> <a href="Announcements.html">Announcements</a></li>
-        <li class="nav"> <img src=" ~/Images/calendar-xoaigr9z259n0zw0pl1c.webp"><a href="Events.html">Events</a></li>
-        <li class="nav"> <img src=" ~Images/money.svg"><a href="Payments.html">Payments</a></li>
-        <li class="nav"> <img src=" ~/Images/spanner-wrench.svg"><a href="ServiceRequests.html">Service Requests</a></li>
-        <li class="nav"> <img src=" ~/Images/survey.svg"><a href="Polls.html">Digital Polls</a></li>
+        <li class="logo"><img src="~/Images/Untitled-4.png" class="logo"></li>
+            <li class="nav">  <img src="~/Images/dashboard.svg" class="@(ViewData["Active"]?.ToString() == "dashboard" ? "Current" : "")"><a href="http://localhost:5086/Resident/ViewDashboard" class="@(ViewData["Active"]?.ToString() == "dashboard" ? "Current" : "")">Dashboard</a></li>
+            <li class="nav"> <img src="~/Images/big-megaphone.svg" class="@(ViewData["Active"]?.ToString() == "dashboard" ? "Current" : "")"> <a href="Announcements.html" class="@(ViewData["Active"]?.ToString() == "dashboard" ? "Current" : "")">Announcements</a></li>
+            <li class="nav"> <img src="~/Images/calendar-xoaigr9z259n0zw0pl1c.webp" class="@(ViewData["Active"]?.ToString() == "event" ? "Current" : "")"><a href="http://localhost:5086/Resident/ViewEvents" class="@(ViewData["Active"]?.ToString() == "event" ? "Current" : "")">Events</a></li>
+            <li class="nav"> <img src="~/Images/money.svg" class="@(ViewData["Active"]?.ToString() == "payment" ? "Current" : "")"><a href="http://localhost:5086/Resident/ViewManagePayment" class="@(ViewData["Active"]?.ToString() == "payment" ? "Current" : "")">Payments</a></li>
+            <li class="nav"> <img src="~/Images/spanner-wrench.svg" class="@(ViewData["Active"]?.ToString() == "servicerequest" ? "Current" : "")"><a href="http://localhost:5086/Resident/ViewSerivceRequests" class="@(ViewData["Active"]?.ToString() == "servicerequest" ? "Current" : "")">Service Requests</a></li>
+            <li class="nav"> <img src="~/Images/survey.svg" class="@(ViewData["Active"]?.ToString() == "polls" ? "Current" : "")"><a href="http://localhost:5086/Resident/ViewPolls" @(ViewData["Active"]?.ToString() == "polls" ? "Current" : "")>Digital Polls</a></li>
         <li class="nav leave"> <img src=" ~/Images/door-leave.svg"> <a href="Register_Homepage.html">Leave</a></li>
     </ul>
- 
+    @RenderBody()
+    </div>
 </body>
 </html>
 

@@ -1,9 +1,48 @@
-﻿@using VecinoBuildingMangement
+﻿@using VecinoBuildingMangement.ViewModels
+@using VecinoBuildingMangement.Models
+@model MainpageViewModel
 @{
     ViewData["Title"] = "ViewDashboard";
+    ViewData["Active"] = "dashboard";
     Layout = "~/Views/Shared/MasterResidentPage.cshtml";
 }
 
 
 <link href="~/css/main.css" rel="stylesheet" />
+<div class="main">
+    <div class="main_block">
+        <ul>
+            <li class="Address">@Model.Building.Address</li>
+            <li class="Code"><span>Code: @Model.Building.EntranceCode</span></li>
+        </ul>
 
+
+    </div>
+    <div class="box">
+        <div class="Title"><img src="../Images/big-megaphone.svg" clas><h1 class="head">Latest Update</h1></div>
+        <ul class="Update">
+            @for(int i =0; i< 2; i++)
+            {
+                <li>@Model.Notifications[i].NotificationTitle <br>  <span class="Time">@Model.Notifications[i].NotificationDate</span> </li>
+
+            }
+          
+            
+        </ul>
+
+    </div>
+    <div class="box">
+        <div class="Title"><img src="../Images/calendar-xoaigr9z259n0zw0pl1c.webp"><h1 class="head">Upcoming Events</h1></div>
+        <ul class="Update">
+            @for (int i = 0; i < 2; i++)
+            {
+                <li>@Model.events[i].EventTitle <br><span class="Time">@Model.events[i].EventDate</span></li>
+
+            }
+           
+            
+        </ul>
+    </div>
+
+
+</div>

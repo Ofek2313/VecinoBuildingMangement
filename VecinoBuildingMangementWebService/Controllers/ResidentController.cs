@@ -4,6 +4,7 @@ using VecinoBuildingMangement.ViewModels;
 using VecinoBuildingMangement.Models;
 using System.Reflection.Metadata.Ecma335;
 using Microsoft.Extensions.Options;
+using System.Text;
 
 namespace VecinoBuildingMangementWebService.Controllers
 {
@@ -77,6 +78,23 @@ namespace VecinoBuildingMangementWebService.Controllers
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
                 serviceRequestViewModel.serviceRequests = repositoryUOW.ServiceRequestRepository.GetServiceRequestsByResidentId(residentId);
                 serviceRequestViewModel.RequestTypes = repositoryUOW.RequestTypeRepository.GetAll();
+                foreach(ServiceRequest serviceRequest in serviceRequestViewModel.serviceRequests)
+                {
+                    switch(serviceRequest.RequestStatus)
+                    {
+                        case "Pending":
+                            serviceRequestViewModel.Pending += 1;
+                            break;
+                        case "Completed":
+                            serviceRequestViewModel.Completed += 1;
+                            break;
+                        case "In Progress":
+                            serviceRequestViewModel.InProgress += 1;
+                            break;
+                        default:
+                            break;
+                    }
+                }
 
                 return serviceRequestViewModel;
 
@@ -135,14 +153,16 @@ namespace VecinoBuildingMangementWebService.Controllers
         }
 
         [HttpGet]
-        public List<Event> ViewEvents()
+        public List<Event> ViewEvents(string residentId)
         {
             List<Event> events = new List<Event>();
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
-                events = this.repositoryUOW.EventRepository.GetAll();
-                Console.WriteLine(events.Count);
+                Building building = this.repositoryUOW.BuildingRepository.GetBuildingByResidentId(residentId);
+              
+                events = this.repositoryUOW.EventRepository.GetEventByBuildingId(building.BuildingId);
+                
                 return events;
             }
             catch (Exception ex)

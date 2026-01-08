@@ -90,7 +90,7 @@ namespace VecinoBuildingMangementWebService
         }
         public List<Fee> ViewPaidFeesById(string id)
         {
-            string sql = "Select FeeTitle,FeeAmount From Fee Where IsPaid=True And ResidentId = @ResidentId";
+            string sql = "Select * From Fee Where IsPaid=True And ResidentId = @ResidentId";
             this.dbHelperOleDb.AddParameter("@ResidentId", id);
             List<Fee> fees = new List<Fee>();
             using (IDataReader reader = this.dbHelperOleDb.Select(sql))
