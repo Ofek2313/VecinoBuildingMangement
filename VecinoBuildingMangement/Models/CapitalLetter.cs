@@ -14,6 +14,8 @@ namespace VecinoBuildingMangement.Models
 
         public override bool IsValid(object? value)
         {
+            if (value == null) return false;
+
             string word = value.ToString();
             for (int i = 0; i < word.Length; i++)
             {

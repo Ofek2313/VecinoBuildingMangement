@@ -18,6 +18,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Resident}/{action=ViewDashboard}/{id?}");
+    pattern: "{controller=Guest}/{action=Homepage}/{id?}");
 
 app.Run();

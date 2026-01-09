@@ -88,27 +88,33 @@ namespace BuildingManagementWsClient
              
             }
         }
-        //public async Task<T> PostAsyncReturn(T model)
-        //{
+       
+        public async Task<TResponse> PostAsyncReturn<TRequest,TResponse>(TRequest model)
+        {
 
-        //    using (HttpRequestMessage httpRequest = new HttpRequestMessage())
-        //    {
-        //        httpRequest.Method = HttpMethod.Post;
-        //        httpRequest.RequestUri = this.uriBuilder.Uri;
-        //        string json = JsonSerializer.Serialize<T>(model);
-        //        StringContent content = new StringContent(json);
-        //        httpRequest.Content = content;
-        //        using (HttpResponseMessage httpResponse = await this.httpClient.SendAsync(httpRequest))
-        //        {
-        //            if(httpResponse.IsSuccessStatusCode)
-        //            {
-        //                string id = httpResponse.
-        //            }
-        //        }
+            using (HttpRequestMessage httpRequest = new HttpRequestMessage())
+            {
+                httpRequest.Method = HttpMethod.Post;
+                httpRequest.RequestUri = this.uriBuilder.Uri;
+                string json = JsonSerializer.Serialize<TRequest>(model);
+                StringContent content = new StringContent(json,Encoding.UTF8,"application/json");
+                httpRequest.Content = content;
+                using (HttpResponseMessage httpResponse = await this.httpClient.SendAsync(httpRequest))
+                {
+                    if (httpResponse.IsSuccessStatusCode)
+                    {
+                        string result = await httpResponse.Content.ReadAsStringAsync();
+                        JsonSerializerOptions options = new JsonSerializerOptions();
+                        options.PropertyNameCaseInsensitive = true; 
+                        TResponse value = JsonSerializer.Deserialize<TResponse>(result, options);
+                        return value;
+                    }
+                }
+                return default(TResponse);
 
-        //    }
-        //}
-            public async Task<bool> PostAsync(T model, Stream file)
+            }
+        }
+        public async Task<bool> PostAsync(T model, Stream file)
             {
                 using (HttpRequestMessage httpRequest = new HttpRequestMessage())
                 {

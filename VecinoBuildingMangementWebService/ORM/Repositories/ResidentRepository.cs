@@ -13,7 +13,7 @@ namespace VecinoBuildingMangementWebService
         //public ResidentRepository(DbHelperOleDb dbHelperOleDb,ModelCreators modelCreators)
         //    : base(dbHelperOleDb,modelCreators) { }
         public override bool Create(Resident model)
-        {
+        {   
             //string sql = @$"Insert Into Resident(ResidentName,ResidentPassword,ResidentPhone,ResidentEmail,UnitNumber,BuildingId)
             //                Values('{model.ResidentName}','{model.ResidentPassword}','{model.ResidentPhone}',
             //                       '{model.ResidentEmail}',{model.UnitNumber},{model.BuildingId})";
@@ -33,6 +33,7 @@ namespace VecinoBuildingMangementWebService
             return this.dbHelperOleDb.Insert(sql) > 0;
 
         }
+    
         private string GetHash(string password, string salt)
         {
             string combine = password + salt;
@@ -43,6 +44,7 @@ namespace VecinoBuildingMangementWebService
                 return Convert.ToBase64String(hash);
             }
         }
+      
 
         //public bool Delete(string id)
         //{

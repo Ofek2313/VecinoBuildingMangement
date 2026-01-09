@@ -1,5 +1,6 @@
 ﻿using BuildingManagementWsClient;
 using Microsoft.AspNetCore.Mvc;
+using NuGet.Protocol;
 using VecinoBuildingMangement.Models;
 using VecinoBuildingMangement.ViewModels;
 
@@ -35,29 +36,30 @@ namespace VecinoWebApplication.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register(Resident resident)
+        public async Task<IActionResult> Register(Resident resident/*,IFormFile file*/)
         {
+            if (!resident.IsValid)
+                return View("RegisterForm", resident);
+     
             ApiClient<Resident> client = new ApiClient<Resident>();
             client.Scheme = "http";
             client.Host = "localhost";
             client.Port = 5269;
-            client.Path = "api/Resident/Register";
+            client.Path = "api/Guest/Register";
 
-            bool residentAddedResponse = await client.PostAsync(resident);
-            if(residentAddedResponse)
+            string residentId = await client.PostAsyncReturn<Resident, string>(resident);
+
+            if (residentId != null && residentId != "")
             {
-                ApiClient<string> client2 = new ApiClient<string>();
-                client2.Scheme = "http";
-                client2.Host = "localhost";
-                client2.Port = 5269;
-                client2.Path = "api/Resident/Login";
-                client2.AddParameter("email", resident.ResidentEmail);
-                client2.AddParameter("password", resident.ResidentPassword);
-                string residentId = await client2.GetAsync();
-                return RedirectToAction("ViewDashboard", new { residentId = residentId });
+                HttpContext.Session.SetString("residentId", residentId);
+                return RedirectToAction("ViewDashboard","Resident");
             }
-            return View("RegisterForm");
+            ViewBag.Error = true;
+            return View("RegisterForm", resident);
+
+
 
         }
+       
     }
 }

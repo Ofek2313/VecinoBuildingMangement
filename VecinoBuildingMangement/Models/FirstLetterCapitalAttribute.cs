@@ -12,7 +12,7 @@ namespace VecinoBuildingMangement.Models
         public override bool IsValid(object? value)
         {
 
-           
+           if(value == null) return false;
            string[] words = value.ToString().Split(" ");
            foreach(string word in words)
            {

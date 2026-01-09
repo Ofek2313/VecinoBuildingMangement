@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 using VecinoBuildingMangement.Models;
 using VecinoBuildingMangement.ViewModels;
 
@@ -62,16 +63,20 @@ namespace VecinoBuildingMangementWebService.Controllers
         }
 
         [HttpPost]
-        public bool Register(Resident resident)
+        public string Register([FromBody] Resident resident)
         {
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
-                return repositoryUOW.ResidentRepository.Create(resident);
+                if (this.repositoryUOW.ResidentRepository.Create(resident))
+                    return this.repositoryUOW.ResidentRepository.GetLastId();
+                return null;
+
+
             }
             catch (Exception ex)
             {
-                return false;
+                return null;
             }
             finally
             {

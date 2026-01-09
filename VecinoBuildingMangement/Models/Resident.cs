@@ -19,7 +19,11 @@ namespace VecinoBuildingMangement.Models
         int unitNumber;
         string buildingId;
 
-        public Resident() { }
+        public Resident() 
+        {
+            unitNumber = 0;
+            BuildingId = "0";
+        }
 
 
         public string ResidentSalt { get; set; }

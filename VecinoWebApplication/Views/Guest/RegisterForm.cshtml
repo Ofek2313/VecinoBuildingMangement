@@ -1,0 +1,44 @@
+﻿@using VecinoBuildingMangement.Models
+@model Resident
+@{
+    ViewData["Title"] = "RegisterForm";
+    Layout = "~/Views/Shared/MasterGuestPage.cshtml";
+}
+
+<main>
+    <div class="box">
+        <h2 class="header2">Register</h2>
+       
+        <form asp-controller="Guest" asp-action="Register" method="post">
+            <div class="field">
+                <input type="text" placeholder="Full Name" class="input" asp-for="ResidentName" value="Ofek">
+                 <span class="errorData" asp-validation-for="ResidentName"></span>
+            </div>
+           
+            <div class="field">
+                <input type="password" placeholder="Password" class="input" asp-for="ResidentPassword" value="Test22$$">
+                <span class="errorData" asp-validation-for="ResidentPassword"></span>
+            </div>
+
+          @*   <div class="field">
+                <input type="password" placeholder="Confirm Password" class="input" asp-for="ResidentPassword">
+                <span class="errorData" asp-validation-for="ResidentPassword"></span>
+            </div> *@
+
+            <div class="field">
+                <input type="text" placeholder="Phone" class="input" asp-for="ResidentPhone" value="050000001">
+                <span class="errorData" asp-validation-for="ResidentPhone"></span>
+            </div>
+
+            <div class="field">
+                <input type="email" placeholder="Email" class="input" asp-for="ResidentEmail" value="ofekcohen1981@gmail.com">
+                <span class="errorData" asp-validation-for="ResidentEmail"></span>
+            </div>
+            <div class="btns">
+                <button class="button" type="submit">Register</button>
+                <button type="reset" class="button">Clear</button>
+            </div>
+        </form>
+    </div>
+</main>
+

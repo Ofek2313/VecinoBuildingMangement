@@ -11,6 +11,7 @@ namespace VecinoBuildingMangement.Models
     {
         private bool isDigit(string value)
         {
+            
             for (int i = 0; i < value.Length; i++)
             {
                 if (value[i] < '0' || value[i] > '9')

@@ -85,7 +85,7 @@ form{
    flex-direction: column;
    justify-content: center;
    align-items: center;
-
+   
 
 }
 h2{
@@ -99,7 +99,7 @@ h2{
     -webkit-text-fill-color: transparent;
 }
 .input{
-    width: 70%;          
+    width: 90%;          
     padding: 10px;     
     margin-bottom: 15px; 
     border-radius: 10px;
@@ -123,6 +123,7 @@ form h2{
     background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
     color: white;
     text-align: center;
+    cursor:pointer;
     
 }
 .btns{
@@ -132,4 +133,9 @@ form h2{
    margin-right: 14px;
    
 
+}
+.field{
+    
+    width: 100%;    
+    margin-left:5rem;
 }

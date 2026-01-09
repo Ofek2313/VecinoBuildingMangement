@@ -27,7 +27,7 @@
             <li class="nav"> <img src="~/Images/calendar-xoaigr9z259n0zw0pl1c.webp" class="@(ViewData["Active"]?.ToString() == "event" ? "Current" : "")"><a href="http://localhost:5086/Resident/ViewEvents" class="@(ViewData["Active"]?.ToString() == "event" ? "Current" : "")">Events</a></li>
             <li class="nav"> <img src="~/Images/money.svg" class="@(ViewData["Active"]?.ToString() == "payment" ? "Current" : "")"><a href="http://localhost:5086/Resident/ViewManagePayment" class="@(ViewData["Active"]?.ToString() == "payment" ? "Current" : "")">Payments</a></li>
             <li class="nav"> <img src="~/Images/spanner-wrench.svg" class="@(ViewData["Active"]?.ToString() == "servicerequest" ? "Current" : "")"><a href="http://localhost:5086/Resident/ViewSerivceRequests" class="@(ViewData["Active"]?.ToString() == "servicerequest" ? "Current" : "")">Service Requests</a></li>
-            <li class="nav"> <img src="~/Images/survey.svg" class="@(ViewData["Active"]?.ToString() == "polls" ? "Current" : "")"><a href="http://localhost:5086/Resident/ViewPolls" @(ViewData["Active"]?.ToString() == "polls" ? "Current" : "")>Digital Polls</a></li>
+            <li class="nav"> <img src="~/Images/survey.svg" class="@(ViewData["Active"]?.ToString() == "polls" ? "Current" : "")"><a href="http://localhost:5086/Resident/ViewPolls" class="@(ViewData["Active"]?.ToString() == "polls" ? "Current" : "")">Digital Polls</a></li>
         <li class="nav leave"> <img src=" ~/Images/door-leave.svg"> <a href="Register_Homepage.html">Leave</a></li>
     </ul>
     @RenderBody()

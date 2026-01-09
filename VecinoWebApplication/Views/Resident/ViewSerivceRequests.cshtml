@@ -68,7 +68,11 @@
             <input type="text" class="input title" placeholder="Request Title">
             <textarea class="input description" placeholder="Request Description"></textarea>
             <Select class="input select">
-                <option value="test"> Test</option>
+                @foreach(RequestTypes requestTypes in Model.RequestTypes )
+                {
+                    <option value="@requestTypes.RequestTypeId"> @requestTypes.RequestTypeName</option>
+                }
+                
             </Select>
             <button class="sumbitbtn">Submit</button>
         </form>
