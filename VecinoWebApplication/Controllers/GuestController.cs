@@ -47,13 +47,13 @@ namespace VecinoWebApplication.Controllers
             client.Port = 5269;
             client.Path = "api/Guest/Register";
 
-            string residentId = await client.PostAsyncReturn<Resident, string>(resident);
+            bool ok = await client.PostAsync(resident);
 
-            if (residentId != null && residentId != "")
-            {
-                HttpContext.Session.SetString("residentId", residentId);
-                return RedirectToAction("ViewDashboard","Resident");
-            }
+            //if (residentId != null && residentId != "")
+            //{
+            //    HttpContext.Session.SetString("residentId", residentId);
+            //    return RedirectToAction("ViewDashboard","Resident");
+            //}
             ViewBag.Error = true;
             return View("RegisterForm", resident);
 

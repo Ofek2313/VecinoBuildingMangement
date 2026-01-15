@@ -20,15 +20,16 @@ namespace VecinoBuildingMangementWebService
 
             string sql = @$"Insert Into Resident(ResidentName,ResidentPassword,ResidentPhone,ResidentEmail,UnitNumber,BuildingId,ResidentSalt)
                             Values(@ResidentName,@ResidentPassword,@ResidentPhone,
-                                   @ResidentEmail,@UnitNumber,@BuildingId)";
+                                   @ResidentEmail,@UnitNumber,@BuildingId,@ResidentSalt)";
+            string salt = GetSalt(GetRandomNumber());
             this.dbHelperOleDb.AddParameter("@ResidentName", model.ResidentName);
+            this.dbHelperOleDb.AddParameter("@ResidentPassword", GetHash(model.ResidentPassword, salt));
             this.dbHelperOleDb.AddParameter("@ResidentPhone", model.ResidentPhone);
             this.dbHelperOleDb.AddParameter("@ResidentEmail", model.ResidentEmail);
             this.dbHelperOleDb.AddParameter("@UnitNumber", model.UnitNumber);
             this.dbHelperOleDb.AddParameter("@BuildingId", model.BuildingId);
-            string salt = GetSalt(GetRandomNumber());
             this.dbHelperOleDb.AddParameter("@ResidentSalt",salt);
-            this.dbHelperOleDb.AddParameter("@ResidentPassword", GetHash(model.ResidentPassword,salt));
+         
 
             return this.dbHelperOleDb.Insert(sql) > 0;
 

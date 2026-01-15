@@ -21,16 +21,15 @@ namespace VecinoBuildingMangement.Models
 
         public Resident() 
         {
-            unitNumber = 0;
-            BuildingId = "0";
+          
         }
 
 
-        public string ResidentSalt { get; set; }
+        public string? ResidentSalt { get; set; }
 
 
 
-        public string ResidentId
+        public string? ResidentId
         {
             get { return residentId; }
             set { residentId = value;
@@ -92,7 +91,7 @@ namespace VecinoBuildingMangement.Models
                 ValidateProperty(value, "UnitNumber");
             }
         }
-        public string BuildingId
+        public string? BuildingId
         {
             get { return buildingId; }
             set { buildingId = value; }
