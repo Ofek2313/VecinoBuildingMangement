@@ -104,6 +104,8 @@ namespace BuildingManagementWsClient
                     if (httpResponse.IsSuccessStatusCode)
                     {
                         string result = await httpResponse.Content.ReadAsStringAsync();
+                        //if (typeof(TResponse) == typeof(string))
+                        //    return result;
                         JsonSerializerOptions options = new JsonSerializerOptions();
                         options.PropertyNameCaseInsensitive = true; 
                         TResponse value = JsonSerializer.Deserialize<TResponse>(result, options);

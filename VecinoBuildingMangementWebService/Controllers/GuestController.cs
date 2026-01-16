@@ -63,17 +63,25 @@ namespace VecinoBuildingMangementWebService.Controllers
         }
 
         [HttpPost]
-        public bool Register([FromBody] Resident resident)
+        public Resident Register([FromBody] Resident resident)
         {
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
-                return this.repositoryUOW.ResidentRepository.Create(resident);
+                if (this.repositoryUOW.ResidentRepository.Create(resident))
+                {
+                    string residentId =  this.repositoryUOW.ResidentRepository.GetLastId();
+                    resident.ResidentId = residentId;
+                    return resident;
+
+                }
+                else
+                    return null;
 
             }
             catch (Exception ex)
             {
-                return false;
+                return null;
             }
             finally
             {

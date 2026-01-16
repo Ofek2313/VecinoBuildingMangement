@@ -25,15 +25,20 @@ namespace VecinoBuildingMangement.Models
         }
 
 
-        public string? ResidentSalt { get; set; }
+        public string? ResidentSalt { get; set; } = "";
 
 
 
         public string? ResidentId
         {
             get { return residentId; }
-            set { residentId = value;
-                
+            set
+            {
+                if (value == null)
+                    residentId = "";
+                else
+                    residentId = value;
+
             }
         }
 
@@ -94,7 +99,12 @@ namespace VecinoBuildingMangement.Models
         public string? BuildingId
         {
             get { return buildingId; }
-            set { buildingId = value; }
+            set {
+                if (value == null)
+                    buildingId = "1";
+                else
+                    buildingId = value;     
+            }
         }
 
 

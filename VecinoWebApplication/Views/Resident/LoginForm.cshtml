@@ -1,19 +1,22 @@
-﻿
+﻿@using VecinoBuildingMangement.ViewModels;
+@model LogInViewModel;
+
 @{
     ViewData["Title"] = "LoginForm";
     Layout = "~/Views/Shared/MasterGuestPage.cshtml";
 }
 
+
 <main>
     <div class="box">
         <h2 class="header2">Log In</h2>
-        <form>
+        <form asp-controller="Resident" asp-action="ResidentLogIn" method="post">
 
 
-            <input type="text" placeholder="Email/Phone" class="input">
-            <input type="password" placeholder="Password" class="input">
+            <input type="text" placeholder="Email/Phone" class="input" asp-for="Email" >
+            <input type="password" placeholder="Password" class="input" asp-for="Password">
             <div class="btns">
-                <a class="button" href="Register_Homepage.html">Login</a>
+                <button class="button" type="submit">Login</button>
                 <input type="reset" class="button">
             </div>
         </form>

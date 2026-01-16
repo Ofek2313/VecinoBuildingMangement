@@ -113,11 +113,12 @@ namespace VecinoBuildingMangementWebService.Controllers
 
 
         [HttpPost]
-        public bool OpenServiceRequest(ServiceRequest serviceRequest)
+        public bool OpenServiceRequest([FromBody] ServiceRequest serviceRequest)
         {
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
+              
                 return repositoryUOW.ServiceRequestRepository.Create(serviceRequest);
             }
             catch (Exception ex)
@@ -131,14 +132,17 @@ namespace VecinoBuildingMangementWebService.Controllers
 
         }
 
-        [HttpGet]
-        public string Login(string email, string password)
+        [HttpPost]
+        public Resident Login([FromBody] LogInViewModel logInViewModel)
         {
 
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
-                return this.repositoryUOW.ResidentRepository.Login(email, password);
+                string id = this.repositoryUOW.ResidentRepository.Login(logInViewModel.Email, logInViewModel.Password);
+                if (id != null)
+                    return this.repositoryUOW.ResidentRepository.GetById(id);
+                return null;
             }
             catch(Exception ex)
             {
@@ -175,14 +179,15 @@ namespace VecinoBuildingMangementWebService.Controllers
             }
         }
         [HttpPost]
-        public bool JoinBuilding(string residentId, string buildingCode)
+        public bool JoinBuilding([FromBody] JoinBuildingRequest joinBuildingRequest)
         {
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
-                string buildingId = this.repositoryUOW.BuildingRepository.GetBuildingIdByCode(buildingCode);
+                
+                string buildingId = this.repositoryUOW.BuildingRepository.GetBuildingIdByCode(joinBuildingRequest.buildingCode);
                 if (buildingId != null)
-                    return this.repositoryUOW.ResidentRepository.UpdateResidentBuilding(residentId, buildingId);
+                    return this.repositoryUOW.ResidentRepository.UpdateResidentBuilding(joinBuildingRequest.residentId, buildingId);
                 else
                     return false;
             }
@@ -256,7 +261,7 @@ namespace VecinoBuildingMangementWebService.Controllers
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
                 viewModel.Building = this.repositoryUOW.BuildingRepository.GetBuildingByResidentId(residentId);
                 viewModel.Notifications = this.repositoryUOW.NotificationRepository.GetNotificationsByResidentId(residentId);
-                viewModel.events = this.repositoryUOW.EventRepository.GetAll();
+                viewModel.events = this.repositoryUOW.EventRepository.GetEventByBuildingId(viewModel.Building.BuildingId);
                 return viewModel;
             }
             catch (Exception ex)

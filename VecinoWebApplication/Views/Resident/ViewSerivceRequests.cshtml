@@ -1,6 +1,7 @@
 ﻿@using VecinoBuildingMangement.ViewModels
 @using VecinoBuildingMangement.Models
 @model ServiceRequestViewModel
+
 @{
     ViewData["Title"] = "ViewSerivceRequests";
     ViewData["Active"] = "servicerequest";
@@ -63,18 +64,18 @@
     <div class="overlay" id="overlay"></div>
     <div class="PopOut" id="popout">
         <h2>Submit A request</h2>
-        <form class="request-submit">
+        <form class="request-submit" asp-controller="Resident" asp-action="CreateServiceRequest" method="post">
 
-            <input type="text" class="input title" placeholder="Request Title">
-            <textarea class="input description" placeholder="Request Description"></textarea>
-            <Select class="input select">
+            <input type="text" class="input title" placeholder="Request Title" asp-for="ServiceRequest.RequestTitle" >
+            <textarea class="input description" placeholder="Request Description" asp-for="ServiceRequest.RequestMessage"></textarea>
+            <Select class="input select" asp-for="ServiceRequest.RequestTypeId">
                 @foreach(RequestTypes requestTypes in Model.RequestTypes )
                 {
                     <option value="@requestTypes.RequestTypeId"> @requestTypes.RequestTypeName</option>
                 }
                 
             </Select>
-            <button class="sumbitbtn">Submit</button>
+            <button class="sumbitbtn" type="submit">Submit</button>
         </form>
      
     </div>

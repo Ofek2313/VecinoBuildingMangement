@@ -21,11 +21,16 @@
     <div class="box">
         <div class="Title"><img src="../Images/big-megaphone.svg" clas><h1 class="head">Latest Update</h1></div>
         <ul class="Update">
-            @for(int i =0; i< 2; i++)
+            @if(Model.Notifications != null && Model.Notifications.Count > 0)
             {
-                <li>@Model.Notifications[i].NotificationTitle <br>  <span class="Time">@Model.Notifications[i].NotificationDate</span> </li>
+                int count = Math.Min(2, Model.Notifications.Count);
+                @for (int i = 0; i < count; i++)
+                {
+                    <li>@Model.Notifications[i].NotificationTitle <br>  <span class="Time">@Model.Notifications[i].NotificationDate</span> </li>
 
+                }
             }
+           
           
             
         </ul>
@@ -34,11 +39,16 @@
     <div class="box">
         <div class="Title"><img src="../Images/calendar-xoaigr9z259n0zw0pl1c.webp"><h1 class="head">Upcoming Events</h1></div>
         <ul class="Update">
-            @for (int i = 0; i < 2; i++)
+            @if(Model.events != null && Model.events.Count > 0)
             {
-                <li>@Model.events[i].EventTitle <br><span class="Time">@Model.events[i].EventDate</span></li>
+                int count = Math.Min(2, Model.events.Count);
+                @for (int i = 0; i < count; i++)
+                {
+                    <li>@Model.events[i].EventTitle <br><span class="Time">@Model.events[i].EventDate</span></li>
 
+                }
             }
+           
            
             
         </ul>

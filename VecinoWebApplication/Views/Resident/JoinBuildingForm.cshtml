@@ -1,0 +1,22 @@
+﻿
+@{
+    ViewData["Title"] = "JoinBuildingForm";
+    Layout = "~/Views/Shared/MasterGuestPage.cshtml";
+}
+
+<main>
+    <div class="box">
+        <h2>Join</h2>
+        <form asp-controller="Resident" asp-action="JoinBuilding" method="post">
+
+
+            <input type="text" placeholder="Code" class="input" name="buildingCode" >
+
+            <div class="btns">
+                <button class="button" type="submit">Join</button>
+                <input type="reset" class="button">
+            </div>
+        </form>
+    </div>
+</main>
+

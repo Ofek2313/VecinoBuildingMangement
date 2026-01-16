@@ -22,7 +22,12 @@ namespace VecinoBuildingMangement.Models
         public string RequestId
         {
             get { return requestId; }
-            set { requestId = value; }
+            set {
+                if (value == null)
+                    requestId = "";
+                else
+                    requestId = value;
+            }
         }
 
         [Required(ErrorMessage ="Title can not be empty")]
@@ -53,11 +58,14 @@ namespace VecinoBuildingMangement.Models
         }
 
         [Required(ErrorMessage = "Request Date can not be empty")]
-        [Date(ErrorMessage ="Date must be a valid date")]
+       
         public string RequestDate
         {
             get { return requestDate; }
-            set { requestDate = value;
+            set {
+               
+                   
+                requestDate = value;
                 ValidateProperty(value, "RequestDate");
             }
         }
@@ -66,7 +74,9 @@ namespace VecinoBuildingMangement.Models
         public string RequestStatus
         {
             get { return requestStatus; }
-            set { requestStatus = value;
+            set { 
+                
+                   requestStatus = value;
                 ValidateProperty(value, "RequestStatus");
             }
         }

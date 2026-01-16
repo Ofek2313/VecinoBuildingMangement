@@ -18,12 +18,24 @@
 </head>
 <body>
     
-    <ul class="nav">
-        <li> <a href="http://localhost:5086/Guest/HomePage"> <img src="~/Images/logo_small.png" class="logo"></a> </li>
-        <li class="item"><a href="http://localhost:5086/Guest/ViewBuildingCatalogue"> Buildings</a></li>
-        <li class="item"><a href="http://localhost:5086/Resident/LoginForm"> Login</a></li>
-        <li class="item"> <a href="http://localhost:5086/Guest/RegisterForm"> Register</a></li>
-    </ul>
+        <ul class="nav">
+            <li> <a href="http://localhost:5086/Guest/HomePage"> <img src="~/Images/logo_small.png" class="logo"></a> </li>
+            <li class="item"><a href="http://localhost:5086/Guest/ViewBuildingCatalogue"> Buildings</a></li>
+            @if (ViewBag.IsLoggedIn == null)
+            {
+                <li class="item"><a href="http://localhost:5086/Resident/LoginForm"> Login</a></li>
+            <li class="item"> <a href="http://localhost:5086/Guest/RegisterForm"> Register</a></li>
+        }
+        else
+        {
+            <li class="item"> <a href="http://localhost:5086/Resident/JoinBuildingForm">Join Building</a></li>
+        }
+                
+        </ul>
+    
+   
+
+    
     @RenderBody()
 
 </body>
