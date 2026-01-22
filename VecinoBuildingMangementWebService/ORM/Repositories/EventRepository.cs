@@ -89,5 +89,55 @@ namespace VecinoBuildingMangementWebService
 
             return events;
         }
+        private bool HasHappend(string date)
+        {
+            string[] date1Split = date.Split('/');
+            string[] date2Split = DateTime.Now.ToString("dd/MM/yyyy").Split('/');
+
+            if (Convert.ToUInt32(date1Split[0]) < Convert.ToUInt32(date2Split[0]))
+                return true;
+            if (Convert.ToUInt32(date1Split[1]) < Convert.ToUInt32(date2Split[1]))
+                return true;
+            if (Convert.ToUInt32(date1Split[2]) < Convert.ToUInt32(date2Split[2]))
+                return true;
+            return false;
+        }
+        public List<Event> GetPreviousEventsByBuildingId(string buildingId)
+        {
+            string sql = "Select * From Event Where BuildingId = @BuildingId";
+            this.dbHelperOleDb.AddParameter("@BuildingId", buildingId);
+
+            List<Event> events = new List<Event>();
+            using (IDataReader reader = this.dbHelperOleDb.Select(sql))
+            {
+                while (reader.Read())
+                {
+                    if(HasHappend(this.ModelCreator.CreateModel(reader).EventDate))
+                        events.Add(this.ModelCreator.CreateModel(reader));
+
+                }
+            }
+
+            return events;
+        }
+        public List<Event> GetCurrentEventsByBuildingId(string buildingId)
+        {
+            string sql = "Select * From Event Where BuildingId = @BuildingId";
+            this.dbHelperOleDb.AddParameter("@BuildingId", buildingId);
+
+            List<Event> events = new List<Event>();
+            using (IDataReader reader = this.dbHelperOleDb.Select(sql))
+            {
+                while (reader.Read())
+                {
+                    if (!HasHappend(this.ModelCreator.CreateModel(reader).EventDate))
+                        events.Add(this.ModelCreator.CreateModel(reader));
+
+                }
+            }
+
+            return events;
+        }
     }
+    
 }

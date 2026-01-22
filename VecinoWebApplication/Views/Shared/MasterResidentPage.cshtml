@@ -23,15 +23,48 @@
       
         <li class="logo"><img src="~/Images/Untitled-4.png" class="logo"></li>
             <li class="nav">  <img src="~/Images/dashboard.svg" class="@(ViewData["Active"]?.ToString() == "dashboard" ? "Current" : "")"><a href="http://localhost:5086/Resident/ViewDashboard" class="@(ViewData["Active"]?.ToString() == "dashboard" ? "Current" : "")">Dashboard</a></li>
-            <li class="nav"> <img src="~/Images/big-megaphone.svg" class="@(ViewData["Active"]?.ToString() == "dashboard" ? "Current" : "")"> <a href="Announcements.html" class="@(ViewData["Active"]?.ToString() == "dashboard" ? "Current" : "")">Announcements</a></li>
+            <li class="nav"> <img src="~/Images/big-megaphone.svg" class="@(ViewData["Active"]?.ToString() == "annc" ? "Current" : "")"> <a href="http://localhost:5086/Resident/ViewAnnouncement" class="@(ViewData["Active"]?.ToString() == "annc" ? "Current" : "")">Announcements</a></li>
             <li class="nav"> <img src="~/Images/calendar-xoaigr9z259n0zw0pl1c.webp" class="@(ViewData["Active"]?.ToString() == "event" ? "Current" : "")"><a href="http://localhost:5086/Resident/ViewEvents" class="@(ViewData["Active"]?.ToString() == "event" ? "Current" : "")">Events</a></li>
             <li class="nav"> <img src="~/Images/money.svg" class="@(ViewData["Active"]?.ToString() == "payment" ? "Current" : "")"><a href="http://localhost:5086/Resident/ViewManagePayment" class="@(ViewData["Active"]?.ToString() == "payment" ? "Current" : "")">Payments</a></li>
             <li class="nav"> <img src="~/Images/spanner-wrench.svg" class="@(ViewData["Active"]?.ToString() == "servicerequest" ? "Current" : "")"><a href="http://localhost:5086/Resident/ViewSerivceRequests" class="@(ViewData["Active"]?.ToString() == "servicerequest" ? "Current" : "")">Service Requests</a></li>
             <li class="nav"> <img src="~/Images/survey.svg" class="@(ViewData["Active"]?.ToString() == "polls" ? "Current" : "")"><a href="http://localhost:5086/Resident/ViewPolls" class="@(ViewData["Active"]?.ToString() == "polls" ? "Current" : "")">Digital Polls</a></li>
         <li class="nav leave"> <img src=" ~/Images/door-leave.svg"> <a href="Register_Homepage.html">Leave</a></li>
     </ul>
+        <div class="profile-container">
+            <button class="profile-btn" id="profileBtn">
+                <img src="~/Images/person.png" class="profile">
+            </button>
+            <div class="dropdown-menu" id="dropdownMenu">
+                <ul>
+                    <li onclick="window.location.href='profile.html'">👤 My Profile</li>
+                    <li onclick="window.location.href='settings.html'">⚙️ Settings</li>
+
+                    <li class="divider"></li>
+
+                    <li onclick="logout()">🚪 Logout</li>
+                </ul>
+            </div>
+        </div>
     @RenderBody()
     </div>
+    <script>
+        const profileBtn = document.getElementById('profileBtn');
+        const dropdownMenu = document.getElementById('dropdownMenu');
+
+        profileBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            dropdownMenu.classList.toggle('show');
+        });
+
+
+        document.addEventListener('click', (e) => {
+            if (!profileBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                dropdownMenu.classList.remove('show');
+            }
+        });
+
+
+    </script>
 </body>
 </html>
 

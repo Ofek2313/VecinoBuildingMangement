@@ -1,161 +1,229 @@
 
-.main{
+
+.FeeTitle{
+    font-size:200px;
+}
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+@keyframes popOut {
+    from {
+        opacity: 0;
+        transform: scale(0.2);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+
+.main {
     display: grid;
-    grid-template-columns: 2fr 1fr;
- 
+    grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
+    grid-template-rows: 50px repeat(4,1fr);
     gap: 20px;
-    height: 100vh;
+}
 
-}
-.box1{
-  
-    background-color: white;
-    border-radius: 20px;
-   
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    grid-column: 1/2;
-    
-  
-}
-.long {
-
-  grid-column: 2/3;  
-  height: auto;
-}
-*{
-    font-family: Roboto;
-     color: #1f2937;
-}
-h1{
-    font-family: Roboto;
-    color: #1f2937;
-    padding-left: 10%;
-    padding-top:2%;
-    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-.Fee{
-    font-size: 3.5em;
-    margin-left: 5%;
-    margin-top: 5%;
-}
-.Money{
-    font-size: 4em;
-    text-align: center;
-    transition: font-size 0.3s ease;
-    font-weight: bold;
-    padding-top: 5%;
-    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    
-}
-.Money:hover{
-    font-size:4vw;
-}
-.NumberFee{
-    font-size: 1.5rem;
-    text-align: center;
-    color: #718096;
-    font-weight: lighter;
-}
-.Icon{
-    width: 200px;
-    height: 200px;
-    margin-left: 60%;
-    margin-top:-50%;
-}
-.History{
-    list-style-type: none;
-    margin-left: 15%;
-    margin-top: 15%;
-    height: 100%;
-}
-.Fees{
-    font-weight: lighter;
-    text-align: center;
-    font-size: 1.5rem;
-    margin-bottom: 1%;
-    color: #718096
-}
-.selectbox{
-   
-    width: 80%;
-    height: 40px;
-    border-radius: 8px;
-    border: 3px solid rgb(208, 208, 208);
-    font-size: 1.3rem;
-    
-}
-.wrapselect{
+.payments {
+    grid-column-start: 1;
+    grid-column-end: 3;
+    background: #fff;
+    border-radius: 16px;
+    padding: 1rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.06);
     display: flex;
-    justify-content: center;
-    align-items: center;
     flex-direction: column;
-    margin-top: 15vh;
-    height: 25%;
-    gap: 10px;
+    justify-content: center;
+    padding-left: 2rem;
+    grid-row-start: 2;
+    background: linear-gradient(to bottom right, #14b8a6, #10b981, #16a34a);
+    
+}
 
-}
-.wrapselect h2{
-    
-    
-    font-size:1.5em;
-}
-.btn{
-    width: 100%;
-    height: 65%;
-    border-radius: 10px;
-    font-size: 1.2em;
-    border: 1px solid rgb(208, 208, 208);
-    text-align: center;
-    padding-bottom: 4%;
+.Money {
+    font-size: 3.5em;
     font-weight: bold;
-    background:linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
     color: white;
+    animation: popOut 0.6s ease;
 }
-.btn-wrap{
-    margin: 0;
-    display: flex;
-    gap: 5px;
-    width: 80%;
-}
-.Date{
-    font-weight: lighter;
 
+.Fees {
+    padding-left: 0.5em;
+    color: white;
+    font-weight: 300;
 }
-.Amount{
-    font-size: 1.2rem;
+
+.NumberFee {
+    padding-left: 0.5em;
+    color: white;
+    font-weight: 300;
+}
+
+.history {
+    background: #fff;
+    border-radius: 16px;
+    padding: 1rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+    display: flex;
+    flex-direction: column;
+    grid-row-start: 2;
+    grid-row-end: 5;
+    gap: 1rem;
+    
+}
+
+.fees {
+    grid-row-start: 3;
+    grid-row-end: 5;
+    grid-column-start: 1;
+    grid-column-end: 3;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.fee {
+    background: #fff;
+    border-radius: 16px;
+    padding: 1rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+    min-height: 90px;
+    animation: fadeIn 0.6s ease-in;
+    display: flex;
+}
+
+
+
+.paid {
+    background: #fff;
+    border-radius: 16px;
+    padding: 1rem;
+    background-color: rgba(121, 255, 130, 0.12);
+    min-height: 40px;
+    display: flex;
+    animation-delay:0.2s;
+    animation: fadeIn 0.6s ease-in;
+}
+
+.Title {
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.Secondary {
+    font-size: 0.9rem;
+    font-weight: 400;
+}
+
+.imgwraper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+}
+
+.requestimg {
+    border-radius: 10px;
+    padding: 0.5em;
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+    background: linear-gradient(135deg, #72ff47, #06b838);
+}
+
+.info {
+    padding-left: 0.3em;
+    padding-top: 0.3em;
+}
+
+.feeamount {
+    margin-left: auto;
+    padding-top: 0.9em;
+    font-weight: bold;
+}
+
+header {
+    grid-row-start: 1;
+    font-size: 2rem;
+    font-weight: bold;
+    background: linear-gradient(135deg, #46e017, #02a530);
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: popOut 0.5s ease;
+}
+
+.FeeTitle {
+    font-size: 1.5em;
     font-weight: 500;
 }
-.Status{
-    background-color: black;
-    border-radius: 20px;
-    padding: 2px;
+
+.feedesc {
+    font-weight: 300;
+    font-size: 0.9em;
 }
-.History li{
-    margin-top: 15%;
+
+.feeinfo {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex: 1;
 }
-.Pen{
-    background-color: rgba(253, 253, 4, 0.3);
-    color: rgba(157, 160, 0, 0.869);
+
+.fee-bottom {
+    width: 50%;
+    display: flex;
+  
+    justify-content: space-between;
 }
-.Com{
-     background-color: rgba(0, 255, 64, 0.3);
-    color: rgba(0, 150, 18, 0.869);
+
+.status {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.25em 0.6em;
+    border-radius: 999px;
+    background-color: rgba(239, 68, 68, 0.15);
+    color: rgba(185, 28, 28, 0.9);
 }
-.Can{
-    background-color: rgba(255, 7, 7, 0.3);
-    color: rgba(234, 0, 0, 0.869);
+
+.amount {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #111827;
+    margin-left: auto;
+    padding-top: 1.5em;
 }
-.long h1{
-    font-size: 2rem;
-    
+
+.moneyimg {
+    border-radius: 10px;
+    padding: 0.5em;
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+    background: linear-gradient(135deg, #72ff47, #06b838);
 }
-@media(max-width:1000px){
-    .History{
-        margin-bottom: 5%;
-        font-size: 1.5em;
-    }
+
+.moneywraper {
+    padding-right: 1em;
+}
+.PayBtn {
+    margin-left: auto;
+    padding: 0.65rem 1.25rem;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #f4f4f5, #bdbdbd);
+    font-size: 0.95rem;
+    font-weight: bolder;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 6px 18px rgba(59, 130, 246, 0.35);
 }

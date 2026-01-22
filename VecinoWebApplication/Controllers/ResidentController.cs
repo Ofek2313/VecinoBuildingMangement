@@ -42,15 +42,15 @@ namespace VecinoWebApplication.Controllers
         [HttpGet]
         public async Task<IActionResult> ViewEvents()
         {
-            ApiClient<List<Event>> client = new ApiClient<List<Event>>();
+            ApiClient<ViewEventViewModel> client = new ApiClient<ViewEventViewModel>();
             string residentId = HttpContext.Session.GetString("residentId");
             client.Scheme = "http";
             client.Host = "localhost";
             client.Port = 5269;
             client.Path = "api/Resident/ViewEvents";
             client.AddParameter("residentId", residentId);
-            List<Event> events = await client.GetAsync();
-            return View(events);
+            ViewEventViewModel viewEventViewModel = await client.GetAsync();
+            return View(viewEventViewModel);
         }
         [HttpGet]
         public IActionResult CreateServiceRequestForm()
@@ -62,6 +62,8 @@ namespace VecinoWebApplication.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateServiceRequest(ServiceRequest serviceRequest)
         {
+            Console.WriteLine($"Incoming serviceRequest.RequestId: '{serviceRequest.RequestId}'");
+
             serviceRequest.ResidentId = HttpContext.Session.GetString("residentId");
             serviceRequest.RequestStatus = "Pending";
             serviceRequest.RequestDate = DateTime.Now.ToShortDateString();
@@ -80,7 +82,7 @@ namespace VecinoWebApplication.Controllers
         
         }
         [HttpGet]
-        public async Task<IActionResult> ViewPolls(string buildingId)
+        public async Task<IActionResult> ViewPolls()
         {
             ApiClient<List<PollViewModel>> client = new ApiClient<List<PollViewModel>>();
             string residentId = HttpContext.Session.GetString("residentId");
@@ -88,7 +90,7 @@ namespace VecinoWebApplication.Controllers
             client.Host = "localhost";
             client.Port = 5269;
             client.Path = "api/Resident/PollViewModel";
-            client.AddParameter("buildingId", residentId);
+            client.AddParameter("residentId", residentId);
             List<PollViewModel> polls = await client.GetAsync();
             return View(polls);
         }
@@ -178,6 +180,20 @@ namespace VecinoWebApplication.Controllers
             ViewBag["Error"] = true;
             return RedirectToAction("JoinBuildingForm");
 
+
+        }
+        [HttpGet]
+        public async Task<IActionResult> ViewAnnouncement()
+        {
+            ApiClient<List<Notification>> client = new ApiClient<List<Notification>>();
+            string residentId = HttpContext.Session.GetString("residentId");
+            client.Scheme = "http";
+            client.Host = "localhost";
+            client.Port = 5269;
+            client.Path = "api/Resident/GetNotifications";
+            client.AddParameter("residentId", residentId);
+            List<Notification> viewNotification = await client.GetAsync();
+            return View(viewNotification);
 
         }
     }

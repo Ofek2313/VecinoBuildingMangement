@@ -157,17 +157,18 @@ namespace VecinoBuildingMangementWebService.Controllers
         }
 
         [HttpGet]
-        public List<Event> ViewEvents(string residentId)
+        public ViewEventViewModel ViewEvents(string residentId)
         {
             List<Event> events = new List<Event>();
+            ViewEventViewModel viewEventViewModel = new ViewEventViewModel();
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
                 Building building = this.repositoryUOW.BuildingRepository.GetBuildingByResidentId(residentId);
-              
-                events = this.repositoryUOW.EventRepository.GetEventByBuildingId(building.BuildingId);
-                
-                return events;
+
+                viewEventViewModel.CurrEvents = this.repositoryUOW.EventRepository.GetEventByBuildingId(building.BuildingId);
+                viewEventViewModel.PreEvents = this.repositoryUOW.EventRepository.GetPreviousEventsByBuildingId(building.BuildingId);
+                return viewEventViewModel;
             }
             catch (Exception ex)
             {
@@ -274,13 +275,15 @@ namespace VecinoBuildingMangementWebService.Controllers
             }
         }
         [HttpGet]
-        public List<PollViewModel> PollViewModel(string buildingId)
+        public List<PollViewModel> PollViewModel(string residentId)
         {
             List<PollViewModel> pollviewModel = new List<PollViewModel>();
-            
+          
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
+                Building building = this.repositoryUOW.BuildingRepository.GetBuildingByResidentId(residentId);
+                string buildingId = building.BuildingId;
                 List<Poll> polls = this.repositoryUOW.PollRepository.GetActivePollsByBuilding(buildingId);
                 foreach (Poll poll in polls)
                 {

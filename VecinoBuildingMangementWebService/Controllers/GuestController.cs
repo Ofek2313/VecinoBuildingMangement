@@ -76,7 +76,11 @@ namespace VecinoBuildingMangementWebService.Controllers
 
                 }
                 else
+                {
+                  
                     return null;
+                }
+                    
 
             }
             catch (Exception ex)

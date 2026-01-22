@@ -1,0 +1,36 @@
+﻿@using VecinoBuildingMangement.Models
+@{
+    ViewData["Title"] = "ViewAnnouncement";
+    ViewData["active"] = "annc";
+    Layout = "~/Views/Shared/MasterResidentPage.cshtml";
+}
+@model List<Notification>
+<link href="~/css/Anncs.css" rel="stylesheet" />
+<div class="main1">
+    <header class="header">Announcements and Notifications</header>
+    <section class="Announcements">
+        @foreach(Notification notification in Model)
+        {
+            
+        
+            <div class="announcement">
+                <img src="~/Images/big-megaphone.svg" class="megaphone">
+                <div class="info">
+
+
+                    <h1 class="AnncTitle">@notification.NotificationTitle</h1>
+                    <p class="AnncDesc">@notification.NotificationMessage</p>
+                    <div class="bottom">
+                        <img src="~/Images/calendar-xoaigr9z259n0zw0pl1c.webp" class="cal">
+                        <p class="AnncDate">@notification.NotificationDate</p>
+                    </div>
+
+                </div>
+            </div>
+        }
+       
+    
+
+    </section>
+
+</div>

@@ -48,7 +48,8 @@ namespace VecinoWebApplication.Controllers
             client.Path = "api/Guest/Register";
 
             Resident resident1 = await client.PostAsyncReturn<Resident,Resident>(resident);
-
+            if (resident1 == null)
+                return View("RegisterForm");
             if (resident1.ResidentId != null && resident1.ResidentId != "")
             {
                 HttpContext.Session.SetString("residentId", resident1.ResidentId);

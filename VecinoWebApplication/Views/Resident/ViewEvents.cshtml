@@ -1,6 +1,6 @@
 ﻿@using VecinoBuildingMangement.Models
 @using VecinoBuildingMangement.ViewModels
-@model List<Event>
+@model ViewEventViewModel
 @{
     ViewData["Title"] = "ViewEvents";
     ViewData["Active"] = "event";
@@ -14,7 +14,7 @@
     <div class="event-grid">
 
 
-        @foreach(Event event1 in Model)
+        @foreach (Event event1 in Model.CurrEvents)
         {
             <div class="event-box">
 
@@ -33,16 +33,21 @@
     <div class="past-events">
         <h2>Past Events</h2>
         <div class="event-grids">
-            <div class="event-box">
+            @foreach(Event preEvent in Model.PreEvents)
+            {
+                
+            
+                <div class="event-box">
 
-                <h1 class="event-title">A Residnetal Meeting</h1>
-                <p class="event-desc">A meeting to disscuess about the building upcoming future, and building funds.</p>
-                <div class="details">
-                    <p class="event-date"><img src="../Images/calendar-xoaigr9z259n0zw0pl1c.webp" class="side-image">17/9/2025</p>
-                    <p class="event-time"> <img src="../Images/clock.png" class="side-image">4:00PM - 8:00 PM</p>
-                    <p class="event-type"><img src="../Images/clipboard.png" class="side-image" s>Event Type</p>
+                    <h1 class="event-title">@preEvent.EventTitle</h1>
+                    <p class="event-desc">@preEvent.EventDescription</p>
+                    <div class="details">
+                        <p class="event-date"><img src="../Images/calendar-xoaigr9z259n0zw0pl1c.webp" class="side-image">@preEvent.EventDate</p>
+                        <p class="event-time"> <img src="../Images/clock.png" class="side-image">4:00PM - 8:00 PM</p>
+                        <p class="event-type"><img src="../Images/clipboard.png" class="side-image" s>@preEvent.EventTypeId</p>
+                    </div>
                 </div>
-            </div>
+            }
         </div>
     </div>
 </main>

@@ -7,56 +7,72 @@
     Layout = "~/Views/Shared/MasterResidentPage.cshtml";
 }
 
-<link rel="stylesheet" href="../css/Pay.css">
+<link rel="stylesheet" href="~/css/Pay.css">
 <div class="main">
-    <div class="box1">
-
-        <p class="Money">@Model.TotalFees₪</p>
+    <header>My Payments</header>
+    <div class="payments">
         <p class="Fees">Total Fees</p>
+        <p class="Money">@Model.TotalFees₪</p>
+
         @if(Model.UnPaidFees.Count == 1)
+        {
+            <p class="NumberFee">1 Fee</p>
+        }
+       else
         {
             <p class="NumberFee">@Model.UnPaidFees.Count Fee</p>
         }
-        else
+           
+        <button class="PayBtn">Pay</button>
+
+    </div>
+    <div class="history">
+        <h2>Payment History</h2>
+        @foreach(Fee fee in Model.Fees)
         {
-            <p class="NumberFee">@Model.UnPaidFees.Count Fees</p>
-        }
+            <div class="paid">
+                <div class="imgwraper">
+                    <img src="~/Images/Completed.webp" class="requestimg">
+                </div>
+                <div class="info">
+                    <p class="Title">@fee.FeeTitle</p>
+                    <p class="Secondary">15/12/2025  -  Credit Card</p>
 
-        <div class="wrapselect">
-            <h2>Payment</h2>
-            <select class="selectbox">
-                <option>All Fees</option>
-                @foreach(Fee fee in Model.UnPaidFees)
-                {
-                    <option>@fee.FeeTitle @fee.FeeAmount₪</option>
-                }
-                
-               
-            </select>
-            <div class="btn-wrap">
-                <button class="btn">Pay</button>
-                <button class="btn">Reset</button>
-
+                </div>
+                <p class="feeamount">@fee.FeeAmount₪</p>
             </div>
-
-        </div>
-
-
+        }
+        
+      
 
     </div>
 
-    <div class="box1 long">
-        <h1>Payment History</h1>
-        <ul class="History">
-            @foreach(Fee fee1 in Model.Fees)
-            {
-                <li> <span class="Date">@fee1.FeeDueDate </span><br> <span class="Amount">@fee1.FeeAmount₪ </span> <br> <span class="Status Pen">Pending</span><br> </li>
-            }
-            
-            <li> <span class="Date">September 5, 2025 </span><br> <span class="Amount">250₪ </span> <br> <span class="Status Com">Completed</span><br> </li>
-            <li> <span class="Date">September 2, 2025 </span><br> <span class="Amount">250₪ </span> <br> <span class="Status Can">Cancled</span><br> </li>
+    <div class="fees">
+        @foreach(Fee fee1 in Model.UnPaidFees)
+        {
+            <div class="fee">
+                <div class="moneywraper">
+                    <img src="~/Images/money.webp" class="moneyimg">
+                </div>
+                <div class="feeinfo">
+                    <div class="fee-top">
+                        <p class="FeeTitle">@fee1.FeeTitle</p>
+                        <p class="feedesc"> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vitae mauris risus.  </p>
+                    </div>
 
-        </ul>
+                    <div class="fee-bottom">
+                        <p class="FeeSecondary">Due Date - @fee1.FeeDueDate</p>
+                        <p class="status">Not Payed</p>
+                    </div>
+
+                </div>
+                <p class="amount">@fee1.FeeAmount₪</p>
+            </div>
+        }
+      
+       
+
     </div>
+
 </div>
 
