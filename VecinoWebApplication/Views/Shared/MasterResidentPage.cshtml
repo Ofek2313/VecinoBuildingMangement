@@ -28,7 +28,7 @@
             <li class="nav"> <img src="~/Images/money.svg" class="@(ViewData["Active"]?.ToString() == "payment" ? "Current" : "")"><a href="http://localhost:5086/Resident/ViewManagePayment" class="@(ViewData["Active"]?.ToString() == "payment" ? "Current" : "")">Payments</a></li>
             <li class="nav"> <img src="~/Images/spanner-wrench.svg" class="@(ViewData["Active"]?.ToString() == "servicerequest" ? "Current" : "")"><a href="http://localhost:5086/Resident/ViewSerivceRequests" class="@(ViewData["Active"]?.ToString() == "servicerequest" ? "Current" : "")">Service Requests</a></li>
             <li class="nav"> <img src="~/Images/survey.svg" class="@(ViewData["Active"]?.ToString() == "polls" ? "Current" : "")"><a href="http://localhost:5086/Resident/ViewPolls" class="@(ViewData["Active"]?.ToString() == "polls" ? "Current" : "")">Digital Polls</a></li>
-        <li class="nav leave"> <img src=" ~/Images/door-leave.svg"> <a href="Register_Homepage.html">Leave</a></li>
+            <li class="nav leave"> <img src="~/Images/door-leave.svg"> <a href="http://localhost:5086/Resident/LeaveBuilding">Leave</a></li>
     </ul>
         <div class="profile-container">
             <button class="profile-btn" id="profileBtn">
@@ -36,12 +36,12 @@
             </button>
             <div class="dropdown-menu" id="dropdownMenu">
                 <ul>
-                    <li onclick="window.location.href='profile.html'">👤 My Profile</li>
-                    <li onclick="window.location.href='settings.html'">⚙️ Settings</li>
+                    <li >👤 My Profile</li>
+                    <li >⚙️ Settings</li>
 
                     <li class="divider"></li>
 
-                    <li onclick="logout()">🚪 Logout</li>
+                    <li> <a href="http://localhost:5086/Resident/Logout">🚪 Logout   </a></li>
                 </ul>
             </div>
         </div>
@@ -62,7 +62,10 @@
                 dropdownMenu.classList.remove('show');
             }
         });
-
+        function LeaveBuilding() 
+        { 
+            
+        }
 
     </script>
 </body>

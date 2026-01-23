@@ -41,7 +41,7 @@ namespace VecinoBuildingMangement.Models
         }
 
         [Required(ErrorMessage = "Message can not be empty")]
-        [StringLength(200, MinimumLength = 15, ErrorMessage = "Message needs to be between 10-200 characters")]
+        [StringLength(200, MinimumLength = 10, ErrorMessage = "Message needs to be between 10-200 characters")]
         public string RequestMessage
         {
             get { return requestMessage; }

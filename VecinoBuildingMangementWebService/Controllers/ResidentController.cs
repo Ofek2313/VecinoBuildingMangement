@@ -202,7 +202,8 @@ namespace VecinoBuildingMangementWebService.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpGet]
+        [Produces("application/json")]
         public bool LeaveBuilding(string residentId)
         {
 
@@ -210,6 +211,7 @@ namespace VecinoBuildingMangementWebService.Controllers
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
                 this.repositoryUOW.DbHelperOleDb.OpenTransaction();
+                
 
                 //Deletes all services request that are related onces the resident left the building
                 this.repositoryUOW.ServiceRequestRepository.DeleteByResidentId(residentId);
@@ -341,6 +343,28 @@ namespace VecinoBuildingMangementWebService.Controllers
             }
         }
 
+        [HttpGet]
+
+        public BuildingModel GetBuildingId(string residentId)
+        {
+            try
+            {
+                this.repositoryUOW.DbHelperOleDb.OpenConnection();
+                string id = this.repositoryUOW.BuildingRepository.GetBuildingByResidentId(residentId).BuildingId;
+                BuildingModel buildingModel = new BuildingModel();
+                buildingModel.buildingId = id;
+                return buildingModel;
+
+            }
+            catch (Exception ex)
+            {
+                return null; 
+            }
+            finally
+            {
+                this.repositoryUOW.DbHelperOleDb.CloseConnection();
+            }
+        }
     }
 
 }

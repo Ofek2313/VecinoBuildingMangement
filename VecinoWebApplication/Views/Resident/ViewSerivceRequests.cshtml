@@ -66,8 +66,10 @@
         <h2>Submit A request</h2>
         <form class="request-submit" asp-controller="Resident" asp-action="CreateServiceRequest" method="post">
 
-            <input type="text" class="input title" placeholder="Request Title" asp-for="ServiceRequest.RequestTitle" >
-            <textarea class="input description" placeholder="Request Description" asp-for="ServiceRequest.RequestMessage"></textarea>
+            <input type="text" id="title" class="input title" placeholder="Request Title" asp-for="ServiceRequest.RequestTitle" >
+            <span asp-validation-for="ServiceRequest.RequestTitle"></span>
+            <textarea id="description"  class="input description" placeholder="Request Description" asp-for="ServiceRequest.RequestMessage"></textarea>
+            <span asp-validation-for="ServiceRequest.RequestMessage"></span>
             <Select class="input select" asp-for="ServiceRequest.RequestTypeId">
                 @foreach(RequestTypes requestTypes in Model.RequestTypes )
                 {
@@ -75,7 +77,7 @@
                 }
                 
             </Select>
-            <button class="sumbitbtn" type="submit">Submit</button>
+            <button class="sumbitbtn" type="button" onclick="check()">Submit</button>
         </form>
      
     </div>
@@ -95,5 +97,23 @@
         overlay.style.display = 'none';
         popout.style.display = 'none';
     });
+    function check() {
+      
+        const title = document.getElementById('title').value;
+        const message = document.getElementById('description').value;
+
+        if (title == "" || message == "")
+        { 
+            alert("Empty Field");
+        }   
+        if(title < 5 || message < 10)
+        {
+            alert("More Characters");
+        }
+        else{
+            document.forms[0].submit();
+        }
+        
+    }
 </script>
 

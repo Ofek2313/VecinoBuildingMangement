@@ -3,6 +3,7 @@ using VecinoBuildingMangement;
 using BuildingManagementWsClient;
 using VecinoBuildingMangement.ViewModels;
 using VecinoBuildingMangement.Models;
+using Microsoft.AspNetCore.Authentication;
 
 namespace VecinoWebApplication.Controllers
 {
@@ -75,7 +76,7 @@ namespace VecinoWebApplication.Controllers
             client.Path = "api/Resident/OpenServiceRequest";
 
             bool response = await client.PostAsync(serviceRequest);
-            
+           
             
             return RedirectToAction("ViewSerivceRequests");
 
@@ -97,18 +98,22 @@ namespace VecinoWebApplication.Controllers
         [HttpGet]
         public async Task<IActionResult> ViewDashboard()
         {
+
+            MainpageViewModel mainpage = await GetTaskMainPage();
+            return View(mainpage);
+
+        }
+        private async Task<MainpageViewModel> GetTaskMainPage()
+        {
             ApiClient<MainpageViewModel> client = new ApiClient<MainpageViewModel>();
             client.Scheme = "http";
             client.Host = "localhost";
             client.Port = 5269;
             client.Path = "api/Resident/Mainpage";
             client.AddParameter("residentId", HttpContext.Session.GetString("residentId"));
-            MainpageViewModel mainpage = await client.GetAsync();
-            
-            return View(mainpage);
+            return await client.GetAsync();
 
         }
-
         public IActionResult JoinBuildingForm()
         {
             return View();
@@ -155,30 +160,47 @@ namespace VecinoWebApplication.Controllers
             client.Path = "api/Resident/Login";
             Resident resident = await client.PostAsyncReturn<LogInViewModel, Resident>(logInViewModel);
 
-            if (resident.ResidentId != null)
-            {
-                HttpContext.Session.SetString("residentId", resident.ResidentId);
-                return RedirectToAction("ViewDashboard");
-            }
-            return View("LoginForm");
+            if(resident == null)
+                return View("LoginForm");
+            
+            HttpContext.Session.SetString("residentId", resident.ResidentId);
+            ViewBag.IsLoggedIn = true;
+            //ApiClient<BuildingModel> client2 = new ApiClient<BuildingModel>();
+            //client2.Scheme = "https";
+            //client2.Host = "localhost";
+            //client2.Port = 5269;
+            //client2.Path = "api/Resident/GetBuildingId";
+            //client2.AddParameter("residentId", resident.ResidentId);
+            //BuildingModel buildingModel = await client2.GetAsync();
+
+             return RedirectToAction("ViewDashboard");
+            
+             return RedirectToAction("HomePage", "Guest");
+            
+            
 
         }
+
         [HttpGet]
-        public async Task<IActionResult> LeaveBuilding(string residentId)
+        public async Task<IActionResult> LeaveBuilding()
         {
             ApiClient<bool> client = new ApiClient<bool>();
             client.Scheme = "http";
             client.Host = "localhost";
             client.Port = 5269;
             client.Path = "api/Resident/LeaveBuilding";
+
+            string residentId = HttpContext.Session.GetString("residentId");
             client.AddParameter("residentId", residentId);
+
+
 
             bool leftBuilding = await client.GetAsync();
 
-            if(leftBuilding) return RedirectToAction("ViewDashboard", new { residentId = residentId });
-
-            ViewBag["Error"] = true;
-            return RedirectToAction("JoinBuildingForm");
+            if(leftBuilding) return RedirectToAction("Homepage","Guest");
+            MainpageViewModel mainpage = await GetTaskMainPage();
+            return View("ViewDashboard", mainpage);
+          
 
 
         }
@@ -195,6 +217,16 @@ namespace VecinoWebApplication.Controllers
             List<Notification> viewNotification = await client.GetAsync();
             return View(viewNotification);
 
+        }
+
+        [HttpGet]
+        public IActionResult Logout()
+        {
+           
+            HttpContext.Session.Remove("residentId");
+
+            return RedirectToAction("HomePage", "Guest");
+          
         }
     }
 }

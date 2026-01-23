@@ -86,7 +86,7 @@ namespace VecinoBuildingMangementWebService
         }
         public bool DeleteByResidentId(string residentId)
         {
-            string sql = "DELETE FROM Notification WHERE NotificationId IN ( SELECT NotificationId FROM ResidentNotification WHERE ResidentId =@ResidentId; ) ";
+            string sql = "DELETE FROM ResidentNotification WHERE ResidentId = @ResidentId;";
             this.dbHelperOleDb.AddParameter("@ResidentId", residentId);
             return this.dbHelperOleDb.Delete(sql) > 0;
         }
