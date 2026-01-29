@@ -1,78 +1,153 @@
 ﻿@using VecinoBuildingMangement.Models
 @using VecinoBuildingMangement.ViewModels
+
 @model ManagePaymentViewModel
+
 @{
     ViewData["Title"] = "ViewManagePayment";
     ViewData["Active"] = "payment";
     Layout = "~/Views/Shared/MasterResidentPage.cshtml";
 }
 
-<link rel="stylesheet" href="~/css/Pay.css">
-<div class="main">
-    <header>My Payments</header>
-    <div class="payments">
-        <p class="Fees">Total Fees</p>
-        <p class="Money">@Model.TotalFees₪</p>
-
-        @if(Model.UnPaidFees.Count == 1)
-        {
-            <p class="NumberFee">1 Fee</p>
-        }
-       else
-        {
-            <p class="NumberFee">@Model.UnPaidFees.Count Fee</p>
-        }
-           
-        <button class="PayBtn">Pay</button>
-
+<link  rel="stylesheet" href="~/css/Pay.css"/>
+<div class="container">
+    <div class="header">
+        <h1>My Payments</h1>
+        <p>View and manage your rent payments</p>
     </div>
-    <div class="history">
-        <h2>Payment History</h2>
-        @foreach(Fee fee in Model.Fees)
-        {
-            <div class="paid">
-                <div class="imgwraper">
-                    <img src="~/Images/Completed.webp" class="requestimg">
-                </div>
-                <div class="info">
-                    <p class="Title">@fee.FeeTitle</p>
-                    <p class="Secondary">15/12/2025  -  Credit Card</p>
 
-                </div>
-                <p class="feeamount">@fee.FeeAmount₪</p>
-            </div>
+    <div class="payment-hero">
+        <div class="payment-hero-info">
+         @if(Model.unPaidFees > 0)
+            {
+                <p>Next Payment Due</p>
+                <h2>@Model.nextFee.FeeAmount₪</h2>
+                <p>Due on @Model.nextFee.FeeDueDate</p>
+                <span class="badge">14 days remaining</span>
+            }
+            else
+            {
+                <h2>No Fees Due</h2>
+            }
+         
+            
+           
+        </div>
+        @if(Model.unPaidFees > 0)
+        {
+            <button class="pay-btn" id="pay-btn" onclick="Payfee('@Model.nextFee.FeeId')">💳 Pay Now</button>
         }
         
-      
-
     </div>
 
-    <div class="fees">
-        @foreach(Fee fee1 in Model.UnPaidFees)
-        {
-            <div class="fee">
-                <div class="moneywraper">
-                    <img src="~/Images/money.webp" class="moneyimg">
-                </div>
-                <div class="feeinfo">
-                    <div class="fee-top">
-                        <p class="FeeTitle">@fee1.FeeTitle</p>
-                        <p class="feedesc"> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vitae mauris risus.  </p>
-                    </div>
+    <div class="grid">
 
-                    <div class="fee-bottom">
-                        <p class="FeeSecondary">Due Date - @fee1.FeeDueDate</p>
-                        <p class="status">Not Payed</p>
-                    </div>
+        <div class="card-stats">
+            <h3 class="card-title">Payment Summary</h3>
 
+            <div class="stat-box green">
+                <div class="stat-label">
+                    💵 Total Paid (2025)
                 </div>
-                <p class="amount">@fee1.FeeAmount₪</p>
+                <div class="stat-value">@Model.TotalPaidFees₪</div>
             </div>
-        }
-      
-       
 
+            <div class="stat-box blue">
+                <div class="stat-label">
+                    💵 Total Unpaid
+                </div>
+                <div class="stat-value">@Model.TotalUnPaidFees₪</div>
+            </div>
+
+            <div class="stat-box purple">
+                <div class="stat-label">
+                    💰 Fees Paid
+                </div>
+                <div class="stat-value">@(Model.paidFees)/@(Model.unPaidFees+Model.paidFees)</div>
+
+            </div>
+        </div>
+
+
+
+
+        <div class="card">
+            <h3 class="card-title">Fee History</h3>
+
+            @foreach(Fee fee in Model.Fees)
+            {
+                if(!fee.IsPaid)
+                {
+                    <div class="payment-item unpaid-item">
+                        <div class="payment-icon unpaid-icon">X</div>
+                        <div class="payment-info">
+                            <div class="payment-month">@fee.FeeTitle</div>
+                            <div class="payment-details">@fee.FeeDueDate</div>
+                        </div>
+                        <div class="payment-amount">
+                            
+                             
+                                <div class="amount">@fee.FeeAmount₪</div>
+                            <span class="status-badge unpaid-badge">UnPaid</span>
+
+                            
+                            
+                        </div>
+                        <button class="pay-btn-small" onclick="Payfee('@fee.FeeId')">Pay</button>
+                        
+                    </div>
+                }
+                else
+                {
+                    <div class="payment-item">
+                        <div class="payment-icon">✓</div>
+                        <div class="payment-info">
+                            <div class="payment-month">@fee.FeeTitle</div>
+                            <div class="payment-details">@fee.FeeDueDate</div>
+                        </div>
+                        <div class="payment-amount">
+                            <div class="amount">@fee.FeeAmount₪</div>
+                            <span class="status-badge">Paid</span>
+                        </div>
+                       
+
+                    </div>
+                }
+            }
+           
+
+           
+
+          
+        </div>
     </div>
-
 </div>
+<script>
+   async function Payfee(feeId)
+   {
+        try{
+            
+             const res = await fetch(`http://localhost:5086/Resident/PayFee`,
+                                       {method: 'Post',
+                                        headers: {'Content-Type' : 'application/json'},
+                                        body: JSON.stringify({FeeId:feeId})
+
+                                       });
+             const data = await res.json();
+             if(data.success == true)
+             {
+                 location.reload();
+             }
+             else{
+                 alert("Could not pay fee");
+             }
+
+
+         }
+         catch(err){
+             console.error(err);
+             alert(err.message || 'Could not attend event');
+         }
+   }
+</script>
 

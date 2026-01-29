@@ -96,5 +96,23 @@ namespace VecinoBuildingMangementWebService
 
             return polls;
         }
+        public List<Poll> GetInActivePollsByBuilding(string buildingId)
+        {
+            string sql = "Select * From Poll where BuildingId = @BuildingId AND IsActive = False";
+            this.dbHelperOleDb.AddParameter("@BuildingId", buildingId);
+
+            List<Poll> polls = new List<Poll>();
+            using (IDataReader reader = this.dbHelperOleDb.Select(sql))
+            {
+                while (reader.Read())
+                {
+
+                    polls.Add(this.ModelCreator.CreateModel(reader));
+
+                }
+            }
+
+            return polls;
+        }
     }
 }

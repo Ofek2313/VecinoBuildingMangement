@@ -70,6 +70,25 @@ namespace VecinoBuildingMangementWebService
         //    this.dbHelperOleDb.AddParameter("@FeeId", model.FeeId);
         //    return this.dbHelperOleDb.Update(sql) > 0;
         //}
+
+        public List<Fee> GetFeesById(string residentId)
+        {
+            string sql = "SELECT * FROM Fee WHERE  ResidentId = @ResidentId";
+            this.dbHelperOleDb.AddParameter("@ResidentId", residentId);
+
+            List<Fee> fees = new List<Fee>();
+            using (IDataReader reader = this.dbHelperOleDb.Select(sql))
+            {
+                while (reader.Read())
+                {
+
+                    fees.Add(this.ModelCreator.CreateModel(reader));
+
+                }
+            }
+
+            return fees;
+        }
         public List<Fee> GetUnPaidFeeById(string id)
         {
             string sql = "SELECT * FROM Fee WHERE IsPaid = False And ResidentId = @ResidentId";
@@ -128,5 +147,7 @@ namespace VecinoBuildingMangementWebService
             this.dbHelperOleDb.AddParameter("@FeeId", feeId);
             return this.dbHelperOleDb.Update(sql) > 0;
         }
+        
+       
     }
 }

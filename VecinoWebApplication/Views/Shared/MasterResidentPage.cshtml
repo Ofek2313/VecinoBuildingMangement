@@ -2,72 +2,105 @@
 @{
     ViewData["Title"] = "MasterResidentPage";
 }
-    
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="~/css/main.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-    <title>Dashboard</title>
+    <title>Community - The Meridian Tower</title>
+    
+    <link rel="stylesheet" href="~/css/main2.css">
     <style>
 
     </style>
 </head>
 <body>
-    <div class="app-layout">
-    <ul class="nav-bar">
-      
-        <li class="logo"><img src="~/Images/Untitled-4.png" class="logo"></li>
-            <li class="nav">  <img src="~/Images/dashboard.svg" class="@(ViewData["Active"]?.ToString() == "dashboard" ? "Current" : "")"><a href="http://localhost:5086/Resident/ViewDashboard" class="@(ViewData["Active"]?.ToString() == "dashboard" ? "Current" : "")">Dashboard</a></li>
-            <li class="nav"> <img src="~/Images/big-megaphone.svg" class="@(ViewData["Active"]?.ToString() == "annc" ? "Current" : "")"> <a href="http://localhost:5086/Resident/ViewAnnouncement" class="@(ViewData["Active"]?.ToString() == "annc" ? "Current" : "")">Announcements</a></li>
-            <li class="nav"> <img src="~/Images/calendar-xoaigr9z259n0zw0pl1c.webp" class="@(ViewData["Active"]?.ToString() == "event" ? "Current" : "")"><a href="http://localhost:5086/Resident/ViewEvents" class="@(ViewData["Active"]?.ToString() == "event" ? "Current" : "")">Events</a></li>
-            <li class="nav"> <img src="~/Images/money.svg" class="@(ViewData["Active"]?.ToString() == "payment" ? "Current" : "")"><a href="http://localhost:5086/Resident/ViewManagePayment" class="@(ViewData["Active"]?.ToString() == "payment" ? "Current" : "")">Payments</a></li>
-            <li class="nav"> <img src="~/Images/spanner-wrench.svg" class="@(ViewData["Active"]?.ToString() == "servicerequest" ? "Current" : "")"><a href="http://localhost:5086/Resident/ViewSerivceRequests" class="@(ViewData["Active"]?.ToString() == "servicerequest" ? "Current" : "")">Service Requests</a></li>
-            <li class="nav"> <img src="~/Images/survey.svg" class="@(ViewData["Active"]?.ToString() == "polls" ? "Current" : "")"><a href="http://localhost:5086/Resident/ViewPolls" class="@(ViewData["Active"]?.ToString() == "polls" ? "Current" : "")">Digital Polls</a></li>
-            <li class="nav leave"> <img src="~/Images/door-leave.svg"> <a href="http://localhost:5086/Resident/LeaveBuilding">Leave</a></li>
-    </ul>
-        <div class="profile-container">
-            <button class="profile-btn" id="profileBtn">
-                <img src="~/Images/person.png" class="profile">
-            </button>
-            <div class="dropdown-menu" id="dropdownMenu">
-                <ul>
-                    <li >👤 My Profile</li>
-                    <li >⚙️ Settings</li>
+    <aside class="sidebar">
+        <div class="sidebar-content">
+            <div class="sidebar-logo">
+                <div class="logo-wrapper">
+                    <div class="logo-icon"><img src="logo_small.png" class="img-vecino"></div>
 
-                    <li class="divider"></li>
+                </div>
+            </div>
 
-                    <li> <a href="http://localhost:5086/Resident/Logout">🚪 Logout   </a></li>
-                </ul>
+
+            <nav class="sidebar-nav">
+                <a href="http://localhost:5086/Resident/ViewDashboard" class="nav-item @(ViewData["Active"]?.ToString() == "dashboard" ? "active" : "")">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                    </svg>
+                    <span>Dashboard</span>
+                </a>
+
+                <a href="http://localhost:5086/Resident/ViewSerivceRequests" class="nav-item @(ViewData["Active"]?.ToString() == "servicerequest" ? "active" : "")">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         width="24"
+                         height="24"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="2"
+                         stroke-linecap="round"
+                         stroke-linejoin="round"
+                         class="nav-icon">
+                        <path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z" />
+                    </svg>
+                    <span>Requests</span>
+                </a>
+                <a href="http://localhost:5086/Resident/ViewManagePayment" class="nav-item @(ViewData["Active"]?.ToString() == "payment" ? "active" : "")">
+                    <svg class="nav-icon" width="32px" height="32px" viewBox="0 0 32 32" id="i-creditcard" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                        <path d="M2 7 L2 25 30 25 30 7 Z M5 18 L9 18 M5 21 L11 21" />
+                        <path d="M2 11 L2 13 30 13 30 11 Z" fill="currentColor" />
+                    </svg>
+                    <span>Payments</span>
+                </a>
+                <a href="http://localhost:5086/Resident/ViewAnnouncement" class="nav-item  @(ViewData["Active"]?.ToString() == "annc" ? "active" : "")">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
+                    </svg>
+                    <span>Announcements</span>
+
+                </a>
+                <a href="http://localhost:5086/Resident/ViewEvents" class="nav-item @(ViewData["Active"]?.ToString() == "event" ? "active" : "")">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                    <span>Events</span>
+                </a>
+                <a href="http://localhost:5086/Resident/ViewPolls" class="nav-item @(ViewData["Active"]?.ToString() == "polls" ? "active" : "")">
+                    <svg class="nav-icon" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M3 13h2v8H3v-8zm4-6h2v14H7V7zm4-4h2v18h-2V3zm4 9h2v9h-2v-9zm4-3h2v12h-2V9z" />
+                    </svg>
+                    <span>Polls</span>
+                </a>
+            </nav>
+
+
+            <div class="sidebar-bottom">
+
+
+
+                <div class="user-card">
+                    <div class="user-avatar">U</div>
+                    <div class="user-info">
+                        <p class="user-name">@Context.Session.GetString("residentName")</p>
+
+                    </div>
+                </div>
+                <a href="http://localhost:5086/Resident/Logout" class="nav-item">
+                    <svg class="nav-icon" width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M16.0674 2.25C15.6532 2.25 15.3174 2.58579 15.3174 3C15.3174 3.41421 15.6532 3.75 16.0674 3.75V2.25ZM16.0674 20.25C15.6532 20.25 15.3174 20.5858 15.3174 21C15.3174 21.4142 15.6532 21.75 16.0674 21.75V20.25ZM20.4997 3.75C20.6986 3.75 20.8893 3.82902 21.03 3.96967L22.0907 2.90901C21.6687 2.48705 21.0964 2.25 20.4997 2.25V3.75ZM21.03 3.96967C21.1707 4.11032 21.2497 4.30109 21.2497 4.5H22.7497C22.7497 3.90326 22.5126 3.33097 22.0907 2.90901L21.03 3.96967ZM21.2497 4.5V19.5H22.7497V4.5H21.2497ZM21.2497 19.5C21.2497 19.6989 21.1707 19.8897 21.03 20.0303L22.0907 21.091C22.5126 20.669 22.7497 20.0967 22.7497 19.5H21.2497ZM21.03 20.0303C20.8893 20.171 20.6986 20.25 20.4997 20.25V21.75C21.0964 21.75 21.6687 21.5129 22.0907 21.091L21.03 20.0303ZM16.0674 3.75H20.4997V2.25H16.0674V3.75ZM20.4997 20.25H16.0674V21.75H20.4997V20.25Z" fill="#71717A" />
+                        <path d="M12.1032 22.9926L12.0041 23.7361L12.0042 23.7361L12.1032 22.9926ZM2.67467 21.7352L2.77381 20.9918L2.77292 20.9917L2.67467 21.7352ZM2 21.0097L2.75 21.0101V21.0097H2ZM2 3.90556H2.75L2.75 3.9049L2 3.90556ZM2.62124 3.18788L2.76819 3.92334C2.77534 3.92191 2.78247 3.92038 2.78957 3.91874L2.62124 3.18788ZM12.0498 1.01625L11.9029 0.280784C11.8957 0.282213 11.8886 0.283746 11.8815 0.285383L12.0498 1.01625ZM13 1.73393L12.25 1.73327V1.73393H13ZM13 22.2671L13.75 22.2676V22.2671H13ZM12.2024 22.2492L2.77381 20.9918L2.57552 22.4786L12.0041 23.7361L12.2024 22.2492ZM2.77292 20.9917C2.7629 20.9904 2.7549 20.9876 2.74924 20.9847C2.74358 20.9818 2.74133 20.9794 2.7413 20.9794L1.64285 22.0009C1.89027 22.2669 2.2234 22.4321 2.57641 22.4788L2.77292 20.9917ZM2.7413 20.9794C2.74129 20.9794 2.74188 20.98 2.74278 20.9814C2.74367 20.9829 2.74481 20.9849 2.74592 20.9877C2.74822 20.9935 2.75001 21.0012 2.75 21.0101L1.25 21.0093C1.24979 21.3819 1.39421 21.7335 1.64285 22.0009L2.7413 20.9794ZM2.75 21.0097V3.90556H1.25V21.0097H2.75ZM2.75 3.9049C2.75001 3.91322 2.74843 3.92056 2.74631 3.92618C2.74421 3.93173 2.74201 3.93449 2.7416 3.93497L1.60748 2.95325C1.37999 3.21606 1.24969 3.55216 1.25 3.90622L2.75 3.9049ZM2.7416 3.93497C2.74124 3.93538 2.74879 3.92722 2.76819 3.92334L2.47429 2.45241C2.1418 2.51885 1.83398 2.69158 1.60748 2.95325L2.7416 3.93497ZM2.78957 3.91874L12.2181 1.74711L11.8815 0.285383L2.4529 2.45701L2.78957 3.91874ZM12.1968 1.75171C12.2089 1.74929 12.2218 1.74946 12.2337 1.7521L12.5604 0.288122C12.3443 0.239884 12.1199 0.23741 11.9029 0.280784L12.1968 1.75171ZM12.2337 1.7521C12.2455 1.75473 12.253 1.75908 12.2565 1.76175L13.1606 0.564807C12.9819 0.429858 12.7766 0.33637 12.5604 0.288122L12.2337 1.7521ZM12.2565 1.76175C12.2599 1.7643 12.2583 1.76423 12.2556 1.75891L13.5915 1.07667C13.4879 0.873871 13.3394 0.699877 13.1606 0.564807L12.2565 1.76175ZM12.2556 1.75891C12.2528 1.75333 12.25 1.74438 12.25 1.73327L13.75 1.73459C13.7502 1.50472 13.6952 1.27973 13.5915 1.07667L12.2556 1.75891ZM12.25 1.73393V22.2671H13.75V1.73393H12.25ZM12.25 22.2666C12.25 22.256 12.2526 22.2473 12.2553 22.2417L13.6025 22.9013C13.6988 22.7046 13.7499 22.4883 13.75 22.2676L12.25 22.2666ZM12.2553 22.2417C12.258 22.2362 12.2598 22.2356 12.2572 22.2377L13.2007 23.4039C13.3681 23.2684 13.5063 23.0977 13.6025 22.9013L12.2553 22.2417ZM12.2572 22.2377C12.2545 22.2399 12.2481 22.244 12.2375 22.247L12.6347 23.6934C12.84 23.637 13.0333 23.5393 13.2007 23.4039L12.2572 22.2377ZM12.2375 22.247C12.2268 22.2499 12.2145 22.2508 12.2023 22.2492L12.0042 23.7361C12.2148 23.7641 12.4295 23.7498 12.6347 23.6934L12.2375 22.247Z" fill="#71717A" />
+                        <path d="M8.5 11.25C8.08579 11.25 7.75 11.5858 7.75 12C7.75 12.4142 8.08579 12.75 8.5 12.75V11.25ZM10 12.75C10.4142 12.75 10.75 12.4142 10.75 12C10.75 11.5858 10.4142 11.25 10 11.25V12.75ZM8.5 12.75H10V11.25H8.5V12.75Z" fill="#71717A" />
+                    </svg>
+                    <span>Sign Out</span>
+                </a>
             </div>
         </div>
-    @RenderBody()
-    </div>
-    <script>
-        const profileBtn = document.getElementById('profileBtn');
-        const dropdownMenu = document.getElementById('dropdownMenu');
+    </aside>
 
-        profileBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            dropdownMenu.classList.toggle('show');
-        });
-
-
-        document.addEventListener('click', (e) => {
-            if (!profileBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
-                dropdownMenu.classList.remove('show');
-            }
-        });
-        function LeaveBuilding() 
-        { 
-            
-        }
-
-    </script>
+    @RenderBody();
 </body>
 </html>
-

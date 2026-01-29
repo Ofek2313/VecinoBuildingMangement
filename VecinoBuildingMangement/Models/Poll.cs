@@ -11,6 +11,7 @@ namespace VecinoBuildingMangement.Models
     {
         string pollId;
         string pollTitle;
+        string pollDescription;
         bool  isActive;
         string pollDate;
         string buildingId;
@@ -31,6 +32,15 @@ namespace VecinoBuildingMangement.Models
             get { return pollTitle; } 
             set { pollTitle = value;
                 ValidateProperty(value, "PollTitle");
+            }
+        }
+
+        [Required(ErrorMessage = "Poll Description can not be empty")]
+        public string PollDescription
+        {
+            get { return pollDescription; }
+            set { pollDescription = value;
+                ValidateProperty(value, "PollDescription");
             }
         }
 

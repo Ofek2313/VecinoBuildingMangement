@@ -68,7 +68,7 @@ namespace VecinoBuildingMangementWebService
 
         public List<Notification> GetNotificationsByResidentId(string residentId)
         {
-            string sql = "SELECT Notification.NotificationId,NotificationMessage,NotificationTitle,NotificationDate FROM Notification INNER JOIN ResidentNotification rn ON Notification.NotificationId = rn.NotificationId WHERE rn.ResidentId = @ResidentId";
+            string sql = "SELECT Notification.NotificationId,NotificationMessage,NotificationTitle,NotificationDate,Priority,IsPinned FROM Notification INNER JOIN ResidentNotification rn ON Notification.NotificationId = rn.NotificationId WHERE rn.ResidentId = @ResidentId AND IsPinned=false";
             this.dbHelperOleDb.AddParameter("@ResidentId", residentId);
 
             List<Notification> notifications = new List<Notification>();
@@ -84,6 +84,26 @@ namespace VecinoBuildingMangementWebService
 
             return notifications;
         }
+
+        public List<Notification> GetPinnedNotificationsByResidentId(string residentId)
+        {
+            string sql = "SELECT Notification.NotificationId,NotificationMessage,NotificationTitle,NotificationDate,Priority,IsPinned FROM Notification INNER JOIN ResidentNotification rn ON Notification.NotificationId = rn.NotificationId WHERE rn.ResidentId = @ResidentId AND IsPinned=true";
+            this.dbHelperOleDb.AddParameter("@ResidentId", residentId);
+
+            List<Notification> notifications = new List<Notification>();
+            using (IDataReader reader = this.dbHelperOleDb.Select(sql))
+            {
+                while (reader.Read())
+                {
+
+                    notifications.Add(this.ModelCreator.CreateModel(reader));
+
+                }
+            }
+
+            return notifications;
+        }
+
         public bool DeleteByResidentId(string residentId)
         {
             string sql = "DELETE FROM ResidentNotification WHERE ResidentId = @ResidentId;";

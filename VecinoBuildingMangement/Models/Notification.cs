@@ -14,6 +14,8 @@ namespace VecinoBuildingMangement.Models
         string notificationTitle;
         string notificationMessage;
         string notificationDate;
+        string priority;
+        bool isPinned;
 
         public Notification() { }
 
@@ -50,6 +52,21 @@ namespace VecinoBuildingMangement.Models
         {
             get { return notificationDate; }
             set { notificationDate = value; }
+        }
+
+        [Required(ErrorMessage = "Priority can not be empty")]
+        public string Priority
+        {
+
+            get { return this.priority; }
+            set { this.priority = value; }
+        }
+
+        [Required(ErrorMessage = "IsPinned can not be empty")]
+        public bool IsPinned
+        {
+            get { return this.isPinned; }
+            set { this.isPinned = value; }
         }
     }
 }

@@ -9,7 +9,7 @@ namespace VecinoBuildingMangement.ViewModels
 {
     public class ViewEventViewModel
     {
-        public List<Event> CurrEvents { get; set; }
-        public List<Event> PreEvents { get; set; }
+        public List<EventViewModel> CurrEvents { get; set; } = new List<EventViewModel>();
+        public List<EventViewModel> PreEvents { get; set; } = new List<EventViewModel>();
     }
 }

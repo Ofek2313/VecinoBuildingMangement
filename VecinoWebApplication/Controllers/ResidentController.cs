@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using VecinoBuildingMangement;
-using BuildingManagementWsClient;
-using VecinoBuildingMangement.ViewModels;
-using VecinoBuildingMangement.Models;
+﻿using BuildingManagementWsClient;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using VecinoBuildingMangement;
+using VecinoBuildingMangement.Models;
+using VecinoBuildingMangement.ViewModels;
 
 namespace VecinoWebApplication.Controllers
 {
@@ -85,14 +86,14 @@ namespace VecinoWebApplication.Controllers
         [HttpGet]
         public async Task<IActionResult> ViewPolls()
         {
-            ApiClient<List<PollViewModel>> client = new ApiClient<List<PollViewModel>>();
+            ApiClient<ViewPollViewModel> client = new ApiClient<ViewPollViewModel>();
             string residentId = HttpContext.Session.GetString("residentId");
             client.Scheme = "http";
             client.Host = "localhost";
             client.Port = 5269;
             client.Path = "api/Resident/PollViewModel";
             client.AddParameter("residentId", residentId);
-            List<PollViewModel> polls = await client.GetAsync();
+            ViewPollViewModel polls = await client.GetAsync();
             return View(polls);
         }
         [HttpGet]
@@ -164,7 +165,9 @@ namespace VecinoWebApplication.Controllers
                 return View("LoginForm");
             
             HttpContext.Session.SetString("residentId", resident.ResidentId);
+            HttpContext.Session.SetString("residentName", resident.ResidentName);
             ViewBag.IsLoggedIn = true;
+            
             //ApiClient<BuildingModel> client2 = new ApiClient<BuildingModel>();
             //client2.Scheme = "https";
             //client2.Host = "localhost";
@@ -207,14 +210,14 @@ namespace VecinoWebApplication.Controllers
         [HttpGet]
         public async Task<IActionResult> ViewAnnouncement()
         {
-            ApiClient<List<Notification>> client = new ApiClient<List<Notification>>();
+            ApiClient<NotificationsViewModels> client = new ApiClient<NotificationsViewModels>();
             string residentId = HttpContext.Session.GetString("residentId");
             client.Scheme = "http";
             client.Host = "localhost";
             client.Port = 5269;
             client.Path = "api/Resident/GetNotifications";
             client.AddParameter("residentId", residentId);
-            List<Notification> viewNotification = await client.GetAsync();
+            NotificationsViewModels viewNotification = await client.GetAsync();
             return View(viewNotification);
 
         }
@@ -227,6 +230,69 @@ namespace VecinoWebApplication.Controllers
 
             return RedirectToAction("HomePage", "Guest");
           
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AttendEvent(string eventId)
+        {
+            ApiClient<AttendEvent> client = new ApiClient<AttendEvent>();
+            string residentId = HttpContext.Session.GetString("residentId");
+            client.Scheme = "http";
+            client.Host = "localhost";
+            client.Port = 5269;
+            client.Path = "api/Resident/AttendEvent";
+            AttendEvent attendEvent = new AttendEvent();
+            attendEvent.eventId = eventId;
+            attendEvent.residentId = residentId;
+
+            bool result = await client.PostAsyncReturn<AttendEvent,bool>(attendEvent);
+            if(result)
+            {
+                return Json(new { success = true });
+            }
+            else
+                return Json(new { success = false });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> VoteInPoll([FromBody] VoteRequest voteRequest)
+        {
+            ApiClient<Vote> client = new ApiClient<Vote>();
+            client.Scheme = "http";
+            client.Host = "localhost";
+            client.Port = 5269;
+            client.Path = "api/Resident/VoteInPoll";
+            string residentId = HttpContext.Session.GetString("residentId");
+            Vote vote = new Vote();
+            vote.PollId = voteRequest.PollId;
+            vote.OptionId = voteRequest.OptionId;
+            vote.ResidentId = residentId;
+            vote.VoteDate = DateTime.Now.ToShortDateString();
+            vote.VoteId = "0";
+            bool result = await client.PostAsync(vote);
+            if (result)
+            {
+                return Json(new { success = true });
+            }
+            else
+                return Json(new { success = false });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> PayFee([FromBody] PayFeeRequest payFeeRequest)
+        {
+            ApiClient<PayFeeRequest> client = new ApiClient<PayFeeRequest>();
+            client.Scheme = "http";
+            client.Host = "localhost";
+            client.Port = 5269;
+            client.Path = "api/Resident/PayFee";
+            bool result = await client.PostAsync(payFeeRequest);
+            if (result)
+            {
+                return Json(new { success = true });
+            }
+            else
+                return Json(new { success = false });
         }
     }
 }

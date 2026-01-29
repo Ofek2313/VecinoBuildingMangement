@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using Microsoft.Extensions.Options;
+using System.Data;
 using System.Text;
 using VecinoBuildingMangement.Models;
 
@@ -71,6 +72,13 @@ namespace VecinoBuildingMangementWebService
 
         //    return this.dbHelperOleDb.Update(sql) > 0;
         //}
+        public bool AttendEvent(string eventId,string residentId)
+        {
+            string sql = @"INSERT INTO EventAttendance (ResidentId, EventId) VALUES (@ResidentId, @EventId)";
+            this.dbHelperOleDb.AddParameter("@ResidentId", residentId);
+            this.dbHelperOleDb.AddParameter("@EventId", eventId);
+            return this.dbHelperOleDb.Insert(sql) > 0;
+        }
         public List<Event> GetEventByBuildingId(string buildingId)
         {
             string sql = "Select * From Event Where BuildingId = @BuildingId";
@@ -81,8 +89,8 @@ namespace VecinoBuildingMangementWebService
             {
                 while (reader.Read())
                 {
-
-                    events.Add(this.ModelCreator.CreateModel(reader));
+                    if (!HasHappend(this.ModelCreator.CreateModel(reader).EventDate))
+                        events.Add(this.ModelCreator.CreateModel(reader));
 
                 }
             }
@@ -94,12 +102,25 @@ namespace VecinoBuildingMangementWebService
             string[] date1Split = date.Split('/');
             string[] date2Split = DateTime.Now.ToString("dd/MM/yyyy").Split('/');
 
-            if (Convert.ToUInt32(date1Split[0]) < Convert.ToUInt32(date2Split[0]))
+            int day1 = Convert.ToInt32(date1Split[0]);
+            int month1 = Convert.ToInt32(date1Split[1]);
+            int year1 = Convert.ToInt32(date1Split[2]);
+
+            int day2 = Convert.ToInt32(date2Split[0]);
+            int month2 = Convert.ToInt32(date2Split[1]);
+            int year2 = Convert.ToInt32(date2Split[2]);
+
+            if (year1 < year2)
                 return true;
-            if (Convert.ToUInt32(date1Split[1]) < Convert.ToUInt32(date2Split[1]))
+            else if (year2 < year1)
+                return false;
+            if (month1 < month2)
                 return true;
-            if (Convert.ToUInt32(date1Split[2]) < Convert.ToUInt32(date2Split[2]))
+            else if (month2 < month1)
+                return false;
+            if (day1 < day2)
                 return true;
+
             return false;
         }
         public List<Event> GetPreviousEventsByBuildingId(string buildingId)
@@ -137,6 +158,22 @@ namespace VecinoBuildingMangementWebService
             }
 
             return events;
+        }
+
+        public int GetAttendingCount(string eventId)
+        {
+            string sql = "SELECT COUNT(*) FROM EventAttendance WHERE EventId = @EventId";
+            this.dbHelperOleDb.AddParameter("@EventId", eventId);
+            using (IDataReader reader = this.dbHelperOleDb.Select(sql))
+            {
+                while (reader.Read())
+                {
+
+                    return Convert.ToInt32(reader[0]);
+
+                }
+            }
+            return 0;
         }
     }
     

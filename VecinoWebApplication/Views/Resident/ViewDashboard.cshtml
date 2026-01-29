@@ -8,51 +8,269 @@
 }
 
 
-<link href="~/css/main.css" rel="stylesheet" />
-<div class="main">
-    <div class="main_block">
-        <ul>
-            <li class="Address">@Model.Building.Address</li>
-            <li class="Code"><span>Code: @Model.Building.EntranceCode</span></li>
-        </ul>
+<link href="~/css/dashboard.css" rel="stylesheet" />
+<div class="container">
+   
+    <div class="header">
+        <div class="header-top">
+            <div class="greeting">
+                <h1>Welcome Back, Sarah</h1>
+                <p>Building Management Dashboard</p>
+            </div>
+            <div class="time-display">
+                <svg class="time-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <div class="time-info">
+                    <div class="current-time">9:47 AM</div>
+                    <div class="current-date">Thursday, Jan 29, 2026</div>
+                </div>
+            </div>
+        </div>
 
-
-    </div>
-    <div class="box">
-        <div class="Title"><img src="../Images/big-megaphone.svg" clas><h1 class="head">Latest Update</h1></div>
-        <ul class="Update">
-            @if(Model.Notifications != null && Model.Notifications.Count > 0)
-            {
-                int count = Math.Min(2, Model.Notifications.Count);
-                @for (int i = 0; i < count; i++)
-                {
-                    <li>@Model.Notifications[i].NotificationTitle <br>  <span class="Time">@Model.Notifications[i].NotificationDate</span> </li>
-
-                }
-            }
-           
-          
-            
-        </ul>
-
-    </div>
-    <div class="box">
-        <div class="Title"><img src="../Images/calendar-xoaigr9z259n0zw0pl1c.webp"><h1 class="head">Upcoming Events</h1></div>
-        <ul class="Update">
-            @if(Model.events != null && Model.events.Count > 0)
-            {
-                int count = Math.Min(2, Model.events.Count);
-                @for (int i = 0; i < count; i++)
-                {
-                    <li>@Model.events[i].EventTitle <br><span class="Time">@Model.events[i].EventDate</span></li>
-
-                }
-            }
-           
-           
-            
-        </ul>
+      
+        <div class="personal-banner">
+            <div class="banner-content">
+                <div class="banner-label">Next Scheduled Cleaning</div>
+                <div class="banner-title">Tomorrow at 10:00 AM</div>
+                <div class="banner-detail">Common Areas & Hallways • Floor 4</div>
+            </div>
+            <svg class="banner-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+            </svg>
+        </div>
     </div>
 
 
+    <div class="main-content">
+       
+        <div class="card systems-card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <svg class="title-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                    </svg>
+                    Building Systems Status
+                </h3>
+                <div class="status-badge">
+                    <span class="status-dot"></span>
+                    All Systems Normal
+                </div>
+            </div>
+
+            <div class="systems-grid">
+             
+                <div class="system-item operational">
+                    <div class="system-header">
+                        <div class="system-name">
+                            <svg class="system-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+                            </svg>
+                            <span class="system-title">Elevators</span>
+                        </div>
+                        <div class="status-indicator">Operational</div>
+                    </div>
+                    <div class="system-details">
+                        All 3 elevators running normally<br>
+                        Last maintenance: Jan 15, 2026
+                    </div>
+                </div>
+
+           
+                <div class="system-item operational">
+                    <div class="system-header">
+                        <div class="system-name">
+                            <svg class="system-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                            </svg>
+                            <span class="system-title">Water Supply</span>
+                        </div>
+                        <div class="status-indicator">Normal</div>
+                    </div>
+                    <div class="system-details">
+                        Water pressure normal<br>
+                        Quality check: Passed (Jan 20)
+                    </div>
+                </div>
+
+              
+                <div class="system-item operational">
+                    <div class="system-header">
+                        <div class="system-name">
+                            <svg class="system-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                            </svg>
+                            <span class="system-title">Electricity</span>
+                        </div>
+                        <div class="status-indicator">Stable</div>
+                    </div>
+                    <div class="system-details">
+                        Power supply stable<br>
+                        Backup generator ready
+                    </div>
+                </div>
+
+           
+                <div class="system-item operational">
+                    <div class="system-header">
+                        <div class="system-name">
+                            <svg class="system-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span class="system-title">Cleaning</span>
+                        </div>
+                        <div class="status-indicator">On Schedule</div>
+                    </div>
+                    <div class="system-details">
+                        Daily schedule active<br>
+                        Next: Tomorrow 10:00 AM
+                    </div>
+                </div>
+
+               
+                <div class="system-item warning">
+                    <div class="system-header">
+                        <div class="system-name">
+                            <svg class="system-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                            </svg>
+                            <span class="system-title">HVAC</span>
+                        </div>
+                        <div class="status-indicator">Maintenance</div>
+                    </div>
+                    <div class="system-details">
+                        Routine maintenance in progress<br>
+                        Expected completion: 2:00 PM
+                    </div>
+                </div>
+
+         
+                <div class="system-item operational">
+                    <div class="system-header">
+                        <div class="system-name">
+                            <svg class="system-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                            </svg>
+                            <span class="system-title">Security</span>
+                        </div>
+                        <div class="status-indicator">Active</div>
+                    </div>
+                    <div class="system-details">
+                        All cameras online<br>
+                        Access control functioning
+                    </div>
+                </div>
+            </div>
+        </div>
+
+      
+        <div class="card notifications-card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <svg class="title-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                    </svg>
+                    Notifications
+                </h3>
+                <span class="notification-count">5</span>
+            </div>
+
+            <div class="notifications-list">
+                <div class="notification-item unread important">
+                    <div class="notification-header">
+                        <div class="notification-title">
+                            <svg class="notification-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                            </svg>
+                            HVAC Maintenance Today
+                            <span class="unread-indicator">New</span>
+                        </div>
+                        <span class="notification-time">1h ago</span>
+                    </div>
+                    <div class="notification-content">
+                        HVAC system maintenance in progress. Temporary temperature fluctuations expected until 2 PM.
+                    </div>
+                </div>
+
+                <div class="notification-item unread announcement">
+                    <div class="notification-header">
+                        <div class="notification-title">
+                            <svg class="notification-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"></path>
+                            </svg>
+                            Building Announcement
+                            <span class="unread-indicator">New</span>
+                        </div>
+                        <span class="notification-time">3h ago</span>
+                    </div>
+                    <div class="notification-content">
+                        Community BBQ event this Sunday at 3 PM on the rooftop. Please RSVP by Friday.
+                    </div>
+                </div>
+
+                <div class="notification-item unread">
+                    <div class="notification-header">
+                        <div class="notification-title">
+                            <svg class="notification-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                            </svg>
+                            Cleaning Schedule Update
+                            <span class="unread-indicator">New</span>
+                        </div>
+                        <span class="notification-time">5h ago</span>
+                    </div>
+                    <div class="notification-content">
+                        Floor 4 common areas will be cleaned tomorrow at 10 AM. Please keep hallways clear.
+                    </div>
+                </div>
+
+                <div class="notification-item">
+                    <div class="notification-header">
+                        <div class="notification-title">
+                            <svg class="notification-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
+                            </svg>
+                            Package Delivered
+                        </div>
+                        <span class="notification-time">Yesterday</span>
+                    </div>
+                    <div class="notification-content">
+                        A package has been delivered to the front desk. Collection code: #2847
+                    </div>
+                </div>
+
+                <div class="notification-item">
+                    <div class="notification-header">
+                        <div class="notification-title">
+                            <svg class="notification-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            Payment Reminder
+                        </div>
+                        <span class="notification-time">2 days ago</span>
+                    </div>
+                    <div class="notification-content">
+                        February rent payment due in 3 days. Amount: ₪2,500
+                    </div>
+                </div>
+
+                <div class="notification-item announcement">
+                    <div class="notification-header">
+                        <div class="notification-title">
+                            <svg class="notification-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            New Amenity Available
+                        </div>
+                        <span class="notification-time">3 days ago</span>
+                    </div>
+                    <div class="notification-content">
+                        The renovated library is now open. Book online or visit during 8 AM - 10 PM.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+   
 </div>

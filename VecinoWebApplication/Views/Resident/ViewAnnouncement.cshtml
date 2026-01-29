@@ -1,36 +1,100 @@
-﻿@using VecinoBuildingMangement.Models
+﻿@using VecinoBuildingMangement.ViewModels
+@using VecinoBuildingMangement.Models
 @{
     ViewData["Title"] = "ViewAnnouncement";
     ViewData["active"] = "annc";
     Layout = "~/Views/Shared/MasterResidentPage.cshtml";
 }
-@model List<Notification>
-<link href="~/css/Anncs.css" rel="stylesheet" />
-<div class="main1">
-    <header class="header">Announcements and Notifications</header>
-    <section class="Announcements">
-        @foreach(Notification notification in Model)
-        {
-            
-        
-            <div class="announcement">
-                <img src="~/Images/big-megaphone.svg" class="megaphone">
-                <div class="info">
+@model NotificationsViewModels
+<link href="~/css//announcment.css" rel="stylesheet" />
+<div class="container">
+    <div class="header">
+        <h1>Community</h1>
+        <p class="subtitle">Stay updated with building announcements and news</p>
+    </div>
 
-
-                    <h1 class="AnncTitle">@notification.NotificationTitle</h1>
-                    <p class="AnncDesc">@notification.NotificationMessage</p>
-                    <div class="bottom">
-                        <img src="~/Images/calendar-xoaigr9z259n0zw0pl1c.webp" class="cal">
-                        <p class="AnncDate">@notification.NotificationDate</p>
+   
+    <div class="announcements-section">
+        <h2 class="section-title">
+            <svg class="pin-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+            </svg>
+            Pinned Announcements
+        </h2>
+        <div class="announcements-grid">
+            @foreach(Notification notification in Model.PinnedNotifications )
+            {
+                <div class="announcement-card pinned" style="animation-delay: 0s;">
+                    <div class="announcement-content">
+                        <div class="announcement-icon icon-important">
+                            <svg class="megaphone-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
+                            </svg>
+                        </div>
+                        <div class="announcement-body">
+                            <div class="announcement-header">
+                                <h3 class="announcement-title">@notification.NotificationTitle</h3>
+                                <div class="badges">
+                                    <span class="badge badge-pinned">
+                                        <svg class="small-pin-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+                                        </svg>
+                                        Pinned
+                                    </span>
+                                    <span class="badge badge-important">@notification.Priority</span>
+                                </div>
+                            </div>
+                            <p class="announcement-text">@notification.NotificationMessage</p>
+                            <div class="announcement-date">
+                                <svg class="calendar-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                                <span>@notification.NotificationDate</span>
+                            </div>
+                        </div>
                     </div>
-
                 </div>
-            </div>
-        }
-       
-    
+            }
+           
 
-    </section>
+           
+    <!-- Regular Announcements -->
+    <div class="announcements-section">
+        <h2 class="section-title">All Announcements</h2>
+        <div class="announcements-grid">
+            @foreach(Notification notification1 in Model.Notifications)
+            {
 
+                        <div class="announcement-card" style="animation-delay: 0.3s;">
+                            <div class="announcement-content">
+                                <div class="announcement-icon icon-info">
+                                    <svg class="megaphone-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
+                                    </svg>
+                                </div>
+                                <div class="announcement-body">
+                                    <div class="announcement-header">
+                                        <h3 class="announcement-title">@notification1.NotificationTitle</h3>
+                                        <div class="badges">
+                                            <span class="badge badge-info">@notification1.Priority</span>
+                                        </div>
+                                    </div>
+                                    <p class="announcement-text">@notification1.NotificationMessage</p>
+                                    <div class="announcement-date">
+                                        <svg class="calendar-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                        </svg>
+                                        <span>@notification1.NotificationDate</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+            }
+          
+
+           
+
+           
+        </div>
+    </div>
 </div>

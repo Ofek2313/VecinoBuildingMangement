@@ -15,6 +15,7 @@ namespace VecinoBuildingMangement.Models
         string eventDescription;
         string eventTypeId;
         string buildingId;
+        
 
         public Event() { }
         public string EventId
@@ -65,5 +66,6 @@ namespace VecinoBuildingMangement.Models
             set { buildingId = value; }
         }
 
+       
     }
 }

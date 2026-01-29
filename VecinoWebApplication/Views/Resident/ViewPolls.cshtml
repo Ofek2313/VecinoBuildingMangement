@@ -1,6 +1,6 @@
 ﻿@using VecinoBuildingMangement.Models
 @using VecinoBuildingMangement.ViewModels
-@model List<PollViewModel>
+@model ViewPollViewModel
 
 @{
     ViewData["Title"] = "ViewPolls";
@@ -8,41 +8,187 @@
     Layout = "~/Views/Shared/MasterResidentPage.cshtml";
 }
 
-<link rel="stylesheet" href="../css/poll.css">
-<main class="main">
-    <div class="box">
-        <h1>Digital Polls</h1>
-        <div class="polls">
-            @foreach(PollViewModel pollViewModel in Model)
-            {
-                <div class="poll">
-                    <h2>@pollViewModel.poll.PollTitle</h2>
-
-                    <div class="options">
-                        @foreach(OptionViewModel optionViewModel in pollViewModel.options)
-                        {
-                            <div class="option">
-                                <div class="bar" style="width: 36%;"></div>
-                                <span>@optionViewModel.option.OptionText</span>
-                                <span class="precent">@optionViewModel.voted</span>
-                            </div>
-                        }
-
-                    </div>
-                    <div class="votes">
-                        <span class="option1">Yes </span> <input type="radio"> <span class="option2">No </span>  <input type="radio">
-                        <button class="btn">Vote</button>
-                    </div>
-
-
-                </div>
-            }
-            
-         
-
-
-            
+<link rel="stylesheet" href="~/css/poll.css">
+<div class="container">
+    
+    <div class="page-header">
+        <div class="page-title-section">
+            <h1>Community Polls</h1>
+            <p>Have your say on community decisions</p>
         </div>
 
     </div>
-</main>
+
+    
+    <div class="polls-container">
+
+        
+        @foreach(PollViewModel poll in Model.ActivePolls)
+        {
+            <div class="poll-card">
+                <div class="poll-header">
+                    <div class="poll-icon active">
+                        <svg fill="none" stroke="#3b82f6" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                        </svg>
+                    </div>
+                    <div class="poll-info">
+                        <div class="poll-title-row">
+                            <h3 class="poll-title">@poll.poll.PollTitle</h3>
+                            <span class="poll-badge active">Active</span>
+                        </div>
+                        <p class="poll-description">@poll.poll.PollDescription</p>
+                        <div class="poll-meta">
+                            <span>
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+                                </svg>
+                                Amenities
+                            </span>
+                            <span>
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                @poll.poll.PollDate
+                            </span>
+                            <span>
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                </svg>
+                                62 votes
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="poll-options">
+                    @foreach(OptionViewModel optionViewModel in poll.options)
+                    {
+                        <div class="poll-option" onclick="select(this,'@optionViewModel.option.OptionId','@optionViewModel.option.PollId')">
+                            <div class="option-content">
+                                <span class="option-text">@optionViewModel.option.OptionText</span>
+                            </div>
+                        </div>
+                    }
+
+
+                    <button id="btn-vote" class="btn-submit-vote" onclick="vote()">Vote</button>
+                </div>
+            </div>
+
+        }
+      
+       
+
+        @foreach (PollViewModel pollViewModel in Model.InActivePolls)
+        {
+            <div class="poll-card">
+                <div class="poll-header">
+                    <div class="poll-icon closed">
+                        <svg fill="none" stroke="#6b7280" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                        </svg>
+                    </div>
+                    <div class="poll-info">
+                        <div class="poll-title-row">
+                            <h3 class="poll-title">@pollViewModel.poll.PollTitle</h3>
+                            <span class="poll-badge closed">Closed</span>
+                        </div>
+                        <p class="poll-description">@pollViewModel.poll.PollDescription</p>
+                        <div class="poll-meta">
+                            <span>
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+                                </svg>
+                                Landscaping
+                            </span>
+                            <span>
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                </svg>
+                                Closed @pollViewModel.poll.PollDate
+                            </span>
+                            <span>
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                </svg>
+                                94 votes
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="poll-options">
+                    @foreach (OptionViewModel optionViewModel in pollViewModel.options)
+                    {
+                        
+                   
+                        <div class="poll-option result">
+                            <div class="option-progress" style="width: 78%;"></div>
+                            <div class="option-content">
+                                <span class="option-text">@optionViewModel.option.OptionText</span>
+                                <div class="option-stats">
+                                    <span class="option-check">
+                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                                        </svg>
+                                    </span>
+                                    <span class="option-percentage">78%</span>
+                                    <span class="option-votes">@optionViewModel.voted votes</span>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    
+                </div>
+            </div>
+        }
+        
+
+        
+
+    </div>
+</div>
+<script>
+    let selectedOption = null;
+    let selectedPoll = null;
+    let selectedOptionEl = null;
+    function select(button,optionId,pollId)
+    {
+          if(selectedOptionEl) selectedOptionEl.style.backgroundColor = "";
+
+        button.style.backgroundColor = "#d1e7ff";
+        selectedOptionEl = button;
+        selectedOption = optionId;
+        selectedPoll = pollId;
+    }
+    async function vote()
+    {
+        if(selectedOption == null || selectedPoll == null)
+            alert("Select an option")
+        try{
+            const res = await fetch(`http://localhost:5086/Resident/VoteInPoll`,
+                                      {method: 'Post',
+                                       headers: {'Content-Type' : 'application/json'},
+                                       body: JSON.stringify({OptionId:selectedOption,PollId:selectedPoll})
+
+                                      });
+            const data = await res.json();
+            if(data.success == true)
+            {
+                selectedOption = null;
+                selectedPoll = null;
+                document.getElementById("btn-vote").disabled = true;
+
+                alert("Voted");
+            }
+               
+
+
+        }
+        catch(err){
+            console.error(err);
+            alert(err.message || 'Could not attend event');
+        }
+    }
+</script>

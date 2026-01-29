@@ -7,47 +7,140 @@
     Layout = "~/Views/Shared/MasterResidentPage.cshtml";
 }
 
-<link rel="stylesheet" href="../css/Event.css">
-<main class="main">
-    <h1>Community Events</h1>
-    <h2>Upcoming Events</h2>
-    <div class="event-grid">
-
-
-        @foreach (Event event1 in Model.CurrEvents)
-        {
-            <div class="event-box">
-
-                <h1 class="event-title">@event1.EventTitle</h1>
-                <p class="event-desc">@event1.EventDescription</p>
-                <div class="details">
-                    <p class="event-date"><img src="../Images/calendar-xoaigr9z259n0zw0pl1c.webp" class="side-image">@event1.EventDate</p>
-                    <p class="event-time"> <img src="../Images/clock.png" class="side-image">4:00PM - 8:00 PM</p>
-                    <p class="event-type"><img src="../Images/clipboard.png" class="side-image" s>@event1.EventTypeId</p>
-                </div>
-            </div>
-        }
-       
-      
+<link rel="stylesheet" href="~/css/Event.css">
+<div class="container">
+    <div class="header">
+        <h1>Community Events</h1>
+        <p class="subtitle">Join upcoming events and activities at The Meridian Tower</p>
     </div>
-    <div class="past-events">
-        <h2>Past Events</h2>
-        <div class="event-grids">
-            @foreach(Event preEvent in Model.PreEvents)
-            {
-                
-            
-                <div class="event-box">
 
-                    <h1 class="event-title">@preEvent.EventTitle</h1>
-                    <p class="event-desc">@preEvent.EventDescription</p>
-                    <div class="details">
-                        <p class="event-date"><img src="../Images/calendar-xoaigr9z259n0zw0pl1c.webp" class="side-image">@preEvent.EventDate</p>
-                        <p class="event-time"> <img src="../Images/clock.png" class="side-image">4:00PM - 8:00 PM</p>
-                        <p class="event-type"><img src="../Images/clipboard.png" class="side-image" s>@preEvent.EventTypeId</p>
+   
+    <div class="filters">
+        <div class="filters-content">
+            <div class="search-wrapper">
+                <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                <input type="text" class="search-input" placeholder="Search events...">
+            </div>
+            <select class="category-select">
+                <option value="all">All Categories</option>
+                <option value="social">Social</option>
+                <option value="wellness">Wellness</option>
+                <option value="educational">Educational</option>
+                <option value="entertainment">Entertainment</option>
+                <option value="community">Community</option>
+            </select>
+        </div>
+    </div>
+
+  
+    <div>
+        <h2 class="section-title">Upcoming Events</h2>
+        <div class="events-grid">
+            @foreach(EventViewModel event1 in Model.CurrEvents)
+            {
+                <div class="event-card" style="animation-delay: 0s;">
+                    <div class="event-image">
+                        <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=800&q=80" alt="Spring Community BBQ">
+                        <span class="event-badge badge-social">social</span>
+                    </div>
+                    <div class="event-content">
+                        <h3 class="event-title">@event1.Event.EventTitle</h3>
+                        <p class="event-description">@event1.Event.EventDescription</p>
+                        <div class="event-details">
+                            <div class="detail-item">
+                                <svg class="detail-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                                <span>@event1.Event.EventDescription</span>
+                            </div>
+                            <div class="detail-item">
+                                <svg class="detail-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <span>4:00 PM - 8:00 PM</span>
+                            </div>
+                          
+                        </div>
+                        <div class="event-footer">
+                            <div class="attendees">
+                                <svg class="detail-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                </svg>
+                                <span class="attending-count">@event1.Attending</span>
+                            </div>
+                            <button  class="rsvp-btn" onclick="attendEvent(@event1.Event.EventId,this)">Attend</button>
+                        </div>
                     </div>
                 </div>
             }
+          
+
+
+            
         </div>
     </div>
-</main>
+
+  
+    <div>
+        <h2 class="section-title">Past Events</h2>
+        <div class="events-grid">
+            @foreach(EventViewModel event1 in Model.PreEvents)
+            {
+                <div class="event-card past" style="animation-delay: 0s;">
+                    <div class="event-image">
+                        <img src="https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=800&q=80" alt="Wine & Cheese Social">
+                        <span class="event-badge badge-past">Past Event</span>
+                    </div>
+                    <div class="event-content">
+                        <h3 class="event-title">@event1.Event.EventTitle</h3>
+                        <p class="event-description">@event1.Event.EventDescription</p>
+                        <div class="event-footer">
+                            <div class="attendees">
+                                <svg class="detail-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                </svg>
+                                <span >@event1.Attending attended</span>
+                            </div>
+                            <span class="past-date">@event1.Event.EventDate</span>
+                        </div>
+                    </div>
+                </div>
+            }
+           
+            
+        </div>
+    </div>
+</div>
+<script>
+    async function attendEvent(eventId,button)
+    {
+        try{
+            const res = await fetch(`http://localhost:5086/Resident/AttendEvent?eventId=${eventId}`,
+                                      {method: 'Get',
+                                       headers: {'Content-Type' : 'application/json'},
+                                      
+                                      });
+            const data = await res.json();
+            if(data.success == true)
+                updateAttendance(button)
+            
+           
+        }
+        catch(err){
+            console.error(err);
+            alert(err.message || 'Could not attend event');
+        }
+
+    }
+    function updateAttendance(button)
+    {
+        const card = button.closest('.event-card');
+        const attendingSpan = card.querySelector('.attending-count');
+        const number = parseInt(attendingSpan.innerText);
+        attendingSpan.innerText = `${number+1}`;
+        
+
+    }
+</script>

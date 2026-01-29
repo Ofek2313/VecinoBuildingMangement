@@ -8,81 +8,138 @@
     Layout = "~/Views/Shared/MasterResidentPage.cshtml";
 }
 <link rel="stylesheet" href="~/css/Service.css">
-<main class="requests">
-    <h1>Service Requests</h1>
-    <h2 class="desc">Sumbit Your Service Requests</h2>
-    <section class="UpperWrapper">
-        <button class="request-button" id="openbtn">New Request</button>
-    </section>
-
-    <section class="stats-grid">
-
-
-        <div class="stat-card Pending">
-            <span class="stat pend">Pending</span>
-            <span class="count">@Model.Pending</span>
-
+<div class="container">
+    <div class="header">
+        <div class="header-text">
+            <h1>My Requests</h1>
+            <p>Track your maintenance requests</p>
         </div>
-        <div class="stat-card Progress">
-            <span class="stat prog">In Progress</span>
-            <span class="count">@Model.InProgress</span>
+        <button class="new-request-btn" id="openbtn" >
+            <svg class="plus-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+            </svg>
+            New Request
+        </button>
+    </div>
 
+    
+    <div class="stats-grid">
+        <div class="stat-card pending" style="animation-delay: 0s;">
+            <div class="stat-content">
+                <div class="stat-icon pending">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div>
+                    <p class="stat-number">@Model.Pending</p>
+                    <p class="stat-label">Pending</p>
+                </div>
+            </div>
         </div>
-        <div class="stat-card Completed">
-            <span class="stat comp">Completed</span>
-            <span class="count">@Model.Completed</span>
 
+        <div class="stat-card in-progress" style="animation-delay: 0.1s;">
+            <div class="stat-content">
+                <div class="stat-icon in-progress">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                </div>
+                <div>
+                    <p class="stat-number">@Model.InProgress</p>
+                    <p class="stat-label">In Progress</p>
+                </div>
+            </div>
         </div>
-    </section>
-    <section class="previous">
-        @if(Model.serviceRequests != null)
+
+        <div class="stat-card completed" style="animation-delay: 0.2s;">
+            <div class="stat-content">
+                <div class="stat-icon completed">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div>
+                    <p class="stat-number">@Model.Completed</p>
+                    <p class="stat-label">Completed</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="requests-list">
+        
+        @foreach(ServiceRequest serviceRequest in Model.serviceRequests)
         {
-            
-        
-            @foreach(ServiceRequest request in Model.serviceRequests)
-            {
-            
-        
-                <div class="request">
-                    <div class="imgwraper prog">
-                        <img src="../Images/InProgress.png" class="requestimg">
+            <div class="request-card" style="animation-delay: 0.3s;">
+                <div class="request-content">
+                    <div class="request-icon icon-@serviceRequest.RequestStatus">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
                     </div>
+                    <div class="request-body">
+                        <div class="request-header">
+                            <div>
+                                <h3 class="request-title">@serviceRequest.RequestTitle</h3>
+                                <p class="request-description">@serviceRequest.RequestMessage</p>
+                            </div>
+                            <div class="badges">
+                                @if (serviceRequest.RequestStatus == "Pending")
+                                {
+                                    <span class="badge badge-status-pending">@serviceRequest.RequestStatus</span>
+                                }
+                                else if(serviceRequest.RequestStatus == "InProgress")
+                                {
+                                    <span class="badge badge-status-in-progress">@serviceRequest.RequestStatus</span>
+                                }
+                                else
+                                {
+                                    <span class="badge badge-status-completed">@serviceRequest.RequestStatus</span>
+                                }
 
-                    <div class="requestwraper">
-                        <span class="RequestTitle">@request.RequestTitle</span>
-                        <span class="Description">@request.RequestMessage</span>
+                            </div>
+                        </div>
+                        <div class="request-meta">
+                            <span class="request-category">@serviceRequest.RequestTypeId</span>
+                            <span></span>
+                            <span>Submitted @serviceRequest.RequestDate</span>
 
-                    </div>
-                    <div class="typewraper">
-                        <span>@request.RequestTypeId</span>
-                        <span>@request.RequestDate</span>
+                        </div>
                     </div>
                 </div>
-            }
+            </div>
         }
-    </section>
-    <div class="overlay" id="overlay"></div>
-    <div class="PopOut" id="popout">
-        <h2>Submit A request</h2>
-        <form class="request-submit" asp-controller="Resident" asp-action="CreateServiceRequest" method="post">
+        
 
-            <input type="text" id="title" class="input title" placeholder="Request Title" asp-for="ServiceRequest.RequestTitle" >
-            <span asp-validation-for="ServiceRequest.RequestTitle"></span>
-            <textarea id="description"  class="input description" placeholder="Request Description" asp-for="ServiceRequest.RequestMessage"></textarea>
-            <span asp-validation-for="ServiceRequest.RequestMessage"></span>
-            <Select class="input select" asp-for="ServiceRequest.RequestTypeId">
-                @foreach(RequestTypes requestTypes in Model.RequestTypes )
-                {
-                    <option value="@requestTypes.RequestTypeId"> @requestTypes.RequestTypeName</option>
-                }
-                
-            </Select>
-            <button class="sumbitbtn" type="button" onclick="check()">Submit</button>
-        </form>
-     
+       
     </div>
-</main>
+</div>
+<div class="overlay" id="overlay"></div>
+<div class="PopOut" id="popout">
+    <h2>Submit A request</h2>
+    <form class="request-submit" asp-controller="Resident" asp-action="CreateServiceRequest" method="post">
+
+        <input type="text" id="title" class="input title" placeholder="Request Title" asp-for="ServiceRequest.RequestTitle">
+        <span asp-validation-for="ServiceRequest.RequestTitle"></span>
+        <textarea id="description" class="input description" placeholder="Request Description" asp-for="ServiceRequest.RequestMessage"></textarea>
+        <span asp-validation-for="ServiceRequest.RequestMessage"></span>
+        <Select class="input select" asp-for="ServiceRequest.RequestTypeId">
+            @foreach (RequestTypes requestTypes in Model.RequestTypes)
+            {
+                <option value="@requestTypes.RequestTypeId"> @requestTypes.RequestTypeName</option>
+            }
+
+        </Select>
+        <button class="sumbitbtn" type="button" onclick="check()">Submit</button>
+    </form>
+
+</div>
 <script>
+
     const popout = document.getElementById('popout');
     const overlay = document.getElementById('overlay');
     const openbtn = document.getElementById('openbtn');

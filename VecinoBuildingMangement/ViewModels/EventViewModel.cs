@@ -7,9 +7,9 @@ using VecinoBuildingMangement.Models;
 
 namespace VecinoBuildingMangement.ViewModels
 {
-    public class NotificationsViewModels
+    public class EventViewModel
     {
-        public List<Notification> Notifications { get; set; }
-        public List<Notification> PinnedNotifications { get; set; }
+        public Event Event { get; set; }
+        public int Attending {  get; set; }
     }
 }

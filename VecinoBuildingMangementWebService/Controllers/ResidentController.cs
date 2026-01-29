@@ -18,7 +18,31 @@ namespace VecinoBuildingMangementWebService.Controllers
         {
             this.repositoryUOW = new RepositoryUOW();
         }
+        private bool IsBefore(string date1, string date2)
+        {
+            string[] date1Split = date1.Split('/');
+            string[] date2Split = date2.Split('/');
+            int day1 = Convert.ToInt32(date1Split[0]);
+            int month1 = Convert.ToInt32(date1Split[1]);
+            int year1 = Convert.ToInt32(date1Split[2]);
 
+            int day2 = Convert.ToInt32(date2Split[0]);
+            int month2 = Convert.ToInt32(date2Split[1]);
+            int year2 = Convert.ToInt32(date2Split[2]);
+
+            if (year1 < year2)
+                return true;
+            else if (year2 < year1)
+                return false;
+            if (month1 < month2)
+                return true;
+            else if (month2 < month1)
+                return false;
+            if (day1 < day2)
+                return true;
+
+            return false;
+        }
         [HttpGet]
         public ManagePaymentViewModel GetManagePayment(string residentId)
         {
@@ -26,15 +50,32 @@ namespace VecinoBuildingMangementWebService.Controllers
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
-                viewModel.Fees = repositoryUOW.FeeRepository.ViewPaidFeesById(residentId);
+                viewModel.Fees = repositoryUOW.FeeRepository.GetFeesById(residentId);
+                List<Fee> Paid = this.repositoryUOW.FeeRepository.ViewPaidFeesById(residentId);
                 List<Fee> UnPaid = repositoryUOW.FeeRepository.GetUnPaidFeeById(residentId);
-                viewModel.UnPaidFees = UnPaid;
+                
                 double totalFee = 0;
-                foreach (Fee fee in UnPaid)
+                double unpaidfee = 0;
+                foreach (Fee fee in Paid)
                 {
                     totalFee += fee.FeeAmount;
                 }
-                viewModel.TotalFees = totalFee;
+                viewModel.TotalPaidFees = totalFee;
+                foreach(Fee fee in UnPaid)
+                {
+                    unpaidfee += fee.FeeAmount;
+                }
+                viewModel.TotalUnPaidFees = unpaidfee;
+                viewModel.paidFees = Paid.Count;
+                viewModel.unPaidFees = UnPaid.Count;
+                if (UnPaid.Count > 0)
+                    viewModel.nextFee = UnPaid[0];
+                foreach(Fee fee in UnPaid)
+                {
+                    if(IsBefore(fee.FeeDueDate, viewModel.nextFee.FeeDueDate))
+                        viewModel.nextFee = fee;
+
+                }
                 return viewModel;
             }
             catch (Exception ex)
@@ -50,12 +91,12 @@ namespace VecinoBuildingMangementWebService.Controllers
         }
 
         [HttpPost]
-        public bool PayFee(string feeId)
+        public bool PayFee([FromBody] PayFeeRequest payFeeRequest)
         {
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
-                return this.repositoryUOW.FeeRepository.PayFee(feeId);
+                return this.repositoryUOW.FeeRepository.PayFee(payFeeRequest.FeeId);
             }
             catch(Exception ex)
             {
@@ -160,19 +201,63 @@ namespace VecinoBuildingMangementWebService.Controllers
         public ViewEventViewModel ViewEvents(string residentId)
         {
             List<Event> events = new List<Event>();
+            List<Event> events2 = new List<Event>();
             ViewEventViewModel viewEventViewModel = new ViewEventViewModel();
+            
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
                 Building building = this.repositoryUOW.BuildingRepository.GetBuildingByResidentId(residentId);
+                events = this.repositoryUOW.EventRepository.GetEventByBuildingId(building.BuildingId);
+                events2 = this.repositoryUOW.EventRepository.GetPreviousEventsByBuildingId(building.BuildingId);
 
-                viewEventViewModel.CurrEvents = this.repositoryUOW.EventRepository.GetEventByBuildingId(building.BuildingId);
-                viewEventViewModel.PreEvents = this.repositoryUOW.EventRepository.GetPreviousEventsByBuildingId(building.BuildingId);
+                foreach (Event e in events)
+                {
+                    viewEventViewModel.CurrEvents.Add(new EventViewModel
+                    {
+                        Event = e,
+                        Attending = this.repositoryUOW.EventRepository.GetAttendingCount(e.EventId),
+
+
+                    }
+                    );
+                }
+                foreach (Event e in events2)
+                {
+                    viewEventViewModel.PreEvents.Add(new EventViewModel
+                    {
+                        Event = e,
+                        Attending = this.repositoryUOW.EventRepository.GetAttendingCount(e.EventId),
+
+
+                    }
+                    );
+                }
+       
                 return viewEventViewModel;
             }
             catch (Exception ex)
             {
                 return null;
+            }
+            finally
+            {
+                this.repositoryUOW.DbHelperOleDb.CloseConnection();
+            }
+        }
+        [HttpPost]
+        [Produces("application/json")]
+        public bool AttendEvent([FromBody] AttendEvent attendEvent )
+        {
+            try
+            {
+                this.repositoryUOW.DbHelperOleDb.OpenConnection();
+                return this.repositoryUOW.EventRepository.AttendEvent(attendEvent.eventId,attendEvent.residentId);
+
+            }
+            catch (Exception ex)
+            {
+                return false;
             }
             finally
             {
@@ -236,14 +321,16 @@ namespace VecinoBuildingMangementWebService.Controllers
             }
         }
         [HttpGet]
-        public List<Notification> GetNotifications(string residentId)
+        public NotificationsViewModels GetNotifications(string residentId)
         {
-            List<Notification> list = new List<Notification>();
+            NotificationsViewModels notificationsViewModels = new NotificationsViewModels();
+           
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
-                list = this.repositoryUOW.NotificationRepository.GetNotificationsByResidentId(residentId);
-                return list;
+                notificationsViewModels.Notifications = this.repositoryUOW.NotificationRepository.GetNotificationsByResidentId(residentId);
+                notificationsViewModels.PinnedNotifications = this.repositoryUOW.NotificationRepository.GetPinnedNotificationsByResidentId(residentId);
+                return notificationsViewModels;
             }
             catch (Exception ex)
             {
@@ -277,9 +364,9 @@ namespace VecinoBuildingMangementWebService.Controllers
             }
         }
         [HttpGet]
-        public List<PollViewModel> PollViewModel(string residentId)
+        public ViewPollViewModel PollViewModel(string residentId)
         {
-            List<PollViewModel> pollviewModel = new List<PollViewModel>();
+            ViewPollViewModel pollviewModel = new ViewPollViewModel();
           
             try
             {
@@ -289,8 +376,32 @@ namespace VecinoBuildingMangementWebService.Controllers
                 List<Poll> polls = this.repositoryUOW.PollRepository.GetActivePollsByBuilding(buildingId);
                 foreach (Poll poll in polls)
                 {
-                    PollViewModel viewModel = new PollViewModel();
                     
+                        PollViewModel viewModel = new PollViewModel();
+
+                        viewModel.poll = poll;
+                        List<Option> options = this.repositoryUOW.OptionRepository.GetOptionsByPollId(poll.PollId);
+                        foreach (Option option in options)
+                        {
+                            OptionViewModel optionViewModel = new OptionViewModel();
+                            optionViewModel.option = option;
+                            optionViewModel.voted = this.repositoryUOW.VoteRepository.CountVoteByOption(option.OptionId);
+                            //optionViewModel.voted = CalcVote(options, option.OptionId);
+                            viewModel.options.Add(optionViewModel);
+                        }
+                        pollviewModel.ActivePolls.Add(viewModel);
+                    
+                   
+                    
+
+
+                }
+                List<Poll> polls1 = this.repositoryUOW.PollRepository.GetInActivePollsByBuilding(buildingId);
+                foreach (Poll poll in polls1)
+                {
+
+                    PollViewModel viewModel = new PollViewModel();
+
                     viewModel.poll = poll;
                     List<Option> options = this.repositoryUOW.OptionRepository.GetOptionsByPollId(poll.PollId);
                     foreach (Option option in options)
@@ -301,10 +412,14 @@ namespace VecinoBuildingMangementWebService.Controllers
                         //optionViewModel.voted = CalcVote(options, option.OptionId);
                         viewModel.options.Add(optionViewModel);
                     }
-                    pollviewModel.Add(viewModel);
+                    pollviewModel.InActivePolls.Add(viewModel);
+
+
+
 
 
                 }
+
                 return pollviewModel;
                
             }
