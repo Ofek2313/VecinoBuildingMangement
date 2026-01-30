@@ -159,13 +159,13 @@ namespace VecinoWebApplication.Controllers
             client.Host = "localhost";
             client.Port = 5269;
             client.Path = "api/Resident/Login";
-            Resident resident = await client.PostAsyncReturn<LogInViewModel, Resident>(logInViewModel);
+            ApiResponse<Resident> resident = await client.PostAsyncReturn<LogInViewModel, Resident>(logInViewModel);
 
-            if(resident == null)
+            if(resident == null || !resident.Success)
                 return View("LoginForm");
             
-            HttpContext.Session.SetString("residentId", resident.ResidentId);
-            HttpContext.Session.SetString("residentName", resident.ResidentName);
+            HttpContext.Session.SetString("residentId", resident.Data.ResidentId);
+            HttpContext.Session.SetString("residentName", resident.Data.ResidentName);
             ViewBag.IsLoggedIn = true;
             
             //ApiClient<BuildingModel> client2 = new ApiClient<BuildingModel>();
@@ -245,8 +245,8 @@ namespace VecinoWebApplication.Controllers
             attendEvent.eventId = eventId;
             attendEvent.residentId = residentId;
 
-            bool result = await client.PostAsyncReturn<AttendEvent,bool>(attendEvent);
-            if(result)
+            ApiResponse<bool> result = await client.PostAsyncReturn<AttendEvent,bool>(attendEvent);
+            if(result.Data)
             {
                 return Json(new { success = true });
             }
@@ -269,18 +269,20 @@ namespace VecinoWebApplication.Controllers
             vote.ResidentId = residentId;
             vote.VoteDate = DateTime.Now.ToShortDateString();
             vote.VoteId = "0";
-            bool result = await client.PostAsync(vote);
-            if (result)
+            ApiResponse<bool> result = await client.PostAsyncReturn<Vote,bool>(vote);
+            if (result.Success)
             {
-                return Json(new { success = true });
+                return Json(new { success = result.Data });
             }
             else
-                return Json(new { success = false });
+                return Json(new  { success = false });
         }
+        
 
         [HttpPost]
         public async Task<IActionResult> PayFee([FromBody] PayFeeRequest payFeeRequest)
         {
+
             ApiClient<PayFeeRequest> client = new ApiClient<PayFeeRequest>();
             client.Scheme = "http";
             client.Host = "localhost";
@@ -293,6 +295,23 @@ namespace VecinoWebApplication.Controllers
             }
             else
                 return Json(new { success = false });
+        }
+
+        public async Task<IActionResult> UploadPhoto(IFormFile file)
+        {
+            string residentId = HttpContext.Session.GetString("residentId");
+            ApiClient<ViewModelAvatar> client = new ApiClient<ViewModelAvatar>();
+            client.Scheme = "http";
+            client.Host = "localhost";
+            client.Port = 5269;
+            client.Path = "api/Resident/UploadPhoto";
+            ViewModelAvatar viewModelAvatar = new ViewModelAvatar();
+            viewModelAvatar.ResidentId = residentId;
+            viewModelAvatar.Extension = Path.GetExtension(file.FileName).TrimStart('.');
+
+            bool result = await client.PostAsync(viewModelAvatar, file.OpenReadStream());
+
+            return View(result);
         }
     }
 }

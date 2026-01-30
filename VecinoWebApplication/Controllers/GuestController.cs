@@ -36,7 +36,7 @@ namespace VecinoWebApplication.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register(Resident resident/*,IFormFile file*/)
+        public async Task<IActionResult> Register(Resident resident)
         {
             if (!resident.IsValid)
                 return View("RegisterForm", resident);
@@ -47,12 +47,12 @@ namespace VecinoWebApplication.Controllers
             client.Port = 5269;
             client.Path = "api/Guest/Register";
 
-            Resident resident1 = await client.PostAsyncReturn<Resident,Resident>(resident);
-            if (resident1 == null)
+            ApiResponse<Resident> resident1 = await client.PostAsyncReturn<Resident,Resident>(resident);
+            if (resident1 == null || !resident1.Success )
                 return View("RegisterForm");
-            if (resident1.ResidentId != null && resident1.ResidentId != "")
+            if (resident1.Data.ResidentId != null && resident1.Data.ResidentId != "")
             {
-                HttpContext.Session.SetString("residentId", resident1.ResidentId);
+                HttpContext.Session.SetString("residentId", resident1.Data.ResidentId);
                 ViewBag.IsLoggedIn = true;
                 return View("Homepage");
             }
@@ -62,6 +62,7 @@ namespace VecinoWebApplication.Controllers
 
 
         }
+
        
     }
 }

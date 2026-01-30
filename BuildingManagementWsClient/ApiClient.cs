@@ -90,11 +90,12 @@ namespace BuildingManagementWsClient
             }
         }
        
-        public async Task<TResponse> PostAsyncReturn<TRequest,TResponse>(TRequest model)
+        public async Task<ApiResponse<TResponse>> PostAsyncReturn<TRequest,TResponse>(TRequest model)
         {
 
             using (HttpRequestMessage httpRequest = new HttpRequestMessage())
             {
+                ApiResponse<TResponse> response = new ApiResponse<TResponse>();
                 httpRequest.Method = HttpMethod.Post;
                 httpRequest.RequestUri = this.uriBuilder.Uri;
                 string json = JsonSerializer.Serialize<TRequest>(model);
@@ -108,16 +109,27 @@ namespace BuildingManagementWsClient
                         //if (typeof(TResponse) == typeof(string))
                         //    return result;
                         if (string.IsNullOrWhiteSpace(result))
-                            return default(TResponse);
+                        {
+                            response.Success = false;
+                            response.Data = default(TResponse);
+                            return response;
+                        }
+                            
                         JsonSerializerOptions options = new JsonSerializerOptions();
                         options.PropertyNameCaseInsensitive = true; 
                         TResponse value = JsonSerializer.Deserialize<TResponse>(result, options);
-                        return value;
+                        
+                        response.Success = true;
+                        response.Data = value;
+                        return response;
                     }
                 }
-                return default(TResponse);
+                response.Success = false;
+                response.Data = default(TResponse);
+                return response;
 
             }
+            
         }
         public async Task<bool> PostAsync(T model, Stream file)
             {

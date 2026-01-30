@@ -25,7 +25,7 @@
         
         @foreach(PollViewModel poll in Model.ActivePolls)
         {
-            <div class="poll-card">
+            <div class="poll-card" id="">
                 <div class="poll-header">
                     <div class="poll-icon active">
                         <svg fill="none" stroke="#3b82f6" viewBox="0 0 24 24">
@@ -61,12 +61,12 @@
                     </div>
                 </div>
 
-                <div class="poll-options">
+                <div class="poll-options" id="vote-@poll.poll.PollId">
                     @foreach(OptionViewModel optionViewModel in poll.options)
                     {
                         <div class="poll-option" onclick="select(this,'@optionViewModel.option.OptionId','@optionViewModel.option.PollId')">
                             <div class="option-content">
-                                <span class="option-text">@optionViewModel.option.OptionText</span>
+                                <span data-optionid="@optionViewModel.option.OptionId" class="option-text" >@optionViewModel.option.OptionText</span>
                             </div>
                         </div>
                     }
@@ -74,6 +74,20 @@
 
                     <button id="btn-vote" class="btn-submit-vote" onclick="vote()">Vote</button>
                 </div>
+                <div class="poll-options" id="result-@poll.poll.PollId" style="display:none;">
+                    @foreach (OptionViewModel optionViewModel in poll.options)
+                    {
+                        <div class="poll-option">
+                            <div class="option-content">
+                                <span class="option-text" id="option-@optionViewModel.option.OptionId" >@optionViewModel.voted</span>
+                            </div>
+                        </div>
+                    }
+
+
+                    <button id="btn-result-@poll.poll.PollId" class="btn-submit-vote" onclick="vote()">Vote</button>
+                </div>
+                
             </div>
 
         }
@@ -153,6 +167,7 @@
     let selectedOption = null;
     let selectedPoll = null;
     let selectedOptionEl = null;
+
     function select(button,optionId,pollId)
     {
           if(selectedOptionEl) selectedOptionEl.style.backgroundColor = "";
@@ -162,7 +177,7 @@
         selectedOption = optionId;
         selectedPoll = pollId;
     }
-    async function vote()
+    async function vote(pollId)
     {
         if(selectedOption == null || selectedPoll == null)
             alert("Select an option")
@@ -174,13 +189,29 @@
 
                                       });
             const data = await res.json();
-            if(data.success == true)
-            {
+            if (data.success == true) {
+
+                showResults();
+                const option = document.getElementById(`option-${selectedOption}`);
+                
+                option.innerText = parseInt(option.innerText) + 1;
+
+                const resultContainer = document.getElementById(`result-${selectedPoll}`);
+                const voteElements = resultContainer.querySelectorAll('.option-text');
+                let totalVotes = 0;
+
+            
+               
+
                 selectedOption = null;
                 selectedPoll = null;
-                document.getElementById("btn-vote").disabled = true;
+                document.getElementById(`btn-result-${selectedPoll}`).disabled = true;
 
-                alert("Voted");
+
+            }
+            else
+            { 
+                showResults();
             }
                
 
@@ -190,5 +221,12 @@
             console.error(err);
             alert(err.message || 'Could not attend event');
         }
+    }
+    
+    function showResults()
+    {
+
+        document.getElementById(`result-${selectedPoll}`).style.display = 'block';
+        document.getElementById(`vote-${selectedPoll}`).style.display = 'none';
     }
 </script>

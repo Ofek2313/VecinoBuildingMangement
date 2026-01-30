@@ -5,6 +5,8 @@ using VecinoBuildingMangement.Models;
 using System.Reflection.Metadata.Ecma335;
 using Microsoft.Extensions.Options;
 using System.Text;
+using System.IO;
+using System.Text.Json;
 
 namespace VecinoBuildingMangementWebService.Controllers
 {
@@ -437,6 +439,7 @@ namespace VecinoBuildingMangementWebService.Controllers
         
 
         [HttpPost]
+        [Produces("application/json")]
         public bool VoteInPoll(Vote vote)
         {
             try
@@ -474,6 +477,37 @@ namespace VecinoBuildingMangementWebService.Controllers
             catch (Exception ex)
             {
                 return null; 
+            }
+            finally
+            {
+                this.repositoryUOW.DbHelperOleDb.CloseConnection();
+            }
+        }
+
+        [HttpPost]
+        public bool UploadPhoto([FromForm]string model, IFormFile file)
+        {
+            try
+            {
+                this.repositoryUOW.DbHelperOleDb.OpenConnection();
+                this.repositoryUOW.DbHelperOleDb.OpenTransaction();
+                ViewModelAvatar viewModelAvatar = JsonSerializer.Deserialize<ViewModelAvatar>(model);
+                bool response = this.repositoryUOW.ResidentRepository.UpdatePhotoById(viewModelAvatar.ResidentId, viewModelAvatar.Extension);
+                string fileName = viewModelAvatar.ResidentId + "." + viewModelAvatar.Extension;
+                string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images",fileName);
+                using (FileStream fileStream = new FileStream(path, FileMode.Create,FileAccess.Write))
+                {
+                    file.CopyTo(fileStream);    
+                }
+                this.repositoryUOW.DbHelperOleDb.Commit();
+                return true;
+
+
+            }
+            catch(Exception ex)
+            {
+                this.repositoryUOW.DbHelperOleDb.RollBack();
+                return false;
             }
             finally
             {

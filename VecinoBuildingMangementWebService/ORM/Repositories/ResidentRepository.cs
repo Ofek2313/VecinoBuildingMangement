@@ -168,6 +168,11 @@ namespace VecinoBuildingMangementWebService
             Random rand = new Random();
             return rand.Next(8,16);
         }
-        
+        public bool UpdatePhotoById(string residentId,string extension)
+        {
+            string sql = $"Update Resident SET ResidentImage = {residentId}.{extension} WHERE ResidentId = @ResidentId";
+            this.dbHelperOleDb.AddParameter("@ResidentId", residentId);
+            return this.dbHelperOleDb.Update(sql) > 0;
+        }
     }
 }
