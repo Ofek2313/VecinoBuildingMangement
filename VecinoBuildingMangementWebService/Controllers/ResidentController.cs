@@ -11,7 +11,7 @@ using System.Text.Json;
 namespace VecinoBuildingMangementWebService.Controllers
 {
     [Route("api/[controller]/[action]")]
-    [ApiController] 
+    [ApiController]
     public class ResidentController : ControllerBase
     {
         RepositoryUOW repositoryUOW;
@@ -55,7 +55,7 @@ namespace VecinoBuildingMangementWebService.Controllers
                 viewModel.Fees = repositoryUOW.FeeRepository.GetFeesById(residentId);
                 List<Fee> Paid = this.repositoryUOW.FeeRepository.ViewPaidFeesById(residentId);
                 List<Fee> UnPaid = repositoryUOW.FeeRepository.GetUnPaidFeeById(residentId);
-                
+
                 double totalFee = 0;
                 double unpaidfee = 0;
                 foreach (Fee fee in Paid)
@@ -63,7 +63,7 @@ namespace VecinoBuildingMangementWebService.Controllers
                     totalFee += fee.FeeAmount;
                 }
                 viewModel.TotalPaidFees = totalFee;
-                foreach(Fee fee in UnPaid)
+                foreach (Fee fee in UnPaid)
                 {
                     unpaidfee += fee.FeeAmount;
                 }
@@ -72,9 +72,9 @@ namespace VecinoBuildingMangementWebService.Controllers
                 viewModel.unPaidFees = UnPaid.Count;
                 if (UnPaid.Count > 0)
                     viewModel.nextFee = UnPaid[0];
-                foreach(Fee fee in UnPaid)
+                foreach (Fee fee in UnPaid)
                 {
-                    if(IsBefore(fee.FeeDueDate, viewModel.nextFee.FeeDueDate))
+                    if (IsBefore(fee.FeeDueDate, viewModel.nextFee.FeeDueDate))
                         viewModel.nextFee = fee;
 
                 }
@@ -88,7 +88,7 @@ namespace VecinoBuildingMangementWebService.Controllers
             {
                 this.repositoryUOW.DbHelperOleDb.CloseConnection();
             }
-            
+
 
         }
 
@@ -100,7 +100,7 @@ namespace VecinoBuildingMangementWebService.Controllers
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
                 return this.repositoryUOW.FeeRepository.PayFee(payFeeRequest.FeeId);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
 
                 return false;
@@ -121,9 +121,9 @@ namespace VecinoBuildingMangementWebService.Controllers
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
                 serviceRequestViewModel.serviceRequests = repositoryUOW.ServiceRequestRepository.GetServiceRequestsByResidentId(residentId);
                 serviceRequestViewModel.RequestTypes = repositoryUOW.RequestTypeRepository.GetAll();
-                foreach(ServiceRequest serviceRequest in serviceRequestViewModel.serviceRequests)
+                foreach (ServiceRequest serviceRequest in serviceRequestViewModel.serviceRequests)
                 {
-                    switch(serviceRequest.RequestStatus)
+                    switch (serviceRequest.RequestStatus)
                     {
                         case "Pending":
                             serviceRequestViewModel.Pending += 1;
@@ -146,12 +146,12 @@ namespace VecinoBuildingMangementWebService.Controllers
             {
                 return null;
             }
-            finally 
+            finally
             {
                 this.repositoryUOW.DbHelperOleDb.CloseConnection();
             }
         }
-      
+
 
 
 
@@ -161,7 +161,7 @@ namespace VecinoBuildingMangementWebService.Controllers
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
-              
+
                 return repositoryUOW.ServiceRequestRepository.Create(serviceRequest);
             }
             catch (Exception ex)
@@ -187,7 +187,7 @@ namespace VecinoBuildingMangementWebService.Controllers
                     return this.repositoryUOW.ResidentRepository.GetById(id);
                 return null;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return null;
             }
@@ -205,10 +205,11 @@ namespace VecinoBuildingMangementWebService.Controllers
             List<Event> events = new List<Event>();
             List<Event> events2 = new List<Event>();
             ViewEventViewModel viewEventViewModel = new ViewEventViewModel();
-            
+
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
+                viewEventViewModel.EventTypes = this.repositoryUOW.EventTypeRepository.GetAll();
                 Building building = this.repositoryUOW.BuildingRepository.GetBuildingByResidentId(residentId);
                 events = this.repositoryUOW.EventRepository.GetEventByBuildingId(building.BuildingId);
                 events2 = this.repositoryUOW.EventRepository.GetPreviousEventsByBuildingId(building.BuildingId);
@@ -235,7 +236,7 @@ namespace VecinoBuildingMangementWebService.Controllers
                     }
                     );
                 }
-       
+
                 return viewEventViewModel;
             }
             catch (Exception ex)
@@ -249,12 +250,12 @@ namespace VecinoBuildingMangementWebService.Controllers
         }
         [HttpPost]
         [Produces("application/json")]
-        public bool AttendEvent([FromBody] AttendEvent attendEvent )
+        public bool AttendEvent([FromBody] AttendEvent attendEvent)
         {
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
-                return this.repositoryUOW.EventRepository.AttendEvent(attendEvent.eventId,attendEvent.residentId);
+                return this.repositoryUOW.EventRepository.AttendEvent(attendEvent.eventId, attendEvent.residentId);
 
             }
             catch (Exception ex)
@@ -272,7 +273,7 @@ namespace VecinoBuildingMangementWebService.Controllers
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
-                
+
                 string buildingId = this.repositoryUOW.BuildingRepository.GetBuildingIdByCode(joinBuildingRequest.buildingCode);
                 if (buildingId != null)
                     return this.repositoryUOW.ResidentRepository.UpdateResidentBuilding(joinBuildingRequest.residentId, buildingId);
@@ -298,7 +299,7 @@ namespace VecinoBuildingMangementWebService.Controllers
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
                 this.repositoryUOW.DbHelperOleDb.OpenTransaction();
-                
+
 
                 //Deletes all services request that are related onces the resident left the building
                 this.repositoryUOW.ServiceRequestRepository.DeleteByResidentId(residentId);
@@ -326,7 +327,7 @@ namespace VecinoBuildingMangementWebService.Controllers
         public NotificationsViewModels GetNotifications(string residentId)
         {
             NotificationsViewModels notificationsViewModels = new NotificationsViewModels();
-           
+
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
@@ -352,7 +353,7 @@ namespace VecinoBuildingMangementWebService.Controllers
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
                 viewModel.Building = this.repositoryUOW.BuildingRepository.GetBuildingByResidentId(residentId);
-                viewModel.Notifications = this.repositoryUOW.NotificationRepository.GetNotificationsByResidentId(residentId);
+                viewModel.Notifications = this.repositoryUOW.NotificationRepository.GetAllNotificationsByResidentId(residentId);
                 viewModel.events = this.repositoryUOW.EventRepository.GetEventByBuildingId(viewModel.Building.BuildingId);
                 return viewModel;
             }
@@ -369,7 +370,7 @@ namespace VecinoBuildingMangementWebService.Controllers
         public ViewPollViewModel PollViewModel(string residentId)
         {
             ViewPollViewModel pollviewModel = new ViewPollViewModel();
-          
+
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
@@ -378,23 +379,26 @@ namespace VecinoBuildingMangementWebService.Controllers
                 List<Poll> polls = this.repositoryUOW.PollRepository.GetActivePollsByBuilding(buildingId);
                 foreach (Poll poll in polls)
                 {
-                    
-                        PollViewModel viewModel = new PollViewModel();
 
-                        viewModel.poll = poll;
-                        List<Option> options = this.repositoryUOW.OptionRepository.GetOptionsByPollId(poll.PollId);
-                        foreach (Option option in options)
-                        {
-                            OptionViewModel optionViewModel = new OptionViewModel();
-                            optionViewModel.option = option;
-                            optionViewModel.voted = this.repositoryUOW.VoteRepository.CountVoteByOption(option.OptionId);
-                            //optionViewModel.voted = CalcVote(options, option.OptionId);
-                            viewModel.options.Add(optionViewModel);
-                        }
+                    PollViewModel viewModel = new PollViewModel();
+
+                    viewModel.poll = poll;
+                    List<Option> options = this.repositoryUOW.OptionRepository.GetOptionsByPollId(poll.PollId);
+                    foreach (Option option in options)
+                    {
+                        OptionViewModel optionViewModel = new OptionViewModel();
+                        optionViewModel.option = option;
+                        optionViewModel.voted = this.repositoryUOW.VoteRepository.CountVoteByOption(option.OptionId);
+                        //optionViewModel.voted = CalcVote(options, option.OptionId);
+                        viewModel.options.Add(optionViewModel);
+                    }
+                    if (this.repositoryUOW.VoteRepository.hasVoted(residentId, viewModel.poll.PollId))
+                        pollviewModel.VotedPolls.Add(viewModel);
+                    else
                         pollviewModel.ActivePolls.Add(viewModel);
-                    
-                   
-                    
+
+
+
 
 
                 }
@@ -423,9 +427,9 @@ namespace VecinoBuildingMangementWebService.Controllers
                 }
 
                 return pollviewModel;
-               
+
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return null;
             }
@@ -435,8 +439,8 @@ namespace VecinoBuildingMangementWebService.Controllers
             }
         }
 
-       
-        
+
+
 
         [HttpPost]
         [Produces("application/json")]
@@ -445,14 +449,14 @@ namespace VecinoBuildingMangementWebService.Controllers
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
-                if (!this.repositoryUOW.VoteRepository.hasVoted(vote.ResidentId, vote.PollId))
+                if (!this.repositoryUOW.VoteRepository.hasVoted(vote.ResidentId, vote.PollId)) // Creates a new vote record only if the resident has not already voted in this poll.
                     return this.repositoryUOW.VoteRepository.Create(vote);
                 else
                     return false;
             }
             catch (Exception ex)
             {
-                
+
                 return false;
             }
             finally
@@ -476,7 +480,7 @@ namespace VecinoBuildingMangementWebService.Controllers
             }
             catch (Exception ex)
             {
-                return null; 
+                return null;
             }
             finally
             {
@@ -485,7 +489,7 @@ namespace VecinoBuildingMangementWebService.Controllers
         }
 
         [HttpPost]
-        public bool UploadPhoto([FromForm]string model, IFormFile file)
+        public bool UploadPhoto([FromForm] string model, IFormFile file) //Uploads a photo to the webserver and updates the database
         {
             try
             {
@@ -494,17 +498,17 @@ namespace VecinoBuildingMangementWebService.Controllers
                 ViewModelAvatar viewModelAvatar = JsonSerializer.Deserialize<ViewModelAvatar>(model);
                 bool response = this.repositoryUOW.ResidentRepository.UpdatePhotoById(viewModelAvatar.ResidentId, viewModelAvatar.Extension);
                 string fileName = viewModelAvatar.ResidentId + "." + viewModelAvatar.Extension;
-                string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images",fileName);
-                using (FileStream fileStream = new FileStream(path, FileMode.Create,FileAccess.Write))
+                string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images", fileName);
+                using (FileStream fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))
                 {
-                    file.CopyTo(fileStream);    
+                    file.CopyTo(fileStream);
                 }
                 this.repositoryUOW.DbHelperOleDb.Commit();
                 return true;
 
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 this.repositoryUOW.DbHelperOleDb.RollBack();
                 return false;
@@ -514,6 +518,74 @@ namespace VecinoBuildingMangementWebService.Controllers
                 this.repositoryUOW.DbHelperOleDb.CloseConnection();
             }
         }
+
+        [HttpGet]
+        public IActionResult GetPhoto(string residentId) //Retrieves the photo file name that belongs to the resident, returns  it as a stream so the api client could handle it.
+        {
+            try
+            {
+                this.repositoryUOW.DbHelperOleDb.OpenConnection();
+                string photo = this.repositoryUOW.ResidentRepository.GetPhotoById(residentId);
+                string extension = Path.GetExtension(photo).TrimStart('.');
+                string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images", photo);
+
+
+                FileStream stream = System.IO.File.OpenRead(path);
+
+                return File(stream, $"image/{extension}"); //I transfer the image as bytes for added security, accesing the webserver directly is not safe, and can cause problems if its on a private network.
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Image Failed To Load");
+            }
+            finally
+            {
+                this.repositoryUOW.DbHelperOleDb.CloseConnection();
+            }
+        }
+        [HttpGet]
+        public IActionResult GetEventPhoto(string eventId)
+        {
+            try
+            {
+                this.repositoryUOW.DbHelperOleDb.OpenConnection();
+                string photo = this.repositoryUOW.EventRepository.GetPhotoById(eventId);
+                string extension = Path.GetExtension(photo).TrimStart('.');
+                string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images", photo);
+
+
+                FileStream stream = System.IO.File.OpenRead(path);
+
+                return File(stream, $"image/{extension}"); 
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Image Failed To Load");
+            }
+            finally
+            {
+                this.repositoryUOW.DbHelperOleDb.CloseConnection();
+            }
+        }
+
+        [HttpGet]
+        public Resident GetResident(string residentId)
+        {
+            try
+            {
+                this.repositoryUOW.DbHelperOleDb.OpenConnection();
+                return this.repositoryUOW.ResidentRepository.GetById(residentId);
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+            finally
+            {
+                this.repositoryUOW.DbHelperOleDb.CloseConnection();
+            }
+        }
     }
+       
 
 }

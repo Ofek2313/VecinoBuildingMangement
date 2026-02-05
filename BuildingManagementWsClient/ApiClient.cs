@@ -73,6 +73,29 @@ namespace BuildingManagementWsClient
                 }
             }
         }
+        public async Task<(byte[] bytes,string contentType)> GetFileAsync() // getting data from webservices 
+        {
+            using (HttpRequestMessage httpRequest = new HttpRequestMessage())
+            {
+                httpRequest.Method = HttpMethod.Get;
+                httpRequest.RequestUri = this.uriBuilder.Uri;
+                using (HttpResponseMessage httpResponse = await this.httpClient.SendAsync(httpRequest))
+                {
+                    if (httpResponse.IsSuccessStatusCode)
+                    {
+                        byte[] result = await httpResponse.Content.ReadAsByteArrayAsync();
+                        string contentType = httpResponse.Content.Headers.ContentType.ToString() ?? "image/jpeg";
+                        return (result,contentType);
+
+                        
+                    }
+
+                    return (null,null);
+
+                }
+            }
+        }
+
         public async Task<bool> PostAsync(T model)
         {
             using (HttpRequestMessage httpRequest = new HttpRequestMessage())

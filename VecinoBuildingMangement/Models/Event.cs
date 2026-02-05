@@ -14,6 +14,7 @@ namespace VecinoBuildingMangement.Models
         string eventTitle;
         string eventDescription;
         string eventTypeId;
+        string eventImage;
         string buildingId;
         
 
@@ -59,6 +60,16 @@ namespace VecinoBuildingMangement.Models
             set { eventTypeId = value; }
         }
 
+        public string EventImage
+        {
+            get { return eventImage; }
+            set {
+                if (value == null)
+                    eventImage = "event0.png";
+                else
+                    eventImage = value;
+                }
+        }
    
         public string BuildingId
         {

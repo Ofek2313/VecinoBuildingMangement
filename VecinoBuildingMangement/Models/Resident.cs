@@ -18,6 +18,7 @@ namespace VecinoBuildingMangement.Models
         string residentEmail;
         int unitNumber;
         string buildingId;
+        string residentImage;
 
         public Resident() 
         {
@@ -107,6 +108,19 @@ namespace VecinoBuildingMangement.Models
             }
         }
         public string? ResidentSalt { get; set; } = "";
+
+
+        public string ResidentImage
+        {
+            get { return residentImage;}
+            set
+            {
+                if (value == null)
+                    residentImage = "none";
+                else
+                    residentImage = value;
+            }
+        }
 
     }
 }

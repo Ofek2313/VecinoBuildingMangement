@@ -77,9 +77,17 @@
                 <div class="poll-options" id="result-@poll.poll.PollId" style="display:none;">
                     @foreach (OptionViewModel optionViewModel in poll.options)
                     {
-                        <div class="poll-option">
-                            <div class="option-content">
-                                <span class="option-text" id="option-@optionViewModel.option.OptionId" >@optionViewModel.voted</span>
+                        <div class="option-result">
+
+                        
+                            <div class="option-progress" data-optionid="@optionViewModel.option.OptionId" style="width: 0%;"></div>
+                            <div class="poll-option">
+                                <div class="option-content">
+                                    <span class="option-name">
+                                        @optionViewModel.option.OptionText
+                                    </span>
+                                    <span class="option-text" id="option-@optionViewModel.option.OptionId" >@optionViewModel.voted</span>
+                                </div>
                             </div>
                         </div>
                     }
@@ -91,7 +99,71 @@
             </div>
 
         }
-      
+        @foreach (PollViewModel poll in Model.VotedPolls)
+        {
+            <div class="poll-card" id="">
+                <div class="poll-header">
+                    <div class="poll-icon active">
+                        <svg fill="none" stroke="#3b82f6" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                        </svg>
+                    </div>
+                    <div class="poll-info">
+                        <div class="poll-title-row">
+                            <h3 class="poll-title">@poll.poll.PollTitle</h3>
+                            <span class="poll-badge active">Active</span>
+                        </div>
+                        <p class="poll-description">@poll.poll.PollDescription</p>
+                        <div class="poll-meta">
+                            <span>
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+                                </svg>
+                                Amenities
+                            </span>
+                            <span>
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                @poll.poll.PollDate
+                            </span>
+                            <span>
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                </svg>
+                                62 votes
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div class="poll-options" id="result-@poll.poll.PollId" >
+                    @foreach (OptionViewModel optionViewModel in poll.options)
+                    {
+                        <div class="option-result">
+
+
+                            <div class="option-progress" data-optionid="@optionViewModel.option.OptionId" style="width: 0%;"></div>
+                            <div class="poll-option">
+                                <div class="option-content">
+                                    <span class="option-name">
+                                        @optionViewModel.option.OptionText
+                                    </span>
+                                    <span class="option-text" id="option-@optionViewModel.option.OptionId">@optionViewModel.voted</span>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+
+                    <button id="btn-result-@poll.poll.PollId" class="btn-submit-vote" onclick="vote()" disabled>Vote</button>
+                </div>
+
+            </div>
+            
+
+        }
        
 
         @foreach (PollViewModel pollViewModel in Model.InActivePolls)
@@ -164,13 +236,14 @@
     </div>
 </div>
 <script>
+    
     let selectedOption = null;
     let selectedPoll = null;
     let selectedOptionEl = null;
 
     function select(button,optionId,pollId)
     {
-          if(selectedOptionEl) selectedOptionEl.style.backgroundColor = "";
+         if(selectedOptionEl) selectedOptionEl.style.backgroundColor = "";
 
         button.style.backgroundColor = "#d1e7ff";
         selectedOptionEl = button;
@@ -196,22 +269,22 @@
                 
                 option.innerText = parseInt(option.innerText) + 1;
 
-                const resultContainer = document.getElementById(`result-${selectedPoll}`);
-                const voteElements = resultContainer.querySelectorAll('.option-text');
-                let totalVotes = 0;
+               calculatePercentages(selectedPoll);
 
             
                
 
                 selectedOption = null;
                 selectedPoll = null;
-                document.getElementById(`btn-result-${selectedPoll}`).disabled = true;
+                // document.getElementById(`btn-result-${selectedPoll}`).disabled = true;
 
 
             }
             else
             { 
+                calculatePercentages(selectedPoll);
                 showResults();
+                
             }
                
 
@@ -219,6 +292,7 @@
         }
         catch(err){
             console.error(err);
+
             alert(err.message || 'Could not attend event');
         }
     }
@@ -229,4 +303,38 @@
         document.getElementById(`result-${selectedPoll}`).style.display = 'block';
         document.getElementById(`vote-${selectedPoll}`).style.display = 'none';
     }
+
+    function calculatePercentages(pollId)
+    {
+        const resultContainer = document.getElementById(`result-${pollId}`);
+        const optionElements = resultContainer.querySelectorAll('[id^="option-"]');
+
+    
+        let total = 0;
+        optionElements.forEach(el => {
+            total += parseInt(el.innerText);
+        });
+
+        optionElements.forEach(el => {
+            const votes = parseInt(el.innerText);
+            const percentage = total > 0 ? Math.round((votes / total) * 100) : 0;
+            const optionId = el.id.replace('option-', '');
+            const progressBar = resultContainer.querySelector(`.option-progress[data-optionid="${optionId}"]`);
+            progressBar.style.width = percentage + '%';
+            el.innerText = `${percentage}%`;
+        
+          
+        });
+
+    }
+     document.addEventListener('DOMContentLoaded', function() {
+        @foreach (PollViewModel poll in Model.VotedPolls)
+        {
+            <text>
+            
+             calculatePercentages('@poll.poll.PollId');
+            </text>
+
+        }
+    });
 </script>

@@ -175,6 +175,19 @@ namespace VecinoBuildingMangementWebService
             }
             return 0;
         }
+        public string GetPhotoById(string eventId)
+        {
+            string sql = "Select EventImage From [Event] Where EventId = @EventId";
+            this.dbHelperOleDb.AddParameter("@EventId", eventId);
+            using (IDataReader dataRedaer = this.dbHelperOleDb.Select(sql))
+            {
+                if (dataRedaer.Read())
+                {
+                    return Convert.ToString(dataRedaer["EventImage"]);
+                }
+                return null;
+            }
+        }
     }
     
 }

@@ -104,7 +104,7 @@
                             </div>
                         </div>
                         <div class="request-meta">
-                            <span class="request-category">@serviceRequest.RequestTypeId</span>
+                            <span class="request-category">@Model.RequestTypes[Convert.ToInt16(@serviceRequest.RequestTypeId)-1].requestTypeName </span>
                             <span></span>
                             <span>Submitted @serviceRequest.RequestDate</span>
 
@@ -124,9 +124,9 @@
     <form class="request-submit" asp-controller="Resident" asp-action="CreateServiceRequest" method="post">
 
         <input type="text" id="title" class="input title" placeholder="Request Title" asp-for="ServiceRequest.RequestTitle">
-        <span asp-validation-for="ServiceRequest.RequestTitle"></span>
+        <span id="titleError"></span>
         <textarea id="description" class="input description" placeholder="Request Description" asp-for="ServiceRequest.RequestMessage"></textarea>
-        <span asp-validation-for="ServiceRequest.RequestMessage"></span>
+        <span id="messageError"></span>
         <Select class="input select" asp-for="ServiceRequest.RequestTypeId">
             @foreach (RequestTypes requestTypes in Model.RequestTypes)
             {
@@ -156,15 +156,26 @@
     });
     function check() {
       
+
         const title = document.getElementById('title').value;
         const message = document.getElementById('description').value;
+        const titleError = document.getElementById('titleError');
+        const messageError = document.getElementById('messageError');
+     
 
-        if (title == "" || message == "")
+        if (title == "")
         { 
-            alert("Empty Field");
-        }   
+            alert("testing");
+            
+        }  
+        if(message = "")
+        {
+            alert("testing");
+        }
         if(title < 5 || message < 10)
         {
+            
+          
             alert("More Characters");
         }
         else{

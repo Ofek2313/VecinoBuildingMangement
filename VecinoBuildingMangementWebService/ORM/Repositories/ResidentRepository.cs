@@ -18,9 +18,9 @@ namespace VecinoBuildingMangementWebService
             //                Values('{model.ResidentName}','{model.ResidentPassword}','{model.ResidentPhone}',
             //                       '{model.ResidentEmail}',{model.UnitNumber},{model.BuildingId})";
 
-            string sql = @$"Insert Into Resident(ResidentName,ResidentPassword,ResidentPhone,ResidentEmail,UnitNumber,BuildingId,ResidentSalt)
+            string sql = @$"Insert Into Resident(ResidentName,ResidentPassword,ResidentPhone,ResidentEmail,UnitNumber,BuildingId,ResidentSalt,ResidentImage)
                             Values(@ResidentName,@ResidentPassword,@ResidentPhone,
-                                   @ResidentEmail,@UnitNumber,@BuildingId,@ResidentSalt)";
+                                   @ResidentEmail,@UnitNumber,@BuildingId,@ResidentSalt,@ResidentImage)";
             string salt = GetSalt(GetRandomNumber());
             this.dbHelperOleDb.AddParameter("@ResidentName", model.ResidentName);
             this.dbHelperOleDb.AddParameter("@ResidentPassword", GetHash(model.ResidentPassword, salt));
@@ -29,6 +29,7 @@ namespace VecinoBuildingMangementWebService
             this.dbHelperOleDb.AddParameter("@UnitNumber", model.UnitNumber);
             this.dbHelperOleDb.AddParameter("@BuildingId", model.BuildingId);
             this.dbHelperOleDb.AddParameter("@ResidentSalt",salt);
+            this.dbHelperOleDb.AddParameter("@ResidentImage", model.ResidentImage);
          
 
             return this.dbHelperOleDb.Insert(sql) > 0;
@@ -170,9 +171,22 @@ namespace VecinoBuildingMangementWebService
         }
         public bool UpdatePhotoById(string residentId,string extension)
         {
-            string sql = $"Update Resident SET ResidentImage = {residentId}.{extension} WHERE ResidentId = @ResidentId";
+            string sql = $"Update Resident SET ResidentImage = '{residentId}.{extension}' WHERE ResidentId = @ResidentId";
             this.dbHelperOleDb.AddParameter("@ResidentId", residentId);
             return this.dbHelperOleDb.Update(sql) > 0;
+        }
+        public string GetPhotoById(string residentId)
+        {
+            string sql = "Select ResidentImage From Resident Where ResidentId = @ResidentId";
+            this.dbHelperOleDb.AddParameter("@ResidentId", residentId);
+            using(IDataReader dataRedaer = this.dbHelperOleDb.Select(sql))
+            {
+                if(dataRedaer.Read())
+                {
+                    return Convert.ToString(dataRedaer["ResidentImage"]);
+                }
+                return null;
+            }
         }
     }
 }

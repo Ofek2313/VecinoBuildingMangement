@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Threading.Tasks;
 using VecinoBuildingMangement;
 using VecinoBuildingMangement.Models;
 using VecinoBuildingMangement.ViewModels;
@@ -55,6 +56,21 @@ namespace VecinoWebApplication.Controllers
             return View(viewEventViewModel);
         }
         [HttpGet]
+        public async Task<IActionResult> GetEventPhoto(string eventId)
+        {
+           
+            ApiClient<bool> client = new ApiClient<bool>(); // The types does not matter since working with a file I dont need any model
+            client.Scheme = "http";
+            client.Host = "localhost";
+            client.Port = 5269;
+            client.Path = "api/Resident/GetEventPhoto";
+            client.AddParameter("eventId", eventId);
+            (byte[] bytes, string contentType) = await client.GetFileAsync();
+            if (bytes != null || contentType != null)
+                return File(bytes, contentType);
+            return BadRequest();
+        }
+        [HttpGet]
         public IActionResult CreateServiceRequestForm()
         {
             ServiceRequest serviceRequest = new ServiceRequest();
@@ -75,10 +91,10 @@ namespace VecinoWebApplication.Controllers
             client.Host = "localhost";
             client.Port = 5269;
             client.Path = "api/Resident/OpenServiceRequest";
-
-            bool response = await client.PostAsync(serviceRequest);
            
-            
+            bool response = await client.PostAsync(serviceRequest);
+
+           
             return RedirectToAction("ViewSerivceRequests");
 
         
@@ -175,10 +191,10 @@ namespace VecinoWebApplication.Controllers
             //client2.Path = "api/Resident/GetBuildingId";
             //client2.AddParameter("residentId", resident.ResidentId);
             //BuildingModel buildingModel = await client2.GetAsync();
-
-             return RedirectToAction("ViewDashboard");
-            
-             return RedirectToAction("HomePage", "Guest");
+            if(resident.Data.BuildingId != "0")
+                return RedirectToAction("ViewDashboard");
+            else
+                return RedirectToAction("HomePage", "Guest");
             
             
 
@@ -296,7 +312,18 @@ namespace VecinoWebApplication.Controllers
             else
                 return Json(new { success = false });
         }
-
+        public async Task<IActionResult> ViewProfile()
+        {
+            ApiClient<Resident> client = new ApiClient<Resident>();
+            string residentId = HttpContext.Session.GetString("residentId");
+            client.Scheme = "http";
+            client.Host = "localhost";
+            client.Port = 5269;
+            client.Path = "api/Resident/GetResident";
+            client.AddParameter("residentId", residentId);
+            Resident resident = await client.GetAsync();
+            return View(resident);
+        }
         public async Task<IActionResult> UploadPhoto(IFormFile file)
         {
             string residentId = HttpContext.Session.GetString("residentId");
@@ -311,7 +338,24 @@ namespace VecinoWebApplication.Controllers
 
             bool result = await client.PostAsync(viewModelAvatar, file.OpenReadStream());
 
-            return View(result);
+            return View("ViewProfile");
         }
+        public async Task<IActionResult> GetPhoto()
+        {
+            string residentId = HttpContext.Session.GetString("residentId");
+            ApiClient<bool> client = new ApiClient<bool>(); // The types does not matter since working with a file I dont need any model
+            client.Scheme = "http";
+            client.Host = "localhost";
+            client.Port = 5269;
+            client.Path = "api/Resident/GetPhoto";
+            client.AddParameter("residentId", residentId);
+            (byte[] bytes, string contentType) = await client.GetFileAsync();
+            if(bytes != null || contentType != null)
+                return File(bytes, contentType);
+            return BadRequest();
+
+
+        }
+
     }
 }
