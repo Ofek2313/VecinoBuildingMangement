@@ -103,7 +103,33 @@
         </div>
     </div>
 </div>
+<div id="overlay" class="overlay"></div>
+<div id="popout" class="PopOut">
+    <h2>Update Profile</h2>
+    <form asp-controller="Resident" asp-action="UpdateProfile">
+        <input name="Name" placeholder="Full Name" class="input" />
+        <input name="Email" placeholder="Email" class="input" />
+        <input name="PhoneNumber" placeholder ="Phone" class="input" />
 
+        <button class="sumbitbtn" type="submit">Submit</button>
+    </form>
+</div>
+<script>
+    const popout = document.getElementById('popout');
+    const overlay = document.getElementById('overlay');
+    const openbtn = document.getElementById('btn-primary');
+    openbtn.addEventListener('click',function()
+    {
+        popout.style.display = 'block';
+        overlay.style.display = 'block';
+    }
+
+    );
+    overlay.addEventListener('click', function()  {
+        overlay.style.display = 'none';
+        popout.style.display = 'none';
+    });
+</script>
 
 
 

@@ -312,6 +312,7 @@ namespace VecinoWebApplication.Controllers
             else
                 return Json(new { success = false });
         }
+        [HttpGet]
         public async Task<IActionResult> ViewProfile()
         {
             ApiClient<Resident> client = new ApiClient<Resident>();
@@ -324,6 +325,7 @@ namespace VecinoWebApplication.Controllers
             Resident resident = await client.GetAsync();
             return View(resident);
         }
+        [HttpGet]
         public async Task<IActionResult> UploadPhoto(IFormFile file)
         {
             string residentId = HttpContext.Session.GetString("residentId");
@@ -338,8 +340,9 @@ namespace VecinoWebApplication.Controllers
 
             bool result = await client.PostAsync(viewModelAvatar, file.OpenReadStream());
 
-            return View("ViewProfile");
+            return RedirectToAction("ViewProfile");
         }
+        [HttpGet]
         public async Task<IActionResult> GetPhoto()
         {
             string residentId = HttpContext.Session.GetString("residentId");
@@ -357,5 +360,33 @@ namespace VecinoWebApplication.Controllers
 
         }
 
+        [HttpPost]
+        public async Task<IActionResult> UpdateProfile(UpdateResidentViewModel updateResidentViewModel)
+        {
+            ApiClient<Resident> client = new ApiClient<Resident>();
+            string residentId = HttpContext.Session.GetString("residentId");
+            client.Scheme = "http";
+            client.Host = "localhost";
+            client.Port = 5269;
+            client.Path = "api/Resident/GetResident";
+            client.AddParameter("residentId", residentId);
+            Resident resident = await client.GetAsync();
+
+            if (!string.IsNullOrWhiteSpace(updateResidentViewModel.Name))
+                resident.ResidentName = updateResidentViewModel.Name;
+            if (!string.IsNullOrWhiteSpace(updateResidentViewModel.Email))
+                resident.ResidentEmail = updateResidentViewModel.Email;
+            if(!string.IsNullOrWhiteSpace(updateResidentViewModel.PhoneNumber))
+                resident.ResidentPhone = updateResidentViewModel.PhoneNumber;
+
+            ApiClient<Resident> client2 = new ApiClient<Resident>();
+            client2.Scheme = "http";
+            client2.Host = "localhost";
+            client2.Port = 5269;
+            client2.Path = "api/Resident/UpdateResident";
+            bool response = await client2.PostAsync(resident);
+            return RedirectToAction("ViewProfile");
+
+        }
     }
 }

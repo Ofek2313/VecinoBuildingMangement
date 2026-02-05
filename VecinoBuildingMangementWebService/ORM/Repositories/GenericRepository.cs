@@ -104,13 +104,15 @@ namespace VecinoBuildingMangementWebService
 
             PropertyInfo id = type.GetProperties().Where(p => !ignore.Contains(p.Name)).ToArray()[0];
             sql += val;
-            sql += @$"WHERE {id.Name} = @{id.Name}";
-            this.dbHelperOleDb.AddParameter($@"@{id.Name}", id.GetValue(model).ToString());
+            sql += @$" WHERE {id.Name} = @{id.Name}";
+        
+            Console.WriteLine(id.GetValue(model));
 
             foreach (PropertyInfo property in properties)
             {
-                dbHelperOleDb.AddParameter(@$"@{property.Name}", property.GetValue(model).ToString());
+                dbHelperOleDb.AddParameter(@$"@{property.Name}", property.GetValue(model));
             }
+            this.dbHelperOleDb.AddParameter($@"@{id.Name}", id.GetValue(model));
             Console.WriteLine(sql);
             return this.dbHelperOleDb.Update(sql) > 0;
         }

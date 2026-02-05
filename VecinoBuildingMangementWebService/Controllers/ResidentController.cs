@@ -359,6 +359,7 @@ namespace VecinoBuildingMangementWebService.Controllers
             }
             catch (Exception ex)
             {
+               
                 return null;
             }
             finally
@@ -579,6 +580,24 @@ namespace VecinoBuildingMangementWebService.Controllers
             catch (Exception ex)
             {
                 return null;
+            }
+            finally
+            {
+                this.repositoryUOW.DbHelperOleDb.CloseConnection();
+            }
+        }
+        [HttpPost]
+        public bool UpdateResident([FromBody]Resident resident)
+        {
+            try
+            {
+                this.repositoryUOW.DbHelperOleDb.OpenConnection();
+                return this.repositoryUOW.ResidentRepository.Update(resident);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return false;
             }
             finally
             {
