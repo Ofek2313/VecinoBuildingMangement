@@ -53,6 +53,7 @@ namespace VecinoWebApplication.Controllers
             if (resident1.Data.ResidentId != null && resident1.Data.ResidentId != "")
             {
                 HttpContext.Session.SetString("residentId", resident1.Data.ResidentId);
+                HttpContext.Session.SetString("residentName", resident1.Data.ResidentName);
                 ViewBag.IsLoggedIn = true;
                 return View("Homepage");
             }

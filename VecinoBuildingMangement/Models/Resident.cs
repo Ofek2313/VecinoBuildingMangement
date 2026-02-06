@@ -116,7 +116,7 @@ namespace VecinoBuildingMangement.Models
             set
             {
                 if (value == null)
-                    residentImage = "none";
+                    residentImage = "0.jpg";
                 else
                     residentImage = value;
             }
