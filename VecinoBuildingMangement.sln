@@ -9,9 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Testing", "Testing\Testing.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VecinoBuildingMangementWebService", "VecinoBuildingMangementWebService\VecinoBuildingMangementWebService.csproj", "{5D9823EE-2AB6-40A4-A74F-5EA57560334F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildingManagementWsClient", "BuildingManagementWsClient\BuildingManagementWsClient.csproj", "{3CE49757-EF8B-47A5-8C40-5646B881F0C2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BuildingManagementWsClient", "BuildingManagementWsClient\BuildingManagementWsClient.csproj", "{3CE49757-EF8B-47A5-8C40-5646B881F0C2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VecinoWebApplication", "VecinoWebApplication\VecinoWebApplication.csproj", "{3406572F-03BA-4DF1-A1E5-13D0BA666B39}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VecinoWebApplication", "VecinoWebApplication\VecinoWebApplication.csproj", "{3406572F-03BA-4DF1-A1E5-13D0BA666B39}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VecinoWpfApp", "VecinoWpfApp\VecinoWpfApp.csproj", "{4D675DE0-C196-40C2-B759-D649B0D6E7E5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{3406572F-03BA-4DF1-A1E5-13D0BA666B39}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3406572F-03BA-4DF1-A1E5-13D0BA666B39}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3406572F-03BA-4DF1-A1E5-13D0BA666B39}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4D675DE0-C196-40C2-B759-D649B0D6E7E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D675DE0-C196-40C2-B759-D649B0D6E7E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D675DE0-C196-40C2-B759-D649B0D6E7E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D675DE0-C196-40C2-B759-D649B0D6E7E5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

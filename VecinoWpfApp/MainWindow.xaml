@@ -1,0 +1,60 @@
+﻿<Window x:Class="VecinoWpfApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:VecinoWpfApp"
+        mc:Ignorable="d"
+        Title="Dashboard" Height="1080" Width="1920" ResizeMode="NoResize" >
+    <Window.Resources>
+        <Style x:Key="navItem" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="20"></Setter>
+            <Setter Property="FontFamily" Value="Segoe UI"></Setter>
+            <Setter Property="FontWeight" Value="Medium"></Setter>
+            <Setter Property="Foreground" Value="#64748b"></Setter>
+        </Style>
+
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="275"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Vertical" Background="White">
+            <Image Source="/Images/logo_small.png"></Image>
+
+            <TextBlock Margin="0 20 45 0" Style="{StaticResource navItem}" Width="150">
+                 <Hyperlink TextDecorations="None" Foreground="#64748b"  x:Name="HyperlinkDashboard" Click="HyperlinkDashboard_Click">Dashboard</Hyperlink>
+                <TextBlock.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                        <GradientStop Color="#FF6B73" Offset="0"/>
+                        <GradientStop Color="#4D9DE0" Offset="1"/>
+                    </LinearGradientBrush>
+                </TextBlock.Background>
+            </TextBlock>
+
+            <TextBlock Margin="40 20 0 0" Style="{StaticResource navItem}">
+                <Hyperlink TextDecorations="None" Foreground="#64748b" x:Name="HyperlinkRequests" Click="HyperlinkRequests_Click">Requests</Hyperlink>
+            </TextBlock>
+            <TextBlock Margin="40 20 0 0" Style="{StaticResource navItem}">
+                <Hyperlink TextDecorations="None" Foreground="#64748b">Finance</Hyperlink>
+            </TextBlock>
+            <TextBlock Margin="40 20 0 0" Style="{StaticResource navItem}">
+                <Hyperlink TextDecorations="None" Foreground="#64748b">Announcements</Hyperlink>
+            </TextBlock>
+            <TextBlock Margin="40 20 0 0" Style="{StaticResource navItem}">
+                <Hyperlink TextDecorations="None" Foreground="#64748b">Events</Hyperlink>
+            </TextBlock>
+            <TextBlock Margin="40 20 0 0" Style="{StaticResource navItem}">
+                <Hyperlink TextDecorations="None" Foreground="#64748b">Polls</Hyperlink>
+            </TextBlock>
+            <TextBlock Margin="40 20 0 0" Style="{StaticResource navItem}">
+                <Hyperlink TextDecorations="None" Foreground="#64748b">Resident</Hyperlink>
+            </TextBlock>
+        </StackPanel>
+        <Frame x:Name="frameMain" Grid.Column="1" Grid.Row="0"></Frame>
+    </Grid>
+</Window>

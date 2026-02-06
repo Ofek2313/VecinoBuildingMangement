@@ -325,7 +325,7 @@ namespace VecinoWebApplication.Controllers
             Resident resident = await client.GetAsync();
             return View(resident);
         }
-        [HttpGet]
+        [HttpPost]
         public async Task<IActionResult> UploadPhoto(IFormFile file)
         {
             string residentId = HttpContext.Session.GetString("residentId");
@@ -385,6 +385,10 @@ namespace VecinoWebApplication.Controllers
             client2.Port = 5269;
             client2.Path = "api/Resident/UpdateResident";
             bool response = await client2.PostAsync(resident);
+            if(response & !string.IsNullOrWhiteSpace(updateResidentViewModel.Name))
+            {
+                HttpContext.Session.SetString("residentName", updateResidentViewModel.Name);
+            }
             return RedirectToAction("ViewProfile");
 
         }
