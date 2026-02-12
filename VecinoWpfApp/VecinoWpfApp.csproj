@@ -10,11 +10,13 @@
 
   <ItemGroup>
     <None Remove="Images\dashboard-1-svgrepo-com.svg" />
+    <None Remove="Images\dashboard.png" />
     <None Remove="Images\logo_small.png" />
   </ItemGroup>
 
   <ItemGroup>
     <Resource Include="Images\dashboard-1-svgrepo-com.svg" />
+    <Resource Include="Images\dashboard.png" />
     <Resource Include="Images\logo_small.png" />
   </ItemGroup>
 

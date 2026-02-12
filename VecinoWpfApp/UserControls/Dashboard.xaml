@@ -5,9 +5,113 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:VecinoWpfApp.UserControls"
              mc:Ignorable="d" 
-             d:DesignHeight="1080" d:DesignWidth="1645">
+             d:DesignHeight="1080" d:DesignWidth="1645" d:Background="#f8fafc">
+    <UserControl.Resources>
+        <Style x:Key="text" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="White"></Setter>
+            <Setter Property="FontFamily" Value="Segoe UI"></Setter>
+            <Setter Property="FontWeight" Value="SemiBold"></Setter>
+           
+        </Style>
+        <Style x:Key="button" TargetType="Button">
+            <Setter Property="Background">
+                <Setter.Value>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Color="#14b8a6" Offset="0"/>
+                        <GradientStop Color="#3b82f6" Offset="1"/>
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="FontFamily" Value="Segoe UI"></Setter>
+            <Setter Property="Foreground" Value="White"></Setter>
+            <Setter Property="FontWeight" Value="SemiBold"></Setter>
+            <Setter Property="Width" Value="125"></Setter>
+            <Setter Property="Height" Value="45"></Setter>
+            <Setter Property="FontSize" Value="17"></Setter>
+            <Setter Property="Cursor" Value="Hand"></Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                        CornerRadius="8" 
+                        Padding="{TemplateBinding Padding}">
+                            <Border.Effect>
+                                <DropShadowEffect Color="#14b8a6" Opacity="0.3" BlurRadius="4" ShadowDepth="2" Direction="270"/>
+                            </Border.Effect>
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
     <Canvas>
-        <Button Content="Button" Canvas.Left="10" Canvas.Top="10" Height="1070" Width="1652"/>
+        <Border BorderBrush="Black"  Height="204" Width="1366" Canvas.Left="140" Canvas.Top="80" HorizontalAlignment="Center" VerticalAlignment="Top" CornerRadius ="12">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Color="#14b8a6" Offset="0"/>
+                    <GradientStop Color="#3b82f6" Offset="1"/>
+                </LinearGradientBrush>
+            </Border.Background>
+            <Border.Effect>
+                <DropShadowEffect Color="Black" 
+                          Opacity="0.1" 
+                          BlurRadius="6" 
+                          ShadowDepth="4" 
+                          Direction="270"/>
+            </Border.Effect>
+            <Viewbox Margin="40 0 0 0">
+                <StackPanel Orientation="Vertical" Width="82">
+                    <TextBlock Style="{StaticResource text}" FontSize="2.5">Haim Laskob 6</TextBlock>
+                    <TextBlock Style="{StaticResource text}" FontSize="1.5" FontWeight="Normal">Entrance Code: 1234</TextBlock>
+                </StackPanel>
+            </Viewbox>
+        </Border>
+        <TextBlock Foreground="#1e293b" Canvas.Left="140" TextWrapping="Wrap" Text="Welcome Back, Ofek" Canvas.Top="14" HorizontalAlignment="Center" VerticalAlignment="Top" Width="341" FontFamily="Segoe UI" FontWeight="SemiBold" Height="34" FontSize="30"/>
+        <TextBlock Canvas.Left="145" TextWrapping="Wrap" Text="Vecino Admin Dashboard" Canvas.Top="54" HorizontalAlignment="Left" VerticalAlignment="Center" Width="173" FontFamily="Segoe UI" FontWeight="Light" Foreground="#64748b" FontSize="12"/>
+        <Border BorderBrush="Black" Height="254" Width="585" Canvas.Left="903" Canvas.Top="342" HorizontalAlignment="Center" VerticalAlignment="Top" Background="White" CornerRadius="12">
+            <Border.Effect>
+                <DropShadowEffect Color="Black" 
+                          Opacity="0.1" 
+                          BlurRadius="6" 
+                          ShadowDepth="4" 
+                          Direction="270"/>
+            </Border.Effect>
+            
+                
+         
+            <StackPanel Orientation="Vertical"  HorizontalAlignment="Center">
+                <TextBlock FontFamily="Segoe UI" FontSize="25" Foreground="#1e293b" FontWeight="SemiBold"  Margin="60 10 0 0"> 
+                    Join Code
+                </TextBlock>
+                <TextBlock FontSize="55" FontFamily="Segoe UI" FontWeight="Bold" Margin="45 20 0 0">
+                    <TextBlock.Foreground>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#14b8a6" Offset="0"/>
+                            <GradientStop Color="#3b82f6" Offset="1"/>
+                        </LinearGradientBrush>
+                    </TextBlock.Foreground>
+                    XXXX
+                </TextBlock>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0">
+                   
+                    <Button Content="Copy" Margin="0,0,10,0" Style="{StaticResource button}" BorderThickness="0"/>
+                    <Button Content="New Code" Style="{StaticResource button}"/>
+                </StackPanel>
+            </StackPanel>
+            
+        </Border>
+        <Border BorderBrush="Black" Height="254" Width="585" Canvas.Left="145" Canvas.Top="342" Background="White" CornerRadius="12" HorizontalAlignment="Left" VerticalAlignment="Center">
+            <Border.Effect>
+                <DropShadowEffect Color="Black" 
+                    Opacity="0.1" 
+                    BlurRadius="6" 
+                    ShadowDepth="4" 
+                    Direction="270"/>
+            </Border.Effect>
+        </Border>
+
+
 
 
     </Canvas>
