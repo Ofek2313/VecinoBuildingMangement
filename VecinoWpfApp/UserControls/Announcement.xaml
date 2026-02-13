@@ -82,7 +82,33 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <Style x:Key="NormalBadge" TargetType="Border">
+            <Setter Property="Background" Value="#eff6ff"/>
+            <Setter Property="CornerRadius" Value="12"/>
+            <Setter Property="Padding" Value="10,5"/>
+        </Style>
 
+        <Style x:Key="ImportantBadge" TargetType="Border">
+            <Setter Property="Background" Value="#fef3c7"/>
+            <Setter Property="CornerRadius" Value="12"/>
+            <Setter Property="Padding" Value="10,5"/>
+        </Style>
+
+        <Style x:Key="UrgentBadge" TargetType="Border">
+            <Setter Property="Background" Value="#fee2e2"/>
+            <Setter Property="CornerRadius" Value="12"/>
+            <Setter Property="Padding" Value="10,5"/>
+        </Style>
+
+        <!-- Announcement Item Style -->
+        <Style x:Key="AnnouncementItem" TargetType="Border">
+            <Setter Property="Background" Value="#f9fafb"/>
+            <Setter Property="CornerRadius" Value="12"/>
+            <Setter Property="Padding" Value="20"/>
+            <Setter Property="Margin" Value="0,0,0,15"/>
+            <Setter Property="BorderBrush" Value="#e5e7eb"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
         <Style x:Key="DeleteButton" TargetType="Button">
             <Setter Property="Background" Value="Red"></Setter>
             <Setter Property="Foreground" Value="White"/>
@@ -179,57 +205,89 @@
             </StackPanel>
 
         </Border>
-
-        <Border Height="380" Width="1420" Canvas.Left="80" Canvas.Top="669"  Style="{StaticResource borderDesgin}">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-
-                <StackPanel Orientation="Vertical" Grid.Column="0">
-                    <TextBlock Foreground="#1e293b" FontWeight="SemiBold" FontSize="25" Margin="25 20 0 25">
-                    Previous Announcements
+        
+        <Border Height="380" Width="1427" Canvas.Left="80" Canvas.Top="669" Style="{StaticResource borderDesgin}">
+            <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="25,20,25,25">
+                <StackPanel>
+                    <TextBlock Foreground="#1e293b" FontWeight="SemiBold" FontSize="25" Margin="0,0,0,25">
+                 Previous Announcements
                     </TextBlock>
 
+                    <ListView x:Name="listViewAnnc" HorizontalContentAlignment="Stretch">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
 
-                    <StackPanel Margin="25 0 0 0">
-                        <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-                            <TextBlock Text="A Residential Meeting" 
-                            FontSize="16" 
-                            FontWeight="SemiBold" 
-                            Foreground="#1f2937"
-                            Margin="0,0,15,0"/>
-                            <Border Style="{StaticResource importantBade}">
-                                <TextBlock Text="Important" 
-                        FontSize="13" 
-                        FontWeight="SemiBold" 
-                        Foreground="Red"/>
-                            </Border>
-                        </StackPanel>
-                        <TextBlock Text="A Residential meeting was schudled for the end of february" 
-                FontSize="13" 
-                Foreground="#6b7280"
-                Margin="0,0,0,10"/>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="Send Date - 12/02/2026" FontSize="12" Foreground="#9ca3af"/>
-                        </StackPanel>
-                    </StackPanel>
+                                <Border Style="{StaticResource AnnouncementItem}">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0">
+                                            <TextBlock Text="{Binding NotificationTitle}" 
+                                  FontSize="18" 
+                                  FontWeight="SemiBold" 
+                                  Foreground="#1e293b"
+                                  VerticalAlignment="Center"
+                                  Margin="0,0,12,0"/>
+                                            <Border Style="{StaticResource ImportantBadge}">
+                                                <TextBlock Text="{Binding Priority}" 
+                                      FontSize="12" 
+                                      FontWeight="SemiBold" 
+                                      Foreground="#d97706"/>
+                                            </Border>
+                                        </StackPanel>
+
+                                        <Button Content="Delete" 
+                           Grid.Row="0" 
+                           Grid.Column="1"
+                           Style="{StaticResource DeleteButton}"
+                           Width="90"
+                           Height="36"/>
 
 
+                                        <TextBlock Text="{Binding NotificationMessage}" 
+                              Grid.Row="1" 
+                              Grid.Column="0"
+                              Grid.ColumnSpan="2"
+                              FontSize="14" 
+                              Foreground="#64748b"
+                              Margin="0,12,0,10"
+                              TextWrapping="Wrap"/>
+
+
+                                        <StackPanel Orientation="Horizontal" 
+                               Grid.Row="2" 
+                               Grid.Column="0">
+                                            <Path Width="14" 
+                             Height="14" 
+                             Fill="#9ca3af"
+                             VerticalAlignment="Center"
+                             Stretch="Uniform"
+                             Data="M9 2a1 1 0 0 1 1 1v1h4V3a1 1 0 1 1 2 0v1h3a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h3V3a1 1 0 0 1 1-1zM8 6H5v3h14V6h-3v1a1 1 0 1 1-2 0V6h-4v1a1 1 0 0 1-2 0V6zm11 5H5v8h14v-8z"/>
+                                            <TextBlock Text="{Binding NotificationDate}" 
+                                  FontSize="13" 
+                                  Foreground="#9ca3af"
+                                  Margin="8,0,0,0"
+                                  VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
 
 
 
 
                 </StackPanel>
-                <Button Content="Delete"  Style="{StaticResource DeleteButton}" Margin="1183,88,87,260"/>
-                <Border Height="1" 
-                    Margin="8,166,8,213"
-                    Background="#E5E7EB"
-                    Opacity="0.7"/>
-            </Grid>
-
-
+            </ScrollViewer>
         </Border>
     </Canvas>
 </UserControl>

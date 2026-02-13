@@ -11,7 +11,7 @@
             <Setter Property="Foreground" Value="White"></Setter>
             <Setter Property="FontFamily" Value="Segoe UI"></Setter>
             <Setter Property="FontWeight" Value="SemiBold"></Setter>
-           
+
         </Style>
         <Style x:Key="button" TargetType="Button">
             <Setter Property="Background">
@@ -46,7 +46,7 @@
         </Style>
     </UserControl.Resources>
     <Canvas>
-        <Border BorderBrush="Black"  Height="204" Width="1366" Canvas.Left="140" Canvas.Top="80" HorizontalAlignment="Center" VerticalAlignment="Top" CornerRadius ="12">
+        <Border BorderBrush="Black" Height="228" Width="1366" Canvas.Left="140" Canvas.Top="80"  HorizontalAlignment="Center" VerticalAlignment="Top" CornerRadius ="12">
             <Border.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
                     <GradientStop Color="#14b8a6" Offset="0"/>
@@ -60,7 +60,7 @@
                           ShadowDepth="4" 
                           Direction="270"/>
             </Border.Effect>
-            <Viewbox Margin="40 0 0 0">
+            <Viewbox Margin="40,0,0,4">
                 <StackPanel Orientation="Vertical" Width="82">
                     <TextBlock Style="{StaticResource text}" FontSize="2.5">Haim Laskob 6</TextBlock>
                     <TextBlock Style="{StaticResource text}" FontSize="1.5" FontWeight="Normal">Entrance Code: 1234</TextBlock>
@@ -69,7 +69,7 @@
         </Border>
         <TextBlock Foreground="#1e293b" Canvas.Left="140" TextWrapping="Wrap" Text="Welcome Back, Ofek" Canvas.Top="14" HorizontalAlignment="Center" VerticalAlignment="Top" Width="341" FontFamily="Segoe UI" FontWeight="SemiBold" Height="34" FontSize="30"/>
         <TextBlock Canvas.Left="145" TextWrapping="Wrap" Text="Vecino Admin Dashboard" Canvas.Top="54" HorizontalAlignment="Left" VerticalAlignment="Center" Width="173" FontFamily="Segoe UI" FontWeight="Light" Foreground="#64748b" FontSize="12"/>
-        <Border BorderBrush="Black" Height="254" Width="585" Canvas.Left="903" Canvas.Top="342" HorizontalAlignment="Center" VerticalAlignment="Top" Background="White" CornerRadius="12">
+        <Border BorderBrush="Black" Height="254" Width="585" Canvas.Left="921" Canvas.Top="348" HorizontalAlignment="Center" VerticalAlignment="Top" Background="White" CornerRadius="12">
             <Border.Effect>
                 <DropShadowEffect Color="Black" 
                           Opacity="0.1" 
@@ -77,9 +77,9 @@
                           ShadowDepth="4" 
                           Direction="270"/>
             </Border.Effect>
-            
-                
-         
+
+
+
             <StackPanel Orientation="Vertical"  HorizontalAlignment="Center">
                 <TextBlock FontFamily="Segoe UI" FontSize="25" Foreground="#1e293b" FontWeight="SemiBold"  Margin="60 10 0 0"> 
                     Join Code
@@ -94,14 +94,14 @@
                     XXXX
                 </TextBlock>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0">
-                   
+
                     <Button Content="Copy" Margin="0,0,10,0" Style="{StaticResource button}" BorderThickness="0"/>
                     <Button Content="New Code" Style="{StaticResource button}"/>
                 </StackPanel>
             </StackPanel>
-            
+
         </Border>
-        <Border BorderBrush="Black" Height="254" Width="585" Canvas.Left="145" Canvas.Top="342" Background="White" CornerRadius="12" HorizontalAlignment="Left" VerticalAlignment="Center">
+        <Border BorderBrush="Black" Height="254" Width="713" Canvas.Left="145" Canvas.Top="348" Background="White" CornerRadius="12" HorizontalAlignment="Center" VerticalAlignment="Top">
             <Border.Effect>
                 <DropShadowEffect Color="Black" 
                     Opacity="0.1" 

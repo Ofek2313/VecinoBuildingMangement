@@ -12,6 +12,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using VecinoBuildingMangement.Models;
+using VecinoBuildingMangement.ViewModels;
+using BuildingManagementWsClient;
 
 namespace VecinoWpfApp.UserControls
 {
@@ -20,9 +23,25 @@ namespace VecinoWpfApp.UserControls
     /// </summary>
     public partial class Requests : UserControl
     {
+        ManageServiceRequestViewModel serviceRequestViewModel;
         public Requests()
         {
             InitializeComponent();
+            GetRequestList();
+        }
+
+        private async Task GetRequestList()
+        {
+            ApiClient<ManageServiceRequestViewModel> client = new ApiClient<ManageServiceRequestViewModel>();
+            client.Scheme = "http";
+            client.Host = "localhost";
+            client.Port = 5269;
+            client.Path = "api/Admin/ManageServiceRequest";
+            serviceRequestViewModel = await client.GetAsync();
+
+            listViewRequests.ItemsSource = this.serviceRequestViewModel.serviceRequests;
+            this.DataContext = this.serviceRequestViewModel;
+
         }
     }
 }

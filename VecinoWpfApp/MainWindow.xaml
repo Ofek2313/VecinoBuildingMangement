@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:VecinoWpfApp"
         mc:Ignorable="d"
-        Title="Dashboard" Height="1080" Width="1920" ResizeMode="NoResize" >
+        Title="Dashboard" Height="1080" Width="1920" ResizeMode="NoResize"  WindowState="Maximized" WindowStyle="None"
+        >
     <Window.Resources>
         
         <Style x:Key="navItem" TargetType="Border">
@@ -176,6 +177,6 @@
 
            
         </StackPanel>
-        <Frame x:Name="frameMain" Grid.Column="1" Grid.Row="0" Background="#f8fafc"></Frame>
+        <Frame x:Name="frameMain" Grid.Column="1" Grid.Row="0" Background="#f8fafc" NavigationUIVisibility="Hidden"></Frame>
     </Grid>
 </Window>

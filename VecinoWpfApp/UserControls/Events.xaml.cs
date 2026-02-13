@@ -13,33 +13,33 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using VecinoBuildingMangement.Models;
 using VecinoBuildingMangement.ViewModels;
 
 namespace VecinoWpfApp.UserControls
 {
     /// <summary>
-    /// Interaction logic for Announcement.xaml
+    /// Interaction logic for Events.xaml
     /// </summary>
-    public partial class Announcement : UserControl
+    public partial class Events : UserControl
     {
-        List<Notification> annoucnemnetslist;
-        public Announcement()
+        ManageEventViewModel eventViewModel;
+        public Events()
         {
             InitializeComponent();
-            GetAnnouncementList();
+            GetEventsList();
         }
-        private async void GetAnnouncementList()
+        private async Task GetEventsList()
         {
-            ApiClient<List<Notification>> client = new ApiClient<List<Notification>>();
+            ApiClient<ManageEventViewModel> client = new ApiClient<ManageEventViewModel>();
             client.Scheme = "http";
             client.Host = "localhost";
             client.Port = 5269;
-            client.Path = "api/Admin/GetNotifications";
-            annoucnemnetslist = await client.GetAsync();
+            client.Path = "api/Admin/ManageEvent";
+            eventViewModel = await client.GetAsync();
 
-            listViewAnnc.ItemsSource = this.annoucnemnetslist;
-          
+            listViewEvents.ItemsSource = this.eventViewModel.Events;
+            this.DataContext = this.eventViewModel.Events;
+
         }
     }
 }

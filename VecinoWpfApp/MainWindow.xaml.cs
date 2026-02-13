@@ -20,6 +20,11 @@ namespace VecinoWpfApp
         Dashboard dashboard;
         Requests requests;
         Announcement announcement;
+        Events events;
+
+        public static readonly string BuildingId;
+        
+
         public MainWindow()
         {
             InitializeComponent();
@@ -81,6 +86,12 @@ namespace VecinoWpfApp
                 announcement = new Announcement();
             this.frameMain.Content = announcement;
         }
+        private void ViewEvents()
+        {
+            if(this.events == null)
+                events = new Events();
+            this.frameMain.Content = events;
+        }
         private void HyperlinkRequests_Click(object sender, RoutedEventArgs e)
         {
             ViewRequests();
@@ -107,6 +118,7 @@ namespace VecinoWpfApp
 
         private void HyperlinkEvent_Click(object sender, RoutedEventArgs e)
         {
+            ViewEvents();
             setActive(eventNav);
         }
 

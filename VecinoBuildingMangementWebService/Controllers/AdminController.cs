@@ -22,7 +22,25 @@ namespace VecinoBuildingMangementWebService.Controllers
             this.repositoryUOW = new RepositoryUOW();
         }
 
+        [HttpGet]
+        public List<Notification> GetNotifications()
+        {
+            try
+            {
+                this.repositoryUOW.DbHelperOleDb.OpenConnection();
+                return this.repositoryUOW.NotificationRepository.GetAll();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return null;
+            }
+            finally
+            {
+                this.repositoryUOW.DbHelperOleDb.CloseConnection();
+            }
 
+        }
         [HttpPost]
         public bool SendNotification(SendNotificationViewModel sendNotificationViewModel)
         {
@@ -133,6 +151,23 @@ namespace VecinoBuildingMangementWebService.Controllers
                 manageServiceRequestViewModel.serviceRequests = this.repositoryUOW.ServiceRequestRepository.GetAll();
               
                 manageServiceRequestViewModel.ServiceRequestNumber = manageServiceRequestViewModel.serviceRequests.Count;
+                foreach (ServiceRequest serviceRequest in manageServiceRequestViewModel.serviceRequests)
+                {
+                    switch (serviceRequest.RequestStatus)
+                    {
+                        case "Pending":
+                            manageServiceRequestViewModel.Pending += 1;
+                            break;
+                        case "Completed":
+                            manageServiceRequestViewModel.Completed += 1;
+                            break;
+                        case "In Progress":
+                            manageServiceRequestViewModel.InProgress += 1;
+                            break;
+                        default:
+                            break;
+                    }
+                }
                 return manageServiceRequestViewModel;
             }
             catch (Exception ex)

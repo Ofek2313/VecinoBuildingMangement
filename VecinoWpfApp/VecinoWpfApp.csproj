@@ -9,12 +9,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\11b8ce4169cc0427174fd5ce30bd35df.jpg" />
     <None Remove="Images\dashboard-1-svgrepo-com.svg" />
     <None Remove="Images\dashboard.png" />
     <None Remove="Images\logo_small.png" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BuildingManagementWsClient\BuildingManagementWsClient.csproj" />
+    <ProjectReference Include="..\VecinoBuildingMangement\VecinoBuildingMangement.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\11b8ce4169cc0427174fd5ce30bd35df.jpg" />
     <Resource Include="Images\dashboard-1-svgrepo-com.svg" />
     <Resource Include="Images\dashboard.png" />
     <Resource Include="Images\logo_small.png" />

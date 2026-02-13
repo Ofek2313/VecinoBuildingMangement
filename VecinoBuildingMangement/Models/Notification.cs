@@ -66,7 +66,11 @@ namespace VecinoBuildingMangement.Models
         public bool IsPinned
         {
             get { return this.isPinned; }
-            set { this.isPinned = value; }
+            set { if (value == null)
+                    this.isPinned = false;
+                  else
+                    this.isPinned = value;
+            }
         }
     }
 }

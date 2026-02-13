@@ -34,7 +34,6 @@
             <Setter Property="Margin" Value="0,0,20,0"/>
         </Style>
 
-        <!-- Status Number Style -->
         <Style x:Key="StatusNumber" TargetType="TextBlock">
             <Setter Property="FontSize" Value="36"/>
             <Setter Property="FontWeight" Value="Bold"/>
@@ -48,7 +47,6 @@
             <Setter Property="Opacity" Value="0.8"/>
         </Style>
 
-        <!-- Action Button Style -->
         <Style x:Key="ActionButton" TargetType="Button">
             <Setter Property="Background" Value="#ff8c42"/>
             <Setter Property="Foreground" Value="White"/>
@@ -76,7 +74,6 @@
             </Style.Triggers>
         </Style>
 
-        <!-- Secondary Action Button -->
         <Style x:Key="SecondaryButton" TargetType="Button">
             <Setter Property="Background" Value="#f3f4f6"/>
             <Setter Property="Foreground" Value="#4b5563"/>
@@ -111,7 +108,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Header Section -->
+      
         <Grid Grid.Row="0" Margin="0,0,0,30">
             <StackPanel VerticalAlignment="Center">
                 <TextBlock Text="Service Requests" 
@@ -126,14 +123,14 @@
                            Foreground="#7f8c8d"/>
             </StackPanel>
 
-            <!-- Filter Buttons -->
+           
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
                 <Button Content="All Requests" Style="{StaticResource ActionButton}"/>
                 <Button Content="Export" Style="{StaticResource SecondaryButton}"/>
             </StackPanel>
         </Grid>
 
-        <!-- Status Cards -->
+       
         <Grid Grid.Row="1" Margin="0,0,0,40">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -141,20 +138,20 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <!-- Pending Card -->
+          
             <Border Grid.Column="0" Style="{StaticResource StatusCard}" Background="#fff4e6">
                 <StackPanel Orientation="Horizontal">
                     <Border Width="50" Height="50" Background="#ff8c42" CornerRadius="10" Margin="0,0,15,0">
                         <TextBlock Text="⏱" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     </Border>
                     <StackPanel VerticalAlignment="Center">
-                        <TextBlock Text="3" Style="{StaticResource StatusNumber}" Foreground="#ff8c42"/>
+                        <TextBlock Text="{Binding Pending}" Style="{StaticResource StatusNumber}" Foreground="#ff8c42"/>
                         <TextBlock Text="Pending" Style="{StaticResource StatusLabel}" Foreground="#ff8c42"/>
                     </StackPanel>
                 </StackPanel>
             </Border>
 
-            <!-- In Progress Card -->
+      
             <Border Grid.Column="1" Style="{StaticResource StatusCard}" Background="#e3f2fd">
                 <StackPanel Orientation="Horizontal">
                     <Border Width="50" Height="50" Background="#5b9cf5" CornerRadius="10" Margin="0,0,15,0">
@@ -167,7 +164,7 @@
                 </StackPanel>
             </Border>
 
-            <!-- Completed Card -->
+          
             <Border Grid.Column="2" Style="{StaticResource StatusCard}" Background="#d4f4dd">
                 <StackPanel Orientation="Horizontal">
                     <Border Width="50" Height="50" Background="#4caf50" CornerRadius="10" Margin="0,0,15,0">
@@ -181,7 +178,7 @@
             </Border>
         </Grid>
 
-        <!-- Requests List -->
+     
         <Border Grid.Row="2" Background="White" CornerRadius="12" Padding="0">
             <Border.Effect>
                 <DropShadowEffect Color="Black" Opacity="0.08" BlurRadius="10" ShadowDepth="2" Direction="270"/>
@@ -189,208 +186,65 @@
 
             <ScrollViewer VerticalScrollBarVisibility="Auto">
                 <StackPanel>
-                    <!-- Request Item 1 - Pending -->
-                    <Border BorderBrush="#e5e7eb" BorderThickness="0,0,0,1" Padding="30,25">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
 
-                            <!-- Request Info -->
-                            <StackPanel Grid.Column="0">
-                                <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-                                    <TextBlock Text="Plumbing Issue - Leaking Faucet" 
-                                               FontSize="18" 
-                                               FontWeight="SemiBold" 
-                                               Foreground="#1f2937"
-                                               Margin="0,0,15,0"/>
-                                    <Border Style="{StaticResource PendingBadge}">
-                                        <TextBlock Text="Pending" 
-                                                   FontSize="12" 
+
+
+
+
+                    <ListView x:Name="listViewRequests" Height="753" HorizontalContentAlignment="Stretch">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Border BorderBrush="#e5e7eb" BorderThickness="0,0,0,1" Padding="30,25">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+
+
+                                        <StackPanel Grid.Column="0">
+                                            <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                                <TextBlock Text="{Binding RequestTitle}" 
+                                                   FontSize="18" 
                                                    FontWeight="SemiBold" 
-                                                   Foreground="#ff8c42"/>
-                                    </Border>
-                                </StackPanel>
-                                <TextBlock Text="Kitchen faucet is constantly dripping. Needs immediate attention." 
-                                           FontSize="14" 
-                                           Foreground="#6b7280"
-                                           Margin="0,0,0,10"/>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="Unit 301 • " FontSize="13" Foreground="#9ca3af"/>
-                                    <TextBlock Text="John Doe • " FontSize="13" Foreground="#9ca3af"/>
-                                    <TextBlock Text="Submitted 2 hours ago" FontSize="13" Foreground="#9ca3af"/>
-                                </StackPanel>
-                            </StackPanel>
+                                                   Foreground="#1f2937"
+                                                   Margin="0,0,15,0"/>
+                                                <Border Style="{StaticResource PendingBadge}">
+                                                    <TextBlock Text="{Binding RequestStatus}" 
+                                                       FontSize="12" 
+                                                       FontWeight="SemiBold" 
+                                                       Foreground="#ff8c42"/>
+                                                </Border>
+                                            </StackPanel>
+                                            <TextBlock Text="{Binding RequestMessage}" 
+                                               FontSize="14" 
+                                               Foreground="#6b7280"
+                                               Margin="0,0,0,10"/>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="Unit 301 • " FontSize="13" Foreground="#9ca3af"/>
+                                                <TextBlock Text="John Doe • " FontSize="13" Foreground="#9ca3af"/>
+                                                <TextBlock Text="{Binding RequestDate}" FontSize="13" Foreground="#9ca3af"/>
+                                            </StackPanel>
+                                        </StackPanel>
 
-                            <!-- Action Buttons -->
-                            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                                <Button Content="Start Work" Style="{StaticResource ActionButton}"/>
-                                <Button Content="View Details" Style="{StaticResource SecondaryButton}"/>
-                            </StackPanel>
-                        </Grid>
-                    </Border>
 
-                    <!-- Request Item 2 - In Progress -->
-                    <Border BorderBrush="#e5e7eb" BorderThickness="0,0,0,1" Padding="30,25">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
+                                        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                            <Button Content="Start Work" Style="{StaticResource ActionButton}"/>
+                                            <Button Content="View Details" Style="{StaticResource SecondaryButton}"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
 
-                            <StackPanel Grid.Column="0">
-                                <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-                                    <TextBlock Text="HVAC Maintenance" 
-                                               FontSize="18" 
-                                               FontWeight="SemiBold" 
-                                               Foreground="#1f2937"
-                                               Margin="0,0,15,0"/>
-                                    <Border Style="{StaticResource InProgressBadge}">
-                                        <TextBlock Text="In Progress" 
-                                                   FontSize="12" 
-                                                   FontWeight="SemiBold" 
-                                                   Foreground="#5b9cf5"/>
-                                    </Border>
-                                </StackPanel>
-                                <TextBlock Text="Air conditioning not cooling properly. Temperature inconsistent." 
-                                           FontSize="14" 
-                                           Foreground="#6b7280"
-                                           Margin="0,0,0,10"/>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="Unit 215 • " FontSize="13" Foreground="#9ca3af"/>
-                                    <TextBlock Text="Sarah Miller • " FontSize="13" Foreground="#9ca3af"/>
-                                    <TextBlock Text="Started 5 hours ago" FontSize="13" Foreground="#9ca3af"/>
-                                </StackPanel>
-                            </StackPanel>
 
-                            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                                <Button Content="Mark Complete" Style="{StaticResource ActionButton}"/>
-                                <Button Content="View Details" Style="{StaticResource SecondaryButton}"/>
-                            </StackPanel>
-                        </Grid>
-                    </Border>
 
-                    <!-- Request Item 3 - Pending -->
-                    <Border BorderBrush="#e5e7eb" BorderThickness="0,0,0,1" Padding="30,25">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
 
-                            <StackPanel Grid.Column="0">
-                                <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-                                    <TextBlock Text="Electrical - Light Fixture" 
-                                               FontSize="18" 
-                                               FontWeight="SemiBold" 
-                                               Foreground="#1f2937"
-                                               Margin="0,0,15,0"/>
-                                    <Border Style="{StaticResource PendingBadge}">
-                                        <TextBlock Text="Pending" 
-                                                   FontSize="12" 
-                                                   FontWeight="SemiBold" 
-                                                   Foreground="#ff8c42"/>
-                                    </Border>
-                                </StackPanel>
-                                <TextBlock Text="Bedroom light fixture is flickering and buzzing." 
-                                           FontSize="14" 
-                                           Foreground="#6b7280"
-                                           Margin="0,0,0,10"/>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="Unit 102 • " FontSize="13" Foreground="#9ca3af"/>
-                                    <TextBlock Text="Mike Johnson • " FontSize="13" Foreground="#9ca3af"/>
-                                    <TextBlock Text="Submitted 1 day ago" FontSize="13" Foreground="#9ca3af"/>
-                                </StackPanel>
-                            </StackPanel>
 
-                            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                                <Button Content="Start Work" Style="{StaticResource ActionButton}"/>
-                                <Button Content="View Details" Style="{StaticResource SecondaryButton}"/>
-                            </StackPanel>
-                        </Grid>
-                    </Border>
-
-                    <!-- Request Item 4 - In Progress -->
-                    <Border BorderBrush="#e5e7eb" BorderThickness="0,0,0,1" Padding="30,25">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-
-                            <StackPanel Grid.Column="0">
-                                <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-                                    <TextBlock Text="Appliance Repair - Dishwasher" 
-                                               FontSize="18" 
-                                               FontWeight="SemiBold" 
-                                               Foreground="#1f2937"
-                                               Margin="0,0,15,0"/>
-                                    <Border Style="{StaticResource InProgressBadge}">
-                                        <TextBlock Text="In Progress" 
-                                                   FontSize="12" 
-                                                   FontWeight="SemiBold" 
-                                                   Foreground="#5b9cf5"/>
-                                    </Border>
-                                </StackPanel>
-                                <TextBlock Text="Dishwasher not draining water after cycle completes." 
-                                           FontSize="14" 
-                                           Foreground="#6b7280"
-                                           Margin="0,0,0,10"/>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="Unit 408 • " FontSize="13" Foreground="#9ca3af"/>
-                                    <TextBlock Text="Emily Chen • " FontSize="13" Foreground="#9ca3af"/>
-                                    <TextBlock Text="Started yesterday" FontSize="13" Foreground="#9ca3af"/>
-                                </StackPanel>
-                            </StackPanel>
-
-                            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                                <Button Content="Mark Complete" Style="{StaticResource ActionButton}"/>
-                                <Button Content="View Details" Style="{StaticResource SecondaryButton}"/>
-                            </StackPanel>
-                        </Grid>
-                    </Border>
-
-                    <!-- Request Item 5 - Pending -->
-                    <Border Padding="30,25">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-
-                            <StackPanel Grid.Column="0">
-                                <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-                                    <TextBlock Text="Door Lock Replacement" 
-                                               FontSize="18" 
-                                               FontWeight="SemiBold" 
-                                               Foreground="#1f2937"
-                                               Margin="0,0,15,0"/>
-                                    <Border Style="{StaticResource PendingBadge}">
-                                        <TextBlock Text="Pending" 
-                                                   FontSize="12" 
-                                                   FontWeight="SemiBold" 
-                                                   Foreground="#ff8c42"/>
-                                    </Border>
-                                </StackPanel>
-                                <TextBlock Text="Front door lock is jammed and key won't turn." 
-                                           FontSize="14" 
-                                           Foreground="#6b7280"
-                                           Margin="0,0,0,10"/>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="Unit 505 • " FontSize="13" Foreground="#9ca3af"/>
-                                    <TextBlock Text="David Park • " FontSize="13" Foreground="#9ca3af"/>
-                                    <TextBlock Text="Submitted 3 hours ago" FontSize="13" Foreground="#9ca3af"/>
-                                </StackPanel>
-                            </StackPanel>
-
-                            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                                <Button Content="Start Work" Style="{StaticResource ActionButton}"/>
-                                <Button Content="View Details" Style="{StaticResource SecondaryButton}"/>
-                            </StackPanel>
-                        </Grid>
-                    </Border>
+                    
                 </StackPanel>
+                
             </ScrollViewer>
         </Border>
     </Grid>

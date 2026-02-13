@@ -127,5 +127,11 @@ namespace VecinoBuildingMangementWebService
             this.dbHelperOleDb.AddParameter("@ResidentId", residentId);
             return this.dbHelperOleDb.Delete(sql) > 0;
         }
+        //public List<ServiceRequest> GetRequestByBuilding(string buildingId)
+        //{
+        //    string sql = @"Select * From ServiceRequest Where BuildingId = @BuildingId";
+        //    this.dbHelperOleDb.AddParameter("@BuildingId", buildingId);
+        //    return 
+        //}
     }
 }
