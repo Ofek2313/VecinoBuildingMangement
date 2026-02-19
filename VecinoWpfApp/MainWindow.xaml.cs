@@ -21,6 +21,7 @@ namespace VecinoWpfApp
         Requests requests;
         Announcement announcement;
         Events events;
+        Polls polls;
 
         public static readonly string BuildingId;
         
@@ -92,6 +93,12 @@ namespace VecinoWpfApp
                 events = new Events();
             this.frameMain.Content = events;
         }
+        private void ViewPolls()
+        {
+            if(this.polls == null)
+                polls = new Polls();
+            this.frameMain.Content = polls;
+        }
         private void HyperlinkRequests_Click(object sender, RoutedEventArgs e)
         {
             ViewRequests();
@@ -124,6 +131,7 @@ namespace VecinoWpfApp
 
         private void HyperlinkPoll_Click(object sender, RoutedEventArgs e)
         {
+            ViewPolls();
             setActive(pollNav);
         }
 
