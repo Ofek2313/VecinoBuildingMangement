@@ -188,6 +188,12 @@ namespace VecinoBuildingMangementWebService
                 return null;
             }
         }
+        public bool UpdatePhotoById(string eventId, string extension)
+        {
+            string sql = $"Update Event SET EventImage = 'event{eventId}.{extension}' WHERE EventId = @EventId";
+            this.dbHelperOleDb.AddParameter("@EventId", eventId);
+            return this.dbHelperOleDb.Update(sql) > 0;
+        }
     }
     
 }

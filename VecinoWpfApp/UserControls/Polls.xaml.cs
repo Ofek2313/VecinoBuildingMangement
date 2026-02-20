@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BuildingManagementWsClient;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using VecinoBuildingMangement.ViewModels;
+using VecinoWpfApp.AppWindows;
 
 namespace VecinoWpfApp.UserControls
 {
@@ -20,9 +23,39 @@ namespace VecinoWpfApp.UserControls
     /// </summary>
     public partial class Polls : UserControl
     {
+        ManagePolls managePolls;
+        NewPoll newPoll;
         public Polls()
         {
             InitializeComponent();
+            GetPollsList();
+        }
+        private async Task GetPollsList()
+        {
+            ApiClient<ManagePolls> client = new ApiClient<ManagePolls>();
+            client.Scheme = "http";
+            client.Host = "localhost";
+            client.Port = 5269;
+            client.Path = "api/Admin/ManagePolls";
+            client.AddParameter("buildingId", "1");
+            managePolls = await client.GetAsync();
+
+            listViewPolls.ItemsSource = this.managePolls.PollviewModel;
+           
+            this.DataContext = this.managePolls;
+            
+        }
+        private void ViewCreatePollWindow()
+        {
+            if(this.newPoll == null)
+                this.newPoll = new NewPoll();
+            this.newPoll.Owner = Window.GetWindow(this);
+            bool? response = this.newPoll.ShowDialog();
+            this.newPoll = null;
+        }
+        private void ButtonPoll_Click(object sender, RoutedEventArgs e)
+        {
+            ViewCreatePollWindow();
         }
     }
 }

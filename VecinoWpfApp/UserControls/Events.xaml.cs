@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using VecinoBuildingMangement.ViewModels;
+using VecinoWpfApp.AppWindows;
 
 namespace VecinoWpfApp.UserControls
 {
@@ -23,6 +24,7 @@ namespace VecinoWpfApp.UserControls
     public partial class Events : UserControl
     {
         ManageEventViewModel eventViewModel;
+        NewEvent newEvent;
         public Events()
         {
             InitializeComponent();
@@ -39,6 +41,24 @@ namespace VecinoWpfApp.UserControls
 
             listViewEvents.ItemsSource = this.eventViewModel.Events;
             this.DataContext = this.eventViewModel.Events;
+
+        }
+        private bool? ViewCreateEventWindow()
+        {
+            if (this.newEvent == null)
+                this.newEvent = new NewEvent();
+            this.newEvent.Owner = Window.GetWindow(this);
+            bool? response = this.newEvent.ShowDialog();
+            this.newEvent = null;
+            return response;
+        }
+
+        private async void ButtonAddEvent_Click(object sender, RoutedEventArgs e)
+        {
+            bool? response = ViewCreateEventWindow();
+         
+            if (response == true)
+                await GetEventsList();
 
         }
     }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using System.Security.Cryptography;
+using System.Text.Json;
 using VecinoBuildingMangement;
 using VecinoBuildingMangement.Models;
 using VecinoBuildingMangement.ViewModels;
@@ -106,15 +107,33 @@ namespace VecinoBuildingMangementWebService.Controllers
         }
 
         [HttpPost]
-        public bool AddUpComingEvent(Event @event)
+        public bool AddUpComingEvent([FromForm] string model, IFormFile file)
         {
+            Event @event = JsonSerializer.Deserialize<Event>(model);
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
-                return this.repositoryUOW.EventRepository.Create(@event);
+                this.repositoryUOW.DbHelperOleDb.OpenTransaction();
+                this.repositoryUOW.EventRepository.Create(@event);
+                string eventId = this.repositoryUOW.EventRepository.GetLastId();
+                string ext = @event.EventImage.TrimStart('.');
+                bool response = this.repositoryUOW.EventRepository.UpdatePhotoById(eventId, ext);
+
+                string fileName = "event" + eventId + "." + ext;
+                string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images", fileName);
+                using (FileStream fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))
+                {
+                    file.CopyTo(fileStream);
+                }
+                this.repositoryUOW.DbHelperOleDb.Commit();
+                return true;
+
+
+
             }
             catch (Exception ex)
             {
+                this.repositoryUOW.DbHelperOleDb.RollBack();
                 return false;
             }
             finally
@@ -465,7 +484,26 @@ namespace VecinoBuildingMangementWebService.Controllers
 
         }
 
+        [HttpGet]
+        public CreateEvent GetEventTypes()
+        {
+            CreateEvent createEvent = new CreateEvent();
+            try
+            {
+                this.repositoryUOW.DbHelperOleDb.OpenConnection();
+                createEvent.eventTypes =  this.repositoryUOW.EventTypeRepository.GetAll();
+                createEvent.Event = null;
+                return createEvent;
 
+            }
+            catch (Exception ex) 
+            {
+                    return null;
+            }
+            finally {
+                this.repositoryUOW.DbHelperOleDb.CloseConnection();
+            }
+        }
 
     }
 }

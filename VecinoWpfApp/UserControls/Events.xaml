@@ -196,7 +196,7 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <Button Content="Add Event +" Canvas.Left="1428" Canvas.Top="100" Height="40" Width="166" Style="{StaticResource DeleteEventButton}" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top">
+        <Button Content="Add Event +" Canvas.Left="1428" Canvas.Top="100" Height="40" Width="166" Style="{StaticResource DeleteEventButton}" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top" Click="ButtonAddEvent_Click">
             <Button.Effect>
                 <DropShadowEffect   Color="Black"
   Opacity="0.05"

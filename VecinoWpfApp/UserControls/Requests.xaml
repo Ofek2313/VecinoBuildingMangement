@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:VecinoWpfApp.UserControls"
              mc:Ignorable="d" 
-             d:DesignHeight="1080" d:DesignWidth="1670" d:Background="White">
+             d:DesignHeight="1080" d:DesignWidth="1645" d:Background="White">
         
         <UserControl.Resources>
         <Style x:Key="PendingBadge" TargetType="Border">
@@ -191,7 +191,7 @@
 
 
 
-                    <ListView x:Name="listViewRequests" Height="753" HorizontalContentAlignment="Stretch">
+                    <ListView x:Name="listViewRequests" Height="753" HorizontalContentAlignment="Stretch" Background="Transparent" BorderThickness="0">
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <Border BorderBrush="#e5e7eb" BorderThickness="0,0,0,1" Padding="30,25">

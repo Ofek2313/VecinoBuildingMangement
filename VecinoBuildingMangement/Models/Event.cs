@@ -22,7 +22,11 @@ namespace VecinoBuildingMangement.Models
         public string EventId
         {
             get { return eventId; }
-            set { eventId = value; }
+            set { if (value == null)
+                    eventId = "";
+                else
+                   eventId = value; 
+            }
         }
 
         [Required(ErrorMessage ="Event Date can not be empty")]

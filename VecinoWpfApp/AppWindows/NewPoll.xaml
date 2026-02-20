@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
             xmlns:local="clr-namespace:VecinoWpfApp.AppWindows"
         Title="Create Poll"
-        Width="580" Height="620"
+        Width="580" Height="700"
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize"
         Background="#EEF1F6"
@@ -18,7 +18,7 @@
         <SolidColorBrush x:Key="FieldBg"       Color="#F0F4FA"/>
         <SolidColorBrush x:Key="DividerColor"  Color="#E8ECF2"/>
 
-        <!-- Input field style (matches NewEvent) -->
+      
         <Style x:Key="InputField" TargetType="TextBox">
             <Setter Property="Height"          Value="52"/>
             <Setter Property="FontSize"        Value="15"/>
@@ -48,7 +48,6 @@
             </Setter>
         </Style>
 
-        <!-- ComboBox style (matches NewEvent) -->
         <Style x:Key="InputCombo" TargetType="ComboBox">
             <Setter Property="Height"          Value="52"/>
             <Setter Property="FontSize"        Value="15"/>
@@ -112,7 +111,6 @@
             </Setter>
         </Style>
 
-        <!-- Label style -->
         <Style x:Key="FieldLabel" TargetType="TextBlock">
             <Setter Property="FontSize"     Value="12"/>
             <Setter Property="FontWeight"   Value="SemiBold"/>
@@ -177,7 +175,7 @@
     </Window.Resources>
 
     <Border Background="{StaticResource CardBg}"
-            CornerRadius="16" Margin="24,24,24,27"
+            CornerRadius="16" Margin="24,10,24,27"
             Padding="32,28">
         <Border.Effect>
             <DropShadowEffect BlurRadius="20" ShadowDepth="2" Direction="270"
@@ -223,29 +221,18 @@
             <!-- Category & Date row -->
             <Grid Margin="0,0,0,18">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="16"/>
+                  
+                    
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <StackPanel Grid.Column="0">
-                    <TextBlock Text="CATEGORY" Style="{StaticResource FieldLabel}"/>
-                    <ComboBox x:Name="CmbCategory" Style="{StaticResource InputCombo}">
-                        <ComboBoxItem Content="Amenities"/>
-                        <ComboBoxItem Content="Facilities"/>
-                        <ComboBoxItem Content="Safety"/>
-                        <ComboBoxItem Content="Finance"/>
-                        <ComboBoxItem Content="Other"/>
-                    </ComboBox>
-                </StackPanel>
-
-                <StackPanel Grid.Column="2">
+                <StackPanel Grid.Column="1">
                     <TextBlock Text="CLOSING DATE" Style="{StaticResource FieldLabel}"/>
                     <DatePicker x:Name="DpClosingDate"
-                                Height="52" FontSize="15"
-                                Background="#f8fafc"
-                                BorderBrush="#cbd5e1"
-                                BorderThickness="1"/>
+                    Height="52" FontSize="15"
+                    Background="#f8fafc"
+                    BorderBrush="#cbd5e1"
+                    BorderThickness="1" Width="469"/>
                 </StackPanel>
             </Grid>
 
@@ -274,7 +261,7 @@
                         Style="{StaticResource SaveButton}"
                        />
             </Grid>
-
+            
         </StackPanel>
     </Border>
 </Window>

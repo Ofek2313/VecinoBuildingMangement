@@ -4,15 +4,17 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:VecinoWpfApp.AppWindows"
     Title="Vecino – Create Event"
-    Height="1080"
-    Width="1645"
+    Height="1000"
+    Width="800"
     WindowStartupLocation="CenterScreen"
     ResizeMode="CanResize"
     Background="#F3F0FB"
     FontFamily="Segoe UI">
 
     <Window.Resources>
-
+        <BooleanToVisibilityConverter x:Key="boolToVisibility">
+            
+        </BooleanToVisibilityConverter>
         <!-- TextBox Style -->
         <Style x:Key="FormInputStyle" TargetType="TextBox">
             <Setter Property="Height" Value="52"/>
@@ -159,7 +161,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
-
+        
         <!-- Label Style -->
         <Style x:Key="LabelStyle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="14"/>
@@ -284,10 +286,16 @@
                                Margin="0,6,0,0"/>
                 </StackPanel>
 
-                <TextBlock Text="Event Title" Style="{StaticResource LabelStyle}"/>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Event Title" Style="{StaticResource LabelStyle}"/>
+                    <TextBlock Text="{Binding (Validation.Errors)[0].ErrorContent,ElementName=TitleInput}" Width="589" Margin="20 0 0 0"
+                               Visibility="{Binding (Validation.HasError),Converter={StaticResource boolToVisibility},ElementName=TitleInput}"></TextBlock>
+                </StackPanel>
+               
                 <TextBox x:Name="TitleInput"
                          Style="{StaticResource FormInputStyle}"
-                         Margin="0,0,0,18"/>
+                         Margin="0,0,0,18"
+                         Text="{Binding Event.EventTitle,UpdateSourceTrigger=PropertyChanged}"/>
 
                 <TextBlock Text="Event Date" Style="{StaticResource LabelStyle}"/>
                 <DatePicker x:Name="EventDatePicker"
@@ -323,7 +331,7 @@
 
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="End Time" Style="{StaticResource LabelStyle}"/>
-                        <ComboBox x:Name="EndTimeComboBox" Style="{StaticResource FormComboBoxStyle}">
+                        <ComboBox x:Name="EndTimeComboBox" Style="{StaticResource FormComboBoxStyle}" >
                             <ComboBoxItem Content="Select" IsSelected="True"/>
                             <ComboBoxItem Content="9:00 AM"/>
                             <ComboBoxItem Content="10:00 AM"/>
@@ -343,24 +351,26 @@
                     </StackPanel>
                 </Grid>
 
+
                 <TextBlock Text="Type" Style="{StaticResource LabelStyle}"/>
                 <ComboBox x:Name="TypeComboBox"
                           Style="{StaticResource FormComboBoxStyle}"
-                          Margin="0,0,0,18">
-                    <ComboBoxItem Content="Select" IsSelected="True"/>
-                    <ComboBoxItem Content="Meeting"/>
-                    <ComboBoxItem Content="Maintenance"/>
-                    <ComboBoxItem Content="Inspection"/>
-                    <ComboBoxItem Content="Emergency"/>
-                    <ComboBoxItem Content="Social"/>
-                    <ComboBoxItem Content="Other"/>
+                          Margin="0,0,0,18" SelectedValuePath="EventTypeId" DisplayMemberPath="EventTypeName">
+                  
                 </ComboBox>
-
-                <TextBlock Text="Description" Style="{StaticResource LabelStyle}"/>
+                <Button Content="Upload Image" Click="ButtonSelectImage_Click"></Button>
+        
+                
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Description" Style="{StaticResource LabelStyle}"/>
+                    <TextBlock Text="{Binding (Validation.Errors)[0].ErrorContent,ElementName=DescriptionInput}" Width="589" Margin="20 0 0 0"
+                Visibility="{Binding (Validation.HasError),Converter={StaticResource boolToVisibility},ElementName=DescriptionInput}"></TextBlock>
+                </StackPanel>
                 <Border Background="#f8fafc"
                         BorderBrush="#cbd5e1"
                         BorderThickness="1"
                         Margin="0,0,0,30">
+                    
                     <TextBox x:Name="DescriptionInput"
                              Height="120"
                              Padding="16,12"
@@ -371,7 +381,9 @@
                              TextWrapping="Wrap"
                              AcceptsReturn="True"
                              VerticalScrollBarVisibility="Auto"
-                             VerticalContentAlignment="Top"/>
+                             VerticalContentAlignment="Top"
+                             Text="{Binding Event.EventDescription,UpdateSourceTrigger=PropertyChanged}"
+                             />
                 </Border>
 
                 <Grid>
@@ -386,7 +398,7 @@
                             Style="{StaticResource CancelButtonStyle}"/>
 
                     <Button Grid.Column="2"
-                            Style="{StaticResource PrimaryButtonStyle}">
+                            Style="{StaticResource PrimaryButtonStyle}" Click="ButtonAddEvent_Click">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="&#xE710;" FontFamily="Segoe MDL2 Assets"
                                        FontSize="14" Foreground="White"

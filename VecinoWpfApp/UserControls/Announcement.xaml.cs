@@ -31,6 +31,7 @@ namespace VecinoWpfApp.UserControls
         }
         private async void GetAnnouncementList()
         {
+
             ApiClient<List<Notification>> client = new ApiClient<List<Notification>>();
             client.Scheme = "http";
             client.Host = "localhost";
