@@ -4,10 +4,15 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:VecinoWpfApp.UserControls"
+             xmlns:conv ="clr-namespace:VecinoWpfApp"
              mc:Ignorable="d" 
              d:DesignHeight="1080" d:DesignWidth="1645" d:Background="White">
         
         <UserControl.Resources>
+
+        <conv:RequestStatusConverter x:Key="requestStatusConverter">
+            
+        </conv:RequestStatusConverter>
         <Style x:Key="PendingBadge" TargetType="Border">
             <Setter Property="Background" Value="#fff4e6"/>
             <Setter Property="CornerRadius" Value="12"/>
@@ -30,7 +35,7 @@
         <Style x:Key="StatusCard" TargetType="Border">
             <Setter Property="CornerRadius" Value="12"/>
             <Setter Property="Padding" Value="25"/>
-            <Setter Property="Height" Value="110"/>
+            <Setter Property="Height" Value="130"/>
             <Setter Property="Margin" Value="0,0,20,0"/>
         </Style>
 
@@ -45,6 +50,7 @@
             <Setter Property="FontSize" Value="15"/>
             <Setter Property="FontFamily" Value="Segoe UI"/>
             <Setter Property="Opacity" Value="0.8"/>
+           
         </Style>
 
         <Style x:Key="ActionButton" TargetType="Button">
@@ -100,6 +106,7 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+            
     </UserControl.Resources>
     <Grid Margin="40">
         <Grid.RowDefinitions>
@@ -124,10 +131,7 @@
             </StackPanel>
 
            
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-                <Button Content="All Requests" Style="{StaticResource ActionButton}"/>
-                <Button Content="Export" Style="{StaticResource SecondaryButton}"/>
-            </StackPanel>
+           
         </Grid>
 
        
@@ -158,7 +162,7 @@
                         <TextBlock Text="⚙" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     </Border>
                     <StackPanel VerticalAlignment="Center">
-                        <TextBlock Text="2" Style="{StaticResource StatusNumber}" Foreground="#5b9cf5"/>
+                        <TextBlock Text="{Binding InProgress}" Style="{StaticResource StatusNumber}" Foreground="#5b9cf5"/>
                         <TextBlock Text="In Progress" Style="{StaticResource StatusLabel}" Foreground="#5b9cf5"/>
                     </StackPanel>
                 </StackPanel>
@@ -171,7 +175,7 @@
                         <TextBlock Text="✓" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White"/>
                     </Border>
                     <StackPanel VerticalAlignment="Center">
-                        <TextBlock Text="12" Style="{StaticResource StatusNumber}" Foreground="#4caf50"/>
+                        <TextBlock Text="{Binding Completed}" Style="{StaticResource StatusNumber}" Foreground="#4caf50"/>
                         <TextBlock Text="Completed" Style="{StaticResource StatusLabel}" Foreground="#4caf50"/>
                     </StackPanel>
                 </StackPanel>
@@ -229,8 +233,8 @@
 
 
                                         <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                                            <Button Content="Start Work" Style="{StaticResource ActionButton}"/>
-                                            <Button Content="View Details" Style="{StaticResource SecondaryButton}"/>
+                                            <Button Content="{Binding RequestStatus,Converter={StaticResource requestStatusConverter}}" Style="{StaticResource ActionButton}" Click="ActionRequest_Click"/>
+                                            <Button Content="View Details" Style="{StaticResource SecondaryButton}" Click="ViewDetailsClick" />
                                         </StackPanel>
                                     </Grid>
                                 </Border>

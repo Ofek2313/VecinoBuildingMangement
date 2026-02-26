@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using VecinoBuildingMangement.Models;
 using VecinoBuildingMangement.ViewModels;
 using BuildingManagementWsClient;
+using VecinoWpfApp.AppWindows;
 
 namespace VecinoWpfApp.UserControls
 {
@@ -24,6 +25,7 @@ namespace VecinoWpfApp.UserControls
     public partial class Requests : UserControl
     {
         ManageServiceRequestViewModel serviceRequestViewModel;
+        ViewRequestDetail requestDetail;
         public Requests()
         {
             InitializeComponent();
@@ -42,6 +44,55 @@ namespace VecinoWpfApp.UserControls
             listViewRequests.ItemsSource = this.serviceRequestViewModel.serviceRequests;
             this.DataContext = this.serviceRequestViewModel;
 
+        }
+
+        private async void ActionRequest_Click(object sender, RoutedEventArgs e)
+        {
+            ServiceRequest item = (sender as Button).DataContext as ServiceRequest;
+            StatusViewModel viewModel = new StatusViewModel();
+            ApiClient<StatusViewModel> client = new ApiClient<StatusViewModel>();
+            client.Scheme = "http";
+            client.Host = "localhost";
+            client.Port = 5269;
+            client.Path = "api/Admin/ChangeRequestStatus";
+
+            viewModel.RequestId = item.RequestId;
+
+            switch (item.RequestStatus)
+            {
+                case "Pending":
+                    viewModel.Status = "In Progress";
+                    break;
+                case "In Progress":
+                    viewModel.Status = "Completed";
+                    break;
+            }
+
+            bool response = await client.PostAsync(viewModel);
+
+            if (response)
+            {
+                MessageBox.Show("Status Changed");
+                GetRequestList();
+            }
+              
+           
+            else
+                MessageBox.Show("Status Didn't Changed");
+        }
+        private bool? ViewCreateRequestWindow(object sender)
+        {
+            ServiceRequest serviceRequest = (sender as Button).DataContext as ServiceRequest;
+            if (this.requestDetail == null)
+                this.requestDetail = new ViewRequestDetail(serviceRequest);
+            this.requestDetail.Owner = Window.GetWindow(this);
+            bool? response = this.requestDetail.ShowDialog();
+            this.requestDetail = null;
+            return response;
+        }
+        private void ViewDetailsClick(object sender, RoutedEventArgs e)
+        {
+            ViewCreateRequestWindow(sender);
         }
     }
 }

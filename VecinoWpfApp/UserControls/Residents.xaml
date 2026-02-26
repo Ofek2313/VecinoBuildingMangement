@@ -1,0 +1,316 @@
+﻿
+<UserControl x:Class="VecinoWpfApp.UserControls.Residents"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:VecinoWpfApp.UserControls"
+             xmlns:conv ="clr-namespace:VecinoWpfApp"
+             mc:Ignorable="d" 
+             d:DesignHeight="1080" d:DesignWidth="1670">
+
+    
+    
+    <UserControl.Background>
+        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#f8fafc" Offset="0"/>
+            <GradientStop Color="#e0f2fe" Offset="0.5"/>
+            <GradientStop Color="#f0fdf4" Offset="1"/>
+        </LinearGradientBrush>
+    </UserControl.Background>
+
+    <UserControl.Resources>
+
+        <Style x:Key="CardBorder" TargetType="Border">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="CornerRadius" Value="16"/>
+            <Setter Property="BorderBrush" Value="#e2e8f0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="Black" Opacity="0.05" BlurRadius="3" ShadowDepth="1" Direction="270"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="RemoveButton" TargetType="Button">
+            <Setter Property="Background">
+                <Setter.Value>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Color="#f43f5e" Offset="0"/>
+                        <GradientStop Color="#e11d48" Offset="1"/>
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Padding" Value="12,6"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="6" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ViewInfoButton" TargetType="Button">
+            <Setter Property="Background" Value="#f1f5f9"/>
+            <Setter Property="Foreground" Value="#0f172a"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Padding" Value="12,6"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="6" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="PrimaryButton" TargetType="Button">
+            <Setter Property="Background">
+                <Setter.Value>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Color="#14b8a6" Offset="0"/>
+                        <GradientStop Color="#22c55e" Offset="1"/>
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Padding" Value="18,10"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="8" Padding="{TemplateBinding Padding}">
+                            <Border.Effect>
+                                <DropShadowEffect Color="Black" Opacity="0.08" BlurRadius="4" ShadowDepth="2" Direction="270"/>
+                            </Border.Effect>
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ActiveBadge" TargetType="Border">
+            <Setter Property="Background" Value="#dcfce7"/>
+            <Setter Property="CornerRadius" Value="10"/>
+            <Setter Property="Padding" Value="10,4"/>
+        </Style>
+
+        <Style x:Key="InactiveBadge" TargetType="Border">
+            <Setter Property="Background" Value="#fee2e2"/>
+            <Setter Property="CornerRadius" Value="10"/>
+            <Setter Property="Padding" Value="10,4"/>
+        </Style>
+
+        <Style x:Key="AvatarBorder" TargetType="Border">
+            <Setter Property="Width" Value="46"/>
+            <Setter Property="Height" Value="46"/>
+            <Setter Property="CornerRadius" Value="23"/>
+            <Setter Property="Margin" Value="0,0,14,0"/>
+            <Setter Property="Background" Value="#e2e8f0"/>
+            <!-- fallback if no image -->
+        </Style>
+        <conv:UrlConverter x:Key="urlConverter"/>
+    </UserControl.Resources>
+
+    <Canvas>
+
+        <TextBlock Canvas.Left="82" Canvas.Top="28"
+                   Text="Residents Management"
+                   FontFamily="Segoe UI" FontSize="27" FontWeight="SemiBold"
+                   Foreground="#1e293b"/>
+        <TextBlock Canvas.Left="82" Canvas.Top="69"
+                   Text="View, search, and manage building residents"
+                   FontFamily="Segoe UI" FontSize="15" FontWeight="Normal"
+                   Foreground="#64748b"/>
+
+        <!-- Search Bar -->
+        <Border Canvas.Left="82" Canvas.Top="112"
+                Height="46" Width="420"
+                Background="White" CornerRadius="10"
+                BorderBrush="#e2e8f0" BorderThickness="1">
+            <Border.Effect>
+                <DropShadowEffect Color="Black" Opacity="0.04" BlurRadius="3" ShadowDepth="1" Direction="270"/>
+            </Border.Effect>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="44"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Path Grid.Column="0" Width="16" Height="16"
+                      HorizontalAlignment="Center" VerticalAlignment="Center"
+                      Stretch="Uniform" Fill="#94a3b8"
+                      Data="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z"/>
+                <TextBox Grid.Column="1" x:Name="searchBox"
+                         Text=""
+                         FontFamily="Segoe UI" FontSize="13"
+                         Foreground="#94a3b8" Background="Transparent"
+                         BorderThickness="0" VerticalAlignment="Center"
+                         Margin="0,0,12,0" TextChanged="searchBox_TextChanged"/>
+            </Grid>
+        </Border>
+
+
+
+        <!-- Stat Cards -->
+        <Border Canvas.Left="82" Canvas.Top="178" Width="220" Height="90" Style="{StaticResource CardBorder}">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="20,0">
+                <Border Width="42" Height="42" CornerRadius="10" Margin="0,0,14,0">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#14b8a6" Offset="0"/>
+                            <GradientStop Color="#22c55e" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <TextBlock Text="👥" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Border>
+                <StackPanel VerticalAlignment="Center">
+                    <TextBlock Text="{Binding TotalResidents}" FontSize="26" FontWeight="Bold" Foreground="#0f172a" FontFamily="Segoe UI"/>
+                    <TextBlock Text="Total Residents" FontSize="11" Foreground="#64748b" FontFamily="Segoe UI"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <Border Canvas.Left="318" Canvas.Top="178" Width="220" Height="90" Style="{StaticResource CardBorder}">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="20,0">
+                <Border Width="42" Height="42" CornerRadius="10" Margin="0,0,14,0" Background="#dcfce7">
+                    <TextBlock Text="✅" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Border>
+                <StackPanel VerticalAlignment="Center">
+                    <TextBlock Text="21" FontSize="26" FontWeight="Bold" Foreground="#16a34a" FontFamily="Segoe UI"/>
+                    <TextBlock Text="Active" FontSize="11" Foreground="#64748b" FontFamily="Segoe UI"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <Border Canvas.Left="554" Canvas.Top="178" Width="220" Height="90" Style="{StaticResource CardBorder}">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="20,0">
+                <Border Width="42" Height="42" CornerRadius="10" Margin="0,0,14,0" Background="#fee2e2">
+                    <TextBlock Text="🚫" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Border>
+                <StackPanel VerticalAlignment="Center">
+                    <TextBlock Text="3" FontSize="26" FontWeight="Bold" Foreground="#e11d48" FontFamily="Segoe UI"/>
+                    <TextBlock Text="Inactive" FontSize="11" Foreground="#64748b" FontFamily="Segoe UI"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <Border Canvas.Left="790" Canvas.Top="178" Width="220" Height="90" Style="{StaticResource CardBorder}">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="20,0">
+                <Border Width="42" Height="42" CornerRadius="10" Margin="0,0,14,0" Background="#e0f2fe">
+                    <TextBlock Text="🏠" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Border>
+                <StackPanel VerticalAlignment="Center">
+                    <TextBlock Text="18" FontSize="26" FontWeight="Bold" Foreground="#0284c7" FontFamily="Segoe UI"/>
+                    <TextBlock Text="Occupied Units" FontSize="11" Foreground="#64748b" FontFamily="Segoe UI"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <!-- Table Card -->
+        <Border Canvas.Left="82" Canvas.Top="288" Width="1512" Height="740" Style="{StaticResource CardBorder}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="54"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- Table Header -->
+                <Border Grid.Row="0" Background="#f8fafc" CornerRadius="16,16,0,0" BorderBrush="#e2e8f0" BorderThickness="0,0,0,1">
+                    <Grid Margin="24,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="260"/>
+                            <ColumnDefinition Width="110"/>
+                            <ColumnDefinition Width="220"/>
+                            <ColumnDefinition Width="150"/>
+                            <ColumnDefinition Width="140"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="RESIDENT" FontFamily="Segoe UI" FontSize="11" FontWeight="SemiBold" Foreground="#64748b" VerticalAlignment="Center" Margin="60,0,0,0"/>
+                        <TextBlock Grid.Column="1" Text="UNIT" FontFamily="Segoe UI" FontSize="11" FontWeight="SemiBold" Foreground="#64748b" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Column="2" Text="EMAIL" FontFamily="Segoe UI" FontSize="11" FontWeight="SemiBold" Foreground="#64748b" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Column="3" Text="PHONE" FontFamily="Segoe UI" FontSize="11" FontWeight="SemiBold" Foreground="#64748b" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Column="4" Text="STATUS" FontFamily="Segoe UI" FontSize="11" FontWeight="SemiBold" Foreground="#64748b" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Column="5" Text="ACTIONS" FontFamily="Segoe UI" FontSize="11" FontWeight="SemiBold" Foreground="#64748b" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,8,0"/>
+                    </Grid>
+                </Border>
+
+                <!-- Rows -->
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+                        <ListView x:Name="ListViewResidents" Height="683" HorizontalContentAlignment="Stretch" Background="Transparent" BorderThickness="0">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <!-- Row Template (repeat per resident) -->
+                                    <Border BorderBrush="#f1f5f9" BorderThickness="0,0,0,1" Padding="24,14">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="260"/>
+                                                <ColumnDefinition Width="110"/>
+                                                <ColumnDefinition Width="220"/>
+                                                <ColumnDefinition Width="150"/>
+                                                <ColumnDefinition Width="140"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                                                <Border Style="{StaticResource AvatarBorder}">
+                                                    <Border.Clip>
+                                                        <EllipseGeometry Center="23,23" RadiusX="23" RadiusY="23"/>
+                                                    </Border.Clip>
+                                                    <Image Source="{Binding ResidentImage,Converter={StaticResource urlConverter}}" 
+                                                       Width="46" Height="46"
+                                                       Stretch="UniformToFill"
+                                                       RenderOptions.BitmapScalingMode="HighQuality"/>
+                                                </Border>
+                                                <StackPanel VerticalAlignment="Center">
+                                                    <TextBlock Text="{Binding ResidentName}" FontFamily="Segoe UI" FontSize="14" FontWeight="SemiBold" Foreground="#0f172a"/>
+                                                   
+                                                </StackPanel>
+                                            </StackPanel>
+                                            <TextBlock Grid.Column="1" Text="{Binding UnitNumber}" FontFamily="Segoe UI" FontSize="14" FontWeight="SemiBold" Foreground="#1e293b" VerticalAlignment="Center"/>
+                                            <TextBlock Grid.Column="2" Text="{Binding ResidentEmail}" FontFamily="Segoe UI" FontSize="13" Foreground="#64748b" VerticalAlignment="Center"/>
+                                            <TextBlock Grid.Column="3" Text="{Binding ResidentPhone}" FontFamily="Segoe UI" FontSize="13" Foreground="#64748b" VerticalAlignment="Center"/>
+                                            <Border Grid.Column="4" Style="{StaticResource ActiveBadge}" VerticalAlignment="Center" HorizontalAlignment="Left">
+                                                <TextBlock Text="Active" FontFamily="Segoe UI" FontSize="12" FontWeight="SemiBold" Foreground="#16a34a"/>
+                                            </Border>
+                                            <StackPanel Grid.Column="5" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right">
+                                                <Button Content="View Info" Style="{StaticResource ViewInfoButton}" Height="32" Margin="0,0,8,0"/>
+                                                <Button Content="Remove" Style="{StaticResource RemoveButton}" Height="32" Click="RemoveResident"/>
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                       
+
+                        
+
+                        
+
+                        
+
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
+        </Border>
+
+    </Canvas>
+</UserControl>

@@ -218,12 +218,12 @@ namespace VecinoBuildingMangementWebService.Controllers
         }
 
         [HttpPost]
-        public bool ChangeRequestStatus(string status,string requestId)
+        public bool ChangeRequestStatus([FromBody] StatusViewModel model)
         {
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
-                return this.repositoryUOW.ServiceRequestRepository.UpdateStatus(status, requestId);
+                return this.repositoryUOW.ServiceRequestRepository.UpdateStatus(model.Status, model.RequestId);
             }
             catch (Exception ex)
             {
@@ -236,13 +236,13 @@ namespace VecinoBuildingMangementWebService.Controllers
         }
 
         [HttpGet]
-        public ManageResidentViewModel ManageResident()
+        public ManageResidentViewModel ManageResident(string buildingId)
         {
             ManageResidentViewModel viewModel = new ManageResidentViewModel();
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
-                viewModel.Residents = this.repositoryUOW.ResidentRepository.GetAll();
+                viewModel.Residents = this.repositoryUOW.ResidentRepository.GetResidentByBuilding(buildingId);
                 viewModel.TotalResidents = viewModel.Residents.Count;
                 return viewModel;
             }

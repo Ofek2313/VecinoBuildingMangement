@@ -63,6 +63,7 @@ namespace BuildingManagementWsClient
                         
                         JsonSerializerOptions options = new JsonSerializerOptions();
                         options.PropertyNameCaseInsensitive = true;
+                        
                         T model = JsonSerializer.Deserialize<T>(result, options);
                         return model;
 

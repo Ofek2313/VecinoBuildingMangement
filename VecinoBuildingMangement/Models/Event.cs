@@ -15,6 +15,8 @@ namespace VecinoBuildingMangement.Models
         string eventDescription;
         string eventTypeId;
         string eventImage;
+        string startTime;
+        string endTime;
         string buildingId;
         
 
@@ -74,7 +76,18 @@ namespace VecinoBuildingMangement.Models
                     eventImage = value;
                 }
         }
-   
+        public string StartTime
+        {
+            get { return startTime; }
+            set { this.startTime = value; }
+        }
+
+        public string EndTime
+        {
+            get{ return endTime; }
+            set { this.endTime = value; }
+        }
+
         public string BuildingId
         {
             get { return buildingId; }

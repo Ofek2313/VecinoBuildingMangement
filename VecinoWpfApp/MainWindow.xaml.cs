@@ -1,4 +1,4 @@
-﻿using System.Text;
+﻿    using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -22,6 +22,7 @@ namespace VecinoWpfApp
         Announcement announcement;
         Events events;
         Polls polls;
+        Residents residents;
 
         public static readonly string BuildingId;
         
@@ -99,6 +100,12 @@ namespace VecinoWpfApp
                 polls = new Polls();
             this.frameMain.Content = polls;
         }
+        private void viewResidents()
+        {
+            if(this.residents == null)
+                residents = new Residents();
+            this.frameMain.Content = residents;
+        }
         private void HyperlinkRequests_Click(object sender, RoutedEventArgs e)
         {
             ViewRequests();
@@ -137,6 +144,7 @@ namespace VecinoWpfApp
 
         private void Hyperlinkresident_Click(object sender, RoutedEventArgs e)
         {
+            viewResidents();
             setActive(resNav);
         }
     }

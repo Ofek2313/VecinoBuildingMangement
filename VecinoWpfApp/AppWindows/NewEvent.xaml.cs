@@ -34,7 +34,7 @@ namespace VecinoWpfApp.AppWindows
             InitializeComponent();
             GetEventTypes();
         }
-        private async Task GetEventTypes()
+        private async void GetEventTypes()
         {
             ApiClient<CreateEvent> client = new ApiClient<CreateEvent> ();
             client.Scheme = "http";
@@ -76,6 +76,8 @@ namespace VecinoWpfApp.AppWindows
             Newevent.EventDate = EventDatePicker.SelectedDate.Value.ToString("dd/MM/yyyy");
             Newevent.EventImage = System.IO.Path.GetExtension(this.imagePath);
             Newevent.EventTypeId = TypeComboBox.SelectedValue.ToString();
+            Newevent.StartTime = ((ComboBoxItem)StartTimeComboBox.SelectedItem).Content.ToString();
+            Newevent.EndTime = ((ComboBoxItem)EndTimeComboBox.SelectedItem).Content.ToString();
             Newevent.BuildingId = "1";
 
             Newevent.Validate();

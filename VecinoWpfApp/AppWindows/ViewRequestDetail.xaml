@@ -1,0 +1,418 @@
+﻿
+<Window x:Class="VecinoWpfApp.AppWindows.ViewRequestDetail"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+          xmlns:local="clr-namespace:VecinoWpfApp.AppWindows"
+        Title="Service Request Details"
+        Width="680" Height="700"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent">
+
+    <Window.Resources>
+
+        <!-- ── Divider style ── -->
+        <Style x:Key="Divider" TargetType="Separator">
+            <Setter Property="Background" Value="#e5e7eb"/>
+            <Setter Property="Height" Value="1"/>
+            <Setter Property="Margin" Value="0,18,0,18"/>
+        </Style>
+
+        <!-- ── Section Label ── -->
+        <Style x:Key="SectionLabel" TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="#9ca3af"/>
+            <Setter Property="Margin" Value="0,0,0,6"/>
+          
+        </Style>
+
+        <!-- ── Value Text ── -->
+        <Style x:Key="ValueText" TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="#1f2937"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+        </Style>
+
+        <!-- ── Action Button (Orange) ── -->
+        <Style x:Key="ActionBtn" TargetType="Button">
+            <Setter Property="Background" Value="#ff8c42"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Padding" Value="22,10"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="8"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#ff7a2e"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- ── Secondary Button (Grey) ── -->
+        <Style x:Key="SecondaryBtn" TargetType="Button">
+            <Setter Property="Background" Value="#f3f4f6"/>
+            <Setter Property="Foreground" Value="#4b5563"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Padding" Value="22,10"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="8"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#e5e7eb"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </Window.Resources>
+
+    <!-- ── Drop shadow wrapper ── -->
+    <Border Margin="12" CornerRadius="16" Background="White" MouseDown="Border_MouseDown">
+        <Border.Effect>
+            <DropShadowEffect Color="Black" Opacity="0.14" BlurRadius="32" ShadowDepth="4" Direction="270"/>
+        </Border.Effect>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <!-- Header -->
+                <RowDefinition Height="Auto"/>
+                <!-- Status bar -->
+                <RowDefinition Height="*"/>
+                <!-- Body -->
+                <RowDefinition Height="Auto"/>
+                <!-- Footer -->
+            </Grid.RowDefinitions>
+
+            <!-- ════════════════════════════════════════
+                 ROW 0 · HEADER
+            ════════════════════════════════════════ -->
+            <Border Grid.Row="0" CornerRadius="16,16,0,0" Padding="30,24,24,24" >
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Color="#fff4e6" Offset="0"/>
+                        <GradientStop Color="#ffedd5" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Left: icon + title -->
+                    <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                        <Border Width="46" Height="46" Background="#ff8c42" CornerRadius="12" Margin="0,0,16,0">
+                            <TextBlock Text="🔧" FontSize="22"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"/>
+                        </Border>
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Text="Service Request Details"
+                                       FontFamily="Segoe UI" FontSize="20" FontWeight="Bold"
+                                       Foreground="#2c3e50"/>
+                            <TextBlock Text="REQ-2025-00148"
+                                       FontFamily="Segoe UI" FontSize="12"
+                                       Foreground="#9ca3af" Margin="0,2,0,0"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <!-- Close button -->
+                    <Button Grid.Column="1" x:Name="btnClose"
+                            Width="34" Height="34"
+                            VerticalAlignment="Top"
+                            Cursor="Hand" Click="btnClose_Click"
+                            >
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border Background="#f3f4f6" CornerRadius="8" x:Name="closeBg">
+                                    <TextBlock Text="✕" FontSize="14" FontWeight="SemiBold"
+                                               Foreground="#6b7280"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="closeBg" Property="Background" Value="#fee2e2"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                </Grid>
+            </Border>
+
+            <!-- ════════════════════════════════════════
+                 ROW 1 · STATUS BAR
+            ════════════════════════════════════════ -->
+            <Border Grid.Row="1" Background="#fafafa"
+                    BorderBrush="#e5e7eb" BorderThickness="0,1,0,1"
+                    Padding="30,14" >
+                <StackPanel Orientation="Horizontal">
+
+                    <!-- Status Badge -->
+                    <Border Background="#fff4e6" CornerRadius="20" Padding="14,6" Margin="0,0,12,0">
+                        <StackPanel Orientation="Horizontal">
+                            <Ellipse Width="8" Height="8" Fill="#ff8c42"
+                                     VerticalAlignment="Center" Margin="0,0,7,0"/>
+                            <TextBlock Text="{Binding RequestStatus}"
+                                       FontFamily="Segoe UI" FontSize="12" FontWeight="SemiBold"
+                                       Foreground="#ff8c42" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Priority Badge -->
+                    <Border Background="#fef9c3" CornerRadius="20" Padding="14,6" Margin="0,0,12,0">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="⚡" FontSize="11" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                            <TextBlock Text="High Priority"
+                                       FontFamily="Segoe UI" FontSize="12" FontWeight="SemiBold"
+                                       Foreground="#b45309" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Category Badge -->
+                    <Border Background="#ede9fe" CornerRadius="20" Padding="14,6">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="🏠" FontSize="11" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                            <TextBlock Text="Maintenance"
+                                       FontFamily="Segoe UI" FontSize="12" FontWeight="SemiBold"
+                                       Foreground="#7c3aed" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+
+                </StackPanel>
+            </Border>
+
+            <!-- ════════════════════════════════════════
+                 ROW 2 · BODY (scrollable)
+            ════════════════════════════════════════ -->
+            <ScrollViewer Grid.Row="2"
+                          VerticalScrollBarVisibility="Auto"
+                          Padding="30,24,30,0">
+                <StackPanel>
+
+                    <!-- ─ Request Title ─ -->
+                    <TextBlock Style="{StaticResource SectionLabel}" Text="REQUEST TITLE"/>
+                    <TextBlock Style="{StaticResource ValueText}"
+                               Text="{Binding RequestTitle}"
+                               FontSize="17" FontWeight="SemiBold"/>
+
+                    <Separator Style="{StaticResource Divider}"/>
+
+                    <!-- ─ Description ─ -->
+                    <TextBlock Style="{StaticResource SectionLabel}" Text="DESCRIPTION"/>
+                    <TextBlock Style="{StaticResource ValueText}"
+                               Text="{Binding RequestMessage}"
+                               LineHeight="22"/>
+
+                    <Separator Style="{StaticResource Divider}"/>
+
+                    <!-- ─ Two-column info ─ -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Left column -->
+                        <StackPanel Grid.Column="0" Margin="0,0,20,0">
+
+                            <TextBlock Style="{StaticResource SectionLabel}" Text="SUBMITTED BY"/>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,18">
+                                <Border Width="32" Height="32" CornerRadius="16"
+                                        Background="#ff8c42" Margin="0,0,10,0">
+                                    <TextBlock Text="JD" FontSize="12" FontWeight="Bold"
+                                               Foreground="White"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"/>
+                                </Border>
+                                <StackPanel VerticalAlignment="Center">
+                                    <TextBlock Text="John Doe"
+                                               FontFamily="Segoe UI" FontSize="14" FontWeight="SemiBold"
+                                               Foreground="#1f2937"/>
+                                    <TextBlock Text="john.doe@email.com"
+                                               FontFamily="Segoe UI" FontSize="12"
+                                               Foreground="#9ca3af"/>
+                                </StackPanel>
+                            </StackPanel>
+
+                            <TextBlock Style="{StaticResource SectionLabel}" Text="UNIT NUMBER"/>
+                            <TextBlock Style="{StaticResource ValueText}" Text="Unit 301" Margin="0,0,0,18"/>
+
+                            <TextBlock Style="{StaticResource SectionLabel}" Text="DATE SUBMITTED"/>
+                            <TextBlock Style="{StaticResource ValueText}" Text="February 24, 2025"/>
+
+                        </StackPanel>
+
+                        <!-- Right column -->
+                        <StackPanel Grid.Column="1">
+
+                            <TextBlock Style="{StaticResource SectionLabel}" Text="ASSIGNED TO"/>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,18">
+                                <Border Width="32" Height="32" CornerRadius="16"
+                                        Background="#5b9cf5" Margin="0,0,10,0">
+                                    <TextBlock Text="MT" FontSize="12" FontWeight="Bold"
+                                               Foreground="White"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"/>
+                                </Border>
+                                <StackPanel VerticalAlignment="Center">
+                                    <TextBlock Text="Mike Thompson"
+                                               FontFamily="Segoe UI" FontSize="14" FontWeight="SemiBold"
+                                               Foreground="#1f2937"/>
+                                    <TextBlock Text="Maintenance Staff"
+                                               FontFamily="Segoe UI" FontSize="12"
+                                               Foreground="#9ca3af"/>
+                                </StackPanel>
+                            </StackPanel>
+
+                            <TextBlock Style="{StaticResource SectionLabel}" Text="BUILDING"/>
+                            <TextBlock Style="{StaticResource ValueText}" Text="Tower A — Floor 3" Margin="0,0,0,18"/>
+
+                            <TextBlock Style="{StaticResource SectionLabel}" Text="LAST UPDATED"/>
+                            <TextBlock Style="{StaticResource ValueText}" Text="February 25, 2025"/>
+
+                        </StackPanel>
+                    </Grid>
+
+                    <Separator Style="{StaticResource Divider}"/>
+
+                    <!-- ─ Timeline ─ -->
+                    <TextBlock Style="{StaticResource SectionLabel}" Text="ACTIVITY TIMELINE"/>
+
+                    <!-- Event 1 -->
+                    <Grid Margin="0,0,0,14">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" Width="40" HorizontalAlignment="Center">
+                            <Border Width="14" Height="14" CornerRadius="7"
+                                    Background="#ff8c42" HorizontalAlignment="Center"/>
+                            <Rectangle Width="2" Height="30" Fill="#e5e7eb"
+                                       HorizontalAlignment="Center" Margin="0,2,0,0"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Margin="8,0,0,0">
+                            <TextBlock Text="Request Submitted"
+                                       FontFamily="Segoe UI" FontSize="13" FontWeight="SemiBold"
+                                       Foreground="#1f2937"/>
+                            <TextBlock Text="Feb 24, 2025 · 10:32 AM"
+                                       FontFamily="Segoe UI" FontSize="12"
+                                       Foreground="#9ca3af" Margin="0,2,0,0"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- Event 2 -->
+                    <Grid Margin="0,0,0,14">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" Width="40" HorizontalAlignment="Center">
+                            <Border Width="14" Height="14" CornerRadius="7"
+                                    Background="#5b9cf5" HorizontalAlignment="Center"/>
+                            <Rectangle Width="2" Height="30" Fill="#e5e7eb"
+                                       HorizontalAlignment="Center" Margin="0,2,0,0"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Margin="8,0,0,0">
+                            <TextBlock Text="Assigned to Mike Thompson"
+                                       FontFamily="Segoe UI" FontSize="13" FontWeight="SemiBold"
+                                       Foreground="#1f2937"/>
+                            <TextBlock Text="Feb 24, 2025 · 02:15 PM"
+                                       FontFamily="Segoe UI" FontSize="12"
+                                       Foreground="#9ca3af" Margin="0,2,0,0"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- Event 3 (pending — no line below) -->
+                    <Grid Margin="0,0,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" Width="40" HorizontalAlignment="Center">
+                            <Border Width="14" Height="14" CornerRadius="7"
+                                    Background="#d1d5db" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Margin="8,0,0,0">
+                            <TextBlock Text="Awaiting Resolution"
+                                       FontFamily="Segoe UI" FontSize="13" FontWeight="SemiBold"
+                                       Foreground="#9ca3af"/>
+                            <TextBlock Text="Estimated: Feb 27, 2025"
+                                       FontFamily="Segoe UI" FontSize="12"
+                                       Foreground="#d1d5db" Margin="0,2,0,0"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <Rectangle Height="24"/>
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- ════════════════════════════════════════
+                 ROW 3 · FOOTER ACTIONS
+            ════════════════════════════════════════ -->
+            <Border Grid.Row="3"
+                    BorderBrush="#e5e7eb" BorderThickness="0,1,0,0"
+                    CornerRadius="0,0,16,16"
+                    Background="#fafafa"
+                    Padding="30,18">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                        <TextBlock Text="REQ-2025-00148"
+                                   FontFamily="Segoe UI Semibold" FontSize="13"
+                                   Foreground="#6b7280"/>
+                        <TextBlock Text="Submitted 2 days ago"
+                                   FontFamily="Segoe UI" FontSize="12"
+                                   Foreground="#9ca3af" Margin="0,2,0,0"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1" Orientation="Horizontal">
+                        <Button Content="Mark In Progress"
+                                Style="{StaticResource ActionBtn}"
+                                Margin="0,0,10,0"/>
+                        <Button Content="Close"
+                                Style="{StaticResource SecondaryBtn}"
+                                x:Name="btnCloseFooter"
+                              />
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+        </Grid>
+    </Border>
+</Window>

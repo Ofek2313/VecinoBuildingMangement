@@ -166,6 +166,7 @@ namespace VecinoBuildingMangementWebService.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.ToString());
                 return false;
             }
             finally
@@ -490,7 +491,7 @@ namespace VecinoBuildingMangementWebService.Controllers
         }
 
         [HttpPost]
-        public bool UploadPhoto([FromForm] string model, IFormFile file) //Uploads a photo to the webserver and updates the database
+        public bool UploadPhoto([FromForm] string model, IFormFile file) //Uploads a photo to the webserver and updates the database, since its multipart I need to use FromForm
         {
             try
             {
