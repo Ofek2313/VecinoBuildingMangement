@@ -10,7 +10,7 @@
              FontFamily="Segoe UI" d:Height="1080" d:Width="1645">
 
     <UserControl.Resources>
-     
+        
 
         <!-- Colors -->
         <SolidColorBrush x:Key="PageBg"        Color="#EEF1F6"/>
@@ -25,6 +25,7 @@
         <SolidColorBrush x:Key="TextMuted"     Color="#B0BAC9"/>
         <SolidColorBrush x:Key="DividerColor"  Color="#E8ECF2"/>
 
+        
         <!-- Card Style -->
         <Style x:Key="PollCard" TargetType="Border">
             <Setter Property="Background"    Value="{StaticResource CardBg}"/>
@@ -92,6 +93,9 @@
         <conv:StatusConverter x:Key="statusConverter">
 
         </conv:StatusConverter>
+        <conv:PrecentageToWidth x:Key="precentageToWidth">
+            
+        </conv:PrecentageToWidth>
     </UserControl.Resources>
 
     <Grid Background="{StaticResource PageBg}">
@@ -145,7 +149,7 @@
                                 FontSize="20" HorizontalAlignment="Center"
                                 VerticalAlignment="Center" Foreground="#5B8FD4"/>
                                             </Border>
-
+                                            
                                             <StackPanel Grid.Column="1" VerticalAlignment="Center">
                                             <TextBlock Text="{Binding poll.PollTitle}"
                                 FontSize="17" FontWeight="Bold"
@@ -184,14 +188,15 @@
 
                                         <!-- Result bar: Yes — 60% -->
                                     <ListView ItemsSource="{Binding options}" HorizontalContentAlignment="Stretch" Background="Transparent" BorderThickness="0">
+                                       
                                         <ListView.ItemTemplate>
                                             <DataTemplate>
                                                             <Grid Margin="0,0,0,10" Height="46">
                                                                 <Border CornerRadius="8" Background="{StaticResource BarEmpty}"/>
-                                                                <Grid>
+                                                                <Grid HorizontalAlignment="Stretch" >
                                                                     <Grid.ColumnDefinitions>
-                                                                        <ColumnDefinition Width="3*"/>
-                                                                        <ColumnDefinition Width="2*"/>
+                                                            <ColumnDefinition Width="{Binding percentage,Converter={StaticResource precentageToWidth}}"/>
+                                                            <ColumnDefinition Width="{Binding percentage,Converter={StaticResource precentageToWidth},ConverterParameter=Second}"/>
                                                                     </Grid.ColumnDefinitions>
                                                                     <Border Grid.Column="0" CornerRadius="8,0,0,8"
                                                                         Background="{StaticResource BarFill}"/>
@@ -199,7 +204,7 @@
                                                     <TextBlock Text="{Binding option.OptionText}" FontSize="14" FontWeight="SemiBold"
                                                                     Foreground="{StaticResource TextPrimary}"
                                                                     VerticalAlignment="Center" Margin="16,0,0,0"/>
-                                                                <TextBlock Text="60%" FontSize="14" FontWeight="Bold"
+                                                    <TextBlock Text="{Binding percentage}" FontSize="14" FontWeight="Bold"
                                                                 Foreground="{StaticResource TextPrimary}"
                                                                 VerticalAlignment="Center" HorizontalAlignment="Right"
                                                                 Margin="0,0,16,0"/>

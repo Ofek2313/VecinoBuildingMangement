@@ -15,6 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using VecinoBuildingMangement.ViewModels;
 using VecinoWpfApp.AppWindows;
+using VecinoWpfApp;
 
 namespace VecinoWpfApp.UserControls
 {
@@ -25,6 +26,7 @@ namespace VecinoWpfApp.UserControls
     {
         ManagePolls managePolls;
         NewPoll newPoll;
+        
         public Polls()
         {
             InitializeComponent();
@@ -39,11 +41,11 @@ namespace VecinoWpfApp.UserControls
             client.Path = "api/Admin/ManagePolls";
             client.AddParameter("buildingId", "1");
             managePolls = await client.GetAsync();
-
+          
             listViewPolls.ItemsSource = this.managePolls.PollviewModel;
            
             this.DataContext = this.managePolls;
-            
+         
         }
         private void ViewCreatePollWindow()
         {
@@ -55,6 +57,7 @@ namespace VecinoWpfApp.UserControls
         }
         private void ButtonPoll_Click(object sender, RoutedEventArgs e)
         {
+            
             ViewCreatePollWindow();
         }
     }

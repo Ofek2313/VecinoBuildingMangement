@@ -24,14 +24,27 @@ namespace VecinoWpfApp
         Polls polls;
         Residents residents;
 
+        bool isLoggedIn;
+
         public static readonly string BuildingId;
         
+        private void HyperLinkState()
+        {
+            this.HyperlinkDashboard.IsEnabled = isLoggedIn;
+            this.HyperlinkRequests.IsEnabled = isLoggedIn;
+            this.HyperLinkAnnouncments.IsEnabled = isLoggedIn;
+            this.HyperlinkFinance.IsEnabled = isLoggedIn;    
+            this.HyperlinkPoll.IsEnabled = isLoggedIn;
+            this.Hyperlinkresident.IsEnabled = isLoggedIn;
+            this.HyperlinkEvent.IsEnabled = isLoggedIn;
+        }
 
         public MainWindow()
         {
             InitializeComponent();
             ViewDashboard();
             setActive(dashboardNav);
+          
         }
         private void setActive(Border activeBorder)
         {

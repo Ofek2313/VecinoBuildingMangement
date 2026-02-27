@@ -74,7 +74,7 @@ namespace VecinoWpfApp.AppWindows
             Newevent.EventTitle = TitleInput.Text;
             Newevent.EventDescription = DescriptionInput.Text;
             Newevent.EventDate = EventDatePicker.SelectedDate.Value.ToString("dd/MM/yyyy");
-            Newevent.EventImage = System.IO.Path.GetExtension(this.imagePath);
+            //Newevent.EventImage = System.IO.Path.GetExtension(this.imagePath);
             Newevent.EventTypeId = TypeComboBox.SelectedValue.ToString();
             Newevent.StartTime = ((ComboBoxItem)StartTimeComboBox.SelectedItem).Content.ToString();
             Newevent.EndTime = ((ComboBoxItem)EndTimeComboBox.SelectedItem).Content.ToString();
@@ -90,7 +90,7 @@ namespace VecinoWpfApp.AppWindows
                 client.Path = "api/Admin/AddUpComingEvent";
                 Stream stream = new FileStream(this.imagePath,FileMode.Open,FileAccess.Read);
                 
-                response = await client.PostAsync(Newevent,stream);
+                response = await client.PostAsync(Newevent,stream,imagePath);
             }
             if(response)
             {

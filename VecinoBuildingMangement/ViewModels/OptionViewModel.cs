@@ -11,5 +11,7 @@ namespace VecinoBuildingMangement.ViewModels
     {
         public Option option { get; set; }
         public int voted { get; set; }
+
+        public double percentage { get; set; }
     }
 }

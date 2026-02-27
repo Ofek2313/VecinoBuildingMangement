@@ -116,7 +116,7 @@ namespace VecinoBuildingMangementWebService.Controllers
                 this.repositoryUOW.DbHelperOleDb.OpenTransaction();
                 this.repositoryUOW.EventRepository.Create(@event);
                 string eventId = this.repositoryUOW.EventRepository.GetLastId();
-                string ext = @event.EventImage.TrimStart('.');
+                string ext = Path.GetExtension(file.FileName).TrimStart('.').ToLower();
                 bool response = this.repositoryUOW.EventRepository.UpdatePhotoById(eventId, ext);
 
                 string fileName = "event" + eventId + "." + ext;
@@ -353,7 +353,6 @@ namespace VecinoBuildingMangementWebService.Controllers
         {
             ManagePolls managePolls = new ManagePolls();
             List<PollViewModel> pollviewModel = new List<PollViewModel>();
-
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
@@ -361,15 +360,30 @@ namespace VecinoBuildingMangementWebService.Controllers
                 foreach (Poll poll in polls)
                 {
                     PollViewModel viewModel = new PollViewModel();
-
+                    int totalVotes = 0;
+                  
                     viewModel.poll = poll;
                     List<Option> options = this.repositoryUOW.OptionRepository.GetOptionsByPollId(poll.PollId);
+                    foreach (Option option in options)
+                    {
+                        totalVotes += this.repositoryUOW.VoteRepository.CountVoteByOption(option.OptionId);
+                    }
+
                     foreach (Option option in options)
                     {
                         OptionViewModel optionViewModel = new OptionViewModel();
                         optionViewModel.option = option;
                         optionViewModel.voted = this.repositoryUOW.VoteRepository.CountVoteByOption(option.OptionId);
+
                         //optionViewModel.voted = CalcVote(options, option.OptionId);
+                        if (totalVotes > 0)
+                        {
+                           optionViewModel.percentage = (double)optionViewModel.voted / totalVotes * 100;
+                        }
+                        else
+                        {
+                            optionViewModel.percentage = 0;
+                        }
                         viewModel.options.Add(optionViewModel);
                     }
                     pollviewModel.Add(viewModel);
@@ -379,8 +393,8 @@ namespace VecinoBuildingMangementWebService.Controllers
                 managePolls.PollviewModel = pollviewModel;
                 managePolls.PollNumbers = pollviewModel.Count;
 
-                int residents = this.repositoryUOW.ResidentRepository.CountResidentByBuildingId(buildingId);
-                int votes = this.repositoryUOW.VoteRepository.CountVotesByBuilding(buildingId);
+                //int residents = this.repositoryUOW.ResidentRepository.CountResidentByBuildingId(buildingId);
+                //int votes = this.repositoryUOW.VoteRepository.CountVotesByBuilding(buildingId);
 
                 double participationRate = 0;
               

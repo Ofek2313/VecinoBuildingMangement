@@ -155,7 +155,7 @@ namespace BuildingManagementWsClient
             }
             
         }
-        public async Task<bool> PostAsync(T model, Stream file)
+        public async Task<bool> PostAsync(T model, Stream file,string fileName)
             {
                 using (HttpRequestMessage httpRequest = new HttpRequestMessage())
                 {
@@ -168,7 +168,7 @@ namespace BuildingManagementWsClient
                     multipartFormDataContent.Add(modelContent,"model");
 
                     StreamContent streamContent = new StreamContent(file); // Streamcontent becaues of the file stream
-                    multipartFormDataContent.Add(streamContent, "file", "file");
+                    multipartFormDataContent.Add(streamContent, "file", fileName);
 
                     httpRequest.Content = multipartFormDataContent;
                     using (HttpResponseMessage httpResponse = await this.httpClient.SendAsync(httpRequest))
