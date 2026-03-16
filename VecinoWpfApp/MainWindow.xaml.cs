@@ -23,6 +23,7 @@ namespace VecinoWpfApp
         Events events;
         Polls polls;
         Residents residents;
+        Finance finance;
 
         bool isLoggedIn;
 
@@ -113,11 +114,17 @@ namespace VecinoWpfApp
                 polls = new Polls();
             this.frameMain.Content = polls;
         }
-        private void viewResidents()
+        private void ViewResidents()
         {
             if(this.residents == null)
                 residents = new Residents();
             this.frameMain.Content = residents;
+        }
+        private void ViewFinance()
+        {
+            if(this.finance == null)
+                finance = new Finance();
+            this.frameMain.Content = finance;
         }
         private void HyperlinkRequests_Click(object sender, RoutedEventArgs e)
         {
@@ -134,6 +141,7 @@ namespace VecinoWpfApp
 
         private void HyperlinkFinance_Click(object sender, RoutedEventArgs e)
         {
+            ViewFinance();
             setActive(financeNav);
         }
 
@@ -157,7 +165,7 @@ namespace VecinoWpfApp
 
         private void Hyperlinkresident_Click(object sender, RoutedEventArgs e)
         {
-            viewResidents();
+            ViewResidents();
             setActive(resNav);
         }
     }

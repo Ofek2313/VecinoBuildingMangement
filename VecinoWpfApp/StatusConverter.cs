@@ -14,7 +14,7 @@ namespace VecinoWpfApp
         {
             if(value is bool isActive)
             {
-                return isActive ? "Active" : "InActive";
+                return isActive ? "Active" : "Closed";
                 
             }
 

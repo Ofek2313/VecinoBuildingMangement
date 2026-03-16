@@ -10,7 +10,6 @@
              FontFamily="Segoe UI" d:Height="1080" d:Width="1645">
 
     <UserControl.Resources>
-        
 
         <!-- Colors -->
         <SolidColorBrush x:Key="PageBg"        Color="#EEF1F6"/>
@@ -25,7 +24,6 @@
         <SolidColorBrush x:Key="TextMuted"     Color="#B0BAC9"/>
         <SolidColorBrush x:Key="DividerColor"  Color="#E8ECF2"/>
 
-        
         <!-- Card Style -->
         <Style x:Key="PollCard" TargetType="Border">
             <Setter Property="Background"    Value="{StaticResource CardBg}"/>
@@ -55,7 +53,7 @@
             <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
 
-       
+        <!-- Create Poll Button -->
         <Style x:Key="CreatePollButton" TargetType="Button">
             <Setter Property="Background"      Value="{StaticResource AccentTeal}"/>
             <Setter Property="Foreground"      Value="White"/>
@@ -90,12 +88,53 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        <conv:StatusConverter x:Key="statusConverter">
 
-        </conv:StatusConverter>
-        <conv:PrecentageToWidth x:Key="precentageToWidth">
-            
-        </conv:PrecentageToWidth>
+        <!-- ✅ NEW: Show Details Button Style -->
+        <Style x:Key="ShowDetailsButton" TargetType="Button">
+            <Setter Property="Background"        Value="Transparent"/>
+            <Setter Property="Foreground"        Value="#5B8FD4"/>
+            <Setter Property="FontSize"          Value="12"/>
+            <Setter Property="FontWeight"        Value="SemiBold"/>
+            <Setter Property="Padding"           Value="12,0"/>
+            <Setter Property="Height"            Value="30"/>
+            <Setter Property="BorderThickness"   Value="1.5"/>
+            <Setter Property="BorderBrush"       Value="#5B8FD4"/>
+            <Setter Property="Cursor"            Value="Hand"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="8"
+                                Padding="{TemplateBinding Padding}"
+                                Height="{TemplateBinding Height}">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock Text="&#xE8A9;" FontFamily="Segoe MDL2 Assets"
+                                           FontSize="11" VerticalAlignment="Center"
+                                           Margin="0,0,5,0"
+                                           Foreground="{TemplateBinding Foreground}"/>
+                                <ContentPresenter VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background"  Value="#EEF3FB"/>
+                                <Setter Property="BorderBrush" Value="#4070C0"/>
+                                <Setter Property="Foreground"  Value="#4070C0"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background"  Value="#D6E4F7"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <conv:StatusConverter x:Key="statusConverter"/>
+        <conv:PrecentageToWidth x:Key="precentageToWidth"/>
     </UserControl.Resources>
 
     <Grid Background="{StaticResource PageBg}">
@@ -104,7 +143,7 @@
                       Padding="48,36,48,40">
             <StackPanel HorizontalAlignment="Stretch">
 
-                <!-- ── Page Header ── -->
+                <!-- Page Header -->
                 <Grid Margin="0,0,0,28">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
@@ -123,111 +162,122 @@
                     <Button Grid.Column="1"
                             Content="Create Poll"
                             Style="{StaticResource CreatePollButton}"
-                            VerticalAlignment="Center" Click="ButtonPoll_Click"
-                           />
+                            VerticalAlignment="Center"
+                            Click="ButtonPoll_Click"/>
                 </Grid>
 
-
-                <ListView x:Name="listViewPolls" HorizontalContentAlignment="Stretch" Height="918" Background="Transparent" BorderThickness="0">
+                <ListView x:Name="listViewPolls" HorizontalContentAlignment="Stretch"
+                          Height="918" Background="Transparent" BorderThickness="0">
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                                <Border Style="{StaticResource PollCard}" Margin="0 25 0 0">
-                                    <StackPanel>
+                            <Border Style="{StaticResource PollCard}" Margin="0,25,0,0">
+                                <StackPanel>
 
-                                      
-                                        <Grid Margin="0,0,0,14">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto"/>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="Auto"/>
-                                            </Grid.ColumnDefinitions>
+                                    <!-- Poll Header -->
+                                    <Grid Margin="0,0,0,14">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
 
-                                            
-                                            <Border Grid.Column="0" Width="48" Height="48" CornerRadius="12"
-                         Background="{StaticResource IconBg}" Margin="0,0,16,0">
-                                                <TextBlock Text="&#xE9F9;" FontFamily="Segoe MDL2 Assets"
-                                FontSize="20" HorizontalAlignment="Center"
-                                VerticalAlignment="Center" Foreground="#5B8FD4"/>
-                                            </Border>
-                                            
-                                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                        <!-- Icon -->
+                                        <Border Grid.Column="0" Width="48" Height="48" CornerRadius="12"
+                                                Background="{StaticResource IconBg}" Margin="0,0,16,0">
+                                            <TextBlock Text="&#xE9F9;" FontFamily="Segoe MDL2 Assets"
+                                                       FontSize="20" HorizontalAlignment="Center"
+                                                       VerticalAlignment="Center" Foreground="#5B8FD4"/>
+                                        </Border>
+
+                                        <!-- Title + Description -->
+                                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
                                             <TextBlock Text="{Binding poll.PollTitle}"
-                                FontSize="17" FontWeight="Bold"
-                                Foreground="{StaticResource TextPrimary}"
-                                TextWrapping="Wrap"/>
+                                                       FontSize="17" FontWeight="Bold"
+                                                       Foreground="{StaticResource TextPrimary}"
+                                                       TextWrapping="Wrap"/>
                                             <TextBlock Text="{Binding poll.PollDescription}"
-                                FontSize="13" Margin="0,4,0,0"
-                                Foreground="{StaticResource TextSecondary}"
-                                TextWrapping="Wrap"/>
-                                            </StackPanel>
-
-                                            <Border Grid.Column="2" Style="{StaticResource VotedBadge}" Margin="16,0,0,0">
-                                                <TextBlock Text="{Binding poll.IsActive,Converter={StaticResource statusConverter}}" FontSize="12" FontWeight="SemiBold"
-                                Foreground="{StaticResource AccentTeal}"/>
-                                            </Border>
-                                        </Grid>
-
-                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
-                                            <TextBlock Text="&#xE8B7;" FontFamily="Segoe MDL2 Assets" FontSize="12"
-                            Foreground="{StaticResource TextMuted}"
-                            VerticalAlignment="Center" Margin="0,0,5,0"/>
-                                            <TextBlock Text="Amenities" Style="{StaticResource MetaText}" Margin="0,0,16,0"/>
-
-                                            <TextBlock Text="&#xE823;" FontFamily="Segoe MDL2 Assets" FontSize="12"
-                            Foreground="{StaticResource TextMuted}"
-                            VerticalAlignment="Center" Margin="0,0,5,0"/>
-                                            <TextBlock Text="30/09/2025" Style="{StaticResource MetaText}" Margin="0,0,16,0"/>
-
-                                            <TextBlock Text="&#xE902;" FontFamily="Segoe MDL2 Assets" FontSize="12"
-                            Foreground="{StaticResource TextMuted}"
-                            VerticalAlignment="Center" Margin="0,0,5,0"/>
-                                            <TextBlock Text="62 votes" Style="{StaticResource MetaText}"/>
+                                                       FontSize="13" Margin="0,4,0,0"
+                                                       Foreground="{StaticResource TextSecondary}"
+                                                       TextWrapping="Wrap"/>
                                         </StackPanel>
 
-                                        <Border Height="1" Background="{StaticResource DividerColor}" Margin="0,0,0,18"/>
+                                        <!-- ✅ NEW: Badge + Show Details button stacked -->
+                                        <StackPanel Grid.Column="2" Orientation="Horizontal"
+                                                    VerticalAlignment="Top" Margin="16,0,0,0">
 
-                                        <!-- Result bar: Yes — 60% -->
-                                    <ListView ItemsSource="{Binding options}" HorizontalContentAlignment="Stretch" Background="Transparent" BorderThickness="0">
-                                       
+                                            <Border Style="{StaticResource VotedBadge}" Margin="0,0,8,0">
+                                                <TextBlock Text="{Binding poll.IsActive, Converter={StaticResource statusConverter}}"
+                                                           FontSize="12" FontWeight="SemiBold"
+                                                           Foreground="{StaticResource AccentTeal}"/>
+                                            </Border>
+
+                                            <Button Content="Show Details"
+                                                    Style="{StaticResource ShowDetailsButton}" Click="ViewPollDetail_Click"
+                                                    
+                                                    />
+                                        </StackPanel>
+
+                                    </Grid>
+
+                                    <!-- Meta row -->
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                                        <TextBlock Text="&#xE8B7;" FontFamily="Segoe MDL2 Assets" FontSize="12"
+                                                   Foreground="{StaticResource TextMuted}"
+                                                   VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                        <TextBlock Text="Amenities" Style="{StaticResource MetaText}" Margin="0,0,16,0"/>
+
+                                        <TextBlock Text="&#xE823;" FontFamily="Segoe MDL2 Assets" FontSize="12"
+                                                   Foreground="{StaticResource TextMuted}"
+                                                   VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                        <TextBlock Text="{Binding poll.PollDate}" Style="{StaticResource MetaText}" Margin="0,0,16,0"/>
+
+                                        <TextBlock Text="&#xE902;" FontFamily="Segoe MDL2 Assets" FontSize="12"
+                                                   Foreground="{StaticResource TextMuted}"
+                                                   VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                        <TextBlock Text="62 votes" Style="{StaticResource MetaText}"/>
+                                    </StackPanel>
+
+                                    <Border Height="1" Background="{StaticResource DividerColor}" Margin="0,0,0,18"/>
+
+                                    <!-- Options bars -->
+                                    <ListView ItemsSource="{Binding options}" HorizontalContentAlignment="Stretch"
+                                              Background="Transparent" BorderThickness="0">
                                         <ListView.ItemTemplate>
                                             <DataTemplate>
-                                                            <Grid Margin="0,0,0,10" Height="46">
-                                                                <Border CornerRadius="8" Background="{StaticResource BarEmpty}"/>
-                                                                <Grid HorizontalAlignment="Stretch" >
-                                                                    <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition Width="{Binding percentage,Converter={StaticResource precentageToWidth}}"/>
-                                                            <ColumnDefinition Width="{Binding percentage,Converter={StaticResource precentageToWidth},ConverterParameter=Second}"/>
-                                                                    </Grid.ColumnDefinitions>
-                                                                    <Border Grid.Column="0" CornerRadius="8,0,0,8"
-                                                                        Background="{StaticResource BarFill}"/>
-                                                                </Grid>
-                                                    <TextBlock Text="{Binding option.OptionText}" FontSize="14" FontWeight="SemiBold"
-                                                                    Foreground="{StaticResource TextPrimary}"
-                                                                    VerticalAlignment="Center" Margin="16,0,0,0"/>
-                                                    <TextBlock Text="{Binding percentage}" FontSize="14" FontWeight="Bold"
-                                                                Foreground="{StaticResource TextPrimary}"
-                                                                VerticalAlignment="Center" HorizontalAlignment="Right"
-                                                                Margin="0,0,16,0"/>
-                                                            </Grid>
+                                                <Grid Margin="0,0,0,10" Height="46">
+                                                    <Border CornerRadius="8" Background="{StaticResource BarEmpty}"/>
+                                                    <Grid HorizontalAlignment="Stretch">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="{Binding percentage, Converter={StaticResource precentageToWidth}}"/>
+                                                            <ColumnDefinition Width="{Binding percentage, Converter={StaticResource precentageToWidth}, ConverterParameter=Second}"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <Border Grid.Column="0" CornerRadius="8,0,0,8"
+                                                                Background="{StaticResource BarFill}"/>
+                                                    </Grid>
+                                                    <TextBlock Text="{Binding option.OptionText}"
+                                                               FontSize="14" FontWeight="SemiBold"
+                                                               Foreground="{StaticResource TextPrimary}"
+                                                               VerticalAlignment="Center" Margin="16,0,0,0"/>
+                                                    <TextBlock Text="{Binding percentage}"
+                                                               FontSize="14" FontWeight="Bold"
+                                                               Foreground="{StaticResource TextPrimary}"
+                                                               VerticalAlignment="Center" HorizontalAlignment="Right"
+                                                               Margin="0,0,16,0"/>
+                                                </Grid>
                                             </DataTemplate>
                                         </ListView.ItemTemplate>
                                     </ListView>
-                                       
 
-                                        
+                                    <TextBlock Text="You are viewing results as an administrator."
+                                               FontSize="12" FontStyle="Italic"
+                                               Foreground="{StaticResource TextMuted}"
+                                               Margin="0,10,0,0" HorizontalAlignment="Center"/>
 
-                                     
-                                        <TextBlock Text="You are viewing results as an administrator."
-                        FontSize="12" FontStyle="Italic"
-                        Foreground="{StaticResource TextMuted}"
-                        Margin="0,10,0,0" HorizontalAlignment="Center"/>
-
-                                    </StackPanel>
-                                </Border>
+                                </StackPanel>
+                            </Border>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
-               
 
             </StackPanel>
         </ScrollViewer>

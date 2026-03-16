@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
             xmlns:local="clr-namespace:VecinoWpfApp.AppWindows"
         Title="Create Poll"
-        Width="580" Height="700"
+        Width="580" Height="850"
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize"
         Background="#EEF1F6"
@@ -47,7 +47,33 @@
                 </Setter.Value>
             </Setter>
         </Style>
-
+        <Style x:Key="AddOptionButton" TargetType="Button">
+            <Setter Property="Background"      Value="Transparent"/>
+            <Setter Property="BorderBrush"     Value="{StaticResource AccentTeal}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Foreground"      Value="{StaticResource AccentTeal}"/>
+            <Setter Property="FontSize"        Value="13"/>
+            <Setter Property="FontWeight"      Value="SemiBold"/>
+            <Setter Property="Height"          Value="36"/>
+            <Setter Property="Cursor"          Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="8">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#E8FBF4"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
         <Style x:Key="InputCombo" TargetType="ComboBox">
             <Setter Property="Height"          Value="52"/>
             <Setter Property="FontSize"        Value="15"/>
@@ -196,7 +222,7 @@
 
             <!-- Poll Title -->
             <TextBlock Text="POLL TITLE" Style="{StaticResource FieldLabel}"/>
-            <TextBox x:Name="TxtTitle"
+            <TextBox x:Name="pollTitle"
                      Style="{StaticResource InputField}"
                      Margin="0,0,0,18"/>
 
@@ -206,7 +232,7 @@
                     BorderBrush="#cbd5e1"
                     BorderThickness="1"
                     Margin="0,0,0,18">
-                <TextBox x:Name="TxtDescription"
+                <TextBox x:Name="pollDescription"
                          Background="Transparent"
                          BorderThickness="0"
                          Padding="14,10"
@@ -228,7 +254,7 @@
 
                 <StackPanel Grid.Column="1">
                     <TextBlock Text="CLOSING DATE" Style="{StaticResource FieldLabel}"/>
-                    <DatePicker x:Name="DpClosingDate"
+                    <DatePicker x:Name="pollDate"
                     Height="52" FontSize="15"
                     Background="#f8fafc"
                     BorderBrush="#cbd5e1"
@@ -237,16 +263,20 @@
             </Grid>
 
             <!-- Options -->
-            <TextBlock Text="OPTIONS" Style="{StaticResource FieldLabel}"/>
-            <TextBox x:Name="TxtOption1"
-                     Style="{StaticResource InputField}"
-                     Margin="0,0,0,10" Height="30"/>
-            <TextBox x:Name="TxtOption2"
-                     Style="{StaticResource InputField}"
-                     Margin="0,0,0,24" Height="30"/>
+            <StackPanel x:Name="optionsPanel" Height="260">
+                <TextBlock Text="OPTIONS" Style="{StaticResource FieldLabel}"/>
+                <TextBox Style="{StaticResource InputField}" Margin="0,0,0,8" Height="38"/>
+                <TextBox Style="{StaticResource InputField}" Margin="0,0,0,10" Height="38"/>
+
+                <Button Content="+ Add Option"
+                        x:Name="addOptionButton"
+                Style="{StaticResource AddOptionButton}"
+                Margin="0,0,0,20" Click="AddOption_Click"/>
+            </StackPanel>
+           
 
             <!-- Action buttons -->
-            <Grid>
+            <Grid Margin="0 0 0 0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="12"/>
@@ -258,7 +288,7 @@
                       />
 
                 <Button Grid.Column="2" Content="Create Poll"
-                        Style="{StaticResource SaveButton}"
+                        Style="{StaticResource SaveButton}" Click="CreatePoll_Click"
                        />
             </Grid>
             

@@ -338,7 +338,7 @@ namespace VecinoWebApplication.Controllers
             viewModelAvatar.ResidentId = residentId;
             viewModelAvatar.Extension = Path.GetExtension(file.FileName).TrimStart('.');
 
-            bool result = await client.PostAsync(viewModelAvatar, file.OpenReadStream());
+            bool result = await client.PostAsync(viewModelAvatar, file.OpenReadStream(),file.FileName);
 
             return RedirectToAction("ViewProfile");
         }

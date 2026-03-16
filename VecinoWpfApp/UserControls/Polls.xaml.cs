@@ -13,9 +13,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using VecinoBuildingMangement.Models;
 using VecinoBuildingMangement.ViewModels;
-using VecinoWpfApp.AppWindows;
 using VecinoWpfApp;
+using VecinoWpfApp.AppWindows;
 
 namespace VecinoWpfApp.UserControls
 {
@@ -26,6 +27,7 @@ namespace VecinoWpfApp.UserControls
     {
         ManagePolls managePolls;
         NewPoll newPoll;
+        PollDetail pollDetail;
         
         public Polls()
         {
@@ -39,7 +41,7 @@ namespace VecinoWpfApp.UserControls
             client.Host = "localhost";
             client.Port = 5269;
             client.Path = "api/Admin/ManagePolls";
-            client.AddParameter("buildingId", "1");
+            client.AddParameter("buildingId", Application.Current.Properties["buildingId"].ToString());
             managePolls = await client.GetAsync();
           
             listViewPolls.ItemsSource = this.managePolls.PollviewModel;
@@ -47,18 +49,38 @@ namespace VecinoWpfApp.UserControls
             this.DataContext = this.managePolls;
          
         }
-        private void ViewCreatePollWindow()
+        private bool? ViewCreatePollWindow()
         {
             if(this.newPoll == null)
                 this.newPoll = new NewPoll();
             this.newPoll.Owner = Window.GetWindow(this);
             bool? response = this.newPoll.ShowDialog();
             this.newPoll = null;
+            return response;
         }
-        private void ButtonPoll_Click(object sender, RoutedEventArgs e)
+        private  async void ButtonPoll_Click(object sender, RoutedEventArgs e)
         {
-            
-            ViewCreatePollWindow();
+            bool? response = ViewCreatePollWindow();
+            if (response == true)
+                await GetPollsList();
+        }
+
+
+        private bool? ViewPollDetailWindow(object sender)
+        {
+            PollViewModel pollViewModel = (sender as Button).DataContext as PollViewModel;
+            if (this.pollDetail == null)
+                this.pollDetail = new PollDetail(pollViewModel);
+            this.pollDetail.Owner = Window.GetWindow(this);
+            bool? response = this.pollDetail.ShowDialog();
+            this.pollDetail = null;
+            return response;
+
+        }
+
+        private void ViewPollDetail_Click(object sender, RoutedEventArgs e)
+        {
+            bool? response = ViewPollDetailWindow(sender);
         }
     }
 }

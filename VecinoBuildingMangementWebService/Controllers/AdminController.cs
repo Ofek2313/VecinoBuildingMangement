@@ -13,7 +13,7 @@ namespace VecinoBuildingMangementWebService.Controllers
     [Route("api/[controller]/[action]")]
     [ApiController]
 
-   
+
     public class AdminController : ControllerBase
     {
         RepositoryUOW repositoryUOW;
@@ -56,10 +56,10 @@ namespace VecinoBuildingMangementWebService.Controllers
                 foreach (string residentId in sendNotificationViewModel.ResidentIds)
                 {
 
-                 
+
 
                     string sql = @"Insert Into ResidentNotification(ResidentId,NotificationId) Values(@ResidentId,@NotificationId)";
-                    this.repositoryUOW.DbHelperOleDb.AddParameter("@ResidentId", residentId)    ;
+                    this.repositoryUOW.DbHelperOleDb.AddParameter("@ResidentId", residentId);
                     this.repositoryUOW.DbHelperOleDb.AddParameter("@NotificationId", id);
                     int rows = this.repositoryUOW.DbHelperOleDb.Insert(sql);
                     if (rows != 1)
@@ -67,8 +67,8 @@ namespace VecinoBuildingMangementWebService.Controllers
                         this.repositoryUOW.DbHelperOleDb.RollBack();
                         return false;
                     }
-                        
-                   
+
+
 
                 }
                 this.repositoryUOW.DbHelperOleDb.Commit();
@@ -86,13 +86,13 @@ namespace VecinoBuildingMangementWebService.Controllers
         }
 
         [HttpGet]
-        public ManageEventViewModel ManageEvent()
+        public ManageEventViewModel ManageEvent(string buildingId)
         {
             ManageEventViewModel manageEventViewModel = new ManageEventViewModel();
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
-                manageEventViewModel.Events = this.repositoryUOW.EventRepository.GetAll();
+                manageEventViewModel.Events = this.repositoryUOW.EventRepository.GetCurrentEventsByBuildingId(buildingId);
                 manageEventViewModel.CurrentMonth = DateTime.Now.ToString("MMMM");
                 return manageEventViewModel;
             }
@@ -150,7 +150,7 @@ namespace VecinoBuildingMangementWebService.Controllers
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
                 return this.repositoryUOW.EventRepository.Delete(eventId);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return false;
             }
@@ -161,14 +161,14 @@ namespace VecinoBuildingMangementWebService.Controllers
         }
 
         [HttpGet]
-        public ManageServiceRequestViewModel ManageServiceRequest()
+        public ManageServiceRequestViewModel ManageServiceRequest(string buildingId)
         {
             ManageServiceRequestViewModel manageServiceRequestViewModel = new ManageServiceRequestViewModel();
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
-                manageServiceRequestViewModel.serviceRequests = this.repositoryUOW.ServiceRequestRepository.GetAll();
-              
+                manageServiceRequestViewModel.serviceRequests = this.repositoryUOW.ServiceRequestRepository.GetRequestsByBuilding(buildingId);
+
                 manageServiceRequestViewModel.ServiceRequestNumber = manageServiceRequestViewModel.serviceRequests.Count;
                 foreach (ServiceRequest serviceRequest in manageServiceRequestViewModel.serviceRequests)
                 {
@@ -246,7 +246,7 @@ namespace VecinoBuildingMangementWebService.Controllers
                 viewModel.TotalResidents = viewModel.Residents.Count;
                 return viewModel;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return null;
             }
@@ -263,7 +263,7 @@ namespace VecinoBuildingMangementWebService.Controllers
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
-                return this.repositoryUOW.ResidentRepository.UpdateResidentBuilding(residentId,"0");
+                return this.repositoryUOW.ResidentRepository.UpdateResidentBuilding(residentId, "0");
             }
             catch (Exception ex)
             {
@@ -299,7 +299,7 @@ namespace VecinoBuildingMangementWebService.Controllers
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
                 return this.repositoryUOW.FeeRepository.ViewPaidFees();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return null;
             }
@@ -327,8 +327,8 @@ namespace VecinoBuildingMangementWebService.Controllers
             }
         }
 
-       [HttpGet]
-       public Building AdminMainPage(string BuildingId)
+        [HttpGet]
+        public Building AdminMainPage(string BuildingId)
         {
             Building building = new Building();
             try
@@ -337,7 +337,7 @@ namespace VecinoBuildingMangementWebService.Controllers
                 building = this.repositoryUOW.BuildingRepository.GetById(BuildingId);
                 return building;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return null;
             }
@@ -345,40 +345,40 @@ namespace VecinoBuildingMangementWebService.Controllers
             {
                 this.repositoryUOW.DbHelperOleDb.CloseConnection();
             }
-       
+
         }
 
         [HttpGet]
         public ManagePolls ManagePolls(string buildingId)
         {
             ManagePolls managePolls = new ManagePolls();
-            List<PollViewModel> pollviewModel = new List<PollViewModel>();
+            List<PollViewModelAdmin> pollviewModel = new List<PollViewModelAdmin>();
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
                 List<Poll> polls = this.repositoryUOW.PollRepository.GetPollByBuildingId(buildingId);
                 foreach (Poll poll in polls)
                 {
-                    PollViewModel viewModel = new PollViewModel();
+                    PollViewModelAdmin viewModel = new PollViewModelAdmin();
                     int totalVotes = 0;
-                  
+
                     viewModel.poll = poll;
                     List<Option> options = this.repositoryUOW.OptionRepository.GetOptionsByPollId(poll.PollId);
                     foreach (Option option in options)
                     {
                         totalVotes += this.repositoryUOW.VoteRepository.CountVoteByOption(option.OptionId);
                     }
-
+                    viewModel.TotalVotes = totalVotes;
                     foreach (Option option in options)
                     {
                         OptionViewModel optionViewModel = new OptionViewModel();
                         optionViewModel.option = option;
                         optionViewModel.voted = this.repositoryUOW.VoteRepository.CountVoteByOption(option.OptionId);
-
+                        optionViewModel.residentsVoted = this.repositoryUOW.ResidentRepository.findResidentsByOption(option.OptionId);
                         //optionViewModel.voted = CalcVote(options, option.OptionId);
                         if (totalVotes > 0)
                         {
-                           optionViewModel.percentage = (double)optionViewModel.voted / totalVotes * 100;
+                            optionViewModel.percentage = (double)optionViewModel.voted / totalVotes * 100;
                         }
                         else
                         {
@@ -386,6 +386,8 @@ namespace VecinoBuildingMangementWebService.Controllers
                         }
                         viewModel.options.Add(optionViewModel);
                     }
+                    int residents = this.repositoryUOW.ResidentRepository.CountResidentByBuildingId(buildingId);
+                    viewModel.ParticipationRate = (int)Math.Round(((double)totalVotes / residents) * 100);
                     pollviewModel.Add(viewModel);
 
 
@@ -397,7 +399,7 @@ namespace VecinoBuildingMangementWebService.Controllers
                 //int votes = this.repositoryUOW.VoteRepository.CountVotesByBuilding(buildingId);
 
                 double participationRate = 0;
-              
+
                 managePolls.ParticipationRate = participationRate;
 
                 return managePolls;
@@ -424,13 +426,13 @@ namespace VecinoBuildingMangementWebService.Controllers
                 this.repositoryUOW.DbHelperOleDb.OpenTransaction();
                 this.repositoryUOW.PollRepository.Create(createPollViewModel.Poll);
                 string pollId = this.repositoryUOW.PollRepository.GetLastId();
-                foreach(Option option in createPollViewModel.Options)
+                foreach (Option option in createPollViewModel.Options)
                 {
                     option.PollId = pollId;
                     this.repositoryUOW.OptionRepository.Create(option);
                 }
 
-                
+
                 this.repositoryUOW.DbHelperOleDb.Commit();
                 return true;
             }
@@ -454,10 +456,10 @@ namespace VecinoBuildingMangementWebService.Controllers
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
                 this.repositoryUOW.DbHelperOleDb.OpenTransaction();
 
-               
+
                 this.repositoryUOW.VoteRepository.DeleteByPollId(pollId); // delete all votes that are realted to the poll
                 this.repositoryUOW.OptionRepository.DeleteByPollId(pollId); // delete all options that are realted to the poll
-                 this.repositoryUOW.PollRepository.Delete(pollId); //delete Poll
+                this.repositoryUOW.PollRepository.Delete(pollId); //delete Poll
                 this.repositoryUOW.DbHelperOleDb.Commit();
                 return true;
             }
@@ -494,7 +496,7 @@ namespace VecinoBuildingMangementWebService.Controllers
             {
                 this.repositoryUOW.DbHelperOleDb.CloseConnection();
             }
-           
+
 
         }
 
@@ -505,20 +507,87 @@ namespace VecinoBuildingMangementWebService.Controllers
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
-                createEvent.eventTypes =  this.repositoryUOW.EventTypeRepository.GetAll();
+                createEvent.eventTypes = this.repositoryUOW.EventTypeRepository.GetAll();
                 createEvent.Event = null;
                 return createEvent;
 
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
-                    return null;
+                return null;
             }
-            finally {
+            finally
+            {
                 this.repositoryUOW.DbHelperOleDb.CloseConnection();
             }
         }
+        [HttpGet]
+        public Building GetBuilding(string buildingId)
+        {
+            Building building = new Building();
+            try
+            {
+                this.repositoryUOW.DbHelperOleDb.OpenConnection();
+                building = this.repositoryUOW.BuildingRepository.GetById(buildingId);
+                return building;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+            finally
+            {
+                this.repositoryUOW.DbHelperOleDb.CloseConnection();
+            }
 
+
+        }
+
+        [HttpGet]
+        public ManageAdminFinance GetBuildingFinance(string buildingId)
+        {
+
+            ManageAdminFinance manageAdminFinance = new ManageAdminFinance();
+            try
+            {
+                this.repositoryUOW.DbHelperOleDb.OpenConnection();
+                List<Fee> buildingFees = this.repositoryUOW.FeeRepository.GetFeesByBuildingId(buildingId);
+                int TotalPaid = 0;
+                int TotalUnPaid = 0;
+                double TotalCollected = 0;
+                foreach(Fee fee in buildingFees)
+                {
+                    ResidentFeeViewModel residentFeeViewModel = new ResidentFeeViewModel();
+
+                    Resident resident = this.repositoryUOW.ResidentRepository.GetById(fee.ResidentId);
+                    residentFeeViewModel.Fee = fee;
+                    residentFeeViewModel.ResidentId = resident.ResidentId;
+                    residentFeeViewModel.ResidentName = resident.ResidentName;
+                    residentFeeViewModel.UnitNumber = resident.UnitNumber;
+
+                    manageAdminFinance.Finances.Add(residentFeeViewModel);
+
+                    if (fee.IsPaid)
+                    {
+                        TotalPaid++;
+                        TotalCollected += fee.FeeAmount;
+                    }
+                        
+                    else
+                        TotalUnPaid++;
+                }
+                return manageAdminFinance;
+
+            }
+            catch(Exception ex)
+            {
+                return null;
+            }
+            finally
+            {
+                this.repositoryUOW.DbHelperOleDb.CloseConnection();
+            }
+        }
     }
 }
 

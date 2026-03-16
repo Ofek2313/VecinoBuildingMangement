@@ -9,12 +9,15 @@ namespace VecinoBuildingMangement.ViewModels
 {
     public class PollViewModel
     {
-        public Poll poll { get; set; }
-        public List<OptionViewModel> options { get; set; }
         public PollViewModel()
         {
             options = new List<OptionViewModel>();
         }
+        public Poll poll { get; set; }
+        public List<OptionViewModel> options { get; set; }
+       
 
+       
+       
     }
 }

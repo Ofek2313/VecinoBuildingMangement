@@ -123,6 +123,8 @@ namespace VecinoBuildingMangementWebService
             }
             return count > 0;
         }
+
+      
     }
    
 }

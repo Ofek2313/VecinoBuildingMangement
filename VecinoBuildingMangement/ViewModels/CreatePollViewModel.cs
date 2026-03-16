@@ -9,7 +9,7 @@ namespace VecinoBuildingMangement
 {
     public class CreatePollViewModel
     {
-        public List<Option> Options { get; set; }
+        public List<Option> Options { get; set; } = new List<Option>();
         
         public Poll Poll { get; set; }
     }

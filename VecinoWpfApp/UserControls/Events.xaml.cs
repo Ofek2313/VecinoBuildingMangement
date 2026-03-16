@@ -37,6 +37,7 @@ namespace VecinoWpfApp.UserControls
             client.Host = "localhost";
             client.Port = 5269;
             client.Path = "api/Admin/ManageEvent";
+            client.AddParameter("buildingId", Application.Current.Properties["buildingId"].ToString());
             eventViewModel = await client.GetAsync();
 
             listViewEvents.ItemsSource = this.eventViewModel.Events;

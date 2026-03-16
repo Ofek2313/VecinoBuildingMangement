@@ -16,19 +16,13 @@ using System.Windows.Shapes;
 namespace VecinoWpfApp.UserControls
 {
     /// <summary>
-    /// Interaction logic for Dashboard.xaml
+    /// Interaction logic for Finance.xaml
     /// </summary>
-    public partial class Dashboard : UserControl
+    public partial class Finance : UserControl
     {
-        public Dashboard()
+        public Finance()
         {
             InitializeComponent();
-          
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-
         }
     }
 }

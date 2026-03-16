@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:VecinoWpfApp"
         mc:Ignorable="d"
-        Title="Dashboard" Height="1080" Width="1920" ResizeMode="NoResize" 
+        Title="Dashboard" Height="1080" Width="1920" ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen"
         >
     <Window.Resources>
         

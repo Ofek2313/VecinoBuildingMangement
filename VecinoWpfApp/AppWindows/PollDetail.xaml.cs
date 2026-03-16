@@ -10,25 +10,23 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
+using VecinoBuildingMangement.ViewModels;
 
-namespace VecinoWpfApp.UserControls
+namespace VecinoWpfApp.AppWindows
 {
     /// <summary>
-    /// Interaction logic for Dashboard.xaml
+    /// Interaction logic for PollDetail.xaml
     /// </summary>
-    public partial class Dashboard : UserControl
+    public partial class PollDetail : Window
     {
-        public Dashboard()
+        public PollDetail(PollViewModel pollViewModel)
         {
             InitializeComponent();
-          
-        }
+            this.DataContext = pollViewModel;
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-
+            listViewPollOptions.ItemsSource = pollViewModel.options;
         }
+        
     }
 }

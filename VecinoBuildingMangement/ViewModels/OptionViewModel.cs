@@ -10,8 +10,11 @@ namespace VecinoBuildingMangement.ViewModels
     public class OptionViewModel
     {
         public Option option { get; set; }
-        public int voted { get; set; }
 
-        public double percentage { get; set; }
+        public int voted { get; set; } = 0;
+
+        public double percentage { get; set; } = 0;
+
+        public List<Resident> residentsVoted { get; set; } = new List<Resident>();
     }
 }

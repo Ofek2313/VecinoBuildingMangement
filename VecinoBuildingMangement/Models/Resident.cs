@@ -19,6 +19,7 @@ namespace VecinoBuildingMangement.Models
         int unitNumber;
         string buildingId;
         string residentImage;
+        bool isAdmin;
 
         public Resident() 
         {
@@ -120,6 +121,11 @@ namespace VecinoBuildingMangement.Models
                 else
                     residentImage = value;
             }
+        }
+        public bool IsAdmin
+        {
+            get { return isAdmin; }
+            set { isAdmin = value; }
         }
 
     }

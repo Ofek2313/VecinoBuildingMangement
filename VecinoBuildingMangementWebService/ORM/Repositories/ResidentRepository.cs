@@ -188,6 +188,20 @@ namespace VecinoBuildingMangementWebService
                 return null;
             }
         }
-       
+        public List<Resident> findResidentsByOption(string optionId)
+        {
+            string sql = @"Select Resident.* From Resident INNER JOIN Vote On Resident.ResidentId = Vote.ResidentId WHERE OptionId = @OptionId";
+            this.dbHelperOleDb.AddParameter("@OptionId", optionId);
+            List<Resident> residents = new List<Resident>();
+            using (IDataReader reader = this.dbHelperOleDb.Select(sql))
+            {
+                while (reader.Read())
+                {
+                    residents.Add(this.ModelCreator.CreateModel(reader));
+                }
+            }
+            return residents;
+        }
+
     }
 }

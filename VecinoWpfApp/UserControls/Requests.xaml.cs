@@ -39,6 +39,7 @@ namespace VecinoWpfApp.UserControls
             client.Host = "localhost";
             client.Port = 5269;
             client.Path = "api/Admin/ManageServiceRequest";
+            client.AddParameter("buildingId", Application.Current.Properties["buildingId"].ToString());
             serviceRequestViewModel = await client.GetAsync();
 
             listViewRequests.ItemsSource = this.serviceRequestViewModel.serviceRequests;
@@ -50,6 +51,7 @@ namespace VecinoWpfApp.UserControls
         {
             ServiceRequest item = (sender as Button).DataContext as ServiceRequest;
             StatusViewModel viewModel = new StatusViewModel();
+            
             ApiClient<StatusViewModel> client = new ApiClient<StatusViewModel>();
             client.Scheme = "http";
             client.Host = "localhost";
@@ -73,26 +75,30 @@ namespace VecinoWpfApp.UserControls
             if (response)
             {
                 MessageBox.Show("Status Changed");
-                GetRequestList();
+                await GetRequestList();
             }
               
            
             else
                 MessageBox.Show("Status Didn't Changed");
+            
+
+
         }
-        private bool? ViewCreateRequestWindow(object sender)
+        private void ViewCreateRequestWindow(object sender)
         {
             ServiceRequest serviceRequest = (sender as Button).DataContext as ServiceRequest;
             if (this.requestDetail == null)
                 this.requestDetail = new ViewRequestDetail(serviceRequest);
             this.requestDetail.Owner = Window.GetWindow(this);
-            bool? response = this.requestDetail.ShowDialog();
+            this.requestDetail.ShowDialog();
             this.requestDetail = null;
-            return response;
+          
         }
-        private void ViewDetailsClick(object sender, RoutedEventArgs e)
+        private async void ViewDetailsClick(object sender, RoutedEventArgs e)
         {
             ViewCreateRequestWindow(sender);
+            
         }
     }
 }

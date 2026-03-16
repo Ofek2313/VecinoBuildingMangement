@@ -147,7 +147,24 @@ namespace VecinoBuildingMangementWebService
             this.dbHelperOleDb.AddParameter("@FeeId", feeId);
             return this.dbHelperOleDb.Update(sql) > 0;
         }
-        
+        public List<Fee> GetFeesByBuildingId(string buildingId)
+        {
+            string sql = @"SELECT Fee.* FROM Resident INNER JOIN Fee ON Resident.ResidentId = Fee.ResidentId WHERE Resident.BuildingId = @BuildingId";
+            this.dbHelperOleDb.AddParameter("@BuildingId", buildingId);
+            List<Fee> fees = new List<Fee>();
+            using (IDataReader reader = this.dbHelperOleDb.Select(sql))
+            {
+                while (reader.Read())
+                {
+
+                    fees.Add(this.ModelCreator.CreateModel(reader));
+
+                }
+            }
+
+            return fees;
+        }
+    }
        
     }
 }

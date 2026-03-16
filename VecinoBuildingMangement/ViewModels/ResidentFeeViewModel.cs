@@ -7,15 +7,14 @@ using VecinoBuildingMangement.Models;
 
 namespace VecinoBuildingMangement.ViewModels
 {
-    public class ManagePolls
+    public class ResidentFeeViewModel
     {
-        public int PollNumbers { get; set; }
-        public double ParticipationRate { get; set; }
 
-        public List<PollViewModelAdmin> PollviewModel { get; set; }
+        public string ResidentId { get; set; }
+        public string ResidentName { get; set; }
+        public int UnitNumber { get; set; }
 
+        public Fee Fee { get; set; }
 
-       
-        
     }
 }

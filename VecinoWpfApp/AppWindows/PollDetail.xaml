@@ -1,0 +1,383 @@
+﻿
+<Window x:Class="VecinoWpfApp.AppWindows.PollDetail"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:conv="clr-namespace:VecinoWpfApp"
+        mc:Ignorable="d"
+        Title="Poll Details"
+        Height="650" Width="920"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        Background="#EEF1F6"
+        FontFamily="Segoe UI">
+
+    <Window.Resources>
+        <conv:PrecentageToWidth x:Key="precentageToWidth"/>
+
+        <!-- Colors -->
+        <SolidColorBrush x:Key="PageBg"        Color="#EEF1F6"/>
+        <SolidColorBrush x:Key="CardBg"        Color="#FFFFFF"/>
+        <SolidColorBrush x:Key="AccentTeal"    Color="#4DD9AC"/>
+        <SolidColorBrush x:Key="AccentTealBg"  Color="#E6FAF4"/>
+        <SolidColorBrush x:Key="IconBg"        Color="#DDE8F8"/>
+        <SolidColorBrush x:Key="BarFill"       Color="#D6E8FB"/>
+        <SolidColorBrush x:Key="BarEmpty"      Color="#F0F4FA"/>
+        <SolidColorBrush x:Key="TextPrimary"   Color="#1A1D23"/>
+        <SolidColorBrush x:Key="TextSecondary" Color="#8A93A8"/>
+        <SolidColorBrush x:Key="TextMuted"     Color="#B0BAC9"/>
+        <SolidColorBrush x:Key="DividerColor"  Color="#E8ECF2"/>
+        <SolidColorBrush x:Key="AccentBlue"    Color="#5B8FD4"/>
+        <SolidColorBrush x:Key="AccentBlueBg"  Color="#EEF3FB"/>
+
+        <!-- Card Style -->
+        <Style x:Key="Card" TargetType="Border">
+            <Setter Property="Background"   Value="{StaticResource CardBg}"/>
+            <Setter Property="CornerRadius" Value="14"/>
+            <Setter Property="Padding"      Value="22,18"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="16" ShadowDepth="2" Direction="270"
+                                      Color="#000000" Opacity="0.05"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Section Title -->
+        <Style x:Key="SectionTitle" TargetType="TextBlock">
+            <Setter Property="FontSize"     Value="13"/>
+            <Setter Property="FontWeight"   Value="Bold"/>
+            <Setter Property="Foreground"   Value="{StaticResource TextPrimary}"/>
+            <Setter Property="Margin"       Value="0,0,0,12"/>
+        </Style>
+
+        <!-- Stat Label -->
+        <Style x:Key="StatLabel" TargetType="TextBlock">
+            <Setter Property="FontSize"   Value="11"/>
+            <Setter Property="Foreground" Value="{StaticResource TextSecondary}"/>
+        </Style>
+
+        <!-- Stat Value -->
+        <Style x:Key="StatValue" TargetType="TextBlock">
+            <Setter Property="FontSize"   Value="22"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="{StaticResource TextPrimary}"/>
+        </Style>
+
+        <!-- Voter Chip -->
+        <Style x:Key="VoterChip" TargetType="Border">
+            <Setter Property="Background"   Value="{StaticResource IconBg}"/>
+            <Setter Property="CornerRadius" Value="20"/>
+            <Setter Property="Padding"      Value="10,5"/>
+            <Setter Property="Margin"       Value="0,0,6,6"/>
+        </Style>
+
+        <!-- Close Button -->
+        <Style x:Key="CloseButton" TargetType="Button">
+            <Setter Property="Background"      Value="{StaticResource AccentTeal}"/>
+            <Setter Property="Foreground"      Value="White"/>
+            <Setter Property="FontSize"        Value="13"/>
+            <Setter Property="FontWeight"      Value="SemiBold"/>
+            <Setter Property="Height"          Value="38"/>
+            <Setter Property="Width"           Value="110"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor"          Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="9"
+                                Padding="0">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#3BC99A"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#2DB589"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid Background="{StaticResource PageBg}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- ── Header Banner ── -->
+        <Border Grid.Row="0" Background="{StaticResource CardBg}" Padding="32,22,32,22">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="12" ShadowDepth="1" Direction="270"
+                                  Color="#000000" Opacity="0.05"/>
+            </Border.Effect>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Icon -->
+                <Border Grid.Column="0" Width="52" Height="52" CornerRadius="13"
+                        Background="{StaticResource IconBg}" Margin="0,0,18,0">
+                    <TextBlock Text="&#xE9F9;" FontFamily="Segoe MDL2 Assets"
+                               FontSize="22" HorizontalAlignment="Center"
+                               VerticalAlignment="Center" Foreground="#5B8FD4"/>
+                </Border>
+
+                <!-- Title block -->
+                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                    <TextBlock Text="Should we renovate the community pool?"
+                               FontSize="18" FontWeight="Bold"
+                               Foreground="{StaticResource TextPrimary}"
+                               TextWrapping="Wrap"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                        <!-- Category pill -->
+                        <Border Background="{StaticResource AccentBlueBg}" CornerRadius="6" Padding="9,3" Margin="0,0,8,0">
+                            <TextBlock Text="Amenities" FontSize="11" FontWeight="SemiBold"
+                                       Foreground="{StaticResource AccentBlue}"/>
+                        </Border>
+                        <!-- Active pill -->
+                        <Border Background="{StaticResource AccentTealBg}" CornerRadius="6" Padding="9,3">
+                            <TextBlock Text="Active" FontSize="11" FontWeight="SemiBold"
+                                       Foreground="{StaticResource AccentTeal}"/>
+                        </Border>
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- Created by -->
+                <StackPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right">
+                    <TextBlock Text="Created by" FontSize="11"
+                               Foreground="{StaticResource TextMuted}" HorizontalAlignment="Right"/>
+                    <TextBlock Text="Admin · Maria Lopez" FontSize="12" FontWeight="SemiBold"
+                               Foreground="{StaticResource TextSecondary}" HorizontalAlignment="Right"/>
+                    <TextBlock Text="Opened 01/09/2025  ·  Closes 30/09/2025"
+                               FontSize="11" Foreground="{StaticResource TextMuted}"
+                               HorizontalAlignment="Right" Margin="0,3,0,0"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- ── Body ── -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled"
+                      Padding="32,24,32,8">
+            <StackPanel>
+
+                <!-- ── Stats Row ── -->
+                <Grid Margin="0,0,0,20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="12"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="12"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="12"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Total Votes -->
+                    <Border Grid.Column="0" Style="{StaticResource Card}">
+                        <StackPanel>
+                            <TextBlock Text="&#xE902;" FontFamily="Segoe MDL2 Assets"
+                                       FontSize="18" Foreground="{StaticResource AccentBlue}" Margin="0,0,0,6"/>
+                            <TextBlock Text="{Binding TotalVotes}" Style="{StaticResource StatValue}"/>
+                            <TextBlock Text="Total Votes" Style="{StaticResource StatLabel}"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Participation -->
+                    <Border Grid.Column="2" Style="{StaticResource Card}">
+                        <StackPanel>
+                            <TextBlock Text="&#xE8F1;" FontFamily="Segoe MDL2 Assets"
+                                       FontSize="18" Foreground="{StaticResource AccentTeal}" Margin="0,0,0,6"/>
+                            <TextBlock Text="{Binding ParticipationRate,StringFormat={}{0}%}" Style="{StaticResource StatValue}"/>
+                            <TextBlock Text="Participation" Style="{StaticResource StatLabel}"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Days Left -->
+                    <Border Grid.Column="4" Style="{StaticResource Card}">
+                        <StackPanel>
+                            <TextBlock Text="&#xE823;" FontFamily="Segoe MDL2 Assets"
+                                       FontSize="18" Foreground="#E8A838" Margin="0,0,0,6"/>
+                            <TextBlock Text="{Binding DaysLeft}" Style="{StaticResource StatValue}"/>
+                            <TextBlock Text="Days Left" Style="{StaticResource StatLabel}"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Options -->
+                    <Border Grid.Column="6" Style="{StaticResource Card}">
+                        <StackPanel>
+                            <TextBlock Text="&#xE9D9;" FontFamily="Segoe MDL2 Assets"
+                                       FontSize="18" Foreground="#B07FD4" Margin="0,0,0,6"/>
+                            <TextBlock Text="{Binding options.Count}" Style="{StaticResource StatValue}"/>
+                            <TextBlock Text="Options" Style="{StaticResource StatLabel}"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+
+                <!-- ── Description Card ── -->
+                <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                    <StackPanel>
+                        <TextBlock Text="Poll Description" Style="{StaticResource SectionTitle}"/>
+                        <TextBlock TextWrapping="Wrap" FontSize="13" LineHeight="22"
+                                   Foreground="{StaticResource TextSecondary}">
+                            The community pool has been in use for over 15 years and requires
+                            significant maintenance. This poll aims to gather resident feedback
+                            on whether we should proceed with a full renovation, partial repairs,
+                            or leave it as-is for now. Your vote will directly influence the
+                            board's decision at the upcoming general meeting.
+                        </TextBlock>
+                    </StackPanel>
+                </Border>
+
+                <!-- ── Results + Voters (side by side) ── -->
+                <Grid Margin="0,0,0,16">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="16"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Results Breakdown -->
+                    <Border Grid.Column="0" Style="{StaticResource Card}">
+                        <StackPanel>
+                            <TextBlock Text="Results Breakdown" Style="{StaticResource SectionTitle}"/>
+
+                            <ListView x:Name="listViewPollOptions" HorizontalContentAlignment="Stretch" BorderThickness="0" Background="Transparent">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Margin="0,0,0,14">
+                                            <Grid Margin="0,0,0,5">
+                                                <TextBlock Text="{Binding option.OptionText}"
+                                                     FontSize="13" FontWeight="SemiBold"
+                                                     Foreground="{StaticResource TextPrimary}"/>
+                                                <TextBlock FontSize="12" Foreground="{StaticResource TextSecondary}"
+                                                HorizontalAlignment="Right">
+                                                    <TextBlock.Text>
+                                                        <MultiBinding StringFormat="{}{0} votes · {1}%">
+                                                            <Binding Path="voted"/>
+                                                            <Binding Path="percentage"/>
+                                                        </MultiBinding>
+                                                    </TextBlock.Text>
+                                                </TextBlock>
+                                                  
+                                            </Grid>
+                                            <Grid Height="10">
+                                                <Border CornerRadius="5" Background="{StaticResource BarEmpty}"/>
+                                                <Grid HorizontalAlignment="Stretch">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="{Binding percentage, Converter={StaticResource precentageToWidth}}"/>
+                                                        <ColumnDefinition Width="{Binding percentage, Converter={StaticResource precentageToWidth}, ConverterParameter=Second}"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <Border Grid.Column="0" CornerRadius="5,0,0,5"
+                Background="{StaticResource AccentBlue}"/>
+                                                </Grid>
+                                            </Grid>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                            <!-- Option 1: Yes -->
+                            
+
+                            
+
+                          
+
+                            <!-- Legend -->
+                            <Border Height="1" Background="{StaticResource DividerColor}" Margin="0,18,0,14"/>
+                            <StackPanel Orientation="Horizontal">
+                                <Ellipse Width="9" Height="9" Fill="{StaticResource AccentBlue}" Margin="0,0,5,0"/>
+                                <TextBlock Text="Leading option" FontSize="11"
+                                           Foreground="{StaticResource TextMuted}" Margin="0,0,14,0"/>
+                                <Ellipse Width="9" Height="9" Fill="{StaticResource AccentTeal}" Margin="0,0,5,0"/>
+                                <TextBlock Text="Runner-up" FontSize="11"
+                                           Foreground="{StaticResource TextMuted}"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Who Voted -->
+                    <Border Grid.Column="2" Style="{StaticResource Card}">
+                        <StackPanel>
+                            <TextBlock Text="Who Voted" Style="{StaticResource SectionTitle}"/>
+
+                            <ListView ItemsSource="{Binding options}" HorizontalContentAlignment="Stretch"
+                  BorderThickness="0" Background="Transparent">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel>
+                                            
+                                            <TextBlock Text="{Binding option.OptionText}"
+                                   FontSize="12" FontWeight="SemiBold"
+                                   Foreground="{StaticResource AccentBlue}"
+                                   Margin="0,0,0,8"/>
+
+                                           
+                                            <WrapPanel Margin="0,0,0,10">
+                                                <ItemsControl ItemsSource="{Binding residentsVoted}">
+                                                    <ItemsControl.ItemsPanel>
+                                                        <ItemsPanelTemplate>
+                                                            <WrapPanel/>
+                                                        </ItemsPanelTemplate>
+                                                    </ItemsControl.ItemsPanel>
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Border Style="{StaticResource VoterChip}">
+                                                                <StackPanel Orientation="Horizontal">
+                                                                    <Ellipse Width="18" Height="18" Fill="#5B8FD4" Margin="0,0,6,0"/>
+                                                                    <TextBlock Text="{Binding ResidentName}"
+                                                           FontSize="11"
+                                                           Foreground="{StaticResource TextPrimary}"
+                                                           VerticalAlignment="Center"/>
+                                                                </StackPanel>
+                                                            </Border>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                            </WrapPanel>
+
+                                            <Border Height="1" Background="{StaticResource DividerColor}" Margin="0,0,0,12"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+
+                        </StackPanel>
+                    </Border>
+                </Grid>
+
+               
+
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- ── Footer ── -->
+        <Border Grid.Row="2" Background="{StaticResource CardBg}" Padding="32,14">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="10" ShadowDepth="-2" Direction="90"
+                                  Color="#000000" Opacity="0.04"/>
+            </Border.Effect>
+            <Grid>
+                <TextBlock Text="Poll ID: #PL-2025-041  ·  Last updated: 18 Sep 2025, 14:32"
+                           FontSize="11" Foreground="{StaticResource TextMuted}"
+                           VerticalAlignment="Center"/>
+                <Button Content="Close" Style="{StaticResource CloseButton}"
+                        HorizontalAlignment="Right"
+                        />
+            </Grid>
+        </Border>
+
+    </Grid>
+</Window>
