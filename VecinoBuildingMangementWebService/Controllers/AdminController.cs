@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using System.Security.Cryptography;
 using System.Text.Json;
+using System.Transactions;
 using VecinoBuildingMangement;
 using VecinoBuildingMangement.Models;
 using VecinoBuildingMangement.ViewModels;
@@ -555,27 +556,46 @@ namespace VecinoBuildingMangementWebService.Controllers
                 int TotalPaid = 0;
                 int TotalUnPaid = 0;
                 double TotalCollected = 0;
+                double Outstanding = 0;
                 foreach(Fee fee in buildingFees)
                 {
                     ResidentFeeViewModel residentFeeViewModel = new ResidentFeeViewModel();
+                    
 
                     Resident resident = this.repositoryUOW.ResidentRepository.GetById(fee.ResidentId);
                     residentFeeViewModel.Fee = fee;
                     residentFeeViewModel.ResidentId = resident.ResidentId;
                     residentFeeViewModel.ResidentName = resident.ResidentName;
                     residentFeeViewModel.UnitNumber = resident.UnitNumber;
-
+                    residentFeeViewModel.ResidentImage = resident.ResidentImage;
                     manageAdminFinance.Finances.Add(residentFeeViewModel);
 
                     if (fee.IsPaid)
                     {
                         TotalPaid++;
                         TotalCollected += fee.FeeAmount;
+                        TransactionViewModel transaction = new TransactionViewModel();
+                        transaction.Fee = fee;
+                        transaction.ResidentName = resident.ResidentName;
+                        manageAdminFinance.Transaction.Add(transaction);
                     }
                         
                     else
+                    {
                         TotalUnPaid++;
+                        Outstanding += fee.FeeAmount;
+                    }
+                        
                 }
+                manageAdminFinance.TotalCollected = TotalCollected;
+                manageAdminFinance.TotalPaid = TotalPaid;
+                manageAdminFinance.TotalUnPaid = TotalUnPaid;
+                manageAdminFinance.CollectionRate = (int)((double)TotalPaid / buildingFees.Count * 100);
+                manageAdminFinance.TotalCollectedCurrentMonth = 0;
+
+                //manageAdminFinance.Transaction = 
+                //manageAdminFinance.Transaction.OrderByDescending(t => DateTime.Parse(t.Fee.FeeDueDate))
+                //.ToList()
                 return manageAdminFinance;
 
             }

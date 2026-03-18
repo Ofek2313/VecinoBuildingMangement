@@ -8,6 +8,8 @@ namespace VecinoBuildingMangement.ViewModels
 {
     public class ManageAdminFinance
     {
+        public List<TransactionViewModel> Transaction { get; set; } = new List<TransactionViewModel>();
+
         public List<ResidentFeeViewModel> Finances { get; set; } = new List<ResidentFeeViewModel>();
 
         public double TotalCollected { get; set; }
@@ -19,6 +21,8 @@ namespace VecinoBuildingMangement.ViewModels
         public int TotalUnPaid { get; set; }
 
         public int CollectionRate { get; set; }
+
+        public double Outstanding { get; set; }
 
 
 

@@ -143,8 +143,10 @@ namespace VecinoBuildingMangementWebService
         }
         public bool PayFee(string feeId)
         {
-            string sql = @"UPDATE Fee SET IsPaid = True WHERE FeeId = @FeeId";
+            string sql = @"UPDATE Fee SET IsPaid = True, PaymentDate=@PaymentDate WHERE FeeId = @FeeId";
+            this.dbHelperOleDb.AddParameter("@PaymentDate", DateTime.Now.ToString("dd/MM/yyyy"));
             this.dbHelperOleDb.AddParameter("@FeeId", feeId);
+            
             return this.dbHelperOleDb.Update(sql) > 0;
         }
         public List<Fee> GetFeesByBuildingId(string buildingId)
@@ -166,5 +168,5 @@ namespace VecinoBuildingMangementWebService
         }
     }
        
-    }
+    
 }

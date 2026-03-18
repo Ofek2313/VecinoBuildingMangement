@@ -12,6 +12,9 @@ namespace VecinoBuildingMangement.ViewModels
 
         public string ResidentId { get; set; }
         public string ResidentName { get; set; }
+
+        public string ResidentImage { get; set; }
+
         public int UnitNumber { get; set; }
 
         public Fee Fee { get; set; }

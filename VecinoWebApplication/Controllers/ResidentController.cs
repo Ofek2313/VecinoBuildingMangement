@@ -283,7 +283,7 @@ namespace VecinoWebApplication.Controllers
             vote.PollId = voteRequest.PollId;
             vote.OptionId = voteRequest.OptionId;
             vote.ResidentId = residentId;
-            vote.VoteDate = DateTime.Now.ToShortDateString();
+            vote.VoteDate = DateTime.Now.ToString("dd/MM/yyyy");
             vote.VoteId = "0";
             ApiResponse<bool> result = await client.PostAsyncReturn<Vote,bool>(vote);
             if (result.Success)

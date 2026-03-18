@@ -15,6 +15,7 @@ namespace VecinoBuildingMangement.Models
         string feeDueDate;
         bool isPaid;
         string residentId;
+        string paymentDate;
 
         public Fee() { }
         public string FeeId
@@ -64,6 +65,12 @@ namespace VecinoBuildingMangement.Models
         {
             get { return this.residentId; }
             set { this.residentId = value; }
+        }
+
+        public string PaymentDate
+        {
+            get { return this.paymentDate; }
+            set { this.paymentDate = value; }
         }
     }
 }

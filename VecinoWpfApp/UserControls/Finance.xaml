@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:VecinoWpfApp.UserControls"
+             xmlns:conv ="clr-namespace:VecinoWpfApp"
              mc:Ignorable="d"
              d:DesignHeight="1080" d:DesignWidth="1670">
 
@@ -16,7 +17,8 @@
     </UserControl.Background>
 
     <UserControl.Resources>
-
+        <conv:UrlConverter x:Key="urlConvertor"></conv:UrlConverter>
+        <conv:FeeStatusStyleConverter x:Key="feeStatusStyleConverter"></conv:FeeStatusStyleConverter>
         <Style x:Key="CardBorder" TargetType="Border">
             <Setter Property="Background" Value="White"/>
             <Setter Property="CornerRadius" Value="16"/>
@@ -95,6 +97,11 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <Style x:Key="Badge" TargetType="Border">
+           
+            <Setter Property="CornerRadius" Value="10"/>
+            <Setter Property="Padding" Value="10,4"/>
+        </Style>
 
         <Style x:Key="PaidBadge" TargetType="Border">
             <Setter Property="Background" Value="#dcfce7"/>
@@ -164,7 +171,7 @@
                     <TextBlock Text="💰" FontSize="22" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 </Border>
                 <StackPanel VerticalAlignment="Center">
-                    <TextBlock Text="12,450₪" FontSize="24" FontWeight="Bold" Foreground="#0f172a" FontFamily="Segoe UI"/>
+                    <TextBlock Text="{Binding TotalCollected,StringFormat={}{0}₪}" FontSize="24" FontWeight="Bold" Foreground="#0f172a" FontFamily="Segoe UI"/>
                     <TextBlock Text="Total Collected" FontSize="11" Foreground="#64748b" FontFamily="Segoe UI"/>
                 </StackPanel>
             </StackPanel>
@@ -177,7 +184,7 @@
                     <TextBlock Text="⚠️" FontSize="22" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 </Border>
                 <StackPanel VerticalAlignment="Center">
-                    <TextBlock Text="3,200₪" FontSize="24" FontWeight="Bold" Foreground="#e11d48" FontFamily="Segoe UI"/>
+                    <TextBlock Text="{Binding Outstanding,StringFormat={}{0}₪}" FontSize="24" FontWeight="Bold" Foreground="#e11d48" FontFamily="Segoe UI"/>
                     <TextBlock Text="Outstanding" FontSize="11" Foreground="#64748b" FontFamily="Segoe UI"/>
                 </StackPanel>
             </StackPanel>
@@ -190,7 +197,7 @@
                     <TextBlock Text="✅" FontSize="22" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 </Border>
                 <StackPanel VerticalAlignment="Center">
-                    <TextBlock Text="18" FontSize="24" FontWeight="Bold" Foreground="#16a34a" FontFamily="Segoe UI"/>
+                    <TextBlock Text="{Binding TotalPaid}" FontSize="24" FontWeight="Bold" Foreground="#16a34a" FontFamily="Segoe UI"/>
                     <TextBlock Text="Residents Paid" FontSize="11" Foreground="#64748b" FontFamily="Segoe UI"/>
                 </StackPanel>
             </StackPanel>
@@ -203,7 +210,7 @@
                     <TextBlock Text="🚫" FontSize="22" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 </Border>
                 <StackPanel VerticalAlignment="Center">
-                    <TextBlock Text="6" FontSize="24" FontWeight="Bold" Foreground="#e11d48" FontFamily="Segoe UI"/>
+                    <TextBlock Text="{Binding TotalUnPaid}" FontSize="24" FontWeight="Bold" Foreground="#e11d48" FontFamily="Segoe UI"/>
                     <TextBlock Text="Residents Unpaid" FontSize="11" Foreground="#64748b" FontFamily="Segoe UI"/>
                 </StackPanel>
             </StackPanel>
@@ -216,7 +223,7 @@
                     <TextBlock Text="📊" FontSize="22" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 </Border>
                 <StackPanel VerticalAlignment="Center">
-                    <TextBlock Text="75%" FontSize="24" FontWeight="Bold" Foreground="#0284c7" FontFamily="Segoe UI"/>
+                    <TextBlock Text="{Binding CollectionRate,StringFormat={}{0}%}" FontSize="24" FontWeight="Bold" Foreground="#0284c7" FontFamily="Segoe UI"/>
                     <TextBlock Text="Collection Rate" FontSize="11" Foreground="#64748b" FontFamily="Segoe UI"/>
                 </StackPanel>
             </StackPanel>
@@ -288,41 +295,54 @@
                         <TextBlock Grid.Column="4" Text="ACTIONS"  FontFamily="Segoe UI" FontSize="11" FontWeight="SemiBold" Foreground="#64748b" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,8,0"/>
                     </Grid>
                 </Border>
-
+                
                 <!-- Static Row -->
                 <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
                     <StackPanel>
-
-                        <!-- Row 1 — Paid -->
-                        <Border BorderBrush="#f1f5f9" BorderThickness="0,0,0,1" Padding="24,12">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="240"/>
-                                    <ColumnDefinition Width="80"/>
-                                    <ColumnDefinition Width="130"/>
-                                    <ColumnDefinition Width="120"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
-                                    <Border Style="{StaticResource AvatarBorder}">
-                                        <TextBlock Text="SC" FontSize="15" FontWeight="Bold" Foreground="#64748b" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <ListView x:Name="listViewFees" HorizontalContentAlignment="Stretch" BorderThickness="0" Background="Transparent">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Border BorderBrush="#f1f5f9" BorderThickness="0,0,0,1" Padding="24,12">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="240"/>
+                                                <ColumnDefinition Width="80"/>
+                                                <ColumnDefinition Width="130"/>
+                                                <ColumnDefinition Width="120"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                                                <Border Style="{StaticResource AvatarBorder}">
+                                                    <Image Source="{Binding ResidentImage,Converter={StaticResource urlConvertor}}"></Image>
+                                                </Border>
+                                                <StackPanel VerticalAlignment="Center">
+                                                    <TextBlock Text="{Binding ResidentName}" FontFamily="Segoe UI" FontSize="13" FontWeight="SemiBold" Foreground="#0f172a"/>
+                                                    <TextBlock Text="Paid 12/03/2026" FontFamily="Segoe UI" FontSize="11" Foreground="#94a3b8"/>
+                                                </StackPanel>
+                                            </StackPanel>
+                                            <TextBlock Grid.Column="1" Text="101" FontFamily="Segoe UI" FontSize="13" FontWeight="SemiBold" Foreground="#1e293b" VerticalAlignment="Center"/>
+                                            <StackPanel Grid.Column="2" VerticalAlignment="Center">
+                                                    <TextBlock Text="{Binding Fee.FeeAmount,StringFormat={}{0}₪}" 
+                                                       FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" 
+                                                       Foreground="#0f172a"/>
+                                                    <TextBlock Text="{Binding Fee.FeeTitle}" 
+                                                       FontFamily="Segoe UI" FontSize="11" 
+                                                       Foreground="#94a3b8"/>
+                                            </StackPanel>
+                                            <Border Grid.Column="3" Background="{Binding Fee.IsPaid,Converter={StaticResource feeStatusStyleConverter},ConverterParameter=Badge}" Style="{StaticResource Badge}" VerticalAlignment="Center" HorizontalAlignment="Left">
+                                                <TextBlock Text="{Binding Fee.IsPaid,Converter={StaticResource feeStatusStyleConverter},ConverterParameter=Label}" FontFamily="Segoe UI" FontSize="12" FontWeight="SemiBold" Foreground="{Binding Fee.IsPaid,Converter={StaticResource feeStatusStyleConverter},ConverterParameter=Text}"/>
+                                            </Border>
+                                            <StackPanel Grid.Column="4" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                                <Button Content="Remind" Style="{StaticResource RemindButton}" Height="30" Margin="0,0,6,0" Click="SendReminder_Click" />
+                                                <Button Content="View" Style="{StaticResource SecondaryButton}" Height="30" />
+                                            </StackPanel>
+                                        </Grid>
                                     </Border>
-                                    <StackPanel VerticalAlignment="Center">
-                                        <TextBlock Text="Sarah Cohen" FontFamily="Segoe UI" FontSize="13" FontWeight="SemiBold" Foreground="#0f172a"/>
-                                        <TextBlock Text="Paid 12/03/2026" FontFamily="Segoe UI" FontSize="11" Foreground="#94a3b8"/>
-                                    </StackPanel>
-                                </StackPanel>
-                                <TextBlock Grid.Column="1" Text="101" FontFamily="Segoe UI" FontSize="13" FontWeight="SemiBold" Foreground="#1e293b" VerticalAlignment="Center"/>
-                                <TextBlock Grid.Column="2" Text="500₪" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Foreground="#0f172a" VerticalAlignment="Center"/>
-                                <Border Grid.Column="3" Style="{StaticResource PaidBadge}" VerticalAlignment="Center" HorizontalAlignment="Left">
-                                    <TextBlock Text="Paid" FontFamily="Segoe UI" FontSize="12" FontWeight="SemiBold" Foreground="#16a34a"/>
-                                </Border>
-                                <StackPanel Grid.Column="4" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-                                    <Button Content="Remind" Style="{StaticResource RemindButton}" Height="30" Margin="0,0,6,0"/>
-                                    <Button Content="View" Style="{StaticResource SecondaryButton}" Height="30" />
-                                </StackPanel>
-                            </Grid>
-                        </Border>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                        <!-- Row 1 — Paid -->
+                        
 
                         <!-- Row 2 — Unpaid -->
                         <Border BorderBrush="#f1f5f9" BorderThickness="0,0,0,1" Padding="24,12">
@@ -391,93 +411,10 @@
             </Grid>
         </Border>
 
-        <!-- ======= FEE BREAKDOWN CARD ======= -->
-        <Border Canvas.Left="1022" Canvas.Top="328" Width="572" Height="336" Style="{StaticResource CardBorder}">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="52"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-
-                <Border Grid.Row="0" Background="#f8fafc" CornerRadius="16,16,0,0" BorderBrush="#e2e8f0" BorderThickness="0,0,0,1">
-                    <Grid Margin="22,0">
-                        <TextBlock Text="Fee Breakdown" FontFamily="Segoe UI" FontSize="15" FontWeight="SemiBold" Foreground="#1e293b" VerticalAlignment="Center"/>
-                        <Button Content="Manage Fees" Style="{StaticResource PrimaryButton}" HorizontalAlignment="Right" Height="32" />
-                    </Grid>
-                </Border>
-
-                <StackPanel Grid.Row="1" Margin="0,4,0,0">
-
-                    <!-- Fee Row 1 -->
-                    <Border BorderBrush="#f1f5f9" BorderThickness="0,0,0,1" Padding="22,12">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="32"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="110"/>
-                            </Grid.ColumnDefinitions>
-                            <Border Grid.Column="0" Width="22" Height="22" CornerRadius="5" Margin="0,0,10,0">
-                                <Border.Background>
-                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                        <GradientStop Color="#14b8a6" Offset="0"/>
-                                        <GradientStop Color="#22c55e" Offset="1"/>
-                                    </LinearGradientBrush>
-                                </Border.Background>
-                            </Border>
-                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                <TextBlock Text="Monthly Fee" FontFamily="Segoe UI" FontSize="13" FontWeight="SemiBold" Foreground="#1e293b"/>
-                                <TextBlock Text="Regular monthly dues" FontFamily="Segoe UI" FontSize="11" Foreground="#94a3b8"/>
-                            </StackPanel>
-                            <TextBlock Grid.Column="2" Text="500₪" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Foreground="#0f172a" VerticalAlignment="Center" Margin="16,0"/>
-                            <TextBlock Grid.Column="3" Text="18/24 collected" FontFamily="Segoe UI" FontSize="11" Foreground="#64748b" VerticalAlignment="Center"/>
-                        </Grid>
-                    </Border>
-
-                    <!-- Fee Row 2 -->
-                    <Border BorderBrush="#f1f5f9" BorderThickness="0,0,0,1" Padding="22,12">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="32"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="110"/>
-                            </Grid.ColumnDefinitions>
-                            <Border Grid.Column="0" Width="22" Height="22" CornerRadius="5" Margin="0,0,10,0" Background="#fee2e2"/>
-                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                <TextBlock Text="Repair Fee" FontFamily="Segoe UI" FontSize="13" FontWeight="SemiBold" Foreground="#1e293b"/>
-                                <TextBlock Text="Building maintenance" FontFamily="Segoe UI" FontSize="11" Foreground="#94a3b8"/>
-                            </StackPanel>
-                            <TextBlock Grid.Column="2" Text="250₪" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Foreground="#0f172a" VerticalAlignment="Center" Margin="16,0"/>
-                            <TextBlock Grid.Column="3" Text="12/24 collected" FontFamily="Segoe UI" FontSize="11" Foreground="#64748b" VerticalAlignment="Center"/>
-                        </Grid>
-                    </Border>
-
-                    <!-- Fee Row 3 -->
-                    <Border BorderBrush="#f1f5f9" BorderThickness="0,0,0,1" Padding="22,12">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="32"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="110"/>
-                            </Grid.ColumnDefinitions>
-                            <Border Grid.Column="0" Width="22" Height="22" CornerRadius="5" Margin="0,0,10,0" Background="#e0f2fe"/>
-                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                <TextBlock Text="Parking Fee" FontFamily="Segoe UI" FontSize="13" FontWeight="SemiBold" Foreground="#1e293b"/>
-                                <TextBlock Text="Monthly parking" FontFamily="Segoe UI" FontSize="11" Foreground="#94a3b8"/>
-                            </StackPanel>
-                            <TextBlock Grid.Column="2" Text="150₪" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Foreground="#0f172a" VerticalAlignment="Center" Margin="16,0"/>
-                            <TextBlock Grid.Column="3" Text="10/24 collected" FontFamily="Segoe UI" FontSize="11" Foreground="#64748b" VerticalAlignment="Center"/>
-                        </Grid>
-                    </Border>
-
-                </StackPanel>
-            </Grid>
-        </Border>
+      
 
         <!-- ======= RECENT TRANSACTIONS CARD ======= -->
-        <Border Canvas.Left="1022" Canvas.Top="678" Width="572" Height="350" Style="{StaticResource CardBorder}">
+        <Border Canvas.Left="1022" Canvas.Top="328" Width="572" Height="700" Style="{StaticResource CardBorder}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="52"/>
