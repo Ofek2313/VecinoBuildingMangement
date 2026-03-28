@@ -41,7 +41,7 @@ namespace VecinoWpfApp.UserControls
             client.Host = "localhost";
             client.Port = 5269;
             client.Path = "api/Admin/ManagePolls";
-            client.AddParameter("buildingId", Application.Current.Properties["buildingId"].ToString());
+            client.AddParameter("buildingId", Session.BuildingId);
             managePolls = await client.GetAsync();
           
             listViewPolls.ItemsSource = this.managePolls.PollviewModel;

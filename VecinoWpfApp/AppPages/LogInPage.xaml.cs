@@ -11,23 +11,22 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 using VecinoBuildingMangement.Models;
 using VecinoBuildingMangement.ViewModels;
 
-namespace VecinoWpfApp.AppWindows
+namespace VecinoWpfApp.AppPages
 {
     /// <summary>
-    /// Interaction logic for StartPage.xaml
+    /// Interaction logic for LogInPage.xaml
     /// </summary>
-    public partial class StartPage : Window
+    public partial class LogInPage : Page
     {
-        public static string BuildingId;
-        public StartPage()
+        public LogInPage()
         {
             InitializeComponent();
         }
-
         private async void btnSignIn_Click(object sender, RoutedEventArgs e)
         {
             LogInViewModel logInViewModel = new LogInViewModel();
@@ -40,34 +39,48 @@ namespace VecinoWpfApp.AppWindows
 
             logInViewModel.Email = txtEmail.Text;
             logInViewModel.Password = txtPassword.Password;
-            
-            
+
+
             ApiClient<LogInViewModel> client = new ApiClient<LogInViewModel>();
             client.Scheme = "http";
             client.Host = "localhost";
             client.Port = 5269;
             client.Path = "api/Resident/Login";
             ApiResponse<Resident> apiResponse = await client.PostAsyncReturn<LogInViewModel, Resident>(logInViewModel);
-         
+
             if (apiResponse.Success && apiResponse.Data != null)
             {
-                if(!apiResponse.Data.IsAdmin)
+                Session.HasAccount = true;
+                if(apiResponse.Data.BuildingId == "0")
                 {
-                    MessageBox.Show("Only Admins are allowed Entrances");
+                    NavigationService.Navigate(new CreateBuilding());
+                    
                     return;
                 }
-                Application.Current.Properties.Add("buildingId", apiResponse.Data.BuildingId);
-                Application.Current.Properties.Add("residentName", apiResponse.Data.ResidentName);
-                MainWindow mainWindow = new MainWindow();
-                mainWindow.Show();
-                this.Close();
+                  
+                if (!apiResponse.Data.IsAdmin)
+                {
+                    MessageBox.Show("Only Admins are allowed Entrances");
+       
+                    return;
+                }
+                Session.BuildingId = apiResponse.Data.BuildingId;
+
+
+              
+                NavigationService.Navigate(new MainWindow());
             }
             else
             {
                 MessageBox.Show("Unsuccessful");
             }
-           
 
+
+        }
+
+        private void CreateBuildingButton_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new CreateBuilding());
         }
     }
 }

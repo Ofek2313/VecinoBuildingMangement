@@ -68,7 +68,7 @@ namespace VecinoBuildingMangementWebService
 
         public List<Notification> GetNotificationsByResidentId(string residentId)
         {
-            string sql = "SELECT Notification.NotificationId,NotificationMessage,NotificationTitle,NotificationDate,Priority,IsPinned FROM Notification INNER JOIN ResidentNotification rn ON Notification.NotificationId = rn.NotificationId WHERE rn.ResidentId = @ResidentId AND IsPinned=false";
+            string sql = "SELECT Notification.NotificationId,NotificationMessage,NotificationTitle,NotificationDate,Priority,IsPinned FROM Notification INNER JOIN ResidentNotification rn ON Notification.NotificationId = rn.NotificationId WHERE rn.ResidentId = @ResidentId";
             this.dbHelperOleDb.AddParameter("@ResidentId", residentId);
 
             List<Notification> notifications = new List<Notification>();

@@ -81,6 +81,7 @@ namespace VecinoBuildingMangementWebService
                 {
 
                     return Convert.ToInt32(reader[0]);
+                    
 
                 }
             }

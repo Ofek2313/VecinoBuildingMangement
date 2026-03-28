@@ -16,6 +16,8 @@ namespace VecinoBuildingMangement.Models
         int totalUnits;
         int floors;
         string joinCode;
+        string buildingImage;
+        string entranceName;
 
         public string BuildingId
         {
@@ -74,6 +76,18 @@ namespace VecinoBuildingMangement.Models
             set { joinCode = value;
                 ValidateProperty(value, "JoinCode");
             }
+        }
+
+        public string BuildingImage
+        {
+            get { return buildingImage; }
+            set { buildingImage = value; }
+        }
+
+        public string EntranceName
+        {
+            get { return entranceName; }
+            set { entranceName = value; }
         }
     }
 }

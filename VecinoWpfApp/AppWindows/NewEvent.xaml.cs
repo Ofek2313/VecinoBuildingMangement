@@ -70,7 +70,7 @@ namespace VecinoWpfApp.AppWindows
         private async void ButtonAddEvent_Click(object sender, RoutedEventArgs e)
         {
             Event Newevent = new Event();
-            bool response = false;
+            ApiResponse<bool> response = new ApiResponse<bool> { Data = false, Success = false };
             Newevent.EventTitle = TitleInput.Text;
             Newevent.EventDescription = DescriptionInput.Text;
             Newevent.EventDate = EventDatePicker.SelectedDate.Value.ToString("dd/MM/yyyy");
@@ -78,7 +78,7 @@ namespace VecinoWpfApp.AppWindows
             Newevent.EventTypeId = TypeComboBox.SelectedValue.ToString();
             Newevent.StartTime = ((ComboBoxItem)StartTimeComboBox.SelectedItem).Content.ToString();
             Newevent.EndTime = ((ComboBoxItem)EndTimeComboBox.SelectedItem).Content.ToString();
-            Newevent.BuildingId = "1";
+            Newevent.BuildingId = Session.BuildingId;
 
             Newevent.Validate();
             if(!Newevent.HasErrors)
@@ -90,9 +90,9 @@ namespace VecinoWpfApp.AppWindows
                 client.Path = "api/Admin/AddUpComingEvent";
                 Stream stream = new FileStream(this.imagePath,FileMode.Open,FileAccess.Read);
                 
-                response = await client.PostAsync(Newevent,stream,imagePath);
+               response = await client.PostAsyncReturn<Event,bool>(Newevent,stream,imagePath);
             }
-            if(response)
+            if(response.Data && response.Success)
             {
                 MessageBox.Show("Event Added Successfully");
                 this.DialogResult = true;

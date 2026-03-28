@@ -10,6 +10,7 @@ namespace VecinoBuildingMangement.ViewModels
     public class BuildingCatalouge
     {
         public List<Building> Buildings { get; set; }
+
         public int Page { get; set; }
 
         public int BuildingsPerPage { get; set; }

@@ -155,6 +155,52 @@ namespace BuildingManagementWsClient
             }
             
         }
+        public async Task<ApiResponse<TResponse>> PostAsyncReturn<TRequest, TResponse>(TRequest model,Stream file,string fileName)
+        {
+
+            using (HttpRequestMessage httpRequest = new HttpRequestMessage())
+            {
+                ApiResponse<TResponse> response = new ApiResponse<TResponse>();
+                httpRequest.Method = HttpMethod.Post;
+                httpRequest.RequestUri = this.uriBuilder.Uri;
+                MultipartFormDataContent multipartFormDataContent = new MultipartFormDataContent();
+                string json = JsonSerializer.Serialize<TRequest>(model);
+                StringContent modelContent = new StringContent(json);
+                multipartFormDataContent.Add(modelContent, "model");
+
+                StreamContent streamContent = new StreamContent(file); // Streamcontent becaues of the file stream
+                multipartFormDataContent.Add(streamContent, "file", fileName);
+                httpRequest.Content = multipartFormDataContent;
+                using (HttpResponseMessage httpResponse = await this.httpClient.SendAsync(httpRequest))
+                {
+                    if (httpResponse.IsSuccessStatusCode)
+                    {
+                        string result = await httpResponse.Content.ReadAsStringAsync();
+                        //if (typeof(TResponse) == typeof(string))
+                        //    return result;
+                        if (string.IsNullOrWhiteSpace(result))
+                        {
+                            response.Success = false;
+                            response.Data = default(TResponse);
+                            return response;
+                        }
+
+                        JsonSerializerOptions options = new JsonSerializerOptions();
+                        options.PropertyNameCaseInsensitive = true;
+                        TResponse value = JsonSerializer.Deserialize<TResponse>(result, options);
+
+                        response.Success = true;
+                        response.Data = value;
+                        return response;
+                    }
+                }
+                response.Success = false;
+                response.Data = default(TResponse);
+                return response;
+
+            }
+
+        }
         public async Task<bool> PostAsync(T model, Stream file,string fileName)
             {
                 using (HttpRequestMessage httpRequest = new HttpRequestMessage())

@@ -1,4 +1,5 @@
-﻿using Swashbuckle.AspNetCore.SwaggerUI;
+﻿using Microsoft.Extensions.Logging;
+using Swashbuckle.AspNetCore.SwaggerUI;
 using System.Data;
 using VecinoBuildingMangement.Models;
 
@@ -137,6 +138,15 @@ namespace VecinoBuildingMangementWebService
                 dataReader.Read();
                 return Convert.ToInt32(dataReader[0]);
             }
+        }
+
+        public bool UpdatePhotoById(string buildingId, string fileName)
+        {
+            string sql = $"Update Building SET BuildingImage = @BuildingImage WHERE BuildingId = @BuildingId";
+            this.dbHelperOleDb.AddParameter("@BuildingImage", fileName);
+            this.dbHelperOleDb.AddParameter("@BuildingId", buildingId);
+            return this.dbHelperOleDb.Update(sql) > 0;
+         
         }
     }
     

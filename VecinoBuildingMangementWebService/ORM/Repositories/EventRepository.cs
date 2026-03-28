@@ -2,6 +2,7 @@
 using System.Data;
 using System.Text;
 using VecinoBuildingMangement.Models;
+using VecinoBuildingMangement.ViewModels;
 
 namespace VecinoBuildingMangementWebService
 {
@@ -193,6 +194,37 @@ namespace VecinoBuildingMangementWebService
             string sql = $"Update Event SET EventImage = 'event{eventId}.{extension}' WHERE EventId = @EventId";
             this.dbHelperOleDb.AddParameter("@EventId", eventId);
             return this.dbHelperOleDb.Update(sql) > 0;
+        }
+
+        public List<EventViewModel> GetEventViewModelsByBuildingId(string buildingId)
+        {
+            string sql = @"SELECT e.EventId,e.EventDate, e.EventTitle, e.EventDescription, e.EventTypeId, e.EventImage, e.StartTime, e.EndTime, e.BuildingId, COUNT(a.EventId) AS AttendingCount FROM Event e LEFT JOIN EventAttendance a ON e.EventId = a.EventId WHERE e.BuildingId = @BuildingId GROUP BY e.EventId, e.EventDate, e.EventTitle, e.EventDescription, e.EventTypeId, e.EventImage, e.StartTime, e.EndTime, e.BuildingId";
+            this.dbHelperOleDb.AddParameter("@BuildingId", buildingId);
+            List<EventViewModel> eventViewModels = new List<EventViewModel>();
+            using(IDataReader dataReader = this.dbHelperOleDb.Select(sql))
+            {
+                while(dataReader.Read())
+                {
+                    EventViewModel eventViewModel = new EventViewModel
+                    {
+                        Event = new Event
+                        {
+                            EventId = dataReader["EventId"].ToString(),
+                            EventDate = dataReader["EventDate"].ToString(),
+                            EventTitle = dataReader["EventTitle"].ToString(),
+                            EventDescription = dataReader["EventDescription"].ToString(),
+                            EventTypeId = dataReader["EventTypeId"].ToString(),
+                            EventImage = dataReader["EventImage"].ToString(),
+                            StartTime = dataReader["StartTime"].ToString(),
+                            EndTime = dataReader["EndTime"].ToString(),
+                            BuildingId = dataReader["BuildingId"].ToString(),
+                        },
+                        Attending = Convert.ToInt32(dataReader["AttendingCount"])
+                    };
+                    eventViewModels.Add(eventViewModel);
+                }
+            }
+            return eventViewModels;
         }
     }
     

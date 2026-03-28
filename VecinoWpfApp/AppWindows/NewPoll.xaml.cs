@@ -1,6 +1,7 @@
 ﻿using BuildingManagementWsClient;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -71,7 +72,7 @@ namespace VecinoWpfApp.AppWindows
             poll.PollDescription = pollDescription.Text;
             poll.PollDate = pollDate.SelectedDate.Value.ToString("dd/MM/yyyy");
             poll.IsActive = true;
-            poll.BuildingId = Application.Current.Properties["buildingId"].ToString();
+            poll.BuildingId = Session.BuildingId;
             poll.PollId = ""; // temp value
             createPollViewModel.Poll = poll;
 
@@ -80,9 +81,9 @@ namespace VecinoWpfApp.AppWindows
             apiClient.Host = "localhost";
             apiClient.Port = 5269;
             apiClient.Path = "api/Admin/CreatePoll";
-            bool response = await apiClient.PostAsync(createPollViewModel);
+            ApiResponse<bool> response = await apiClient.PostAsyncReturn<CreatePollViewModel,bool>(createPollViewModel);
 
-            if(response)
+            if(response.Success && response.Data)
             {
                 this.DialogResult = true;
                 this.Close();

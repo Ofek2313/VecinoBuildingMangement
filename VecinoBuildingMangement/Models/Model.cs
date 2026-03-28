@@ -87,6 +87,11 @@ namespace VecinoBuildingMangement
                 errors.Clear();
                 HandleValidationResults(validationResults);
                 this.isValid = validationResults.Count == 0;
+
+                foreach (var kvp in errors)
+                    Console.WriteLine($"FIELD: {kvp.Key} | ERRORS: {string.Join(", ", kvp.Value)}");
+
+                Console.WriteLine($"HasErrors: {HasErrors}, IsValid: {IsValid}");
             }
         }
 

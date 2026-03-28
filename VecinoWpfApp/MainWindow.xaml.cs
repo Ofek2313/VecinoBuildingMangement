@@ -9,13 +9,12 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using VecinoWpfApp.UserControls;
+using VecinoWpfApp.AppPages;
 
 namespace VecinoWpfApp
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
-    public partial class MainWindow : Window
+   
+    public partial class MainWindow : Page
     {
         Dashboard dashboard;
         Requests requests;
@@ -29,16 +28,7 @@ namespace VecinoWpfApp
 
         public static readonly string BuildingId;
         
-        private void HyperLinkState()
-        {
-            this.HyperlinkDashboard.IsEnabled = isLoggedIn;
-            this.HyperlinkRequests.IsEnabled = isLoggedIn;
-            this.HyperLinkAnnouncments.IsEnabled = isLoggedIn;
-            this.HyperlinkFinance.IsEnabled = isLoggedIn;    
-            this.HyperlinkPoll.IsEnabled = isLoggedIn;
-            this.Hyperlinkresident.IsEnabled = isLoggedIn;
-            this.HyperlinkEvent.IsEnabled = isLoggedIn;
-        }
+      
 
         public MainWindow()
         {
@@ -167,6 +157,13 @@ namespace VecinoWpfApp
         {
             ViewResidents();
             setActive(resNav);
+        }
+
+        private void HyperlinkLogOut_Click(object sender, RoutedEventArgs e)
+        {
+            Session.Clear();
+           NavigationService.Navigate(new LogInPage());
+           
         }
     }
 }

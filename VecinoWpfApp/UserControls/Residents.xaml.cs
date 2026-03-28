@@ -37,7 +37,7 @@ namespace VecinoWpfApp.UserControls
             client.Host = "localhost";
             client.Port = 5269;
             client.Path = "api/Admin/ManageResident";
-            client.AddParameter("buildingId", Application.Current.Properties["buildingId"].ToString());
+            client.AddParameter("buildingId", Session.BuildingId);
             viewModel = await client.GetAsync();
 
             residentsList = viewModel.Residents;

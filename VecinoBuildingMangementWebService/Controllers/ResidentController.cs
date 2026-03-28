@@ -7,6 +7,7 @@ using Microsoft.Extensions.Options;
 using System.Text;
 using System.IO;
 using System.Text.Json;
+using System.Globalization;
 
 namespace VecinoBuildingMangementWebService.Controllers
 {
@@ -53,8 +54,8 @@ namespace VecinoBuildingMangementWebService.Controllers
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
                 viewModel.Fees = repositoryUOW.FeeRepository.GetFeesById(residentId);
-                List<Fee> Paid = this.repositoryUOW.FeeRepository.ViewPaidFeesById(residentId);
-                List<Fee> UnPaid = repositoryUOW.FeeRepository.GetUnPaidFeeById(residentId);
+                List<Fee> Paid = viewModel.Fees.Where(f => f.IsPaid).ToList();
+                List<Fee> UnPaid = viewModel.Fees.Where(f => !f.IsPaid).ToList();
 
                 double totalFee = 0;
                 double unpaidfee = 0;
@@ -212,31 +213,34 @@ namespace VecinoBuildingMangementWebService.Controllers
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
                 viewEventViewModel.EventTypes = this.repositoryUOW.EventTypeRepository.GetAll();
                 Building building = this.repositoryUOW.BuildingRepository.GetBuildingByResidentId(residentId);
-                events = this.repositoryUOW.EventRepository.GetEventByBuildingId(building.BuildingId);
-                events2 = this.repositoryUOW.EventRepository.GetPreviousEventsByBuildingId(building.BuildingId);
+                List<EventViewModel> eventsview = this.repositoryUOW.EventRepository.GetEventViewModelsByBuildingId(building.BuildingId);
+                viewEventViewModel.CurrEvents = eventsview.Where(e => DateTime.ParseExact(e.Event.EventDate,"dd/MM/yyyy",CultureInfo.InvariantCulture) >= DateTime.Today).ToList();
+                viewEventViewModel.PreEvents = eventsview.Where(e => DateTime.ParseExact(e.Event.EventDate, "dd/MM/yyyy", CultureInfo.InvariantCulture) < DateTime.Today).ToList();
+                //events = this.repositoryUOW.EventRepository.GetEventByBuildingId(building.BuildingId);
+                //events2 = this.repositoryUOW.EventRepository.GetPreviousEventsByBuildingId(building.BuildingId);
 
-                foreach (Event e in events)
-                {
-                    viewEventViewModel.CurrEvents.Add(new EventViewModel
-                    {
-                        Event = e,
-                        Attending = this.repositoryUOW.EventRepository.GetAttendingCount(e.EventId),
-
-
-                    }
-                    );
-                }
-                foreach (Event e in events2)
-                {
-                    viewEventViewModel.PreEvents.Add(new EventViewModel
-                    {
-                        Event = e,
-                        Attending = this.repositoryUOW.EventRepository.GetAttendingCount(e.EventId),
+                //foreach (Event e in events)
+                //{
+                //    viewEventViewModel.CurrEvents.Add(new EventViewModel
+                //    {
+                //        Event = e,
+                //        Attending = this.repositoryUOW.EventRepository.GetAttendingCount(e.EventId),
 
 
-                    }
-                    );
-                }
+                //    }
+                //    );
+                //}
+                //foreach (Event e in events2)
+                //{
+                //    viewEventViewModel.PreEvents.Add(new EventViewModel
+                //    {
+                //        Event = e,
+                //        Attending = this.repositoryUOW.EventRepository.GetAttendingCount(e.EventId),
+
+
+                //    }
+                //    );
+                //}
 
                 return viewEventViewModel;
             }
@@ -332,8 +336,10 @@ namespace VecinoBuildingMangementWebService.Controllers
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
-                notificationsViewModels.Notifications = this.repositoryUOW.NotificationRepository.GetNotificationsByResidentId(residentId);
-                notificationsViewModels.PinnedNotifications = this.repositoryUOW.NotificationRepository.GetPinnedNotificationsByResidentId(residentId);
+                List<Notification> allNotifications = this.repositoryUOW.NotificationRepository.GetNotificationsByResidentId(residentId);
+                notificationsViewModels.Notifications = allNotifications.Where(nf => !nf.IsPinned).ToList();
+                notificationsViewModels.PinnedNotifications = allNotifications.Where(nf => nf.IsPinned).ToList();
+                //this.repositoryUOW.NotificationRepository.GetPinnedNotificationsByResidentId(residentId);
                 return notificationsViewModels;
             }
             catch (Exception ex)

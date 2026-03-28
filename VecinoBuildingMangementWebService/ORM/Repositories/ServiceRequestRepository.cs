@@ -146,5 +146,24 @@ namespace VecinoBuildingMangementWebService
             return serviceRequests;
 
         }
+
+        public (int Pending, int Completed, int InProgress) GetServiceRequestSummary(string buildingId)
+        {
+            string sql = @$"SELECT Count(IIF(RequestStatus = 'Pending', 1, NULL)) AS PendingCount,
+                            Count(IIF(RequestStatus = 'Completed', 1, NULL)) AS CompletedCount,
+                            Count(IIF(RequestStatus = 'In Progress', 1, NULL)) AS InProgressCount FROM  ServiceRequest INNER JOIN Resident ON ServiceRequest.ResidentId = Resident.ResidentId
+                             WHERE BuildingId = @BuildingId";
+            this.dbHelperOleDb.AddParameter("@BuildingId", buildingId);
+            using (IDataReader reader = this.dbHelperOleDb.Select(sql))
+            {
+                if (reader.Read())
+                {
+
+                    return (Convert.ToInt32(reader["PendingCount"]), Convert.ToInt32(reader["CompletedCount"]), Convert.ToInt32(reader["InProgressCount"]));
+                }
+                else
+                    return (0, 0, 0);
+            }
+        }
     }
 }

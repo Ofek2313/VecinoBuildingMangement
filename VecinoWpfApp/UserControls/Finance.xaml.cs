@@ -15,6 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using VecinoBuildingMangement.Models;
 using VecinoBuildingMangement.ViewModels;
+using VecinoWpfApp.AppWindows;
 
 namespace VecinoWpfApp.UserControls
 {
@@ -25,6 +26,7 @@ namespace VecinoWpfApp.UserControls
     public partial class Finance : UserControl
     {
         ManageAdminFinance manageAdminFinance;
+        NewFee newFee;
         public Finance()
         {
             InitializeComponent();
@@ -38,9 +40,10 @@ namespace VecinoWpfApp.UserControls
             client.Host = "localhost";
             client.Port = 5269;
             client.Path = "api/Admin/GetBuildingFinance";
-            client.AddParameter("buildingId", Application.Current.Properties["buildingId"].ToString());
+            client.AddParameter("buildingId", Session.BuildingId);
             manageAdminFinance = await client.GetAsync();
             this.listViewFees.ItemsSource = manageAdminFinance.Finances;
+            this.ListViewTransaction.ItemsSource = manageAdminFinance.Transaction;
             this.DataContext = manageAdminFinance;
         }
 
@@ -67,7 +70,7 @@ namespace VecinoWpfApp.UserControls
             notification.Priority = "Urgent";
             notification.IsPinned = false;
             List<string> ids = new List<string>();
-            ids.Add(item.ResidentId);
+            ids.Add(item.Fee.ResidentId);
             sendNotificationViewModel.ResidentIds = ids;
             sendNotificationViewModel.Notification = notification;
             bool response = await client.PostAsync(sendNotificationViewModel);
@@ -76,6 +79,21 @@ namespace VecinoWpfApp.UserControls
             else
                 MessageBox.Show("Failed");
 
+        }
+        private bool? ViewCreateFeeWindow()
+        {
+            if (this.newFee == null)
+                this.newFee = new NewFee();
+            this.newFee.Owner = Window.GetWindow(this);
+            bool? response = this.newFee.ShowDialog();
+            this.newFee = null;
+            return response;
+        }
+        private async void AddFeeButton_Click(object sender, RoutedEventArgs e)
+        {
+            bool? response = ViewCreateFeeWindow();
+            if (response == true)
+                await LoadFinanceData();
         }
     }
 }

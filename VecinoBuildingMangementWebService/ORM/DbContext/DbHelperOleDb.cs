@@ -104,6 +104,16 @@ namespace VecinoBuildingMangementWebService
             this.dbCommand.CommandText = sql;
             return this.dbCommand.ExecuteScalar().ToString();
         }
-       
+        public object ExecuteScalar(string sql)
+        {
+            this.dbCommand.CommandText = sql;
+
+            object result = this.dbCommand.ExecuteScalar();
+
+            this.dbCommand.Parameters.Clear();
+
+            return result;
+
+        }
     }
 }

@@ -39,7 +39,7 @@ namespace VecinoWpfApp.UserControls
             client.Host = "localhost";
             client.Port = 5269;
             client.Path = "api/Admin/ManageServiceRequest";
-            client.AddParameter("buildingId", Application.Current.Properties["buildingId"].ToString());
+            client.AddParameter("buildingId", Session.BuildingId);
             serviceRequestViewModel = await client.GetAsync();
 
             listViewRequests.ItemsSource = this.serviceRequestViewModel.serviceRequests;

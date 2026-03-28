@@ -2,10 +2,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+using System.Globalization;
 using System.Security.Cryptography;
 using System.Text.Json;
 using System.Transactions;
 using VecinoBuildingMangement;
+using VecinoBuildingMangement.DTO;
 using VecinoBuildingMangement.Models;
 using VecinoBuildingMangement.ViewModels;
 
@@ -43,6 +45,7 @@ namespace VecinoBuildingMangementWebService.Controllers
             }
 
         }
+
         [HttpPost]
         public bool SendNotification(SendNotificationViewModel sendNotificationViewModel)
         {
@@ -171,23 +174,25 @@ namespace VecinoBuildingMangementWebService.Controllers
                 manageServiceRequestViewModel.serviceRequests = this.repositoryUOW.ServiceRequestRepository.GetRequestsByBuilding(buildingId);
 
                 manageServiceRequestViewModel.ServiceRequestNumber = manageServiceRequestViewModel.serviceRequests.Count;
-                foreach (ServiceRequest serviceRequest in manageServiceRequestViewModel.serviceRequests)
-                {
-                    switch (serviceRequest.RequestStatus)
-                    {
-                        case "Pending":
-                            manageServiceRequestViewModel.Pending += 1;
-                            break;
-                        case "Completed":
-                            manageServiceRequestViewModel.Completed += 1;
-                            break;
-                        case "In Progress":
-                            manageServiceRequestViewModel.InProgress += 1;
-                            break;
-                        default:
-                            break;
-                    }
-                }
+                (manageServiceRequestViewModel.Pending, manageServiceRequestViewModel.Completed, manageServiceRequestViewModel.InProgress) =
+                    this.repositoryUOW.ServiceRequestRepository.GetServiceRequestSummary(buildingId);
+                //foreach (ServiceRequest serviceRequest in manageServiceRequestViewModel.serviceRequests)
+                //{
+                //    switch (serviceRequest.RequestStatus)
+                //    {
+                //        case "Pending":
+                //            manageServiceRequestViewModel.Pending += 1;
+                //            break;
+                //        case "Completed":
+                //            manageServiceRequestViewModel.Completed += 1;
+                //            break;
+                //        case "In Progress":
+                //            manageServiceRequestViewModel.InProgress += 1;
+                //            break;
+                //        default:
+                //            break;
+                //    }
+                //}
                 return manageServiceRequestViewModel;
             }
             catch (Exception ex)
@@ -257,6 +262,25 @@ namespace VecinoBuildingMangementWebService.Controllers
             }
         }
 
+        [HttpGet]
+        public List<Resident> GetResidents(string buildingId)
+        {
+            try
+            {
+                this.repositoryUOW.DbHelperOleDb.OpenConnection();
+                return this.repositoryUOW.ResidentRepository.GetResidentByBuilding(buildingId);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return null;
+            }
+            finally
+            {
+                this.repositoryUOW.DbHelperOleDb.CloseConnection();
+            }
+        }
+
 
         [HttpPost]
         public bool RemoveResident(string residentId)
@@ -276,15 +300,39 @@ namespace VecinoBuildingMangementWebService.Controllers
             }
         }
         [HttpPost]
-        public bool CreateFee(Fee fee)
+        public bool CreateFee([FromBody] CreateFee createFee)
         {
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
-                return this.repositoryUOW.FeeRepository.Create(fee);
+                this.repositoryUOW.DbHelperOleDb.OpenTransaction();
+                foreach(string id in createFee.FeeRecipientIds)
+                {
+                    Fee fee = new Fee
+                    {
+
+                        FeeTitle = createFee.FeeTitle,
+                        FeeAmount = createFee.FeeAmount,
+                        FeeDueDate = createFee.FeeDueDate,
+                        IsPaid = false,
+                        ResidentId = id,
+                        PaymentDate = ""
+
+                    };
+                    bool response = this.repositoryUOW.FeeRepository.Create(fee);
+                    if(!response)
+                    {
+                        this.repositoryUOW.DbHelperOleDb.RollBack();
+                        return false;
+                    }
+                }
+                this.repositoryUOW.DbHelperOleDb.Commit();
+                return true;
+               
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.ToString());
                 return false;
             }
             finally
@@ -311,16 +359,39 @@ namespace VecinoBuildingMangementWebService.Controllers
         }
 
         [HttpPost]
-        public bool CreateBuilding(Building building)
+        public BuildingResponse CreateBuilding([FromForm] string model, IFormFile file)
         {
+            Building building = JsonSerializer.Deserialize<Building>(model);
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
-                return this.repositoryUOW.BuildingRepository.Create(building);
+                this.repositoryUOW.DbHelperOleDb.OpenTransaction();
+                this.repositoryUOW.BuildingRepository.Create(building);
+                string buildingId = this.repositoryUOW.BuildingRepository.GetLastId();
+                string ext = Path.GetExtension(file.FileName).TrimStart('.').ToLower();
+                string fileName = "building" + buildingId + "." + ext;
+                bool response = this.repositoryUOW.BuildingRepository.UpdatePhotoById(buildingId, fileName);
+              
+                string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images", "BuildingImages" , fileName);
+                using (FileStream fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))
+                {
+                    file.CopyTo(fileStream);
+                }
+                BuildingResponse buildingResponse = new BuildingResponse
+                {
+                    BuildingId = buildingId,
+                };
+                this.repositoryUOW.DbHelperOleDb.Commit();
+                return buildingResponse;
+
+
+
             }
             catch (Exception ex)
             {
-                return false;
+                Console.WriteLine(ex.ToString());
+                this.repositoryUOW.DbHelperOleDb.RollBack();
+                return null;
             }
             finally
             {
@@ -532,7 +603,7 @@ namespace VecinoBuildingMangementWebService.Controllers
                 building = this.repositoryUOW.BuildingRepository.GetById(buildingId);
                 return building;
             }
-            catch (Exception ex)
+            catch
             {
                 return null;
             }
@@ -552,55 +623,78 @@ namespace VecinoBuildingMangementWebService.Controllers
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
-                List<Fee> buildingFees = this.repositoryUOW.FeeRepository.GetFeesByBuildingId(buildingId);
-                int TotalPaid = 0;
-                int TotalUnPaid = 0;
-                double TotalCollected = 0;
-                double Outstanding = 0;
-                foreach(Fee fee in buildingFees)
-                {
-                    ResidentFeeViewModel residentFeeViewModel = new ResidentFeeViewModel();
-                    
+                List<ResidentFeeViewModel> buildingFees = this.repositoryUOW.FeeRepository.GetFeesByBuildingId(buildingId);
+                manageAdminFinance.Finances = buildingFees;
+                FeeSummary feeSummary = this.repositoryUOW.FeeRepository.SummarizeFeesByBuilding(buildingId);
+                manageAdminFinance.TotalPaid = feeSummary.TotalPaid;
+                manageAdminFinance.TotalUnPaid = feeSummary.TotalUnPaid;
+                manageAdminFinance.TotalCollected = feeSummary.TotalCollected;
+                manageAdminFinance.Outstanding = feeSummary.Outstanding;
 
-                    Resident resident = this.repositoryUOW.ResidentRepository.GetById(fee.ResidentId);
-                    residentFeeViewModel.Fee = fee;
-                    residentFeeViewModel.ResidentId = resident.ResidentId;
-                    residentFeeViewModel.ResidentName = resident.ResidentName;
-                    residentFeeViewModel.UnitNumber = resident.UnitNumber;
-                    residentFeeViewModel.ResidentImage = resident.ResidentImage;
-                    manageAdminFinance.Finances.Add(residentFeeViewModel);
+                manageAdminFinance.Transaction = this.repositoryUOW.FeeRepository.GetLastTransactionsByBuildingId(buildingId);
 
-                    if (fee.IsPaid)
-                    {
-                        TotalPaid++;
-                        TotalCollected += fee.FeeAmount;
-                        TransactionViewModel transaction = new TransactionViewModel();
-                        transaction.Fee = fee;
-                        transaction.ResidentName = resident.ResidentName;
-                        manageAdminFinance.Transaction.Add(transaction);
-                    }
-                        
-                    else
-                    {
-                        TotalUnPaid++;
-                        Outstanding += fee.FeeAmount;
-                    }
-                        
-                }
-                manageAdminFinance.TotalCollected = TotalCollected;
-                manageAdminFinance.TotalPaid = TotalPaid;
-                manageAdminFinance.TotalUnPaid = TotalUnPaid;
-                manageAdminFinance.CollectionRate = (int)((double)TotalPaid / buildingFees.Count * 100);
+                manageAdminFinance.CollectionRate = (int)((double)manageAdminFinance.TotalPaid / buildingFees.Count * 100);
                 manageAdminFinance.TotalCollectedCurrentMonth = 0;
 
-                //manageAdminFinance.Transaction = 
-                //manageAdminFinance.Transaction.OrderByDescending(t => DateTime.Parse(t.Fee.FeeDueDate))
-                //.ToList()
+                manageAdminFinance.Transaction =
+                manageAdminFinance.Transaction.OrderByDescending(t => DateTime.ParseExact(t.Fee.PaymentDate, "dd/MM/yyyy", CultureInfo.InvariantCulture))
+                .ToList();
+
                 return manageAdminFinance;
 
             }
             catch(Exception ex)
             {
+                return null;
+            }
+            finally
+            {
+                this.repositoryUOW.DbHelperOleDb.CloseConnection();
+            }
+        }
+
+        [HttpPost]
+        public BuildingResponse CreateBuildingAndRegister([FromForm] string model, IFormFile file)
+        {
+            CreateBuildingRegister createBuildingRegister = JsonSerializer.Deserialize<CreateBuildingRegister>(model);
+            try
+            {
+                this.repositoryUOW.DbHelperOleDb.OpenConnection();
+                this.repositoryUOW.DbHelperOleDb.OpenTransaction();
+      
+                this.repositoryUOW.BuildingRepository.Create(createBuildingRegister.Building);
+                string buildingId = this.repositoryUOW.BuildingRepository.GetLastId();
+                string ext = Path.GetExtension(file.FileName).TrimStart('.').ToLower();
+                string fileName = "building" + buildingId + "." + ext;
+                bool responseBuilding = this.repositoryUOW.BuildingRepository.UpdatePhotoById(buildingId, fileName);
+
+                string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images", "BuildingImages", fileName);
+                using (FileStream fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))
+                {
+                    file.CopyTo(fileStream);
+                }
+                createBuildingRegister.Resident.BuildingId = buildingId;
+                bool responseRegister = this.repositoryUOW.ResidentRepository.Create(createBuildingRegister.Resident);
+
+                if(responseRegister && responseBuilding)
+                {
+                    BuildingResponse buildingResponse = new BuildingResponse
+                    {
+                        BuildingId = buildingId,
+                    };
+                    this.repositoryUOW.DbHelperOleDb.Commit();
+                    return buildingResponse;
+                }
+                this.repositoryUOW.DbHelperOleDb.RollBack();
+                return null;
+
+
+
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                this.repositoryUOW.DbHelperOleDb.RollBack();
                 return null;
             }
             finally

@@ -147,7 +147,7 @@
         <Button Canvas.Left="1398" Canvas.Top="40"
                 Content="+ Add Fee"
                 Style="{StaticResource PrimaryButton}"
-                Height="42" Width="130"
+                Height="42" Width="130" Click="AddFeeButton_Click"
                />
 
         <Button Canvas.Left="1240" Canvas.Top="40"
@@ -317,7 +317,18 @@
                                                 </Border>
                                                 <StackPanel VerticalAlignment="Center">
                                                     <TextBlock Text="{Binding ResidentName}" FontFamily="Segoe UI" FontSize="13" FontWeight="SemiBold" Foreground="#0f172a"/>
-                                                    <TextBlock Text="Paid 12/03/2026" FontFamily="Segoe UI" FontSize="11" Foreground="#94a3b8"/>
+                                                    <TextBlock  FontFamily="Segoe UI" FontSize="11" Foreground="#94a3b8">
+                                                        <TextBlock.Style>
+                                                            <Style TargetType="TextBlock">
+                                                                <Setter Property="Text" Value="{Binding Path=Fee.FeeDueDate, StringFormat=Due Date {0}}" />
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding Fee.IsPaid}" Value="True">
+                                                                        <Setter Property="Text" Value="{Binding Path=Fee.PaymentDate, StringFormat=Payment Date {0}}" />
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBlock.Style>
+                                                    </TextBlock>
                                                 </StackPanel>
                                             </StackPanel>
                                             <TextBlock Grid.Column="1" Text="101" FontFamily="Segoe UI" FontSize="13" FontWeight="SemiBold" Foreground="#1e293b" VerticalAlignment="Center"/>
@@ -341,70 +352,11 @@
                                 </DataTemplate>
                             </ListView.ItemTemplate>
                         </ListView>
-                        <!-- Row 1 — Paid -->
+                      
                         
 
-                        <!-- Row 2 — Unpaid -->
-                        <Border BorderBrush="#f1f5f9" BorderThickness="0,0,0,1" Padding="24,12">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="240"/>
-                                    <ColumnDefinition Width="80"/>
-                                    <ColumnDefinition Width="130"/>
-                                    <ColumnDefinition Width="120"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
-                                    <Border Style="{StaticResource AvatarBorder}">
-                                        <TextBlock Text="DL" FontSize="15" FontWeight="Bold" Foreground="#64748b" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                    </Border>
-                                    <StackPanel VerticalAlignment="Center">
-                                        <TextBlock Text="David Levi" FontFamily="Segoe UI" FontSize="13" FontWeight="SemiBold" Foreground="#0f172a"/>
-                                        <TextBlock Text="Due 01/03/2026" FontFamily="Segoe UI" FontSize="11" Foreground="#94a3b8"/>
-                                    </StackPanel>
-                                </StackPanel>
-                                <TextBlock Grid.Column="1" Text="102" FontFamily="Segoe UI" FontSize="13" FontWeight="SemiBold" Foreground="#1e293b" VerticalAlignment="Center"/>
-                                <TextBlock Grid.Column="2" Text="500₪" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Foreground="#0f172a" VerticalAlignment="Center"/>
-                                <Border Grid.Column="3" Style="{StaticResource UnpaidBadge}" VerticalAlignment="Center" HorizontalAlignment="Left">
-                                    <TextBlock Text="Unpaid" FontFamily="Segoe UI" FontSize="12" FontWeight="SemiBold" Foreground="#e11d48"/>
-                                </Border>
-                                <StackPanel Grid.Column="4" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-                                    <Button Content="Remind" Style="{StaticResource RemindButton}" Height="30" Margin="0,0,6,0" />
-                                    <Button Content="View" Style="{StaticResource SecondaryButton}" Height="30" />
-                                </StackPanel>
-                            </Grid>
-                        </Border>
 
-                        <!-- Row 3 — Overdue -->
-                        <Border BorderBrush="#f1f5f9" BorderThickness="0,0,0,1" Padding="24,12">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="240"/>
-                                    <ColumnDefinition Width="80"/>
-                                    <ColumnDefinition Width="130"/>
-                                    <ColumnDefinition Width="120"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
-                                    <Border Style="{StaticResource AvatarBorder}">
-                                        <TextBlock Text="AB" FontSize="15" FontWeight="Bold" Foreground="#64748b" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                    </Border>
-                                    <StackPanel VerticalAlignment="Center">
-                                        <TextBlock Text="Avi Ben-David" FontFamily="Segoe UI" FontSize="13" FontWeight="SemiBold" Foreground="#0f172a"/>
-                                        <TextBlock Text="Overdue since 01/02" FontFamily="Segoe UI" FontSize="11" Foreground="#94a3b8"/>
-                                    </StackPanel>
-                                </StackPanel>
-                                <TextBlock Grid.Column="1" Text="202" FontFamily="Segoe UI" FontSize="13" FontWeight="SemiBold" Foreground="#1e293b" VerticalAlignment="Center"/>
-                                <TextBlock Grid.Column="2" Text="500₪" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Foreground="#0f172a" VerticalAlignment="Center"/>
-                                <Border Grid.Column="3" Style="{StaticResource OverdueBadge}" VerticalAlignment="Center" HorizontalAlignment="Left">
-                                    <TextBlock Text="Overdue" FontFamily="Segoe UI" FontSize="12" FontWeight="SemiBold" Foreground="#ff8c42"/>
-                                </Border>
-                                <StackPanel Grid.Column="4" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-                                    <Button Content="Remind" Style="{StaticResource RemindButton}" Height="30" Margin="0,0,6,0" />
-                                    <Button Content="View" Style="{StaticResource SecondaryButton}" Height="30" />
-                                </StackPanel>
-                            </Grid>
-                        </Border>
+                       
 
                     </StackPanel>
                 </ScrollViewer>
@@ -426,91 +378,38 @@
                 </Border>
 
                 <StackPanel Grid.Row="1">
-
-                    <!-- Transaction 1 -->
-                    <Border BorderBrush="#f1f5f9" BorderThickness="0,0,0,1" Padding="22,10">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="44"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-                            <Border Grid.Column="0" Width="34" Height="34" CornerRadius="17" Margin="0,0,10,0">
-                                <Border.Background>
-                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                        <GradientStop Color="#14b8a6" Offset="0"/>
-                                        <GradientStop Color="#22c55e" Offset="1"/>
-                                    </LinearGradientBrush>
-                                </Border.Background>
-                                <TextBlock Text="✓" FontSize="15" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            </Border>
-                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                <TextBlock Text="Sarah Cohen" FontFamily="Segoe UI" FontSize="13" FontWeight="SemiBold" Foreground="#1e293b"/>
-                                <TextBlock Text="Monthly Fee" FontFamily="Segoe UI" FontSize="11" Foreground="#94a3b8"/>
-                            </StackPanel>
-                            <StackPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right">
-                                <TextBlock Text="+500₪" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Foreground="#16a34a" HorizontalAlignment="Right"/>
-                                <TextBlock Text="12/03/2026" FontFamily="Segoe UI" FontSize="11" Foreground="#94a3b8" HorizontalAlignment="Right"/>
-                            </StackPanel>
-                        </Grid>
-                    </Border>
-
-                    <!-- Transaction 2 -->
-                    <Border BorderBrush="#f1f5f9" BorderThickness="0,0,0,1" Padding="22,10">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="44"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-                            <Border Grid.Column="0" Width="34" Height="34" CornerRadius="17" Margin="0,0,10,0">
-                                <Border.Background>
-                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                        <GradientStop Color="#14b8a6" Offset="0"/>
-                                        <GradientStop Color="#22c55e" Offset="1"/>
-                                    </LinearGradientBrush>
-                                </Border.Background>
-                                <TextBlock Text="✓" FontSize="15" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            </Border>
-                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                <TextBlock Text="Miriam Shapiro" FontFamily="Segoe UI" FontSize="13" FontWeight="SemiBold" Foreground="#1e293b"/>
-                                <TextBlock Text="Repair Fee" FontFamily="Segoe UI" FontSize="11" Foreground="#94a3b8"/>
-                            </StackPanel>
-                            <StackPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right">
-                                <TextBlock Text="+250₪" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Foreground="#16a34a" HorizontalAlignment="Right"/>
-                                <TextBlock Text="11/03/2026" FontFamily="Segoe UI" FontSize="11" Foreground="#94a3b8" HorizontalAlignment="Right"/>
-                            </StackPanel>
-                        </Grid>
-                    </Border>
-
-                    <!-- Transaction 3 -->
-                    <Border BorderBrush="#f1f5f9" BorderThickness="0,0,0,1" Padding="22,10">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="44"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-                            <Border Grid.Column="0" Width="34" Height="34" CornerRadius="17" Margin="0,0,10,0">
-                                <Border.Background>
-                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                        <GradientStop Color="#14b8a6" Offset="0"/>
-                                        <GradientStop Color="#22c55e" Offset="1"/>
-                                    </LinearGradientBrush>
-                                </Border.Background>
-                                <TextBlock Text="✓" FontSize="15" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            </Border>
-                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                <TextBlock Text="Eitan Katz" FontFamily="Segoe UI" FontSize="13" FontWeight="SemiBold" Foreground="#1e293b"/>
-                                <TextBlock Text="Parking Fee" FontFamily="Segoe UI" FontSize="11" Foreground="#94a3b8"/>
-                            </StackPanel>
-                            <StackPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right">
-                                <TextBlock Text="+150₪" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Foreground="#16a34a" HorizontalAlignment="Right"/>
-                                <TextBlock Text="10/03/2026" FontFamily="Segoe UI" FontSize="11" Foreground="#94a3b8" HorizontalAlignment="Right"/>
-                            </StackPanel>
-                        </Grid>
-                    </Border>
-
+                    <ListView x:Name="ListViewTransaction" BorderThickness="0" Background="Transparent" HorizontalContentAlignment="Stretch">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Border BorderBrush="#f1f5f9" BorderThickness="0,0,0,1" Padding="22,10">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="44"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Border Grid.Column="0" Width="34" Height="34" CornerRadius="17" Margin="0,0,10,0">
+                                            <Border.Background>
+                                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                    <GradientStop Color="#14b8a6" Offset="0"/>
+                                                    <GradientStop Color="#22c55e" Offset="1"/>
+                                                </LinearGradientBrush>
+                                            </Border.Background>
+                                            <TextBlock Text="✓" FontSize="15" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding ResidentName}" FontFamily="Segoe UI" FontSize="13" FontWeight="SemiBold" Foreground="#1e293b"/>
+                                            <TextBlock Text="{Binding Fee.FeeTitle}" FontFamily="Segoe UI" FontSize="11" Foreground="#94a3b8"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right">
+                                            <TextBlock Text="{Binding Fee.FeeAmount,StringFormat= +{0}₪}" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Foreground="#16a34a" HorizontalAlignment="Right"/>
+                                            <TextBlock Text="{Binding Fee.PaymentDate}" FontFamily="Segoe UI" FontSize="11" Foreground="#94a3b8" HorizontalAlignment="Right"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
                 </StackPanel>
             </Grid>
         </Border>
