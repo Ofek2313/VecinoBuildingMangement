@@ -9,7 +9,10 @@ namespace VecinoBuildingMangement.ViewModels
 {
     public class ManageEventViewModel
     {
-        public List<Event> Events { get; set; }
+        public List<EventViewModel> Events { get; set; } = new List<EventViewModel>();
+
+        public List<EventViewModel> PastEvents { get; set; } = new List<EventViewModel>();
+
         public string CurrentMonth { get; set; }
     }
 }

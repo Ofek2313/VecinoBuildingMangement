@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using System.Data;
 using System.Text;
+using VecinoBuildingMangement.DTO;
 using VecinoBuildingMangement.Models;
 using VecinoBuildingMangement.ViewModels;
 
@@ -195,6 +196,20 @@ namespace VecinoBuildingMangementWebService
             this.dbHelperOleDb.AddParameter("@EventId", eventId);
             return this.dbHelperOleDb.Update(sql) > 0;
         }
+        public List<string> GetResidentsAttendingEventByEventId(string eventId)
+        {
+            string sql = $"SELECT Resident.ResidentName FROM Resident INNER JOIN (Event INNER JOIN EventAttendance ON Event.EventId = EventAttendance.EventId) ON Resident.ResidentId = EventAttendance.ResidentId WHERE  Event.EventId = @EventId";
+            this.dbHelperOleDb.AddParameter("@EventId", eventId);
+            List<string> ResidentNames = new List<string>();
+            using (IDataReader dataReader = this.dbHelperOleDb.Select(sql))
+            {
+                while (dataReader.Read())
+                {
+                    ResidentNames.Add(Convert.ToString(dataReader["ResidentName"]));
+                }
+            }
+            return ResidentNames;
+        }
 
         public List<EventViewModel> GetEventViewModelsByBuildingId(string buildingId)
         {
@@ -226,6 +241,7 @@ namespace VecinoBuildingMangementWebService
             }
             return eventViewModels;
         }
+        
     }
     
 }

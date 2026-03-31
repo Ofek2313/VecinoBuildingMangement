@@ -75,142 +75,179 @@
 
         </conv:UrlConverter>
     </UserControl.Resources>
-    <Canvas>
+    <Grid>
+        <!-- Header buttons stay fixed at top -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
-        <TextBlock Canvas.Left="82" TextWrapping="Wrap" Text="Manage Events" Canvas.Top="28" FontFamily="Segoe UI" Foreground="#1e293b" FontSize="27" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Top"/>
-        <TextBlock Canvas.Left="82" TextWrapping="Wrap" Text="View and manage upcoming events" Canvas.Top="69" FontFamily="Segoe UI" Foreground="#1e293b" FontSize="15" FontWeight="Normal" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <!-- Fixed Header -->
+        <Grid Grid.Row="0" Background="Transparent">
+            <TextBlock Margin="82,28,0,0" TextWrapping="Wrap" Text="Manage Events" 
+                   FontFamily="Segoe UI" Foreground="#1e293b" FontSize="27" 
+                   FontWeight="SemiBold" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <TextBlock Margin="82,69,0,0" TextWrapping="Wrap" Text="View and manage upcoming events" 
+                   FontFamily="Segoe UI" Foreground="#1e293b" FontSize="15" 
+                   FontWeight="Normal" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <Button Content="Add Event +" Margin="0,28,82,0" Height="40" Width="166" 
+                Style="{StaticResource DeleteEventButton}" FontSize="16" 
+                HorizontalAlignment="Right" VerticalAlignment="Top" 
+                Click="ButtonAddEvent_Click">
+                <Button.Effect>
+                    <DropShadowEffect Color="Black" Opacity="0.05" BlurRadius="3" 
+                                  ShadowDepth="1" Direction="270"/>
+                </Button.Effect>
+            </Button>
+        </Grid>
 
+        <!-- Scrollable Content -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" 
+                  HorizontalScrollBarVisibility="Disabled"
+                  Margin="0,10,0,0">
+            <StackPanel Margin="82,0,82,30">
 
-        <ListView  x:Name="listViewEvents"  Width="1500"
-          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-          BorderThickness="0"
-          Background="Transparent" HorizontalAlignment="Center" Height="821" VerticalAlignment="Top" Canvas.Left="82" Canvas.Top="214">
-            <ListView.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <WrapPanel Orientation="Horizontal" />
-                </ItemsPanelTemplate>
-            </ListView.ItemsPanel>
+                <!-- Active Events Section -->
+                <TextBlock TextWrapping="Wrap" Text="Active Events" Margin="24,20,0,10"
+                       FontFamily="Segoe UI" Foreground="#1e293b" FontSize="23" 
+                       FontWeight="SemiBold"/>
+                <ItemsControl x:Name="listViewEvents">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemContainerStyle>
+                        <Style TargetType="ContentPresenter">
+                            <Setter Property="Margin" Value="10"/>
+                        </Style>
+                    </ItemsControl.ItemContainerStyle>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Style="{StaticResource borderDesgin}" Height="380" Width="390">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+                                    <Grid Height="184" VerticalAlignment="Top" Grid.Row="0">
+                                        <Image Source="{Binding Event.EventImage, Converter={StaticResource urlConverter}}" Stretch="Fill"/>
+                                        <Grid.Clip>
+                                            <PathGeometry>
+                                                <PathFigure StartPoint="0,16" IsClosed="True">
+                                                    <ArcSegment Point="16,0" Size="16,16" SweepDirection="Clockwise"/>
+                                                    <LineSegment Point="374,0"/>
+                                                    <ArcSegment Point="390,16" Size="16,16" SweepDirection="Clockwise"/>
+                                                    <LineSegment Point="390,184"/>
+                                                    <LineSegment Point="0,184"/>
+                                                </PathFigure>
+                                            </PathGeometry>
+                                        </Grid.Clip>
+                                    </Grid>
+                                    <StackPanel Grid.Row="1" Margin="15,10,0,0">
+                                        <TextBlock Text="{Binding Event.EventTitle}" Foreground="#1e293b" FontSize="20" FontWeight="SemiBold" FontFamily="Segoe UI"/>
+                                        <TextBlock Text="{Binding Event.EventDescription}" Foreground="#1e293b" FontFamily="Segoe UI" FontWeight="Normal" Margin="0,5,0,0" TextWrapping="Wrap"/>
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,25,0,0">
+                                            <Path Width="12" Height="12" VerticalAlignment="Center" Stretch="Uniform" Fill="#64748b"
+                                              Data="M9 2a1 1 0 0 1 1 1v1h4V3a1 1 0 1 1 2 0v1h3a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h3V3a1 1 0 0 1 1-1zM8 6H5v3h14V6h-3v1a1 1 0 1 1-2 0V6h-4v1a1 1 0 0 1-2 0V6zm11 5H5v8h14v-8z"/>
+                                            <TextBlock Text="{Binding Event.EventDate}" Style="{StaticResource DateTextStyle}"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,10,0,0">
+                                            <Path Width="12" Height="12" VerticalAlignment="Center" Stretch="Uniform" Fill="#64748b"
+                                              Data="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.2 3.2.8-1.3-4.5-2.7V7z"/>
+                                            <TextBlock Style="{StaticResource DateTextStyle}">
+                                                <TextBlock.Text>
+                                                    <MultiBinding StringFormat="{}{0} - {1}">
+                                                        <Binding Path="Event.StartTime"/>
+                                                        <Binding Path="Event.EndTime"/>
+                                                    </MultiBinding>
+                                                </TextBlock.Text>
+                                            </TextBlock>
+                                        </StackPanel>
+                                        <Border Height="1" Margin="16,12,0,15" Background="#E5E7EB" Opacity="0.7"/>
+                                        <StackPanel Orientation="Horizontal">
+                                            
+                                      
+                                            <Button Content="Delete" Style="{StaticResource DeleteEventButton}" Width="89" HorizontalAlignment="Right" Margin="0,0,15,0" Height="30"/>
+                                            <Button x:Name="ViewEventDetailsButton" Content="View Detail" Style="{StaticResource DeleteEventButton}" Width="120" HorizontalAlignment="Right" Margin="0,0,15,0" Height="30" Click="ViewEventDetailsButton_Click"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
 
-            <ListView.ItemContainerStyle>
-                <Style TargetType="ListViewItem">
-                    <Setter Property="Margin" Value="10"/>
-                    <Setter Property="Padding" Value="0"/>
-                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                    <Setter Property="VerticalContentAlignment" Value="Stretch"/>
-                    <Setter Property="Template">
-                        <Setter.Value>
-                            <ControlTemplate TargetType="ListViewItem">
-                                <ContentPresenter/>
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
-                </Style>
-            </ListView.ItemContainerStyle>
+                <!-- Divider -->
+                <Border Height="1" Margin="24,20,24,0" Background="#E5E7EB" Opacity="0.7"/>
 
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <Border Style="{StaticResource borderDesgin}"
-                    Height="380"
-                    Width="390">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                            </Grid.RowDefinitions>
+                <!-- Past Events Section -->
+                <TextBlock TextWrapping="Wrap" Text="Past Events" Margin="24,20,0,10"
+                       FontFamily="Segoe UI" Foreground="#1e293b" FontSize="23" 
+                       FontWeight="SemiBold"/>
+                <ItemsControl x:Name="listViewPastEvents">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemContainerStyle>
+                        <Style TargetType="ContentPresenter">
+                            <Setter Property="Margin" Value="10"/>
+                        </Style>
+                    </ItemsControl.ItemContainerStyle>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Style="{StaticResource borderDesgin}" Height="380" Width="390">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+                                    <Grid Height="184" VerticalAlignment="Top" Grid.Row="0">
+                                        <Image Source="{Binding Event.EventImage, Converter={StaticResource urlConverter}}" Stretch="Fill"/>
+                                        <Grid.Clip>
+                                            <PathGeometry>
+                                                <PathFigure StartPoint="0,16" IsClosed="True">
+                                                    <ArcSegment Point="16,0" Size="16,16" SweepDirection="Clockwise"/>
+                                                    <LineSegment Point="374,0"/>
+                                                    <ArcSegment Point="390,16" Size="16,16" SweepDirection="Clockwise"/>
+                                                    <LineSegment Point="390,184"/>
+                                                    <LineSegment Point="0,184"/>
+                                                </PathFigure>
+                                            </PathGeometry>
+                                        </Grid.Clip>
+                                    </Grid>
+                                    <StackPanel Grid.Row="1" Margin="15,10,0,0">
+                                        <TextBlock Text="{Binding Event.EventTitle}" Foreground="#1e293b" FontSize="20" FontWeight="SemiBold" FontFamily="Segoe UI"/>
+                                        <TextBlock Text="{Binding Event.EventDescription}" Foreground="#1e293b" FontFamily="Segoe UI" FontWeight="Normal" Margin="0,5,0,0" TextWrapping="Wrap"/>
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,25,0,0">
+                                            <Path Width="12" Height="12" VerticalAlignment="Center" Stretch="Uniform" Fill="#64748b"
+                                              Data="M9 2a1 1 0 0 1 1 1v1h4V3a1 1 0 1 1 2 0v1h3a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h3V3a1 1 0 0 1 1-1zM8 6H5v3h14V6h-3v1a1 1 0 1 1-2 0V6h-4v1a1 1 0 0 1-2 0V6zm11 5H5v8h14v-8z"/>
+                                            <TextBlock Text="{Binding Event.EventDate}" Style="{StaticResource DateTextStyle}"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,10,0,0">
+                                            <Path Width="12" Height="12" VerticalAlignment="Center" Stretch="Uniform" Fill="#64748b"
+                                              Data="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.2 3.2.8-1.3-4.5-2.7V7z"/>
+                                            <TextBlock Style="{StaticResource DateTextStyle}">
+                                                <TextBlock.Text>
+                                                    <MultiBinding StringFormat="{}{0} - {1}">
+                                                        <Binding Path="Event.StartTime"/>
+                                                        <Binding Path="Event.EndTime"/>
+                                                    </MultiBinding>
+                                                </TextBlock.Text>
+                                            </TextBlock>
+                                        </StackPanel>
+                                        <Border Height="1" Margin="16,12,0,15" Background="#E5E7EB" Opacity="0.7"/>
+                                        <Button Content="Delete" Style="{StaticResource DeleteEventButton}" Width="89" HorizontalAlignment="Right" Margin="0,0,15,0" Height="30"/>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
 
-                            <Grid Height="184"
-                          VerticalAlignment="Top" 
-                          Grid.Row="0">
-                                <Image Source="{Binding EventImage,Converter={StaticResource urlConverter}}"
-                                Stretch="Fill"/>
-                                <Grid.Clip>
-                                    <PathGeometry>
-                                        <PathFigure StartPoint="0,16" IsClosed="True">
-                                            <ArcSegment Point="16,0"
-                                                Size="16,16"
-                                                SweepDirection="Clockwise"/>
-                                            <LineSegment Point="374,0"/>
-                                            <ArcSegment Point="390,16"
-                                                Size="16,16"
-                                                SweepDirection="Clockwise"/>
-                                            <LineSegment Point="390,184"/>
-                                            <LineSegment Point="0,184"/>
-                                        </PathFigure>
-                                    </PathGeometry>
-                                </Grid.Clip>
-                            </Grid>
-
-                            <StackPanel Grid.Row="1" Margin="15 10 0 0">
-                                <TextBlock Text="{Binding EventTitle}"
-                                   Foreground="#1e293b" 
-                                   FontSize="20" 
-                                   FontWeight="SemiBold" 
-                                   FontFamily="Segoe UI"/>
-                                <TextBlock Text="{Binding EventDescription}"
-                                   Foreground="#1e293b" 
-                                   FontFamily="Segoe UI" 
-                                   FontWeight="Normal" 
-                                   Margin="0 5 0 0"
-                                   TextWrapping="Wrap"/>
-
-                                <StackPanel Orientation="Horizontal" 
-                                    VerticalAlignment="Center" 
-                                    Margin="0 25 0 0">
-                                    <Path Width="12"
-                                  Height="12"
-                                  VerticalAlignment="Center"
-                                  Stretch="Uniform"
-                                  Fill="#64748b"
-                                  Data="M9 2a1 1 0 0 1 1 1v1h4V3a1 1 0 1 1 2 0v1h3a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h3V3a1 1 0 0 1 1-1zM8 6H5v3h14V6h-3v1a1 1 0 1 1-2 0V6h-4v1a1 1 0 0 1-2 0V6zm11 5H5v8h14v-8z"/>
-                                    <TextBlock Text="{Binding EventDate}"
-                                       Style="{StaticResource DateTextStyle}"/>
-                                </StackPanel>
-
-                                <StackPanel Orientation="Horizontal" 
-                                    VerticalAlignment="Center" 
-                                    Margin="0 10 0 0">
-                                    <Path Width="12"
-                                  Height="12"
-                                  VerticalAlignment="Center"
-                                  Stretch="Uniform"
-                                  Fill="#64748b"
-                                  Data="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.2 3.2.8-1.3-4.5-2.7V7z"/>
-                                    <TextBlock Style="{StaticResource DateTextStyle}">
-                                        <TextBlock.Text>
-                                            <MultiBinding StringFormat="{}{0} - {1}">
-                                                <Binding Path="StartTime"/>
-                                                <Binding Path="EndTime"/>
-                                            </MultiBinding>
-                                        </TextBlock.Text>
-                                    </TextBlock>
-                                </StackPanel>
-
-                                <Border Height="1" 
-                                Margin="16 12 0 15"
-                                Background="#E5E7EB"
-                                Opacity="0.7"/>
-
-                                <Button Content="Delete"  
-                                Style="{StaticResource DeleteEventButton}" 
-                                Width="89" 
-                                HorizontalAlignment="Right" 
-                                Margin="0 0 15 0" 
-                                Height="30"/>
-                            </StackPanel>
-                        </Grid>
-                    </Border>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
-        <Button Content="Add Event +" Canvas.Left="1428" Canvas.Top="100" Height="40" Width="166" Style="{StaticResource DeleteEventButton}" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top" Click="ButtonAddEvent_Click">
-            <Button.Effect>
-                <DropShadowEffect   Color="Black"
-  Opacity="0.05"
-  BlurRadius="3"
-  ShadowDepth="1"
-  Direction="270"/>
-
-            </Button.Effect>
-        </Button>
-    </Canvas>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
 </UserControl>

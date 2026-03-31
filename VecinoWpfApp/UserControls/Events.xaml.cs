@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using VecinoBuildingMangement.Models;
 using VecinoBuildingMangement.ViewModels;
 using VecinoWpfApp.AppWindows;
 
@@ -25,6 +26,8 @@ namespace VecinoWpfApp.UserControls
     {
         ManageEventViewModel eventViewModel;
         NewEvent newEvent;
+        EventDetails eventDetails;
+
         public Events()
         {
             InitializeComponent();
@@ -41,6 +44,7 @@ namespace VecinoWpfApp.UserControls
             eventViewModel = await client.GetAsync();
 
             listViewEvents.ItemsSource = this.eventViewModel.Events;
+            listViewPastEvents.ItemsSource = this.eventViewModel.PastEvents;
             this.DataContext = this.eventViewModel.Events;
 
         }
@@ -61,6 +65,20 @@ namespace VecinoWpfApp.UserControls
             if (response == true)
                 await GetEventsList();
 
+        }
+        private bool? ViewEventDetailWindow(EventViewModel model)
+        {
+            if (this.eventDetails == null)
+                this.eventDetails = new EventDetails(model);
+            this.eventDetails.Owner = Window.GetWindow(this);
+            bool? response = this.eventDetails.ShowDialog();
+            this.eventDetails = null;
+            return response;
+        }
+        private void ViewEventDetailsButton_Click(object sender, RoutedEventArgs e)
+        {
+            EventViewModel model = (sender as Button).DataContext as EventViewModel;
+            bool? response = ViewEventDetailWindow(model);
         }
     }
 }

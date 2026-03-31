@@ -11,6 +11,7 @@ using VecinoBuildingMangement.DTO;
 using VecinoBuildingMangement.Models;
 using VecinoBuildingMangement.ViewModels;
 
+
 namespace VecinoBuildingMangementWebService.Controllers
 {
     [Route("api/[controller]/[action]")]
@@ -96,7 +97,9 @@ namespace VecinoBuildingMangementWebService.Controllers
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
-                manageEventViewModel.Events = this.repositoryUOW.EventRepository.GetCurrentEventsByBuildingId(buildingId);
+                List<EventViewModel> events = this.repositoryUOW.EventRepository.GetEventViewModelsByBuildingId(buildingId);
+                manageEventViewModel.Events = events.Where(e => (DateTime.ParseExact(e.Event.EventDate, "dd/MM/yyyy", CultureInfo.InvariantCulture) >= DateTime.Today)).ToList();
+                manageEventViewModel.PastEvents = events.Where(e => (DateTime.ParseExact(e.Event.EventDate, "dd/MM/yyyy", CultureInfo.InvariantCulture) < DateTime.Today)).ToList();
                 manageEventViewModel.CurrentMonth = DateTime.Now.ToString("MMMM");
                 return manageEventViewModel;
             }
@@ -157,6 +160,44 @@ namespace VecinoBuildingMangementWebService.Controllers
             catch (Exception ex)
             {
                 return false;
+            }
+            finally
+            {
+                this.repositoryUOW.DbHelperOleDb.CloseConnection();
+            }
+        }
+
+        [HttpPost]
+        public bool UpdateEvent([FromBody] Event @event)
+        {
+            try
+            {
+                this.repositoryUOW.DbHelperOleDb.OpenConnection();
+                return this.repositoryUOW.EventRepository.Update(@event);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return false;
+            }
+            finally
+            {
+                this.repositoryUOW.DbHelperOleDb.CloseConnection();
+            }
+        }
+
+        [HttpGet]
+        public List<string> GetResidentsAttendingEvent(string eventId)
+        {
+            try
+            {
+                this.repositoryUOW.DbHelperOleDb.OpenConnection();
+                return this.repositoryUOW.EventRepository.GetResidentsAttendingEventByEventId(eventId);
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return null;
             }
             finally
             {
