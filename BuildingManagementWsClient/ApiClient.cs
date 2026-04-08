@@ -168,8 +168,12 @@ namespace BuildingManagementWsClient
                 StringContent modelContent = new StringContent(json);
                 multipartFormDataContent.Add(modelContent, "model");
 
-                StreamContent streamContent = new StreamContent(file); // Streamcontent becaues of the file stream
-                multipartFormDataContent.Add(streamContent, "file", fileName);
+                if(file != null && fileName != null)
+                {
+                    StreamContent streamContent = new StreamContent(file); // Streamcontent becaues of the file stream
+                    multipartFormDataContent.Add(streamContent, "file", fileName);
+                }
+               
                 httpRequest.Content = multipartFormDataContent;
                 using (HttpResponseMessage httpResponse = await this.httpClient.SendAsync(httpRequest))
                 {

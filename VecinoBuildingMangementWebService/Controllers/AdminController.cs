@@ -28,16 +28,16 @@ namespace VecinoBuildingMangementWebService.Controllers
         }
 
         [HttpGet]
-        public List<Notification> GetNotifications()
+        public List<Notification> GetNotifications(string buildingId)
         {
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
-                return this.repositoryUOW.NotificationRepository.GetAll();
+                return this.repositoryUOW.NotificationRepository.GetNotificationsByBuildingId(buildingId);
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                Console.WriteLine(ex.ToString());
                 return null;
             }
             finally
@@ -48,41 +48,53 @@ namespace VecinoBuildingMangementWebService.Controllers
         }
 
         [HttpPost]
-        public bool SendNotification(SendNotificationViewModel sendNotificationViewModel)
+        public bool SendNotification([FromBody]SendNotificationViewModel sendNotificationViewModel)
         {
             try
             {
 
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
                 this.repositoryUOW.DbHelperOleDb.OpenTransaction();
+                sendNotificationViewModel.Notification.NotificationDate = DateTime.Now.ToString("dd/MM/yyyy");
                 this.repositoryUOW.NotificationRepository.Create(sendNotificationViewModel.Notification);
                 string id = this.repositoryUOW.NotificationRepository.GetLastId();
-
-                foreach (string residentId in sendNotificationViewModel.ResidentIds)
+                foreach(string residentId in sendNotificationViewModel.ResidentIds)
                 {
-
-
-
-                    string sql = @"Insert Into ResidentNotification(ResidentId,NotificationId) Values(@ResidentId,@NotificationId)";
-                    this.repositoryUOW.DbHelperOleDb.AddParameter("@ResidentId", residentId);
-                    this.repositoryUOW.DbHelperOleDb.AddParameter("@NotificationId", id);
-                    int rows = this.repositoryUOW.DbHelperOleDb.Insert(sql);
-                    if (rows != 1)
+                    bool response = this.repositoryUOW.NotificationRepository.CreateResidentNotification(id, residentId);
+                    if (!response)
                     {
                         this.repositoryUOW.DbHelperOleDb.RollBack();
                         return false;
                     }
-
-
-
                 }
+              
                 this.repositoryUOW.DbHelperOleDb.Commit();
                 return true;
             }
             catch (Exception ex)
             {
                 this.repositoryUOW.DbHelperOleDb.RollBack();
+                Console.WriteLine(ex.ToString());
                 return false;
+            }
+            finally
+            {
+                this.repositoryUOW.DbHelperOleDb.CloseConnection();
+            }
+        }
+        [HttpPost]
+        public bool RemoveNotification([FromBody] string notificationId)
+        {
+            try
+            {
+                this.repositoryUOW.DbHelperOleDb.OpenConnection();
+                return this.repositoryUOW.NotificationRepository.Delete(notificationId);
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return false;
+
             }
             finally
             {
@@ -105,6 +117,7 @@ namespace VecinoBuildingMangementWebService.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.ToString());
                 return null;
             }
             finally
@@ -141,24 +154,7 @@ namespace VecinoBuildingMangementWebService.Controllers
             catch (Exception ex)
             {
                 this.repositoryUOW.DbHelperOleDb.RollBack();
-                return false;
-            }
-            finally
-            {
-                this.repositoryUOW.DbHelperOleDb.CloseConnection();
-            }
-        }
-
-        [HttpDelete]
-        public bool RemoveEvent(string eventId)
-        {
-            try
-            {
-                this.repositoryUOW.DbHelperOleDb.OpenConnection();
-                return this.repositoryUOW.EventRepository.Delete(eventId);
-            }
-            catch (Exception ex)
-            {
+                Console.WriteLine(ex.ToString());
                 return false;
             }
             finally
@@ -168,12 +164,50 @@ namespace VecinoBuildingMangementWebService.Controllers
         }
 
         [HttpPost]
-        public bool UpdateEvent([FromBody] Event @event)
+        public bool RemoveEvent([FromQuery] string eventId)
         {
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
-                return this.repositoryUOW.EventRepository.Update(@event);
+                return this.repositoryUOW.EventRepository.Delete(eventId);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return false;
+            }
+            finally
+            {
+                this.repositoryUOW.DbHelperOleDb.CloseConnection();
+            }
+        }
+
+        [HttpPost]
+        public bool UpdateEvent([FromForm] string model, IFormFile? file)
+        {
+            Event @event = JsonSerializer.Deserialize<Event>(model);
+            bool response = false;
+            try
+            {
+                
+                this.repositoryUOW.DbHelperOleDb.OpenConnection();
+                if(file != null)
+                {
+                    string ext = Path.GetExtension(file.FileName).TrimStart('.').ToLower();
+                    @event.EventImage = $"event{@event.EventId}.{ext}";
+                    response = this.repositoryUOW.EventRepository.Update(@event);
+                    string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images", @event.EventImage);
+                    using (FileStream fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))
+                    {
+                        file.CopyTo(fileStream);
+                    }
+                }
+                else
+                {
+                    response = this.repositoryUOW.EventRepository.Update(@event);
+                }
+                return response;
+                
             }
             catch (Exception ex)
             {
@@ -238,6 +272,7 @@ namespace VecinoBuildingMangementWebService.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.ToString());
                 return null;
             }
             finally
@@ -256,6 +291,7 @@ namespace VecinoBuildingMangementWebService.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.ToString());
                 return false;
             }
             finally
@@ -274,6 +310,7 @@ namespace VecinoBuildingMangementWebService.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.ToString());
                 return false;
             }
             finally
@@ -295,6 +332,7 @@ namespace VecinoBuildingMangementWebService.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.ToString());
                 return null;
             }
             finally
@@ -333,6 +371,7 @@ namespace VecinoBuildingMangementWebService.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.ToString());
                 return false;
             }
             finally
@@ -391,6 +430,7 @@ namespace VecinoBuildingMangementWebService.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.ToString());
                 return null;
             }
             finally
@@ -452,6 +492,7 @@ namespace VecinoBuildingMangementWebService.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.ToString());
                 return null;
             }
             finally
@@ -519,6 +560,7 @@ namespace VecinoBuildingMangementWebService.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.ToString());
                 return null;
             }
             finally
@@ -552,7 +594,7 @@ namespace VecinoBuildingMangementWebService.Controllers
             catch (Exception ex)
             {
                 this.repositoryUOW.DbHelperOleDb.RollBack();
-                Console.WriteLine(ex);
+                Console.WriteLine(ex.ToString());
                 return false;
             }
             finally
@@ -579,6 +621,7 @@ namespace VecinoBuildingMangementWebService.Controllers
             catch (Exception ex)
             {
                 this.repositoryUOW.DbHelperOleDb.RollBack();
+                Console.WriteLine(ex.ToString());
                 return false;
             }
             finally
@@ -603,6 +646,7 @@ namespace VecinoBuildingMangementWebService.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.ToString());
                 return false;
             }
             finally
@@ -644,8 +688,9 @@ namespace VecinoBuildingMangementWebService.Controllers
                 building = this.repositoryUOW.BuildingRepository.GetById(buildingId);
                 return building;
             }
-            catch
+            catch(Exception ex)
             {
+                Console.WriteLine(ex.ToString());
                 return null;
             }
             finally
@@ -686,6 +731,7 @@ namespace VecinoBuildingMangementWebService.Controllers
             }
             catch(Exception ex)
             {
+                Console.WriteLine(ex.ToString());
                 return null;
             }
             finally

@@ -11,5 +11,26 @@ namespace VecinoBuildingMangement.ViewModels
     {
         public Event Event { get; set; }
         public int Attending {  get; set; }
+
+        public EventViewModel Clone()
+        {
+            return new EventViewModel
+            {
+                Event = new Event
+                {
+                    EventId = Event.EventId,
+                    EventDate = Event.EventDate,
+                    EventTitle = Event.EventTitle,
+                    EventDescription = Event.EventDescription,
+                    EventTypeId = Event.EventTypeId,
+                    EventImage = Event.EventImage,
+                    StartTime = Event.StartTime,
+                    EndTime = Event.EndTime,
+                    BuildingId = Event.BuildingId,
+                },
+                Attending = this.Attending,
+
+            };
+        }
     }
 }

@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Controllers\at\" />
     <Folder Include="wwwroot\Images\BuildingImages\" />
   </ItemGroup>
 

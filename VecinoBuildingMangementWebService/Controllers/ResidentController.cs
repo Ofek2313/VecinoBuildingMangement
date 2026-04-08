@@ -366,7 +366,7 @@ namespace VecinoBuildingMangementWebService.Controllers
             }
             catch (Exception ex)
             {
-               
+                Console.WriteLine(ex.ToString());
                 return null;
             }
             finally
@@ -439,6 +439,7 @@ namespace VecinoBuildingMangementWebService.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.ToString());
                 return null;
             }
             finally
@@ -464,7 +465,7 @@ namespace VecinoBuildingMangementWebService.Controllers
             }
             catch (Exception ex)
             {
-
+                Console.WriteLine(ex.ToString());
                 return false;
             }
             finally
@@ -488,6 +489,7 @@ namespace VecinoBuildingMangementWebService.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.ToString());
                 return null;
             }
             finally
@@ -519,6 +521,7 @@ namespace VecinoBuildingMangementWebService.Controllers
             catch (Exception ex)
             {
                 this.repositoryUOW.DbHelperOleDb.RollBack();
+                Console.WriteLine(ex.ToString());
                 return false;
             }
             finally
@@ -544,6 +547,7 @@ namespace VecinoBuildingMangementWebService.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.ToString());
                 return StatusCode(500, "Image Failed To Load");
             }
             finally
@@ -568,6 +572,7 @@ namespace VecinoBuildingMangementWebService.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.ToString());
                 return StatusCode(500, "Image Failed To Load");
             }
             finally
@@ -586,6 +591,7 @@ namespace VecinoBuildingMangementWebService.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.ToString());
                 return null;
             }
             finally

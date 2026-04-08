@@ -46,8 +46,8 @@ namespace VecinoBuildingMangement.Models
             }
         }
 
-        [Required(ErrorMessage = "Date can not be empty")]
-        [Date(ErrorMessage ="Date must be a vaild date")]
+        //[Required(ErrorMessage = "Date can not be empty")]
+        //[Date(ErrorMessage ="Date must be a vaild date")]
         public string NotificationDate
         {
             get { return notificationDate; }

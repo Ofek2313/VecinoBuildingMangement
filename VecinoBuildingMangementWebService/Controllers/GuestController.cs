@@ -53,6 +53,7 @@ namespace VecinoBuildingMangementWebService.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.ToString());
                 return null;
             }
             finally 
@@ -85,6 +86,7 @@ namespace VecinoBuildingMangementWebService.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.ToString());
                 return null;
             }
             finally

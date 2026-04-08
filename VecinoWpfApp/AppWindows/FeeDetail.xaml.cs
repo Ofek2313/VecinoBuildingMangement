@@ -19,9 +19,16 @@ namespace VecinoWpfApp.AppWindows
     /// </summary>
     public partial class FeeDetail : Window
     {
+        private bool _IsEditing = false;
         public FeeDetail()
         {
             InitializeComponent();
+        }
+
+        private void EditFeeButton_Click(object sender, RoutedEventArgs e)
+        {
+            _IsEditing = !_IsEditing;
+            FeeTitleTextBox.IsReadOnly = false;
         }
     }
 }

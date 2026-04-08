@@ -27,6 +27,7 @@ namespace VecinoWpfApp.UserControls
     {
         ManageAdminFinance manageAdminFinance;
         NewFee newFee;
+        FeeDetail feeDetail;
         public Finance()
         {
             InitializeComponent();
@@ -94,6 +95,20 @@ namespace VecinoWpfApp.UserControls
             bool? response = ViewCreateFeeWindow();
             if (response == true)
                 await LoadFinanceData();
+        }
+        private bool? ViewFeeDetailWindow()
+        {
+            if(this.feeDetail == null)
+                this.feeDetail = new FeeDetail();
+            this.feeDetail.Owner = Window.GetWindow(this);
+            bool? response = this.feeDetail.ShowDialog();
+            this.feeDetail = null;
+            return response;
+        }
+
+        private void ViewFeeButton_Click(object sender, RoutedEventArgs e)
+        {
+            bool? response = ViewFeeDetailWindow();
         }
     }
 }

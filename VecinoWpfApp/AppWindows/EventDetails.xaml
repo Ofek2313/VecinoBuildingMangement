@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:VecinoWpfApp.AppWindows"
+    xmlns:conv="clr-namespace:VecinoWpfApp"
     Title="Vecino – Event Details"
     Width="800"
     WindowStartupLocation="CenterScreen"
@@ -183,7 +184,9 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <conv:UrlConverter x:Key="urlConverter">
 
+        </conv:UrlConverter>
     </Window.Resources>
 
     <Grid>
@@ -242,6 +245,9 @@
                             Height="180"
                             Margin="0,0,0,15"
                             ClipToBounds="True">
+                        <Image  Source="{Binding Event.EventImage, Converter={StaticResource urlConverter}}" Stretch="Fill" x:Name="EventImage">
+                            
+                        </Image>
                         <Border.Background>
                             <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
                                 <GradientStop Color="#EDE9FE" Offset="0"/>
@@ -249,18 +255,7 @@
                             </LinearGradientBrush>
                         </Border.Background>
                         <!-- Replace this StackPanel with an <Image> bound to your EventImage source -->
-                        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                            <TextBlock Text="&#xEB9F;"
-                                       FontFamily="Segoe MDL2 Assets"
-                                       FontSize="40"
-                                       Foreground="#C4B5FD"
-                                       HorizontalAlignment="Center"/>
-                            <TextBlock Text="Event Image"
-                                       FontSize="13"
-                                       Foreground="#a78bfa"
-                                       HorizontalAlignment="Center"
-                                       Margin="0,8,0,0"/>
-                        </StackPanel>
+                       
                     </Border>
                     <Button x:Name="UploadImage" Visibility="Collapsed"
  Style="{StaticResource SecondaryButton}" Click="UploadImage_Click"
@@ -475,115 +470,7 @@
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
 
-                        <!-- Static fallback attendees (remove once bound to real data) -->
-                        <Border Style="{StaticResource AttendeeCardStyle}">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="44"/>
-                                    <ColumnDefinition Width="12"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <Border Grid.Column="0" Width="44" Height="44" CornerRadius="22">
-                                    <Border.Background>
-                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                            <GradientStop Color="#EDE9FE" Offset="0"/>
-                                            <GradientStop Color="#FCE7F3" Offset="1"/>
-                                        </LinearGradientBrush>
-                                    </Border.Background>
-                                    <TextBlock Text="SR" FontSize="15" FontWeight="SemiBold" Foreground="#7C3AED" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                </Border>
-                                <StackPanel Grid.Column="2" VerticalAlignment="Center">
-                                    <TextBlock Text="Sara Rodriguez" FontSize="15" FontWeight="SemiBold" Foreground="#111827"/>
-                                    <TextBlock Text="Block Organizer" FontSize="13" Foreground="#94a3b8" Margin="0,2,0,0"/>
-                                </StackPanel>
-                                <Border Grid.Column="3" CornerRadius="12" Padding="10,4" VerticalAlignment="Center" Background="#D1FAE5">
-                                    <TextBlock Text="Going" FontSize="12" FontWeight="SemiBold" Foreground="#065F46"/>
-                                </Border>
-                            </Grid>
-                        </Border>
-
-                        <Border Style="{StaticResource AttendeeCardStyle}">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="44"/>
-                                    <ColumnDefinition Width="12"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <Border Grid.Column="0" Width="44" Height="44" CornerRadius="22">
-                                    <Border.Background>
-                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                            <GradientStop Color="#EDE9FE" Offset="0"/>
-                                            <GradientStop Color="#FCE7F3" Offset="1"/>
-                                        </LinearGradientBrush>
-                                    </Border.Background>
-                                    <TextBlock Text="JL" FontSize="15" FontWeight="SemiBold" Foreground="#7C3AED" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                </Border>
-                                <StackPanel Grid.Column="2" VerticalAlignment="Center">
-                                    <TextBlock Text="James Lee" FontSize="15" FontWeight="SemiBold" Foreground="#111827"/>
-                                    <TextBlock Text="Resident" FontSize="13" Foreground="#94a3b8" Margin="0,2,0,0"/>
-                                </StackPanel>
-                                <Border Grid.Column="3" CornerRadius="12" Padding="10,4" VerticalAlignment="Center" Background="#D1FAE5">
-                                    <TextBlock Text="Going" FontSize="12" FontWeight="SemiBold" Foreground="#065F46"/>
-                                </Border>
-                            </Grid>
-                        </Border>
-
-                        <Border Style="{StaticResource AttendeeCardStyle}">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="44"/>
-                                    <ColumnDefinition Width="12"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <Border Grid.Column="0" Width="44" Height="44" CornerRadius="22">
-                                    <Border.Background>
-                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                            <GradientStop Color="#EDE9FE" Offset="0"/>
-                                            <GradientStop Color="#FCE7F3" Offset="1"/>
-                                        </LinearGradientBrush>
-                                    </Border.Background>
-                                    <TextBlock Text="MP" FontSize="15" FontWeight="SemiBold" Foreground="#7C3AED" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                </Border>
-                                <StackPanel Grid.Column="2" VerticalAlignment="Center">
-                                    <TextBlock Text="Maria Patel" FontSize="15" FontWeight="SemiBold" Foreground="#111827"/>
-                                    <TextBlock Text="Resident" FontSize="13" Foreground="#94a3b8" Margin="0,2,0,0"/>
-                                </StackPanel>
-                                <Border Grid.Column="3" CornerRadius="12" Padding="10,4" VerticalAlignment="Center" Background="#FEF3C7">
-                                    <TextBlock Text="Maybe" FontSize="12" FontWeight="SemiBold" Foreground="#92400E"/>
-                                </Border>
-                            </Grid>
-                        </Border>
-
-                        <Border Style="{StaticResource AttendeeCardStyle}">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="44"/>
-                                    <ColumnDefinition Width="12"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <Border Grid.Column="0" Width="44" Height="44" CornerRadius="22">
-                                    <Border.Background>
-                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                            <GradientStop Color="#EDE9FE" Offset="0"/>
-                                            <GradientStop Color="#FCE7F3" Offset="1"/>
-                                        </LinearGradientBrush>
-                                    </Border.Background>
-                                    <TextBlock Text="TK" FontSize="15" FontWeight="SemiBold" Foreground="#7C3AED" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                </Border>
-                                <StackPanel Grid.Column="2" VerticalAlignment="Center">
-                                    <TextBlock Text="Tom Kim" FontSize="15" FontWeight="SemiBold" Foreground="#111827"/>
-                                    <TextBlock Text="Resident" FontSize="13" Foreground="#94a3b8" Margin="0,2,0,0"/>
-                                </StackPanel>
-                                <Border Grid.Column="3" CornerRadius="12" Padding="10,4" VerticalAlignment="Center" Background="#FEE2E2">
-                                    <TextBlock Text="Can't Go" FontSize="12" FontWeight="SemiBold" Foreground="#991B1B"/>
-                                </Border>
-                            </Grid>
-                        </Border>
-
+                      
                     </StackPanel>
 
                     <!-- Action Buttons -->
@@ -597,7 +484,7 @@
                         <Button Grid.Column="0"
                                 Content="Close"
                                 Style="{StaticResource CloseButtonStyle}"
-                                />
+                                x:Name="CloseEvenDetailButton" Click="CloseEvenDetailButton_Click"/>
 
                         <Button Grid.Column="2"
                                 Style="{StaticResource PrimaryButtonStyle}"

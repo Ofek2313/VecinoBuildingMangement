@@ -201,14 +201,21 @@
                                                        TextWrapping="Wrap"/>
                                         </StackPanel>
 
-                                        <!-- ✅ NEW: Badge + Show Details button stacked -->
+                                        
                                         <StackPanel Grid.Column="2" Orientation="Horizontal"
                                                     VerticalAlignment="Top" Margin="16,0,0,0">
 
                                             <Border Style="{StaticResource VotedBadge}" Margin="0,0,8,0">
-                                                <TextBlock Text="{Binding poll.IsActive, Converter={StaticResource statusConverter}}"
+                                                <TextBlock 
                                                            FontSize="12" FontWeight="SemiBold"
-                                                           Foreground="{StaticResource AccentTeal}"/>
+                                                           Foreground="{StaticResource AccentTeal}">
+                                                    <TextBlock.Text>
+                                                        <MultiBinding Converter="{StaticResource statusConverter}">
+                                                            <Binding Path="poll.PollDate"/>
+                                                            <Binding Path="poll.IsActive"/>
+                                                        </MultiBinding>
+                                                    </TextBlock.Text>
+                                                </TextBlock>
                                             </Border>
 
                                             <Button Content="Show Details"

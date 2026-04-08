@@ -100,7 +100,7 @@ namespace VecinoBuildingMangementWebService
         }
         public Building GetBuildingByResidentId(string residentId)
         {
-            string sql = "SELECT b.BuildingId, b.CityId,b.Address,b.EntranceCode,b.TotalUnits,b.Floors,b.JoinCode FROM Building b INNER JOIN Resident ON b.BuildingId = Resident.BuildingId WHERE Resident.ResidentId = @ResidentId;";
+            string sql = "SELECT b.BuildingId, b.CityId,b.Address,b.EntranceCode,b.TotalUnits,b.Floors,b.JoinCode,b.BuildingImage,b.EntranceName FROM Building b INNER JOIN Resident ON b.BuildingId = Resident.BuildingId WHERE Resident.ResidentId = @ResidentId;";
             dbHelperOleDb.AddParameter("@ResidentId", residentId);
 
             using (IDataReader dataReader = this.dbHelperOleDb.Select(sql))

@@ -75,10 +75,34 @@ namespace VecinoWpfApp.UserControls
             this.eventDetails = null;
             return response;
         }
-        private void ViewEventDetailsButton_Click(object sender, RoutedEventArgs e)
+        private async void ViewEventDetailsButton_Click(object sender, RoutedEventArgs e)
         {
             EventViewModel model = (sender as Button).DataContext as EventViewModel;
-            bool? response = ViewEventDetailWindow(model);
+            bool? response = ViewEventDetailWindow(model.Clone());
+
+            if (response == true)
+                await GetEventsList();
+        }
+
+        private async void DeleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            EventViewModel model = (sender as Button).DataContext as EventViewModel;
+            string eventId = model.Event.EventId;
+            //RemoveEvent
+
+            ApiClient<bool> client = new ApiClient<bool>();
+            client.Scheme = "http";
+            client.Host = "localhost";
+            client.Port = 5269;
+            client.Path = "api/Admin/RemoveEvent";
+            client.AddParameter("eventId", eventId);
+            ApiResponse<bool> apiResponse = await client.PostAsyncReturn<object, bool>(null);
+            if (apiResponse.Success && apiResponse.Data)
+            {
+                MessageBox.Show("Deleted");
+                await GetEventsList();
+            }
+              
         }
     }
 }

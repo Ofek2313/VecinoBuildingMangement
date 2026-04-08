@@ -15,6 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using VecinoBuildingMangement.Models;
 using VecinoBuildingMangement.ViewModels;
+using VecinoWpfApp.AppWindows;
 
 namespace VecinoWpfApp.UserControls
 {
@@ -23,13 +24,14 @@ namespace VecinoWpfApp.UserControls
     /// </summary>
     public partial class Announcement : UserControl
     {
-        List<Notification> annoucnemnetslist;
+        //List<Notification> annoucnemnetslist;
+        NewAnnouncement newAnnouncement;
         public Announcement()
         {
             InitializeComponent();
-            GetAnnouncementList();
+            _ =  GetAnnouncementList();
         }
-        private async void GetAnnouncementList()
+        private async Task GetAnnouncementList()
         {
 
             ApiClient<List<Notification>> client = new ApiClient<List<Notification>>();
@@ -37,10 +39,47 @@ namespace VecinoWpfApp.UserControls
             client.Host = "localhost";
             client.Port = 5269;
             client.Path = "api/Admin/GetNotifications";
-            annoucnemnetslist = await client.GetAsync();
+            client.AddParameter("buildingId", Session.BuildingId);
+            listViewAnnc.ItemsSource = await client.GetAsync();
 
-            listViewAnnc.ItemsSource = this.annoucnemnetslist;
+            //= this.annoucnemnetslist;
           
+        }
+
+        private async void btnAddAnnouncement_Click(object sender, RoutedEventArgs e)
+        {
+            bool? response = CreateNewAnnouncement();
+            if (response == true)
+                await GetAnnouncementList();
+        }
+        private bool? CreateNewAnnouncement()
+        {
+            if (this.newAnnouncement == null)
+                this.newAnnouncement = new NewAnnouncement();
+            this.newAnnouncement.Owner = Window.GetWindow(this);
+            bool? response = this.newAnnouncement.ShowDialog();
+            this.newAnnouncement = null;
+            return response;
+        }
+
+        private async void DeleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            Notification model = (sender as Button).DataContext as Notification;
+            string notificationIdId = model.NotificationId;
+            
+
+            ApiClient<string> client = new ApiClient<string>();
+            client.Scheme = "http";
+            client.Host = "localhost";
+            client.Port = 5269;
+            client.Path = "api/Admin/RemoveNotification";
+            //client.AddParameter("notificationId", notificationIdId);
+            ApiResponse<bool> apiResponse = await client.PostAsyncReturn<string, bool>(notificationIdId);
+            if (apiResponse.Success && apiResponse.Data)
+            {
+                MessageBox.Show("Deleted");
+                await GetAnnouncementList();
+            }
         }
     }
 }

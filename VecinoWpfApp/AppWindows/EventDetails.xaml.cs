@@ -2,6 +2,8 @@
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,6 +17,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using VecinoBuildingMangement.Models;
 using VecinoBuildingMangement.ViewModels;
+using VecinoWpfApp.UserControls;
 
 namespace VecinoWpfApp.AppWindows
 {
@@ -24,24 +27,48 @@ namespace VecinoWpfApp.AppWindows
     public partial class EventDetails : Window
     {
         private bool _IsEditing = false;
-       
+        private EventViewModel _savedEventView;
         private string _eventTitle;
         private string _eventDescription;
+        private string _imagePath;
        
 
         public EventDetails(EventViewModel @event)
         {
             InitializeComponent();
+
+    
             LoadAttending(@event.Event.EventId);
+  
             this.DataContext = @event;
+            
 
         }
-    
+        //private void BackUpEvent(EventViewModel @event)
+        //{
+        //    _savedEventView = new EventViewModel
+        //    {
+        //        Event = new Event{
+        //              EventTitle = @event.Event.EventTitle,
+        //              EventDescription = @event.Event.EventDescription,
+        //              EventDate = @event.Event.EventDate,
+        //              EventImage = @event.Event.EventImage,
+        //              StartTime = @event.Event.StartTime,
+        //              EndTime = @event.Event.EndTime,
+        //        },
+        //       Attending = @event.Attending,
+
+        //    };
+        //}
         private async void ButtonEditEvent_Click(object sender, RoutedEventArgs e)
         {
             _IsEditing = !_IsEditing;
-            if(_IsEditing)
+
+            var viewModel = (EventViewModel)this.DataContext;
+            if (_IsEditing)
             {
+                _savedEventView = viewModel.Clone();
+                
                 EventDescriptionText.IsReadOnly = false;
                 EventTitleText.IsReadOnly=false;
                 UploadImage.Visibility = Visibility.Visible;
@@ -56,14 +83,33 @@ namespace VecinoWpfApp.AppWindows
                 EventTitleText.IsReadOnly = true;
                 UploadImage.Visibility = Visibility.Collapsed;
                 MainButton.Text = "Edit Event";
-                var viewModel = (EventViewModel)this.DataContext;
+
+                ApiResponse<bool> apiResponse;
 
                 ApiClient<Event> client = new ApiClient<Event>();
                 client.Host = "localhost";
                 client.Port = 5269;
                 client.Path = "api/Admin/UpdateEvent";
-                ApiResponse<bool> apiResponse = await client.PostAsyncReturn<Event, bool>(viewModel.Event);
-                MessageBox.Show(viewModel.Event.EventDescription);
+
+                if(_imagePath != null)
+                {
+                    Stream stream = new FileStream(_imagePath, FileMode.Open, FileAccess.Read);
+                    apiResponse = await client.PostAsyncReturn<Event, bool>(viewModel.Event, stream, _imagePath);
+                }
+                else
+                {
+                    apiResponse = await client.PostAsyncReturn<Event, bool>(viewModel.Event,null,null);
+                }
+
+                if (!apiResponse.Success || !apiResponse.Data)
+                {
+                    this.DataContext = null;
+                    this.DataContext = _savedEventView;
+                }
+                else
+                {
+                    this.DialogResult = true;
+                }
                 //UpdateEvent
             }
         }
@@ -90,12 +136,20 @@ namespace VecinoWpfApp.AppWindows
             if (dialogResult == true)
             {
                 string fileName = openFileDialog.FileName;
-                //imagePath = fileName;
-                //Uri uri = new Uri(fileName);
-                //BitmapImage bitmapImage = new BitmapImage(uri);
-
-                //ImageEvent.Source = bitmapImage;
+                _imagePath = fileName;
+                Uri uri = new Uri(fileName);
+                BitmapImage bitmapImage = new BitmapImage(uri);
+                EventImage.Source = bitmapImage;
+                
             }
+
+        }
+
+        private void CloseEvenDetailButton_Click(object sender, RoutedEventArgs e)
+        {
+      
+
+            this.Close();
 
         }
     }

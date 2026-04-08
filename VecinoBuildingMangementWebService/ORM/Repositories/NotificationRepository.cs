@@ -128,6 +128,32 @@ namespace VecinoBuildingMangementWebService
             this.dbHelperOleDb.AddParameter("@ResidentId", residentId);
             return this.dbHelperOleDb.Delete(sql) > 0;
         }
+        public List<Notification> GetNotificationsByBuildingId(string buildingId)
+        {
+            string sql = @$"SELECT DISTINCT Notification.* FROM Resident
+                        INNER JOIN (Notification INNER JOIN ResidentNotification ON Notification.NotificationId = ResidentNotification.NotificationId )
+                        ON Resident.ResidentId = ResidentNotification.ResidentId WHERE Resident.BuildingId = @BuildingId";
+            this.dbHelperOleDb.AddParameter("@BuildingId", buildingId);
+            List<Notification> notifications = new List<Notification>();
+            using (IDataReader reader = this.dbHelperOleDb.Select(sql))
+            {
+                while (reader.Read())
+                {
 
+                    notifications.Add(this.ModelCreator.CreateModel(reader));
+
+                }
+            }
+
+            return notifications;
+        }
+
+        public bool CreateResidentNotification(string notificationId, string residentId)
+        {
+            string sql = $@"Insert Into ResidentNotification(ResidentId,NotificationId) VALUES (@ResidentId,@NotificationId)";
+            this.dbHelperOleDb.AddParameter("@ResidentId", residentId);
+            this.dbHelperOleDb.AddParameter("@NotificationId", notificationId);
+            return this.dbHelperOleDb.Insert(sql) > 0;
+        }
     }
 }

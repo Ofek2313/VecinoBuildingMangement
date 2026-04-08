@@ -136,7 +136,7 @@
 
                 <!-- Title block -->
                 <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                    <TextBlock Text="Should we renovate the community pool?"
+                    <TextBlock Text="{Binding poll.PollTitle}"
                                FontSize="18" FontWeight="Bold"
                                Foreground="{StaticResource TextPrimary}"
                                TextWrapping="Wrap"/>
@@ -230,13 +230,9 @@
                 <Border Style="{StaticResource Card}" Margin="0,0,0,16">
                     <StackPanel>
                         <TextBlock Text="Poll Description" Style="{StaticResource SectionTitle}"/>
-                        <TextBlock TextWrapping="Wrap" FontSize="13" LineHeight="22"
+                        <TextBlock TextWrapping="Wrap" FontSize="13" LineHeight="22" Text="{Binding poll.PollDescription}"
                                    Foreground="{StaticResource TextSecondary}">
-                            The community pool has been in use for over 15 years and requires
-                            significant maintenance. This poll aims to gather resident feedback
-                            on whether we should proceed with a full renovation, partial repairs,
-                            or leave it as-is for now. Your vote will directly influence the
-                            board's decision at the upcoming general meeting.
+                          
                         </TextBlock>
                     </StackPanel>
                 </Border>
