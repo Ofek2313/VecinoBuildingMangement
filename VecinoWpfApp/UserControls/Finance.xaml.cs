@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -92,14 +93,16 @@ namespace VecinoWpfApp.UserControls
         }
         private async void AddFeeButton_Click(object sender, RoutedEventArgs e)
         {
+
             bool? response = ViewCreateFeeWindow();
             if (response == true)
                 await LoadFinanceData();
         }
-        private bool? ViewFeeDetailWindow()
+        private bool? ViewFeeDetailWindow(ResidentFeeViewModel viewModel)
         {
-            if(this.feeDetail == null)
-                this.feeDetail = new FeeDetail();
+            
+            if (this.feeDetail == null)
+                this.feeDetail = new FeeDetail(viewModel);
             this.feeDetail.Owner = Window.GetWindow(this);
             bool? response = this.feeDetail.ShowDialog();
             this.feeDetail = null;
@@ -108,7 +111,8 @@ namespace VecinoWpfApp.UserControls
 
         private void ViewFeeButton_Click(object sender, RoutedEventArgs e)
         {
-            bool? response = ViewFeeDetailWindow();
+            ResidentFeeViewModel viewModel = (sender as Button).DataContext as ResidentFeeViewModel;
+            bool? response = ViewFeeDetailWindow(viewModel);
         }
     }
 }

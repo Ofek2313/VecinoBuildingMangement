@@ -419,6 +419,26 @@ namespace VecinoBuildingMangementWebService.Controllers
             {
                 this.repositoryUOW.DbHelperOleDb.CloseConnection();
             }
+            
+        }
+
+        [HttpPost]
+        public bool UpdateFee([FromBody] Fee Fee)
+        {
+            try
+            {
+                this.repositoryUOW.DbHelperOleDb.OpenConnection();
+                return this.repositoryUOW.FeeRepository.Update(Fee);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return false;
+            }
+            finally
+            {
+                this.repositoryUOW.DbHelperOleDb.CloseConnection();
+            }
         }
         [HttpGet]
         public List<Fee> viewPaidFees()

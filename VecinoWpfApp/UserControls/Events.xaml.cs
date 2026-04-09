@@ -43,6 +43,8 @@ namespace VecinoWpfApp.UserControls
             client.AddParameter("buildingId", Session.BuildingId);
             eventViewModel = await client.GetAsync();
 
+            listViewEvents.ItemsSource = null;
+
             listViewEvents.ItemsSource = this.eventViewModel.Events;
             listViewPastEvents.ItemsSource = this.eventViewModel.PastEvents;
             this.DataContext = this.eventViewModel.Events;

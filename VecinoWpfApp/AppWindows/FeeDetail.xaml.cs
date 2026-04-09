@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BuildingManagementWsClient;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,6 +12,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using VecinoBuildingMangement.Models;
+using VecinoBuildingMangement.ViewModels;
 
 namespace VecinoWpfApp.AppWindows
 {
@@ -20,15 +23,45 @@ namespace VecinoWpfApp.AppWindows
     public partial class FeeDetail : Window
     {
         private bool _IsEditing = false;
-        public FeeDetail()
+        private ResidentFeeViewModel _savedResidentFee;
+
+        public FeeDetail(ResidentFeeViewModel residentFee)
         {
             InitializeComponent();
+            this.DataContext = residentFee;
+            
         }
 
-        private void EditFeeButton_Click(object sender, RoutedEventArgs e)
+        private async void EditFeeButton_Click(object sender, RoutedEventArgs e)
         {
             _IsEditing = !_IsEditing;
-            FeeTitleTextBox.IsReadOnly = false;
+            var viewModel = (ResidentFeeViewModel)this.DataContext;
+            if (_IsEditing)
+            {
+                _savedResidentFee = viewModel.Clone();
+                FeeTitleTextBox.IsReadOnly = false;
+             
+
+               
+            }
+            else
+            {
+                ApiClient<Fee> client = new ApiClient<Fee>();
+                client.Host = "localhost";
+                client.Port = 5269;
+                client.Path = "api/Admin/UpdateFee";
+                ApiResponse<bool> apiResponse = await client.PostAsyncReturn<Fee, bool>(viewModel.Fee);
+                if (!apiResponse.Success || !apiResponse.Data)
+                {
+                    this.DataContext = null;
+                    this.DataContext = _savedResidentFee;
+                }
+                else
+                {
+                    this.DialogResult = true;
+                }
+            }
+            
         }
     }
 }

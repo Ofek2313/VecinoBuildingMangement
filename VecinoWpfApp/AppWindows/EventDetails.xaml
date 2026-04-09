@@ -12,7 +12,7 @@
     FontFamily="Segoe UI">
 
     <Window.Resources>
-
+       
         <!-- Label Style -->
         <Style x:Key="LabelStyle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="13"/>

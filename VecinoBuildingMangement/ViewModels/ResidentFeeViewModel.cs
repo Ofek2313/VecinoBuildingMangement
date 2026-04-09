@@ -19,5 +19,26 @@ namespace VecinoBuildingMangement.ViewModels
 
         public Fee Fee { get; set; }
 
+        public ResidentFeeViewModel Clone()
+        {
+            return new ResidentFeeViewModel
+            {
+                Fee = new Fee
+                {
+                    FeeId = Fee.FeeId,
+                    FeeTitle = Fee.FeeTitle,
+                    FeeAmount = Fee.FeeAmount,
+                    FeeDueDate = Fee.FeeDueDate,
+                    IsPaid = Fee.IsPaid,
+                    ResidentId = Fee.ResidentId,
+                    PaymentDate = Fee.PaymentDate
+                },
+                ResidentName = ResidentName,
+                ResidentImage = ResidentImage,
+                UnitNumber = UnitNumber,
+
+            };
+        }
+
     }
 }

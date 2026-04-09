@@ -140,7 +140,9 @@ namespace VecinoWpfApp.AppWindows
                 Uri uri = new Uri(fileName);
                 BitmapImage bitmapImage = new BitmapImage(uri);
                 EventImage.Source = bitmapImage;
-                
+
+               
+
             }
 
         }
