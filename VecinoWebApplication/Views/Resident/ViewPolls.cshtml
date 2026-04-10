@@ -71,6 +71,7 @@
 
 
                     <button id="btn-vote" class="btn-submit-vote" onclick="vote()">Vote</button>
+                  
                 </div>
                 <div class="poll-options" id="result-@poll.poll.PollId" style="display:none;">
                     @foreach (OptionViewModel optionViewModel in poll.options)
@@ -90,8 +91,9 @@
                         </div>
                     }
 
-
+                     
                     <button id="btn-result-@poll.poll.PollId" class="btn-submit-vote" onclick="vote()">Vote</button>
+                    <button class="btn-unvote" onclick="unVote(@poll.poll.PollId)">Change Vote</button>
                 </div>
                 
             </div>
@@ -153,7 +155,8 @@
                     }
 
 
-                    <button id="btn-result-@poll.poll.PollId" class="btn-submit-vote" onclick="vote()" disabled>Vote</button>
+                    <button id="btn-result-@poll.poll.PollId" class="btn-submit-vote" onclick="unVote(@poll.poll.PollId)" >Change Vote</button>
+                   
                 </div>
 
             </div>
@@ -232,7 +235,7 @@
     </div>
 </div>
 <script>
-    
+   
     let selectedOption = null;
     let selectedPoll = null;
     let selectedOptionEl = null;
@@ -333,4 +336,22 @@
 
         }
     });
+
+    async function unVote(pollId) 
+    {
+        const res = await fetch(`http://localhost:5086/Resident/UnVoteInPoll?pollId=${pollId}`,
+            {
+                method: 'Post',
+                
+                
+
+            });
+        const data = await res.json();
+        if (data.success) 
+        {
+            document.getElementById(`result-${pollId}`).style.display = 'block';
+            document.getElementById(`vote-${pollId}`).style.display = 'none';
+            window.location.reload();
+        }
+    }
 </script>

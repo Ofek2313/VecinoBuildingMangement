@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 using VecinoBuildingMangement;
+using VecinoBuildingMangement.DTO;
 using VecinoBuildingMangement.Models;
 using VecinoBuildingMangement.ViewModels;
 
@@ -120,6 +121,8 @@ namespace VecinoWebApplication.Controllers
             return View(mainpage);
 
         }
+
+        [HttpGet]
         private async Task<MainpageViewModel> GetTaskMainPage()
         {
             ApiClient<MainpageViewModel> client = new ApiClient<MainpageViewModel>();
@@ -248,8 +251,8 @@ namespace VecinoWebApplication.Controllers
           
         }
 
-        [HttpGet]
-        public async Task<IActionResult> AttendEvent(string eventId)
+        [HttpPost]
+        public async Task<IActionResult> AttendEvent([FromQuery]string eventId)
         {
             ApiClient<AttendEvent> client = new ApiClient<AttendEvent>();
             string residentId = HttpContext.Session.GetString("residentId");
@@ -262,13 +265,42 @@ namespace VecinoWebApplication.Controllers
             attendEvent.residentId = residentId;
 
             ApiResponse<bool> result = await client.PostAsyncReturn<AttendEvent,bool>(attendEvent);
-            if(result.Data)
+            if(result.Data && result.Success)
             {
                 return Json(new { success = true });
             }
             else
                 return Json(new { success = false });
         }
+
+
+        
+        [HttpPost]
+        public async Task<IActionResult> UnAttendEvent([FromQuery]string eventId)
+        {
+            ApiClient<AttendEvent> client = new ApiClient<AttendEvent>();
+            string residentId = HttpContext.Session.GetString("residentId");
+            client.Scheme = "http";
+            client.Host = "localhost";
+            client.Port = 5269;
+            client.Path = "api/Resident/UnAttendEvent";
+            AttendEvent attendEvent = new AttendEvent
+            {
+                eventId = eventId,
+                residentId = residentId
+            };
+          
+
+            ApiResponse<bool> result = await client.PostAsyncReturn<AttendEvent, bool>(attendEvent);
+            if (result.Data && result.Success)
+            {
+                return Json(new { success = true });
+            }
+            else
+                return Json(new { success = false });
+        }
+
+
 
         [HttpPost]
         public async Task<IActionResult> VoteInPoll([FromBody] VoteRequest voteRequest)
@@ -293,7 +325,27 @@ namespace VecinoWebApplication.Controllers
             else
                 return Json(new  { success = false });
         }
-        
+
+        [HttpPost]
+        public async Task<IActionResult> UnVoteInPoll([FromQuery] string pollId)
+        {
+            ApiClient<VoteDeleteRequest> client = new ApiClient<VoteDeleteRequest>();
+            client.Scheme = "http";
+            client.Host = "localhost";
+            client.Port = 5269;
+            client.Path = "api/Resident/UnVoteInPoll";
+
+            VoteDeleteRequest voteDeleteRequest = new VoteDeleteRequest
+            {
+                PollId = pollId,
+                ResidentId = HttpContext.Session.GetString("residentId")
+            };
+            ApiResponse<bool> apiResponse = await client.PostAsyncReturn<VoteDeleteRequest,bool>(voteDeleteRequest);
+            if(apiResponse.Success)
+                return Json(new { success = apiResponse.Data });
+            else 
+                return Json(new { success = false });
+        }
 
         [HttpPost]
         public async Task<IActionResult> PayFee([FromBody] PayFeeRequest payFeeRequest)

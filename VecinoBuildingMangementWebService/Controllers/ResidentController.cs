@@ -8,6 +8,7 @@ using System.Text;
 using System.IO;
 using System.Text.Json;
 using System.Globalization;
+using VecinoBuildingMangement.DTO;
 
 namespace VecinoBuildingMangementWebService.Controllers
 {
@@ -213,34 +214,10 @@ namespace VecinoBuildingMangementWebService.Controllers
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
                 viewEventViewModel.EventTypes = this.repositoryUOW.EventTypeRepository.GetAll();
                 Building building = this.repositoryUOW.BuildingRepository.GetBuildingByResidentId(residentId);
-                List<EventViewModel> eventsview = this.repositoryUOW.EventRepository.GetEventViewModelsByBuildingId(building.BuildingId);
+                List<EventViewModelResident> eventsview = this.repositoryUOW.EventRepository.GetEventViewModelsByBuildingIdResident(building.BuildingId,residentId);
                 viewEventViewModel.CurrEvents = eventsview.Where(e => DateTime.ParseExact(e.Event.EventDate,"dd/MM/yyyy",CultureInfo.InvariantCulture) >= DateTime.Today).ToList();
                 viewEventViewModel.PreEvents = eventsview.Where(e => DateTime.ParseExact(e.Event.EventDate, "dd/MM/yyyy", CultureInfo.InvariantCulture) < DateTime.Today).ToList();
-                //events = this.repositoryUOW.EventRepository.GetEventByBuildingId(building.BuildingId);
-                //events2 = this.repositoryUOW.EventRepository.GetPreviousEventsByBuildingId(building.BuildingId);
-
-                //foreach (Event e in events)
-                //{
-                //    viewEventViewModel.CurrEvents.Add(new EventViewModel
-                //    {
-                //        Event = e,
-                //        Attending = this.repositoryUOW.EventRepository.GetAttendingCount(e.EventId),
-
-
-                //    }
-                //    );
-                //}
-                //foreach (Event e in events2)
-                //{
-                //    viewEventViewModel.PreEvents.Add(new EventViewModel
-                //    {
-                //        Event = e,
-                //        Attending = this.repositoryUOW.EventRepository.GetAttendingCount(e.EventId),
-
-
-                //    }
-                //    );
-                //}
+               
 
                 return viewEventViewModel;
             }
@@ -253,6 +230,7 @@ namespace VecinoBuildingMangementWebService.Controllers
                 this.repositoryUOW.DbHelperOleDb.CloseConnection();
             }
         }
+
         [HttpPost]
         [Produces("application/json")]
         public bool AttendEvent([FromBody] AttendEvent attendEvent)
@@ -271,6 +249,27 @@ namespace VecinoBuildingMangementWebService.Controllers
             {
                 this.repositoryUOW.DbHelperOleDb.CloseConnection();
             }
+        }
+
+        [HttpPost]
+        public bool UnAttendEvent([FromBody] AttendEvent attendEvent)
+        {
+            try
+            {
+                this.repositoryUOW.DbHelperOleDb.OpenConnection();
+                return this.repositoryUOW.EventRepository.UnAttendEvent(attendEvent.eventId, attendEvent.residentId);
+
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return false;
+            }
+            finally
+            {
+                this.repositoryUOW.DbHelperOleDb.CloseConnection();
+            }
+
         }
         [HttpPost]
         public bool JoinBuilding([FromBody] JoinBuildingRequest joinBuildingRequest)
@@ -473,6 +472,26 @@ namespace VecinoBuildingMangementWebService.Controllers
                 this.repositoryUOW.DbHelperOleDb.CloseConnection();
             }
         }
+
+        [HttpPost]
+        public bool UnVoteInPoll([FromBody] VoteDeleteRequest voteDeleteRequest)
+        {
+            try
+            {
+                this.repositoryUOW.DbHelperOleDb.OpenConnection();
+                return this.repositoryUOW.VoteRepository.DeleteVote(voteDeleteRequest.PollId, voteDeleteRequest.ResidentId);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return false;
+            }
+            finally
+            {
+                this.repositoryUOW.DbHelperOleDb.CloseConnection();
+            }
+        }
+
 
         [HttpGet]
 

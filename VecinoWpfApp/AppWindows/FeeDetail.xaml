@@ -28,7 +28,7 @@
                 <Trigger Property="IsReadOnly" Value="False">
                     <Setter Property="Background" Value="#F9FAFB"/>
                     <Setter Property="BorderThickness" Value="0,0,0,2"/>
-                    <Setter Property="BorderBrush" Value="#A855F7"/>
+                    <Setter Property="BorderBrush" Value="#22c55e"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -134,7 +134,9 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="Fee title" Style="{StaticResource DetailLabelStyle}"/>
-                        <TextBox x:Name="FeeTitleTextBox" Grid.Column="1" Text="{Binding Fee.FeeTitle}" Style="{StaticResource HeaderEditableTextBoxStyle}"/>
+                        <TextBox x:Name="FeeTitleTextBox" Grid.Column="1" Text="{Binding Fee.FeeTitle, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource HeaderEditableTextBoxStyle}"/>
+                        <TextBlock Text="{Binding (Validation.Errors)[0].ErrorContent,ElementName=FeeTitleTextBox}" Width="589" Margin="20 0 0 0"
+                        Visibility="{Binding (Validation.HasError),Converter={StaticResource VisibilityConverter},ElementName=FeeTitleTextBox}"></TextBlock>
                     </Grid>
                 </Border>
 
@@ -145,7 +147,9 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="Amount" Style="{StaticResource DetailLabelStyle}"/>
-                        <TextBox Grid.Column="1" Text="{Binding Fee.FeeAmount}" Style="{StaticResource HeaderEditableTextBoxStyle}" />
+                        <TextBox Grid.Column="1" Text="{Binding Fee.FeeAmount,UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource HeaderEditableTextBoxStyle}" x:Name="FeeAmountTextBox" />
+                        <TextBlock Text="{Binding (Validation.Errors)[0].ErrorContent,ElementName=FeeAmountTextBox}" Width="589" Margin="20 0 0 0"
+                        Visibility="{Binding (Validation.HasError),Converter={StaticResource VisibilityConverter},ElementName=FeeAmountTextBox}"></TextBlock>
                     </Grid>
                 </Border>
 

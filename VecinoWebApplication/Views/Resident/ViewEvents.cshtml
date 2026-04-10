@@ -20,7 +20,7 @@
     <div>
         <h2 class="section-title">Upcoming Events</h2>
         <div class="events-grid">
-            @foreach(EventViewModel event1 in Model.CurrEvents)
+            @foreach(EventViewModelResident event1 in Model.CurrEvents)
             {
                 <div class="event-card" style="animation-delay: 0s;">
                     <div class="event-image">
@@ -60,7 +60,14 @@
                                 </div>
                                 
                             </div>
-                            <button  class="rsvp-btn" onclick="attendEvent(@event1.Event.EventId,this)">Attend</button>
+                            @if(!event1.IsAttending)
+                            {
+                                <button class="rsvp-btn" onclick="attendEvent(@event1.Event.EventId,this)">Attend</button>
+                            }
+                            else
+                            {
+                                <button class="rsvp-btn" onclick="unAttendEvent(@event1.Event.EventId,this)">UnAttend</button>
+                            }
                         </div>
                     </div>
                 </div>
@@ -108,11 +115,15 @@
     {
         try{
             const res = await fetch(`http://localhost:5086/Resident/AttendEvent?eventId=${eventId}`,
-                                      {method: 'Get',
-                                       headers: {'Content-Type' : 'application/json'},
-                                      
-                                      });
+                {
+                    method: 'Post',
+                    headers: {'Content-Type' : 'application/json'},
+                                   
+                }
+                
+            );
             const data = await res.json();
+            
             if(data.success == true)
                 updateAttendance(button)
             
@@ -124,13 +135,47 @@
         }
 
     }
+    async function unAttendEvent(eventId, button) 
+    { 
+        try {
+            const res = await fetch(`http://localhost:5086/Resident/UnAttendEvent?eventId=${eventId}`,
+                {
+                    method: 'Post',
+                    headers: { 'Content-Type': 'application/json' },
+                    
+                });
+            const data = await res.json();
+
+            if (data.success == true)
+                updateUnAttendEvent(button)
+
+
+        }
+        catch (err) {
+            console.error(err);
+            alert(err.message || 'Could not attend event');
+        }
+    }
     function updateAttendance(button)
     {
         const card = button.closest('.event-card');
         const attendingSpan = card.querySelector('.attending-count');
         const number = parseInt(attendingSpan.innerText);
         attendingSpan.innerText = `${number+1}`;
-        
+        button.innerText = "UnAttend";
+        const eventId = button.getAttribute('onclick').match(/\d+/)[0];
+        button.setAttribute('onclick', `unAttendEvent(${eventId}, this)`);
 
+    }
+    function updateUnAttendEvent(button)
+    {
+        const card = button.closest('.event-card');
+        const attendingSpan = card.querySelector('.attending-count');
+        const number = parseInt(attendingSpan.innerText);
+        attendingSpan.innerText = `${number - 1}`;
+
+        button.innerText = "Attend";
+        const eventId = button.getAttribute('onclick').match(/\d+/)[0];
+        button.setAttribute('onclick', `attendEvent(${eventId}, this)`);
     }
 </script>

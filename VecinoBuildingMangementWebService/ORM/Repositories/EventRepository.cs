@@ -81,6 +81,13 @@ namespace VecinoBuildingMangementWebService
             this.dbHelperOleDb.AddParameter("@EventId", eventId);
             return this.dbHelperOleDb.Insert(sql) > 0;
         }
+        public bool UnAttendEvent(string eventId, string residentId)
+        {
+            string sql = @"Delete From EventAttendance where ResidentId = @ResidentId AND EventId = @EventId";
+            this.dbHelperOleDb.AddParameter("@ResidentId", residentId);
+            this.dbHelperOleDb.AddParameter("@EventId", eventId);
+            return this.dbHelperOleDb.Delete(sql) > 0;
+        }
         public List<Event> GetEventByBuildingId(string buildingId)
         {
             string sql = "Select * From Event Where BuildingId = @BuildingId";
@@ -211,14 +218,49 @@ namespace VecinoBuildingMangementWebService
             return ResidentNames;
         }
 
-        public List<EventViewModel> GetEventViewModelsByBuildingId(string buildingId)
+        public List<EventViewModelResident> GetEventViewModelsByBuildingIdResident(string buildingId, string residentId)
         {
-            string sql = @"SELECT e.EventId,e.EventDate, e.EventTitle, e.EventDescription, e.EventTypeId, e.EventImage, e.StartTime, e.EndTime, e.BuildingId, COUNT(a.EventId) AS AttendingCount FROM Event e LEFT JOIN EventAttendance a ON e.EventId = a.EventId WHERE e.BuildingId = @BuildingId GROUP BY e.EventId, e.EventDate, e.EventTitle, e.EventDescription, e.EventTypeId, e.EventImage, e.StartTime, e.EndTime, e.BuildingId";
+            string sql = @"SELECT e.EventId,e.EventDate, e.EventTitle, e.EventDescription, e.EventTypeId, e.EventImage, e.StartTime, e.EndTime, e.BuildingId, COUNT(a.EventId) AS AttendingCount, MAX(IIf(a.ResidentId = @ResidentId, 1, 0)) AS IsAttending FROM Event e LEFT JOIN EventAttendance a ON e.EventId = a.EventId WHERE e.BuildingId = @BuildingId GROUP BY e.EventId, e.EventDate, e.EventTitle, e.EventDescription, e.EventTypeId, e.EventImage, e.StartTime, e.EndTime, e.BuildingId";
+            this.dbHelperOleDb.AddParameter("@ResidentId", residentId);
             this.dbHelperOleDb.AddParameter("@BuildingId", buildingId);
-            List<EventViewModel> eventViewModels = new List<EventViewModel>();
+            List<EventViewModelResident> eventViewModels = new List<EventViewModelResident>();
             using(IDataReader dataReader = this.dbHelperOleDb.Select(sql))
             {
                 while(dataReader.Read())
+                {
+                    EventViewModelResident eventViewModel = new EventViewModelResident
+                    {
+                        Event = new Event
+                        {
+                            EventId = dataReader["EventId"].ToString(),
+                            EventDate = dataReader["EventDate"].ToString(),
+                            EventTitle = dataReader["EventTitle"].ToString(),
+                            EventDescription = dataReader["EventDescription"].ToString(),
+                            EventTypeId = dataReader["EventTypeId"].ToString(),
+                            EventImage = dataReader["EventImage"].ToString(),
+                            StartTime = dataReader["StartTime"].ToString(),
+                            EndTime = dataReader["EndTime"].ToString(),
+                            BuildingId = dataReader["BuildingId"].ToString(),
+                        },
+                        Attending = Convert.ToInt32(dataReader["AttendingCount"]),
+                        IsAttending = Convert.ToBoolean(dataReader["IsAttending"])
+                       
+                    };
+                    eventViewModels.Add(eventViewModel);
+                }
+            }
+            return eventViewModels;
+        }
+
+        public List<EventViewModel> GetEventViewModelsByBuildingId(string buildingId)
+        {
+            string sql = @"SELECT e.EventId,e.EventDate, e.EventTitle, e.EventDescription, e.EventTypeId, e.EventImage, e.StartTime, e.EndTime, e.BuildingId, COUNT(a.EventId) AS AttendingCount FROM Event e LEFT JOIN EventAttendance a ON e.EventId = a.EventId WHERE e.BuildingId = @BuildingId GROUP BY e.EventId, e.EventDate, e.EventTitle, e.EventDescription, e.EventTypeId, e.EventImage, e.StartTime, e.EndTime, e.BuildingId";
+        
+            this.dbHelperOleDb.AddParameter("@BuildingId", buildingId);
+            List<EventViewModel> eventViewModels = new List<EventViewModel>();
+            using (IDataReader dataReader = this.dbHelperOleDb.Select(sql))
+            {
+                while (dataReader.Read())
                 {
                     EventViewModel eventViewModel = new EventViewModel
                     {
@@ -234,14 +276,15 @@ namespace VecinoBuildingMangementWebService
                             EndTime = dataReader["EndTime"].ToString(),
                             BuildingId = dataReader["BuildingId"].ToString(),
                         },
-                        Attending = Convert.ToInt32(dataReader["AttendingCount"])
+                        Attending = Convert.ToInt32(dataReader["AttendingCount"]),
+                        
+
                     };
                     eventViewModels.Add(eventViewModel);
                 }
             }
             return eventViewModels;
         }
-        
     }
     
 }

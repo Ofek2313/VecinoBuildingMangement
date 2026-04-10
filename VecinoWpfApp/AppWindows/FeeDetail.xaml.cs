@@ -40,26 +40,36 @@ namespace VecinoWpfApp.AppWindows
             {
                 _savedResidentFee = viewModel.Clone();
                 FeeTitleTextBox.IsReadOnly = false;
-             
+                FeeAmountTextBox.IsReadOnly = false;
 
-               
+
+
             }
             else
             {
-                ApiClient<Fee> client = new ApiClient<Fee>();
-                client.Host = "localhost";
-                client.Port = 5269;
-                client.Path = "api/Admin/UpdateFee";
-                ApiResponse<bool> apiResponse = await client.PostAsyncReturn<Fee, bool>(viewModel.Fee);
-                if (!apiResponse.Success || !apiResponse.Data)
+                viewModel.Fee.Validate();
+                if(!viewModel.Fee.HasErrors)
                 {
-                    this.DataContext = null;
-                    this.DataContext = _savedResidentFee;
+                    ApiClient<Fee> client = new ApiClient<Fee>();
+                    client.Host = "localhost";
+                    client.Port = 5269;
+                    client.Path = "api/Admin/UpdateFee";
+                    ApiResponse<bool> apiResponse = await client.PostAsyncReturn<Fee, bool>(viewModel.Fee);
+                    if (!apiResponse.Success || !apiResponse.Data)
+                    {
+                        this.DataContext = null;
+                        this.DataContext = _savedResidentFee;
+                    }
+                    else
+                    {
+                        this.DialogResult = true;
+                    }
                 }
                 else
                 {
-                    this.DialogResult = true;
+                    this.DataContext = _savedResidentFee;
                 }
+                
             }
             
         }

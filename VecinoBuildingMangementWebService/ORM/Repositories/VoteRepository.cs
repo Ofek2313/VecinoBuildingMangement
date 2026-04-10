@@ -94,6 +94,13 @@ namespace VecinoBuildingMangementWebService
             this.dbHelperOleDb.AddParameter("@PollId", pollId);
             return this.dbHelperOleDb.Delete(sql) > 0;
         }
+        public bool DeleteVote(string pollId,string residentId)
+        {
+            string sql = @"Delete from Vote where PollId=@PollId and ResidentId = @ResidentId";
+            this.dbHelperOleDb.AddParameter("@PollId", pollId);
+            this.dbHelperOleDb.AddParameter("@ResidentId", residentId);
+            return this.dbHelperOleDb.Delete(sql) > 0;
+        }
         public int CountVotesByBuilding(string buildingId)
         {
             string sql = @"SELECT COUNT(*) FROM Poll INNER JOIN Vote ON Poll.PollId = Vote.PollId WHERE Poll.BuildingId = @BuildingId";
@@ -125,6 +132,7 @@ namespace VecinoBuildingMangementWebService
             return count > 0;
         }
 
+     
       
     }
    

@@ -12,7 +12,9 @@ namespace VecinoBuildingMangement.ViewModels
         public Event Event { get; set; }
         public int Attending {  get; set; }
 
-        public EventViewModel Clone()
+        
+
+        public  EventViewModel Clone()
         {
             return new EventViewModel
             {
@@ -29,6 +31,7 @@ namespace VecinoBuildingMangement.ViewModels
                     BuildingId = Event.BuildingId,
                 },
                 Attending = this.Attending,
+               
 
             };
         }

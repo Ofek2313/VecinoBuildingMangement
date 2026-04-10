@@ -26,11 +26,14 @@ namespace VecinoWpfApp.AppWindows
     {
         private List<ResidentCheckItem> allResidents = new List<ResidentCheckItem>();
         List<Resident> Residents;
+        Notification notification = new Notification();
 
         public NewAnnouncement()
         {
             InitializeComponent();
             _ = GetResidentsList();
+
+            this.DataContext = notification;
         }
         private async Task GetResidentsList()
         {
@@ -85,30 +88,36 @@ namespace VecinoWpfApp.AppWindows
                 MessageBox.Show(id);
                 viewModel.ResidentIds.Add(id);
             }
+            notification.NotificationId = "";
+            notification.NotificationMessage = AnnouncementMessage;
+            notification.NotificationId = " ";
+            notification.NotificationMessage = AnnouncementMessage;
+            notification.NotificationTitle = AnnouncementTitle;
+            notification.NotificationDate = " ";
+            notification.Priority = Priority;
+            notification.IsPinned = IsPinned;
+            viewModel.Notification = notification;
 
-            viewModel.Notification = new Notification
+
+            viewModel.Notification.Validate();
+
+            if(!viewModel.Notification.HasErrors)
             {
-                NotificationId = " ",
-                NotificationMessage = AnnouncementMessage,
-                NotificationTitle = AnnouncementTitle,
-                NotificationDate = " ",
-                Priority = Priority,
-                IsPinned = IsPinned,
-                
-            };
-            ApiClient<SendNotificationViewModel> client = new ApiClient<SendNotificationViewModel>();
-            client.Scheme = "http";
-            client.Host = "localhost";
-            client.Port = 5269;
-            client.Path = "api/Admin/SendNotification";
+                ApiClient<SendNotificationViewModel> client = new ApiClient<SendNotificationViewModel>();
+                client.Scheme = "http";
+                client.Host = "localhost";
+                client.Port = 5269;
+                client.Path = "api/Admin/SendNotification";
 
-            ApiResponse<bool> apiResponse = await client.PostAsyncReturn<SendNotificationViewModel, bool>(viewModel);
+                ApiResponse<bool> apiResponse = await client.PostAsyncReturn<SendNotificationViewModel, bool>(viewModel);
 
-            if (apiResponse.Data  && apiResponse.Success)
-            {
-                this.DialogResult = true;
-                this.Close();
+                if (apiResponse.Data && apiResponse.Success)
+                {
+                    this.DialogResult = true;
+                    this.Close();
+                }
             }
+            
         }
     }
 }

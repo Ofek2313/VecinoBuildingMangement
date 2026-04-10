@@ -301,7 +301,7 @@
                              IsReadOnly="True"
                              Style="{StaticResource HeaderEditableTextBoxStyle}"
                              />
-
+                    
                     <!-- Date / Time / Location Row -->
                     <Grid Margin="0,0,0,20">
                         <Grid.ColumnDefinitions>
@@ -323,7 +323,7 @@
                                     <TextBlock Text="DATE" Style="{StaticResource LabelStyle}" Margin="0"/>
                                 </StackPanel>
                                 <TextBlock x:Name="EventDateText"
-                                           Text="Saturday, Aug 16"
+                                           Text="{Binding Event.EventDate}"
                                            Style="{StaticResource ValueStyle}"
                                            FontWeight="SemiBold"/>
                             </StackPanel>
@@ -382,7 +382,7 @@
                                 <TextBlock Text="DESCRIPTION" Style="{StaticResource LabelStyle}" Margin="0" VerticalAlignment="Center"/>
                             </StackPanel>
                             <TextBox x:Name="EventDescriptionText"
-                                       Text="Join us for our annual neighborhood block party! There will be food, games, and live music for all ages. Bring a dish to share and come ready to have a great time with your neighbors. All residents of Maple Street and surrounding areas are welcome."
+                                       Text="{Binding Event.EventDescription}"
                                        FontSize="15"
                                        Foreground="#374151"
                                        TextWrapping="Wrap"
