@@ -16,6 +16,7 @@ namespace VecinoBuildingMangement.ViewModels
         public Poll poll { get; set; }
         public List<OptionViewModel> options { get; set; }
        
+      public bool HasVoted { get; set; }
 
        
        

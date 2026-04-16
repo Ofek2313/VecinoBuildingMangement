@@ -103,14 +103,14 @@ namespace VecinoWebApplication.Controllers
         [HttpGet]
         public async Task<IActionResult> ViewPolls()
         {
-            ApiClient<ViewPollViewModel> client = new ApiClient<ViewPollViewModel>();
+            ApiClient<List<PollViewModel>> client = new ApiClient<List<PollViewModel>>();
             string residentId = HttpContext.Session.GetString("residentId");
             client.Scheme = "http";
             client.Host = "localhost";
             client.Port = 5269;
             client.Path = "api/Resident/PollViewModel";
             client.AddParameter("residentId", residentId);
-            ViewPollViewModel polls = await client.GetAsync();
+            List<PollViewModel> polls = await client.GetAsync();
             return View(polls);
         }
         [HttpGet]
@@ -317,10 +317,14 @@ namespace VecinoWebApplication.Controllers
             vote.ResidentId = residentId;
             vote.VoteDate = DateTime.Now.ToString("dd/MM/yyyy");
             vote.VoteId = "0";
-            ApiResponse<bool> result = await client.PostAsyncReturn<Vote,bool>(vote);
-            if (result.Success)
+
+            ApiResponse<List<OptionViewModel>> apiResponse = await client.PostAsyncReturn<Vote, List<OptionViewModel>>(vote);
+            
+
+
+            if (apiResponse.Success && apiResponse.Data != null)
             {
-                return Json(new { success = result.Data });
+                return Json(new { success = true, data = apiResponse.Data });
             }
             else
                 return Json(new  { success = false });

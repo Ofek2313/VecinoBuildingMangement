@@ -1,6 +1,7 @@
 ﻿@using VecinoBuildingMangement.Models
 @using VecinoBuildingMangement.ViewModels
-@model ViewPollViewModel
+@using System.Globalization;
+@model List<PollViewModel>
 
 @{
     ViewData["Title"] = "ViewPolls";
@@ -23,8 +24,13 @@
     <div class="polls-container">
 
         
-        @foreach(PollViewModel poll in Model.ActivePolls)
+        @foreach(PollViewModel poll in Model)
         {
+            
+            
+            
+            bool IsOpen = poll.poll.IsActive && DateTime.ParseExact(poll.poll.PollDate, "dd/MM/yyyy", CultureInfo.InvariantCulture) >= DateTime.Today;
+            
             <div class="poll-card" id="">
                 <div class="poll-header">
                     <div class="poll-icon active">
@@ -33,7 +39,7 @@
                     <div class="poll-info">
                         <div class="poll-title-row">
                             <h3 class="poll-title">@poll.poll.PollTitle</h3>
-                            <span class="poll-badge active">Active</span>
+                            <span class="poll-badge active">@(IsOpen ? "Active" : "Closed")</span>
                         </div>
                         <p class="poll-description">@poll.poll.PollDescription</p>
                         <div class="poll-meta">
@@ -59,7 +65,7 @@
                     </div>
                 </div>
 
-                <div class="poll-options" id="vote-@poll.poll.PollId">
+                <div class="poll-options" id="vote-@poll.poll.PollId" style="display:@(IsOpen && !poll.HasVoted ? "block" : "none");">
                     @foreach(OptionViewModel optionViewModel in poll.options)
                     {
                         <div class="poll-option" onclick="select(this,'@optionViewModel.option.OptionId','@optionViewModel.option.PollId')">
@@ -70,163 +76,41 @@
                     }
 
 
-                    <button id="btn-vote" class="btn-submit-vote" onclick="vote()">Vote</button>
+                    <button id="btn-vote" class="btn-submit-vote" onclick="vote(@poll.poll.PollId,this)">Vote</button>
                   
                 </div>
-                <div class="poll-options" id="result-@poll.poll.PollId" style="display:none;">
+                <div class="poll-options" id="result-@poll.poll.PollId" style="display:@(!IsOpen || poll.HasVoted ? "block" : "none");">
                     @foreach (OptionViewModel optionViewModel in poll.options)
                     {
                         <div class="option-result">
 
                         
-                            <div class="option-progress" data-optionid="@optionViewModel.option.OptionId" style="width: 0%;"></div>
+                            <div class="option-progress" data-optionid="@optionViewModel.option.OptionId" style="width: @(optionViewModel.percentage)%;"></div>
                             <div class="poll-option">
                                 <div class="option-content">
                                     <span class="option-name">
                                         @optionViewModel.option.OptionText
                                     </span>
-                                    <span class="option-text" id="option-@optionViewModel.option.OptionId" >@optionViewModel.voted</span>
+                                    <span class="option-text" id="option-@optionViewModel.option.OptionId">@(optionViewModel.percentage)%</span>
                                 </div>
                             </div>
                         </div>
                     }
 
-                     
-                    <button id="btn-result-@poll.poll.PollId" class="btn-submit-vote" onclick="vote()">Vote</button>
-                    <button class="btn-unvote" onclick="unVote(@poll.poll.PollId)">Change Vote</button>
+                    @if(IsOpen)
+                    {
+                        <button id="btn-result-@poll.poll.PollId" class="btn-submit-vote" onclick="unVote(@poll.poll.PollId,this)">Change Vote</button>
+                    }
+                    else
+                    {
+                        <button class="btn-submit-vote" disabled>Voting Closed</button>
+                    }
+                   
+                   
                 </div>
                 
             </div>
 
-        }
-        @foreach (PollViewModel poll in Model.VotedPolls)
-        {
-            <div class="poll-card" id="">
-                <div class="poll-header">
-                    <div class="poll-icon active">
-                        <svg width="24px" height="24px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M7 11h7v2H7zm0-4h10.97v2H7zm0 8h13v2H7zM4 4h2v16H4z" /></svg>
-                    </div>
-                    <div class="poll-info">
-                        <div class="poll-title-row">
-                            <h3 class="poll-title">@poll.poll.PollTitle</h3>
-                            <span class="poll-badge voted">Voted</span>
-                        </div>
-                        <p class="poll-description">@poll.poll.PollDescription</p>
-                        <div class="poll-meta">
-                            <span>
-                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
-                                </svg>
-                                Amenities
-                            </span>
-                            <span>
-                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                                @poll.poll.PollDate
-                            </span>
-                            <span>
-                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                                </svg>
-                                62 votes
-                            </span>
-                        </div>
-                    </div>
-                </div>
-
-                
-                <div class="poll-options" id="result-@poll.poll.PollId" >
-                    @foreach (OptionViewModel optionViewModel in poll.options)
-                    {
-                        <div class="option-result">
-
-
-                            <div class="option-progress" data-optionid="@optionViewModel.option.OptionId" style="width: 0%;"></div>
-                            <div class="poll-option">
-                                <div class="option-content">
-                                    <span class="option-name">
-                                        @optionViewModel.option.OptionText
-                                    </span>
-                                    <span class="option-text" id="option-@optionViewModel.option.OptionId">@optionViewModel.voted</span>
-                                </div>
-                            </div>
-                        </div>
-                    }
-
-
-                    <button id="btn-result-@poll.poll.PollId" class="btn-submit-vote" onclick="unVote(@poll.poll.PollId)" >Change Vote</button>
-                   
-                </div>
-
-            </div>
-            
-
-        }
-       
-
-        @foreach (PollViewModel pollViewModel in Model.InActivePolls)
-        {
-            <div class="poll-card">
-                <div class="poll-header">
-                    <div class="poll-icon closed">
-                        <svg fill="none" stroke="#6b7280" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-                        </svg>
-                    </div>
-                    <div class="poll-info">
-                        <div class="poll-title-row">
-                            <h3 class="poll-title">@pollViewModel.poll.PollTitle</h3>
-                            <span class="poll-badge closed">Closed</span>
-                        </div>
-                        <p class="poll-description">@pollViewModel.poll.PollDescription</p>
-                        <div class="poll-meta">
-                            <span>
-                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
-                                </svg>
-                                Landscaping
-                            </span>
-                            <span>
-                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                                </svg>
-                                Closed @pollViewModel.poll.PollDate
-                            </span>
-                            <span>
-                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                                </svg>
-                                94 votes
-                            </span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="poll-options">
-                    @foreach (OptionViewModel optionViewModel in pollViewModel.options)
-                    {
-                        
-                   
-                        <div class="poll-option result">
-                            <div class="option-progress" style="width: 78%;"></div>
-                            <div class="option-content">
-                                <span class="option-text">@optionViewModel.option.OptionText</span>
-                                <div class="option-stats">
-                                    <span class="option-check">
-                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
-                                        </svg>
-                                    </span>
-                                    <span class="option-percentage">78%</span>
-                                    <span class="option-votes">@optionViewModel.voted votes</span>
-                                </div>
-                            </div>
-                        </div>
-                    }
-                    
-                </div>
-            </div>
         }
         
 
@@ -242,102 +126,72 @@
 
     function select(button,optionId,pollId)
     {
-         if(selectedOptionEl) selectedOptionEl.style.backgroundColor = "";
-
+       if(selectedOptionEl) selectedOptionEl.style.backgroundColor = "";
         button.style.backgroundColor = "#d1e7ff";
         selectedOptionEl = button;
         selectedOption = optionId;
         selectedPoll = pollId;
     }
-    async function vote(pollId)
+    async function vote(pollId,button)
     {
         if(selectedOption == null || selectedPoll == null)
+        {
             alert("Select an option")
+            return;
+        }
+            
         try{
             const res = await fetch(`http://localhost:5086/Resident/VoteInPoll`,
                                       {method: 'Post',
                                        headers: {'Content-Type' : 'application/json'},
                                        body: JSON.stringify({OptionId:selectedOption,PollId:selectedPoll})
 
+                                       
                                       });
-            const data = await res.json();
-            if (data.success == true) {
+            const result = await res.json();
+            if (result.success == true) {
+                
+                handleData(result.data,pollId);
 
                 showResults();
-                const option = document.getElementById(`option-${selectedOption}`);
-                
-                option.innerText = parseInt(option.innerText) + 1;
-
-               calculatePercentages(selectedPoll);
-
-            
+         
                
-
-                selectedOption = null;
-                selectedPoll = null;
-                // document.getElementById(`btn-result-${selectedPoll}`).disabled = true;
-
-
-            }
-            else
-            { 
-                calculatePercentages(selectedPoll);
-                showResults();
                 
             }
-               
-
 
         }
         catch(err){
             console.error(err);
-
-            alert(err.message || 'Could not attend event');
+            alert(err.message || 'Could not vote');
         }
     }
     
-    function showResults()
+    function handleData(data,pollId)
     {
-
-        document.getElementById(`result-${selectedPoll}`).style.display = 'block';
-        document.getElementById(`vote-${selectedPoll}`).style.display = 'none';
-    }
-
-    function calculatePercentages(pollId)
-    {
-        const resultContainer = document.getElementById(`result-${pollId}`);
-        const optionElements = resultContainer.querySelectorAll('[id^="option-"]');
-
-    
-        let total = 0;
-        optionElements.forEach(el => {
-            total += parseInt(el.innerText);
-        });
-
-        optionElements.forEach(el => {
-            const votes = parseInt(el.innerText);
-            const percentage = total > 0 ? Math.round((votes / total) * 100) : 0;
-            const optionId = el.id.replace('option-', '');
+        data.forEach(opt => {
+            const optionId = opt.option.optionId;
+            const percentage = opt.percentage;
+            const resultContainer = document.getElementById(`result-${pollId}`);
             const progressBar = resultContainer.querySelector(`.option-progress[data-optionid="${optionId}"]`);
             progressBar.style.width = percentage + '%';
-            el.innerText = `${percentage}%`;
-        
-          
-        });
-
+            const percentageText = document.getElementById(`option-${optionId}`);
+            percentageText.innerText = percentage + '%';
+        })
+       
     }
-     document.addEventListener('DOMContentLoaded', function() {
-        @foreach (PollViewModel poll in Model.VotedPolls)
-        {
-            <text>
-            
-             calculatePercentages('@poll.poll.PollId');
-            </text>
 
-        }
-    });
+    function showResults()
+    {
+        document.getElementById(`result-${selectedPoll}`).style.display = 'block';
+        document.getElementById(`vote-${selectedPoll}`).style.display = 'none';
 
-    async function unVote(pollId) 
+      
+    }
+
+   
+    
+
+    async function unVote(pollId,button) 
     {
         const res = await fetch(`http://localhost:5086/Resident/UnVoteInPoll?pollId=${pollId}`,
             {
@@ -347,11 +201,21 @@
 
             });
         const data = await res.json();
+
+
         if (data.success) 
         {
-            document.getElementById(`result-${pollId}`).style.display = 'block';
-            document.getElementById(`vote-${pollId}`).style.display = 'none';
-            window.location.reload();
+            document.getElementById(`result-${pollId}`).style.display = 'none';
+            document.getElementById(`vote-${pollId}`).style.display = 'block';
+
+            selectedOption = null;
+            selectedPoll = null;
+
+            if (selectedOptionEl) {
+                selectedOptionEl.style.backgroundColor = "";
+                selectedOptionEl = null;
+            }
+           
         }
     }
 </script>

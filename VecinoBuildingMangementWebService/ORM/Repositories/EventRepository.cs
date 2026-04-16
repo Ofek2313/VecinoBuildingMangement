@@ -285,6 +285,7 @@ namespace VecinoBuildingMangementWebService
             }
             return eventViewModels;
         }
+        
     }
     
 }

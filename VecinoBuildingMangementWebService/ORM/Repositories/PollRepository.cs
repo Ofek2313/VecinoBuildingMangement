@@ -1,5 +1,9 @@
-﻿using System.Data;
+﻿using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
+using VecinoBuildingMangement.DTO;
 using VecinoBuildingMangement.Models;
+using VecinoBuildingMangement.ViewModels;
 
 namespace VecinoBuildingMangementWebService
 {
@@ -114,6 +118,147 @@ namespace VecinoBuildingMangementWebService
 
             return polls;
         }
-       
+       public List<PollViewModel> GetPollViewModels(string buildingId,string residentId)
+        {
+            string sql =  @$"SELECT
+                            Poll.PollId,
+                            Poll.PollTitle,
+                            Poll.PollDescription,
+                            Poll.IsActive,
+                            Poll.PollDate,
+                            Poll.BuildingId,
+                            o.OptionId,
+                            o.OptionText,
+                            Count(v.VoteId) AS VoteCount,
+                            MAX(IIf(v.ResidentId = @ResidentId, 1, 0)) AS HasVoted
+                        FROM
+                            (
+                                Poll
+                                INNER JOIN [Option] o ON o.PollId = Poll.PollId
+                            )
+                            LEFT JOIN Vote v ON v.OptionId = o.OptionId
+                        Where Poll.BuildingId = @BuildingId
+                        GROUP BY
+                            Poll.PollId,
+                            Poll.PollTitle,
+                            Poll.PollDescription,
+                            Poll.IsActive,
+                            Poll.PollDate,
+                            Poll.BuildingId,
+                            o.OptionId,
+                            o.OptionText;";
+            this.dbHelperOleDb.AddParameter("@ResidentId", residentId);
+            this.dbHelperOleDb.AddParameter("@BuildingId", buildingId);
+            List<PollDatabaseFlat> flatRows = new List<PollDatabaseFlat>();
+            using (IDataReader reader = this.dbHelperOleDb.Select(sql))
+            {
+                while (reader.Read())
+                {
+
+                    flatRows.Add(new PollDatabaseFlat
+                    {
+                        PollId = Convert.ToString(reader["PollId"]),
+                        PollTitle = Convert.ToString(reader["PollTitle"]),
+                        PollDescription = Convert.ToString(reader["PollDescription"]),
+                        IsActive = Convert.ToBoolean(reader["IsActive"]),
+                        PollDate = Convert.ToString(reader["PollDate"]),
+                        BuildingId = Convert.ToString(reader["BuildingId"]),
+                        OptionId = Convert.ToString(reader["OptionId"]),
+                        OptionText = Convert.ToString(reader["OptionText"]),
+                        VoteCount = Convert.ToInt32(reader["VoteCount"]),
+                        HasVoted = Convert.ToBoolean(reader["HasVoted"])
+                    });
+
+                }
+
+            }
+
+            return flatRows.GroupBy(r => r.PollId).Select(group =>
+            { 
+                int totalVotes = group.Sum(r => r.VoteCount);
+                return new PollViewModel
+                {
+
+                    poll = new Poll
+                    {
+                        PollId = group.Key,
+                        PollTitle = group.First().PollTitle,
+                        PollDescription = group.First().PollDescription,
+                        IsActive = group.First().IsActive,
+                        PollDate = group.First().PollDate,
+                        BuildingId = group.First().BuildingId,
+
+                    },
+                    options = group.Select(r => new OptionViewModel
+                    {
+                        option = new Option
+                        {
+                            OptionId = r.OptionId,
+                            OptionText = r.OptionText,
+                            PollId = r.PollId,
+                        },
+                        voted = r.VoteCount,
+                        percentage = totalVotes > 0 ? (int)Math.Round((double)r.VoteCount / totalVotes * 100) : 0
+                    }).ToList(),
+                    HasVoted = group.Any(r => r.HasVoted),
+
+                };
+                }).OrderBy(r => DateTime.ParseExact(r.poll.PollDate, "dd/MM/yyyy", CultureInfo.InvariantCulture)).ToList();
+
+
+        }
+        public List<OptionViewModel> GetPollResultById(string pollId)
+        {
+            string sql = $@"SELECT
+                            o.OptionId,
+                            o.PollId,
+                            o.OptionText,
+                            Count(v.VoteId) AS VoteCount
+                        FROM
+                            [Option] o
+                            LEFT JOIN Vote v ON o.OptionId = v.OptionId
+                        WHERE
+                            o.PollId = @PollId
+                        GROUP BY
+                            o.OptionId,
+                            o.PollId,
+                            o.OptionText;";
+
+            this.dbHelperOleDb.AddParameter("@PollId", pollId);
+            List < OptionViewModel> options = new List < OptionViewModel>();
+            using (IDataReader reader = this.dbHelperOleDb.Select(sql))
+            {
+                while (reader.Read())
+                {
+
+                    options.Add(new OptionViewModel
+                    {
+                        option = new Option
+                        {
+                            OptionId = Convert.ToString(reader["OptionId"]),
+                            PollId = Convert.ToString(reader["PollId"]),
+                            OptionText = Convert.ToString(reader["OptionText"]),
+
+
+                        },
+                        voted = Convert.ToInt32(reader["VoteCount"]),
+
+
+                    });
+
+                }
+
+            }
+            int totalVotes = options.Sum(o => o.voted);
+            options.ForEach(o => o.percentage = totalVotes > 0 ? (int)Math.Round((double)o.voted / totalVotes * 100) : 0);
+
+            return options;
+
+        }
+
+
     }
+  
+       
 }
+

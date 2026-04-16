@@ -1,14 +1,15 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using VecinoBuildingMangement.ViewModels;
-using VecinoBuildingMangement.Models;
-using System.Reflection.Metadata.Ecma335;
 using Microsoft.Extensions.Options;
-using System.Text;
-using System.IO;
-using System.Text.Json;
+using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
+using System.Reflection.Metadata.Ecma335;
+using System.Text;
+using System.Text.Json;
 using VecinoBuildingMangement.DTO;
+using VecinoBuildingMangement.Models;
+using VecinoBuildingMangement.ViewModels;
 
 namespace VecinoBuildingMangementWebService.Controllers
 {
@@ -374,66 +375,20 @@ namespace VecinoBuildingMangementWebService.Controllers
             }
         }
         [HttpGet]
-        public ViewPollViewModel PollViewModel(string residentId)
+        public List<PollViewModel> PollViewModel(string residentId)
         {
-            ViewPollViewModel pollviewModel = new ViewPollViewModel();
+           
 
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
                 Building building = this.repositoryUOW.BuildingRepository.GetBuildingByResidentId(residentId);
                 string buildingId = building.BuildingId;
-                List<Poll> polls = this.repositoryUOW.PollRepository.GetActivePollsByBuilding(buildingId);
-                foreach (Poll poll in polls)
-                {
 
-                    PollViewModel viewModel = new PollViewModel();
+                return this.repositoryUOW.PollRepository.GetPollViewModels(buildingId, residentId);
+                
 
-                    viewModel.poll = poll;
-                    List<Option> options = this.repositoryUOW.OptionRepository.GetOptionsByPollId(poll.PollId);
-                    foreach (Option option in options)
-                    {
-                        OptionViewModel optionViewModel = new OptionViewModel();
-                        optionViewModel.option = option;
-                        optionViewModel.voted = this.repositoryUOW.VoteRepository.CountVoteByOption(option.OptionId);
-                        //optionViewModel.voted = CalcVote(options, option.OptionId);
-                        viewModel.options.Add(optionViewModel);
-                    }
-                    if (this.repositoryUOW.VoteRepository.hasVoted(residentId, viewModel.poll.PollId))
-                        pollviewModel.VotedPolls.Add(viewModel);
-                    else
-                        pollviewModel.ActivePolls.Add(viewModel);
-
-
-
-
-
-                }
-                List<Poll> polls1 = this.repositoryUOW.PollRepository.GetInActivePollsByBuilding(buildingId);
-                foreach (Poll poll in polls1)
-                {
-
-                    PollViewModel viewModel = new PollViewModel();
-
-                    viewModel.poll = poll;
-                    List<Option> options = this.repositoryUOW.OptionRepository.GetOptionsByPollId(poll.PollId);
-                    foreach (Option option in options)
-                    {
-                        OptionViewModel optionViewModel = new OptionViewModel();
-                        optionViewModel.option = option;
-                        optionViewModel.voted = this.repositoryUOW.VoteRepository.CountVoteByOption(option.OptionId);
-                        //optionViewModel.voted = CalcVote(options, option.OptionId);
-                        viewModel.options.Add(optionViewModel);
-                    }
-                    pollviewModel.InActivePolls.Add(viewModel);
-
-
-
-
-
-                }
-
-                return pollviewModel;
+               
 
             }
             catch (Exception ex)
@@ -451,21 +406,30 @@ namespace VecinoBuildingMangementWebService.Controllers
 
 
         [HttpPost]
-        [Produces("application/json")]
-        public bool VoteInPoll(Vote vote)
+       
+        public List<OptionViewModel> VoteInPoll(Vote vote)
         {
+            List < OptionViewModel > test = new List<OptionViewModel> ();
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
-                if (!this.repositoryUOW.VoteRepository.hasVoted(vote.ResidentId, vote.PollId)) // Creates a new vote record only if the resident has not already voted in this poll.
-                    return this.repositoryUOW.VoteRepository.Create(vote);
-                else
-                    return false;
+                if (this.repositoryUOW.VoteRepository.hasVoted(vote.ResidentId, vote.PollId)) // Creates a new vote record only if the resident has not already voted in this poll.
+                    return null;
+
+                bool created = this.repositoryUOW.VoteRepository.Create(vote);
+                if (created)
+
+                    test =  this.repositoryUOW.PollRepository.GetPollResultById(vote.PollId);
+                foreach(OptionViewModel viewModel in test)
+                {
+                    Console.WriteLine(viewModel.voted);
+                }
+                return test;
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
-                return false;
+                return null; ;
             }
             finally
             {
