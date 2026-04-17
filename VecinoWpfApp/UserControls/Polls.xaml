@@ -11,7 +11,6 @@
 
     <UserControl.Resources>
 
-        <!-- Colors -->
         <SolidColorBrush x:Key="PageBg"        Color="#EEF1F6"/>
         <SolidColorBrush x:Key="CardBg"        Color="#FFFFFF"/>
         <SolidColorBrush x:Key="AccentTeal"    Color="#4DD9AC"/>
@@ -24,7 +23,6 @@
         <SolidColorBrush x:Key="TextMuted"     Color="#B0BAC9"/>
         <SolidColorBrush x:Key="DividerColor"  Color="#E8ECF2"/>
 
-        <!-- Card Style -->
         <Style x:Key="PollCard" TargetType="Border">
             <Setter Property="Background"    Value="{StaticResource CardBg}"/>
             <Setter Property="CornerRadius"  Value="16"/>
@@ -38,7 +36,7 @@
             </Setter>
         </Style>
 
-        <!-- Voted Badge -->
+        
         <Style x:Key="VotedBadge" TargetType="Border">
             <Setter Property="Background"        Value="{StaticResource AccentTealBg}"/>
             <Setter Property="CornerRadius"      Value="8"/>
@@ -46,14 +44,12 @@
             <Setter Property="VerticalAlignment" Value="Top"/>
         </Style>
 
-        <!-- Meta Text -->
         <Style x:Key="MetaText" TargetType="TextBlock">
             <Setter Property="FontSize"          Value="12"/>
             <Setter Property="Foreground"        Value="{StaticResource TextSecondary}"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
 
-        <!-- Create Poll Button -->
         <Style x:Key="CreatePollButton" TargetType="Button">
             <Setter Property="Background"      Value="{StaticResource AccentTeal}"/>
             <Setter Property="Foreground"      Value="White"/>
@@ -89,7 +85,6 @@
             </Setter>
         </Style>
 
-        <!-- ✅ NEW: Show Details Button Style -->
         <Style x:Key="ShowDetailsButton" TargetType="Button">
             <Setter Property="Background"        Value="Transparent"/>
             <Setter Property="Foreground"        Value="#5B8FD4"/>
@@ -184,7 +179,7 @@
                       Padding="48,36,48,40">
             <StackPanel HorizontalAlignment="Stretch">
 
-                <!-- Page Header -->
+                
                 <Grid Margin="0,0,0,28">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
@@ -245,7 +240,7 @@
                                                     VerticalAlignment="Top" Margin="16,0,0,0">
                                             <Button Content="Close Poll"
                                                Style="{StaticResource ClosePollButton}"
-                                             Margin="0,0,8,0"
+                                             Margin="0,0,8,0" x:Name="ClosePollButton" Click="ClosePollButton_Click"
                                                />
                                             <Button Content="Show Details"
                                               Style="{StaticResource ShowDetailsButton}" Click="ViewPollDetail_Click"

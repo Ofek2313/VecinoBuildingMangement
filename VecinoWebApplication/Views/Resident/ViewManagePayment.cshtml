@@ -35,7 +35,7 @@
         </div>
         @if(Model.unPaidFees > 0)
         {
-            <button class="pay-btn" id="pay-btn" onclick="Payfee('@Model.nextFee.FeeId')">💳 Pay Now</button>
+            <button class="pay-btn" id="pay-btn" onclick="OpenPopUp('@Model.nextFee.FeeId')">💳 Pay Now</button>
         }
         
     </div>
@@ -93,7 +93,7 @@
                             
                             
                         </div>
-                        <button class="pay-btn-small" onclick="Payfee('@fee.FeeId')">Pay</button>
+                        <button class="pay-btn-small" onclick="OpenPopUp('@fee.FeeId')">Pay</button>
                         
                     </div>
                 }
@@ -121,22 +121,76 @@
           
         </div>
     </div>
+    <div id="overlay" class="overlay">
+        <div class="popout" id="popout">
+
+            <div class="popout-header">
+                <h2>💳 Payment Details</h2>
+                <button class="popout-close" onclick="document.getElementById('overlay').style.display='none'">&#x2715;</button>
+            </div>
+
+            <div class="card-icons">
+                <span class="card-icon">VISA</span>
+                <span class="card-icon">MC</span>
+                <span class="card-icon">AMEX</span>
+            </div>
+
+            <div class="modal-field">
+                <label>Cardholder Name</label>
+                <input type="text" placeholder="John Smith" />
+            </div>
+
+            <div class="modal-field">
+                <label>Card Number</label>
+                <input type="text" placeholder="1234 5678 9012 3456" maxlength="19" />
+            </div>
+
+            <div class="modal-row">
+                <div class="modal-field">
+                    <label>Expiry Date</label>
+                    <input type="text" placeholder="MM/YY" maxlength="5" />
+                </div>
+                <div class="modal-field">
+                    <label>CVV</label>
+                    <input type="password" placeholder="•••" maxlength="3" />
+                </div>
+            </div>
+
+            <hr class="modal-divider" />
+
+            <div class="modal-actions">
+                <button class="modal-cancel" onclick="document.getElementById('overlay').style.display='none'">Cancel</button>
+                <button class="modal-confirm" id="confirm-btn" onclick="Payfee()" >💳 Pay Now</button>
+            </div>
+
+        </div>
+    </div>
+
 </div>
 <script>
-   async function Payfee(feeId)
+    let currentFeeId = null;
+    function OpenPopUp(feeId)
+    {
+        const overlay = document.getElementById('overlay');
+       overlay.style.display = 'flex';
+       currentFeeId = feeId;
+
+    }
+   async function Payfee()
    {
         try{
             
              const res = await fetch(`http://localhost:5086/Resident/PayFee`,
                                        {method: 'Post',
                                         headers: {'Content-Type' : 'application/json'},
-                                        body: JSON.stringify({FeeId:feeId})
+                                        body: JSON.stringify({FeeId:currentFeeId})
 
                                        });
              const data = await res.json();
              if(data.success == true)
              {
                  location.reload();
+                 currentFeeId = null;
              }
              else{
                  alert("Could not pay fee");

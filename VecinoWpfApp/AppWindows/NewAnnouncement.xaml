@@ -178,9 +178,9 @@
                                   BorderThickness="0"
                                   Height="40" Padding="10,0"
                                   VerticalContentAlignment="Center">
-                            <ComboBoxItem Content="🔵  Normal" IsSelected="True"/>
-                            <ComboBoxItem Content="🟡  Important"/>
-                            <ComboBoxItem Content="🔴  Urgent"/>
+                            <ComboBoxItem Content="Normal" IsSelected="True"/>
+                            <ComboBoxItem Content="Important"/>
+                            <ComboBoxItem Content="Urgent"/>
                         </ComboBox>
                     </Border>
 

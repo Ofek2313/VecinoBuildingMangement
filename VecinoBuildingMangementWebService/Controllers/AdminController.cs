@@ -650,6 +650,28 @@ namespace VecinoBuildingMangementWebService.Controllers
             }
         }
         [HttpPost]
+        public bool ClosePoll([FromBody] Poll poll)
+        {
+            try
+            {
+                this.repositoryUOW.DbHelperOleDb.OpenConnection();
+                return this.repositoryUOW.PollRepository.UpdatePollStatus(poll.PollId, false);
+
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return false;
+            }
+            finally
+            {
+                this.repositoryUOW.DbHelperOleDb.CloseConnection();
+            }
+        }
+
+
+        [HttpPost]
         public bool GenerateNewBuildingCode(string buildingId)
         {
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";

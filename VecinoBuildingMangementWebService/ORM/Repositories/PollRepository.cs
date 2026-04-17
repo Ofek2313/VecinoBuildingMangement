@@ -255,7 +255,15 @@ namespace VecinoBuildingMangementWebService
             return options;
 
         }
+        public bool UpdatePollStatus(string pollId,bool IsActive)
+        {
+            string sql = "Update Poll Set IsActive = @IsActive WHERE PollId = @PollId";
 
+            this.dbHelperOleDb.AddParameter("@IsActive", IsActive);
+            this.dbHelperOleDb.AddParameter("@PollId", pollId);
+
+            return this.dbHelperOleDb.Update(sql) > 0;
+        }
 
     }
   

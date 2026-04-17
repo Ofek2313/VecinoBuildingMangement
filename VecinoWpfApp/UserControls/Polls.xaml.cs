@@ -82,5 +82,25 @@ namespace VecinoWpfApp.UserControls
         {
             bool? response = ViewPollDetailWindow(sender);
         }
+
+      
+
+        private async void ClosePollButton_Click(object sender, RoutedEventArgs e)
+        {
+            PollViewModel pollViewModel = (sender as Button).DataContext as PollViewModel;
+            ApiClient<Poll> client = new ApiClient<Poll>();
+            client.Scheme = "http";
+            client.Host = "localhost";
+            client.Port = 5269;
+            client.Path = "api/Admin/ClosePoll";
+            ApiResponse<bool> apiResponse = await client.PostAsyncReturn<Poll, bool>(pollViewModel.poll);
+            if (apiResponse.Success && apiResponse.Data)
+                await GetPollsList();
+            else
+                MessageBox.Show("Unable To Close","Error",MessageBoxButton.OK,MessageBoxImage.Error);
+
+
+
+        }
     }
 }

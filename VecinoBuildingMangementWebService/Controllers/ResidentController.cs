@@ -456,9 +456,8 @@ namespace VecinoBuildingMangementWebService.Controllers
             }
         }
 
-
+       
         [HttpGet]
-
         public BuildingModel GetBuildingId(string residentId)
         {
             try
