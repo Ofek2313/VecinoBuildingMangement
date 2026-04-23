@@ -2,13 +2,14 @@
 using VecinoBuildingMangement.DTO;
 using VecinoBuildingMangement.Models;
 using VecinoBuildingMangement.ViewModels;
+using VecinoBuildingMangementWebService.ORM.ModelCreators;
 
 namespace VecinoBuildingMangementWebService
 {
     public class FeeRepository : GenericRepository<Fee>, IRepository<Fee>
     {
-        public FeeRepository(DbHelperOleDb dbHelperOleDb)
-            : base(dbHelperOleDb) { }
+        public FeeRepository(DbHelperOleDb dbHelperOleDb, ModelCreator modelCreator)
+            : base(dbHelperOleDb,modelCreator) { }
         //public bool Create(Fee model)
         //{
         //    string sql = @$"Insert Into Fee(FeeTitle,FeeAmount,FeeDueDate,IsPaid,ResidentId)
@@ -84,7 +85,7 @@ namespace VecinoBuildingMangementWebService
                 while (reader.Read())
                 {
 
-                    fees.Add(this.ModelCreator.CreateModel(reader));
+                    fees.Add(this.modelCreator.CreateModel<Fee>(reader));
 
                 }
             }
@@ -102,7 +103,7 @@ namespace VecinoBuildingMangementWebService
                 while (reader.Read())
                 {
 
-                    fees.Add(this.ModelCreator.CreateModel(reader));
+                    fees.Add(this.modelCreator.CreateModel<Fee>(reader));
 
                 }
             }
@@ -119,7 +120,7 @@ namespace VecinoBuildingMangementWebService
                 while (reader.Read())
                 {
 
-                    fees.Add(this.ModelCreator.CreateModel(reader));
+                    fees.Add(this.modelCreator.CreateModel<Fee>(reader));
 
                 }
             }
@@ -136,7 +137,7 @@ namespace VecinoBuildingMangementWebService
                 while (reader.Read())
                 {
 
-                    fees.Add(this.ModelCreator.CreateModel(reader));
+                    fees.Add(this.modelCreator.CreateModel<Fee>(reader));
 
                 }
             }
@@ -173,19 +174,7 @@ namespace VecinoBuildingMangementWebService
 
                     ResidentFeeViewModel residentFee = new ResidentFeeViewModel
                     {
-                        Fee = new Fee
-                        {
-                            FeeId = reader["FeeId"].ToString(),
-                            FeeTitle = reader["FeeTitle"].ToString(),
-                            FeeAmount = Convert.ToDouble(reader["FeeAmount"]),
-                            FeeDueDate = reader["FeeDueDate"].ToString(),
-                            IsPaid = Convert.ToBoolean(reader["IsPaid"]),
-                            ResidentId = reader["ResidentId"].ToString(),
-                            PaymentDate = reader["PaymentDate"].ToString()
-
-
-
-                        },
+                        Fee = this.modelCreator.CreateModel<Fee>(reader),
                         ResidentName = reader["ResidentName"].ToString(),
                         ResidentImage = reader["ResidentImage"].ToString(),
                         UnitNumber = Convert.ToInt32(reader["UnitNumber"])
@@ -227,7 +216,7 @@ namespace VecinoBuildingMangementWebService
                 {
                     transactionViewModels.Add(new TransactionViewModel
                     {
-                        Fee = this.ModelCreator.CreateModel(reader),
+                        Fee = this.modelCreator.CreateModel<Fee>(reader),
                         ResidentName = Convert.ToString(reader["ResidentName"]),
                     }
                     );
@@ -258,13 +247,9 @@ namespace VecinoBuildingMangementWebService
             {
                 if(reader.Read())
                 {
-                    feeSummary = new FeeSummary
-                    {
-                        TotalPaid = Convert.ToInt32(reader["TotalPaid"]),
-                        TotalUnPaid = Convert.ToInt32(reader["TotalUnPaid"]),
-                        TotalCollected = Convert.ToInt32(reader["TotalCollected"]),
-                        Outstanding = Convert.ToInt32(reader["Outstanding"]),
-                    };
+
+                    feeSummary = this.modelCreator.CreateModel<FeeSummary>(reader);
+                   
                 }
             }
             return feeSummary;

@@ -2,14 +2,15 @@
 using Swashbuckle.AspNetCore.SwaggerUI;
 using System.Data;
 using VecinoBuildingMangement.Models;
+using VecinoBuildingMangementWebService.ORM.ModelCreators;
 
 namespace VecinoBuildingMangementWebService
 {
 
     public class BuildingRepository : GenericRepository<Building>, IRepository<Building>
     {
-        public BuildingRepository(DbHelperOleDb dbHelperOleDb)
-            : base(dbHelperOleDb) { } 
+        public BuildingRepository(DbHelperOleDb dbHelperOleDb,ModelCreator modelCreator)
+            : base(dbHelperOleDb, modelCreator) { } 
 
         //public bool Create(Building model)
         //{
@@ -85,7 +86,7 @@ namespace VecinoBuildingMangementWebService
                 while (reader.Read())
                 {
 
-                    buildings.Add(this.ModelCreator.CreateModel(reader));
+                    buildings.Add(this.modelCreator.CreateModel<Building>(reader));
 
                 }
             }
@@ -106,7 +107,7 @@ namespace VecinoBuildingMangementWebService
             using (IDataReader dataReader = this.dbHelperOleDb.Select(sql))
             {
                 dataReader.Read();
-                return this.ModelCreator.CreateModel(dataReader);
+                return this.modelCreator.CreateModel<Building>(dataReader);
             }
         }
         public bool UpdateJoinCode(string code,string buildingId)

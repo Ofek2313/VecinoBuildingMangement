@@ -1,12 +1,13 @@
 ﻿using System.Data;
 using VecinoBuildingMangement.Models;
+using VecinoBuildingMangementWebService.ORM.ModelCreators;
 
 namespace VecinoBuildingMangementWebService
 {
     public class NotificationRepository : GenericRepository<Notification>, IRepository<Notification>
     {
-        public NotificationRepository(DbHelperOleDb dbHelperOleDb)
-            : base(dbHelperOleDb) { }
+        public NotificationRepository(DbHelperOleDb dbHelperOleDb, ModelCreator modelCreator)
+            : base(dbHelperOleDb, modelCreator) { }
         //public bool Create(Notification model)
         //{
         //    string sql = @$"Insert Into Notification(NotificationMessage,NotificationTitle,NotificationDate)
@@ -77,7 +78,7 @@ namespace VecinoBuildingMangementWebService
                 while (reader.Read())
                 {
 
-                    notifications.Add(this.ModelCreator.CreateModel(reader));
+                    notifications.Add(this.modelCreator.CreateModel<Notification>(reader));
 
                 }
             }
@@ -96,7 +97,7 @@ namespace VecinoBuildingMangementWebService
                 while (reader.Read())
                 {
 
-                    notifications.Add(this.ModelCreator.CreateModel(reader));
+                    notifications.Add(this.modelCreator.CreateModel<Notification>(reader));
 
                 }
             }
@@ -114,7 +115,7 @@ namespace VecinoBuildingMangementWebService
                 while (reader.Read())
                 {
 
-                    notifications.Add(this.ModelCreator.CreateModel(reader));
+                    notifications.Add(this.modelCreator.CreateModel<Notification>(reader));
 
                 }
             }
@@ -140,7 +141,7 @@ namespace VecinoBuildingMangementWebService
                 while (reader.Read())
                 {
 
-                    notifications.Add(this.ModelCreator.CreateModel(reader));
+                    notifications.Add(this.modelCreator.CreateModel<Notification>(reader));
 
                 }
             }

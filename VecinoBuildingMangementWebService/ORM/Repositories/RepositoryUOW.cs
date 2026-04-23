@@ -1,4 +1,5 @@
-﻿using VecinoBuildingMangementWebService.ORM.Repositories;
+﻿using VecinoBuildingMangementWebService.ORM.ModelCreators;
+using VecinoBuildingMangementWebService.ORM.Repositories;
 
 namespace VecinoBuildingMangementWebService
 {
@@ -20,10 +21,11 @@ namespace VecinoBuildingMangementWebService
         DbHelperOleDb dbHelperOleDb;
         ModelCreators modelCreators;
 
+        ModelCreator modelCreator;
         public RepositoryUOW()
         {
             this.dbHelperOleDb = new DbHelperOleDb();
-            this.modelCreators = new ModelCreators();
+            this.modelCreator = new ModelCreator();
         }
         public DbHelperOleDb DbHelperOleDb
         {
@@ -36,7 +38,7 @@ namespace VecinoBuildingMangementWebService
             get
             {
                 if(buildingRepository == null)
-                        buildingRepository = new BuildingRepository(this.dbHelperOleDb);
+                        buildingRepository = new BuildingRepository(this.dbHelperOleDb,this.modelCreator);
                     return buildingRepository;
             }
         }
@@ -56,7 +58,7 @@ namespace VecinoBuildingMangementWebService
             get
             {
                 if (eventRepository == null)
-                    eventRepository = new EventRepository(this.dbHelperOleDb);
+                    eventRepository = new EventRepository(this.dbHelperOleDb,this.modelCreator);
                 return eventRepository;
             }
         }
@@ -76,7 +78,7 @@ namespace VecinoBuildingMangementWebService
             get
             {
                 if (feeRepository == null)
-                    feeRepository = new FeeRepository(this.dbHelperOleDb);
+                    feeRepository = new FeeRepository(this.dbHelperOleDb, this.modelCreator);
                 return feeRepository;
             }
         }
@@ -86,7 +88,7 @@ namespace VecinoBuildingMangementWebService
             get
             {
                 if (notificationRepository == null)
-                    notificationRepository = new NotificationRepository(this.dbHelperOleDb);
+                    notificationRepository = new NotificationRepository(this.dbHelperOleDb, this.modelCreator);
                 return notificationRepository;
             }
         }
@@ -96,7 +98,7 @@ namespace VecinoBuildingMangementWebService
             get
             {
                 if (pollRepository == null)
-                    pollRepository = new PollRepository(this.dbHelperOleDb);
+                    pollRepository = new PollRepository(this.dbHelperOleDb, this.modelCreator);
                 return pollRepository;
             }
         }
@@ -116,7 +118,7 @@ namespace VecinoBuildingMangementWebService
             get
             {
                 if (residentRepository == null)
-                    residentRepository = new ResidentRepository(this.dbHelperOleDb);
+                    residentRepository = new ResidentRepository(this.dbHelperOleDb, this.modelCreator);
                 return residentRepository;
             }
         }
@@ -126,7 +128,7 @@ namespace VecinoBuildingMangementWebService
             get
             {
                 if (serviceRequestRepository == null)
-                    serviceRequestRepository = new ServiceRequestRepository(this.dbHelperOleDb);
+                    serviceRequestRepository = new ServiceRequestRepository(this.dbHelperOleDb, this.modelCreator);
                 return serviceRequestRepository;
             }
         }
@@ -136,7 +138,7 @@ namespace VecinoBuildingMangementWebService
             get
             {
                 if (voteRepository == null)
-                    voteRepository = new VoteRepository(this.dbHelperOleDb);
+                    voteRepository = new VoteRepository(this.dbHelperOleDb, this.modelCreator);
                 return voteRepository;
             }
         }
@@ -145,7 +147,7 @@ namespace VecinoBuildingMangementWebService
             get
             {
                 if (optionRepository == null)
-                    optionRepository = new OptionRepository(this.dbHelperOleDb);
+                    optionRepository = new OptionRepository(this.dbHelperOleDb, this.modelCreator);
                 return optionRepository;
             }
         }

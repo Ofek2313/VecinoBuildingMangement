@@ -4,13 +4,14 @@ using System.Text;
 using VecinoBuildingMangement.DTO;
 using VecinoBuildingMangement.Models;
 using VecinoBuildingMangement.ViewModels;
+using VecinoBuildingMangementWebService.ORM.ModelCreators;
 
 namespace VecinoBuildingMangementWebService
 {
     public class EventRepository : GenericRepository<Event>, IRepository<Event>
     {
-        public EventRepository(DbHelperOleDb dbHelperOleDb)
-            : base(dbHelperOleDb) { }
+        public EventRepository(DbHelperOleDb dbHelperOleDb, ModelCreator modelCreator)
+            : base(dbHelperOleDb,modelCreator) { }
         //public bool Create(Event model)
         //{
         //    string sql = @$"Insert Into Event(EventDate,EventTitle,EventDescription,EventTypeId,BuildingId)
@@ -98,8 +99,8 @@ namespace VecinoBuildingMangementWebService
             {
                 while (reader.Read())
                 {
-                    if (!HasHappend(this.ModelCreator.CreateModel(reader).EventDate))
-                        events.Add(this.ModelCreator.CreateModel(reader));
+                    if (!HasHappend(this.modelCreator.CreateModel<Event>(reader).EventDate))
+                        events.Add(this.modelCreator.CreateModel<Event>(reader));
 
                 }
             }
@@ -142,8 +143,8 @@ namespace VecinoBuildingMangementWebService
             {
                 while (reader.Read())
                 {
-                    if(HasHappend(this.ModelCreator.CreateModel(reader).EventDate))
-                        events.Add(this.ModelCreator.CreateModel(reader));
+                    if(HasHappend(this.modelCreator.CreateModel<Event>(reader).EventDate))
+                        events.Add(this.modelCreator.CreateModel<Event>(reader));
 
                 }
             }
@@ -160,8 +161,8 @@ namespace VecinoBuildingMangementWebService
             {
                 while (reader.Read())
                 {
-                    if (!HasHappend(this.ModelCreator.CreateModel(reader).EventDate))
-                        events.Add(this.ModelCreator.CreateModel(reader));
+                    if (!HasHappend(this.modelCreator.CreateModel<Event>(reader).EventDate))
+                        events.Add(this.modelCreator.CreateModel<Event>(reader));
 
                 }
             }
@@ -230,18 +231,7 @@ namespace VecinoBuildingMangementWebService
                 {
                     EventViewModelResident eventViewModel = new EventViewModelResident
                     {
-                        Event = new Event
-                        {
-                            EventId = dataReader["EventId"].ToString(),
-                            EventDate = dataReader["EventDate"].ToString(),
-                            EventTitle = dataReader["EventTitle"].ToString(),
-                            EventDescription = dataReader["EventDescription"].ToString(),
-                            EventTypeId = dataReader["EventTypeId"].ToString(),
-                            EventImage = dataReader["EventImage"].ToString(),
-                            StartTime = dataReader["StartTime"].ToString(),
-                            EndTime = dataReader["EndTime"].ToString(),
-                            BuildingId = dataReader["BuildingId"].ToString(),
-                        },
+                        Event = this.modelCreator.CreateModel<Event>(dataReader),
                         Attending = Convert.ToInt32(dataReader["AttendingCount"]),
                         IsAttending = Convert.ToBoolean(dataReader["IsAttending"])
                        
@@ -264,21 +254,10 @@ namespace VecinoBuildingMangementWebService
                 {
                     EventViewModel eventViewModel = new EventViewModel
                     {
-                        Event = new Event
-                        {
-                            EventId = dataReader["EventId"].ToString(),
-                            EventDate = dataReader["EventDate"].ToString(),
-                            EventTitle = dataReader["EventTitle"].ToString(),
-                            EventDescription = dataReader["EventDescription"].ToString(),
-                            EventTypeId = dataReader["EventTypeId"].ToString(),
-                            EventImage = dataReader["EventImage"].ToString(),
-                            StartTime = dataReader["StartTime"].ToString(),
-                            EndTime = dataReader["EndTime"].ToString(),
-                            BuildingId = dataReader["BuildingId"].ToString(),
-                        },
+                        Event = this.modelCreator.CreateModel<Event>(dataReader),
                         Attending = Convert.ToInt32(dataReader["AttendingCount"]),
                         
-
+                        
                     };
                     eventViewModels.Add(eventViewModel);
                 }

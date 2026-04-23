@@ -1,12 +1,13 @@
 ﻿using System.Data;
 using VecinoBuildingMangement.Models;
+using VecinoBuildingMangementWebService.ORM.ModelCreators;
 
 namespace VecinoBuildingMangementWebService
 {
     public class ServiceRequestRepository : GenericRepository<ServiceRequest>, IRepository<ServiceRequest>
     {
-        public ServiceRequestRepository(DbHelperOleDb dbHelperOleDb)
-            : base(dbHelperOleDb) { }
+        public ServiceRequestRepository(DbHelperOleDb dbHelperOleDb,ModelCreator modelCreator)
+            : base(dbHelperOleDb, modelCreator) { }
         //public bool Create(ServiceRequest model)
         //{
         //    //string sql = @$"Insert Into Resident(ResidentName,ResidentPassword,ResidentPhone,ResidentEmail,UnitNumber,BuildingId)
@@ -60,7 +61,7 @@ namespace VecinoBuildingMangementWebService
                 while (reader.Read())
                 {
 
-                    serviceRequests.Add(this.ModelCreator.CreateModel(reader));
+                    serviceRequests.Add(this.modelCreator.CreateModel<ServiceRequest>(reader));
 
                 }
             }
@@ -106,7 +107,7 @@ namespace VecinoBuildingMangementWebService
                 while (reader.Read())
                 {
 
-                    serviceRequests.Add(this.ModelCreator.CreateModel(reader));
+                    serviceRequests.Add(this.modelCreator.CreateModel<ServiceRequest>(reader));
 
                 }
             }
@@ -138,7 +139,7 @@ namespace VecinoBuildingMangementWebService
                 while (reader.Read())
                 {
 
-                    serviceRequests.Add(this.ModelCreator.CreateModel(reader));
+                    serviceRequests.Add(this.modelCreator.CreateModel<ServiceRequest>(reader));
 
                 }
             }

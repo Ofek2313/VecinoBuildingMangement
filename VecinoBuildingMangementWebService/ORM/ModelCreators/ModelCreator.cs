@@ -4,9 +4,9 @@ using VecinoBuildingMangement.Models;
 
 namespace VecinoBuildingMangementWebService.ORM.ModelCreators
 {
-    public class ModelCreator<T> : IModelCreator<T> where T : new()
+    public class ModelCreator 
     {
-        public T CreateModel(IDataReader dataReader)
+        public T CreateModel<T>(IDataReader dataReader) where T : new()
         {
             Type type = typeof(T);
             var ignore = new[] { "HasErrors", "IsValid" };

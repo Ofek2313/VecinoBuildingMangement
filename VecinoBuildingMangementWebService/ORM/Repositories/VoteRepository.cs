@@ -1,13 +1,14 @@
 ﻿using Microsoft.Extensions.Options;
 using System.Data;
 using VecinoBuildingMangement.Models;
+using VecinoBuildingMangementWebService.ORM.ModelCreators;
 
 namespace VecinoBuildingMangementWebService
 {
     public class VoteRepository : GenericRepository<Vote>, IRepository<Vote>
     {
-        public VoteRepository(DbHelperOleDb dbHelperOleDb)
-            : base(dbHelperOleDb) { }
+        public VoteRepository(DbHelperOleDb dbHelperOleDb, ModelCreator modelCreator)
+            : base(dbHelperOleDb, modelCreator) { }
 
         public new bool Create(Vote model)
         {

@@ -3,13 +3,14 @@ using System.Data;
 using System.Security.Cryptography;
 using System.Text;
 using VecinoBuildingMangement.Models;
+using VecinoBuildingMangementWebService.ORM.ModelCreators;
 
 namespace VecinoBuildingMangementWebService
 {
     public class ResidentRepository :GenericRepository<Resident>, IRepository<Resident>
     {
-        public ResidentRepository(DbHelperOleDb dbHelperOleDb)
-            :base(dbHelperOleDb) { }
+        public ResidentRepository(DbHelperOleDb dbHelperOleDb, ModelCreator modelCreator)
+            :base(dbHelperOleDb, modelCreator) { }
         //public ResidentRepository(DbHelperOleDb dbHelperOleDb,ModelCreators modelCreators)
         //    : base(dbHelperOleDb,modelCreators) { }
         public override bool Create(Resident model)
@@ -129,7 +130,7 @@ namespace VecinoBuildingMangementWebService
                 while (reader.Read())
                 {
 
-                    residents.Add(this.ModelCreator.CreateModel(reader));
+                    residents.Add(this.modelCreator.CreateModel<Resident>(reader));
 
                 }
             }
@@ -197,7 +198,7 @@ namespace VecinoBuildingMangementWebService
             {
                 while (reader.Read())
                 {
-                    residents.Add(this.ModelCreator.CreateModel(reader));
+                    residents.Add(this.modelCreator.CreateModel<Resident>(reader));
                 }
             }
             return residents;

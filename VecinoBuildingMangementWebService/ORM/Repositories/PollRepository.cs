@@ -4,13 +4,14 @@ using System.Globalization;
 using VecinoBuildingMangement.DTO;
 using VecinoBuildingMangement.Models;
 using VecinoBuildingMangement.ViewModels;
+using VecinoBuildingMangementWebService.ORM.ModelCreators;
 
 namespace VecinoBuildingMangementWebService
 {
     public class PollRepository : GenericRepository<Poll>, IRepository<Poll>
     {
-        public PollRepository(DbHelperOleDb dbHelperOleDb)
-            : base(dbHelperOleDb) { }
+        public PollRepository(DbHelperOleDb dbHelperOleDb, ModelCreator modelCreator)
+            : base(dbHelperOleDb, modelCreator) { }
         //public bool Create(Poll model)
         //{
         //    string sql = @$"Insert Into Poll(PollTitle,PollDate,BuildingId)
@@ -75,7 +76,7 @@ namespace VecinoBuildingMangementWebService
                 while (reader.Read())
                 {
 
-                    polls.Add(this.ModelCreator.CreateModel(reader));
+                    polls.Add(this.modelCreator.CreateModel<Poll>(reader));
 
                 }
             }
@@ -93,7 +94,7 @@ namespace VecinoBuildingMangementWebService
                 while (reader.Read())
                 {
 
-                    polls.Add(this.ModelCreator.CreateModel(reader));
+                    polls.Add(this.modelCreator.CreateModel<Poll>(reader));
 
                 }
             }
@@ -111,7 +112,7 @@ namespace VecinoBuildingMangementWebService
                 while (reader.Read())
                 {
 
-                    polls.Add(this.ModelCreator.CreateModel(reader));
+                    polls.Add(this.modelCreator.CreateModel<Poll>(reader));
 
                 }
             }
@@ -155,19 +156,19 @@ namespace VecinoBuildingMangementWebService
                 while (reader.Read())
                 {
 
-                    flatRows.Add(new PollDatabaseFlat
-                    {
-                        PollId = Convert.ToString(reader["PollId"]),
-                        PollTitle = Convert.ToString(reader["PollTitle"]),
-                        PollDescription = Convert.ToString(reader["PollDescription"]),
-                        IsActive = Convert.ToBoolean(reader["IsActive"]),
-                        PollDate = Convert.ToString(reader["PollDate"]),
-                        BuildingId = Convert.ToString(reader["BuildingId"]),
-                        OptionId = Convert.ToString(reader["OptionId"]),
-                        OptionText = Convert.ToString(reader["OptionText"]),
-                        VoteCount = Convert.ToInt32(reader["VoteCount"]),
-                        HasVoted = Convert.ToBoolean(reader["HasVoted"])
-                    });
+                    flatRows.Add(this.modelCreator.CreateModel<PollDatabaseFlat>(reader)); //new PollDatabaseFlat
+                    //{
+                    //    PollId = Convert.ToString(reader["PollId"]),
+                    //    PollTitle = Convert.ToString(reader["PollTitle"]),
+                    //    PollDescription = Convert.ToString(reader["PollDescription"]),
+                    //    IsActive = Convert.ToBoolean(reader["IsActive"]),
+                    //    PollDate = Convert.ToString(reader["PollDate"]),
+                    //    BuildingId = Convert.ToString(reader["BuildingId"]),
+                    //    OptionId = Convert.ToString(reader["OptionId"]),
+                    //    OptionText = Convert.ToString(reader["OptionText"]),
+                    //    VoteCount = Convert.ToInt32(reader["VoteCount"]),
+                    //    HasVoted = Convert.ToBoolean(reader["HasVoted"])
+                    //});
 
                 }
 
@@ -233,14 +234,8 @@ namespace VecinoBuildingMangementWebService
 
                     options.Add(new OptionViewModel
                     {
-                        option = new Option
-                        {
-                            OptionId = Convert.ToString(reader["OptionId"]),
-                            PollId = Convert.ToString(reader["PollId"]),
-                            OptionText = Convert.ToString(reader["OptionText"]),
-
-
-                        },
+                        option = this.modelCreator.CreateModel<Option>(reader),
+                       
                         voted = Convert.ToInt32(reader["VoteCount"]),
 
 

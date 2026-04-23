@@ -8,22 +8,15 @@ namespace VecinoBuildingMangementWebService
     {
 
         protected DbHelperOleDb dbHelperOleDb;
+        protected ModelCreator modelCreator;
 
-        public GenericRepository(DbHelperOleDb dbHelperOleDb)
+        public GenericRepository(DbHelperOleDb dbHelperOleDb,ModelCreator modelCreator)
         {
             this.dbHelperOleDb = dbHelperOleDb;
+            this.modelCreator = modelCreator;
         }
-        protected ModelCreator<T> modelCreator;
-        protected ModelCreator<T> ModelCreator
-        {
-            get
-            {
-                if (modelCreator == null)
-                    modelCreator = new ModelCreator<T>();
-                return modelCreator;
-            }
-        }
-
+        
+        
 
 
 
@@ -70,7 +63,7 @@ namespace VecinoBuildingMangementWebService
                 while (reader.Read())
                 {
 
-                    list.Add(this.ModelCreator.CreateModel(reader));
+                    list.Add(this.modelCreator.CreateModel<T>(reader));
 
                 }
             }
@@ -89,7 +82,7 @@ namespace VecinoBuildingMangementWebService
             using (IDataReader dataReader = this.dbHelperOleDb.Select(sql))
             {
                 dataReader.Read();
-                return this.ModelCreator.CreateModel(dataReader);
+                return this.modelCreator.CreateModel<T>(dataReader);
             }
 
         }

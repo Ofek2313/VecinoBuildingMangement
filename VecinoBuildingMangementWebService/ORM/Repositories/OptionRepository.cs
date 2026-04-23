@@ -1,12 +1,13 @@
 ﻿using System.Data;
 using VecinoBuildingMangement.Models;
+using VecinoBuildingMangementWebService.ORM.ModelCreators;
 
 namespace VecinoBuildingMangementWebService.ORM.Repositories
 {
     public class OptionRepository : GenericRepository<Option>
     {
-        public OptionRepository(DbHelperOleDb dbHelperOleDb)
-            : base(dbHelperOleDb) { }
+        public OptionRepository(DbHelperOleDb dbHelperOleDb, ModelCreator modelCreator)
+            : base(dbHelperOleDb, modelCreator) { }
 
         public override bool Create(Option model)
         {
@@ -28,7 +29,7 @@ namespace VecinoBuildingMangementWebService.ORM.Repositories
                 while (reader.Read())
                 {
 
-                    options.Add(this.ModelCreator.CreateModel(reader));
+                    options.Add(this.modelCreator.CreateModel<Option>(reader));
 
                 }
             }

@@ -409,7 +409,7 @@ namespace VecinoBuildingMangementWebService.Controllers
        
         public List<OptionViewModel> VoteInPoll(Vote vote)
         {
-            List < OptionViewModel > test = new List<OptionViewModel> ();
+            List <OptionViewModel> test = new List<OptionViewModel> ();
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
