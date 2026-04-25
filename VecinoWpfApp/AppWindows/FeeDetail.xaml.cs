@@ -34,10 +34,11 @@ namespace VecinoWpfApp.AppWindows
 
         private async void EditFeeButton_Click(object sender, RoutedEventArgs e)
         {
-            _IsEditing = !_IsEditing;
+            
             var viewModel = (ResidentFeeViewModel)this.DataContext;
-            if (_IsEditing)
+            if (!_IsEditing)
             {
+                _IsEditing = true;
                 _savedResidentFee = viewModel.Clone();
                 FeeTitleTextBox.IsReadOnly = false;
                 FeeAmountTextBox.IsReadOnly = false;
@@ -47,6 +48,7 @@ namespace VecinoWpfApp.AppWindows
             }
             else
             {
+               
                 viewModel.Fee.Validate();
                 if(!viewModel.Fee.HasErrors)
                 {
@@ -59,17 +61,24 @@ namespace VecinoWpfApp.AppWindows
                     {
                         this.DataContext = null;
                         this.DataContext = _savedResidentFee;
+                        _IsEditing = true;
+                       
+
                     }
                     else
                     {
+                        FeeTitleTextBox.IsReadOnly = true;
+                        FeeAmountTextBox.IsReadOnly = true;
+                        _IsEditing = false;
                         this.DialogResult = true;
                     }
                 }
                 else
                 {
+                    _IsEditing = true;
                     this.DataContext = _savedResidentFee;
                 }
-                
+              
             }
             
         }

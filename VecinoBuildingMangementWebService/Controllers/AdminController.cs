@@ -501,14 +501,14 @@ namespace VecinoBuildingMangementWebService.Controllers
         }
 
         [HttpGet]
-        public Building AdminMainPage(string BuildingId)
+        public AdminMainPage GetAdminMainPage(string residentId)
         {
-            Building building = new Building();
+            AdminMainPage building = new AdminMainPage();
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
-                building = this.repositoryUOW.BuildingRepository.GetById(BuildingId);
-                return building;
+                return this.repositoryUOW.BuildingRepository.GetAdminOverlay(residentId);
+                
             }
             catch (Exception ex)
             {
@@ -831,6 +831,7 @@ namespace VecinoBuildingMangementWebService.Controllers
                 this.repositoryUOW.DbHelperOleDb.CloseConnection();
             }
         }
+        
     }
 }
 

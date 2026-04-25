@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BuildingManagementWsClient;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using VecinoBuildingMangement.ViewModels;
 
 namespace VecinoWpfApp.UserControls
 {
@@ -23,9 +25,18 @@ namespace VecinoWpfApp.UserControls
         public Dashboard()
         {
             InitializeComponent();
-          
+            LoadBuilding();
         }
-
+        private async void LoadBuilding()
+        {
+            ApiClient<AdminMainPage> apiClient = new ApiClient<AdminMainPage>();
+            apiClient.Scheme = "http";
+            apiClient.Host = "localhost";
+            apiClient.Port = 5269;
+            apiClient.Path = "api/Admin/GetAdminMainPage";
+            apiClient.AddParameter("residentId", Session.ResidentId);
+            this.DataContext = await apiClient.GetAsync();
+        }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
 

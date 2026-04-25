@@ -9,7 +9,7 @@ namespace VecinoBuildingMangement.ViewModels
 {
     public class ManageServiceRequestViewModel
     {
-        public List<ServiceRequest> serviceRequests {  get; set; }
+        public List<ServiceRequestDetail> serviceRequests {  get; set; }
         public int ServiceRequestNumber { get; set; }
 
         public int Pending { get; set; } = 0;

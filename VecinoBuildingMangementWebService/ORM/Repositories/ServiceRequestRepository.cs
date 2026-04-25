@@ -1,5 +1,6 @@
 ﻿using System.Data;
 using VecinoBuildingMangement.Models;
+using VecinoBuildingMangement.ViewModels;
 using VecinoBuildingMangementWebService.ORM.ModelCreators;
 
 namespace VecinoBuildingMangementWebService
@@ -128,18 +129,37 @@ namespace VecinoBuildingMangementWebService
             this.dbHelperOleDb.AddParameter("@ResidentId", residentId);
             return this.dbHelperOleDb.Delete(sql) > 0;
         }
-        public List<ServiceRequest> GetRequestsByBuilding(string buildingId)
+        public List<ServiceRequestDetail> GetRequestsByBuilding(string buildingId)
         {
-            string sql = @"SELECT ServiceRequest.* FROM Resident INNER JOIN ServiceRequest ON Resident.ResidentId = ServiceRequest.ResidentId WHERE BuildingId = @BuildingId;";
+            string sql = @"SELECT
+                            ServiceRequest.*,
+                            RequestTypeName,
+                            Resident.ResidentName,
+                            Resident.ResidentEmail,
+                            Resident.ResidentImage
+                            FROM
+                            RequestTypes
+                            INNER JOIN (
+                                Resident
+                                INNER JOIN ServiceRequest ON Resident.ResidentId = ServiceRequest.ResidentId
+                            ) ON RequestTypes.RequestTypeId = ServiceRequest.RequestTypeId
+                             WHERE
+                            (((Resident.BuildingId) = @BuildingId));";
             this.dbHelperOleDb.AddParameter("@BuildingId", buildingId);
 
-            List<ServiceRequest> serviceRequests = new List<ServiceRequest>();
+            List<ServiceRequestDetail> serviceRequests = new List<ServiceRequestDetail>();
             using (IDataReader reader = this.dbHelperOleDb.Select(sql))
             {
                 while (reader.Read())
                 {
 
-                    serviceRequests.Add(this.modelCreator.CreateModel<ServiceRequest>(reader));
+                    serviceRequests.Add(new ServiceRequestDetail {
+                                            ServiceRequest = this.modelCreator.CreateModel<ServiceRequest>(reader),
+                                            RequestTypeName = Convert.ToString(reader["RequestTypeName"]),
+                                            ResidentName = Convert.ToString(reader["ResidentName"]),
+                                            ResidentEmail = Convert.ToString(reader["ResidentEmail"]),
+                                            ResidentImage = Convert.ToString(reader["ResidentImage"]),
+                    } );
 
                 }
             }

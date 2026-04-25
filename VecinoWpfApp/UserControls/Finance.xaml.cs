@@ -109,10 +109,15 @@ namespace VecinoWpfApp.UserControls
             return response;
         }
 
-        private void ViewFeeButton_Click(object sender, RoutedEventArgs e)
+        private async void ViewFeeButton_Click(object sender, RoutedEventArgs e)
         {
             ResidentFeeViewModel viewModel = (sender as Button).DataContext as ResidentFeeViewModel;
-            bool? response = ViewFeeDetailWindow(viewModel);
+            bool? response = ViewFeeDetailWindow(viewModel.Clone());
+
+            if (response == true)
+                await LoadFinanceData();
+
+
         }
     }
 }

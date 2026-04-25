@@ -65,7 +65,7 @@ namespace VecinoWpfApp.AppPages
                     return;
                 }
                 Session.BuildingId = apiResponse.Data.BuildingId;
-
+                Session.ResidentId = apiResponse.Data.ResidentId;
 
               
                 NavigationService.Navigate(new MainWindow());

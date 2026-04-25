@@ -2,6 +2,7 @@
 using Swashbuckle.AspNetCore.SwaggerUI;
 using System.Data;
 using VecinoBuildingMangement.Models;
+using VecinoBuildingMangement.ViewModels;
 using VecinoBuildingMangementWebService.ORM.ModelCreators;
 
 namespace VecinoBuildingMangementWebService
@@ -148,6 +149,36 @@ namespace VecinoBuildingMangementWebService
             this.dbHelperOleDb.AddParameter("@BuildingId", buildingId);
             return this.dbHelperOleDb.Update(sql) > 0;
          
+        }
+
+        public AdminMainPage GetAdminOverlay(string residentId)
+        {
+            AdminMainPage viewmodel = new AdminMainPage();
+            string sql = @"SELECT
+                        Building.*,
+                        Resident.ResidentName,
+                        Cities.CityName
+                        FROM
+                        Cities
+                        INNER JOIN (
+                            Building
+                            INNER JOIN Resident ON Building.BuildingId = Resident.BuildingId
+                        ) ON Cities.CityId = Building.CityId
+                        WHERE
+                        (((Resident.ResidentId) = @ResidentId));";
+            this.dbHelperOleDb.AddParameter("@ResidentId", residentId);
+            using (IDataReader dataReader = this.dbHelperOleDb.Select(sql))
+            {
+                if (dataReader.Read())
+                {
+                    viewmodel.Building = this.modelCreator.CreateModel<Building>(dataReader);
+                    viewmodel.ResidentName = Convert.ToString(dataReader["ResidentName"]);
+                    viewmodel.CityName = Convert.ToString(dataReader["CityName"]);
+                }
+              
+                
+            }
+            return viewmodel;
         }
     }
     

@@ -62,11 +62,12 @@ namespace VecinoWpfApp.AppWindows
         //}
         private async void ButtonEditEvent_Click(object sender, RoutedEventArgs e)
         {
-            _IsEditing = !_IsEditing;
+            
 
             var viewModel = (EventViewModel)this.DataContext;
-            if (_IsEditing)
+            if (!_IsEditing)
             {
+                _IsEditing = true;
                 _savedEventView = viewModel.Clone();
                 
                 EventDescriptionText.IsReadOnly = false;
@@ -79,9 +80,8 @@ namespace VecinoWpfApp.AppWindows
             }
             else
             {
-                EventDescriptionText.IsReadOnly = true;
-                EventTitleText.IsReadOnly = true;
-                UploadImage.Visibility = Visibility.Collapsed;
+                
+              
                 MainButton.Text = "Edit Event";
 
                 ApiResponse<bool> apiResponse;
@@ -90,26 +90,40 @@ namespace VecinoWpfApp.AppWindows
                 client.Host = "localhost";
                 client.Port = 5269;
                 client.Path = "api/Admin/UpdateEvent";
-
-                if(_imagePath != null)
+                viewModel.Event.Validate();
+                if (!viewModel.Event.HasErrors)
                 {
-                    Stream stream = new FileStream(_imagePath, FileMode.Open, FileAccess.Read);
-                    apiResponse = await client.PostAsyncReturn<Event, bool>(viewModel.Event, stream, _imagePath);
+                    if (_imagePath != null)
+                    {
+                        Stream stream = new FileStream(_imagePath, FileMode.Open, FileAccess.Read);
+                        apiResponse = await client.PostAsyncReturn<Event, bool>(viewModel.Event, stream, _imagePath);
+                    }
+                    else
+                    {
+                        apiResponse = await client.PostAsyncReturn<Event, bool>(viewModel.Event, null, null);
+                    }
+
+                    if (!apiResponse.Success || !apiResponse.Data)
+                    {
+                        this.DataContext = null;
+                        this.DataContext = _savedEventView;
+                        _IsEditing = true;
+                    }
+                    else
+                    {
+                        EventDescriptionText.IsReadOnly = true;
+                        EventTitleText.IsReadOnly = true;
+                        UploadImage.Visibility = Visibility.Collapsed;
+                        _IsEditing = false;
+                        this.DialogResult = true;
+                    }
                 }
                 else
                 {
-                    apiResponse = await client.PostAsyncReturn<Event, bool>(viewModel.Event,null,null);
-                }
-
-                if (!apiResponse.Success || !apiResponse.Data)
-                {
-                    this.DataContext = null;
+                    _IsEditing = true;
                     this.DataContext = _savedEventView;
                 }
-                else
-                {
-                    this.DialogResult = true;
-                }
+               
                 //UpdateEvent
             }
         }

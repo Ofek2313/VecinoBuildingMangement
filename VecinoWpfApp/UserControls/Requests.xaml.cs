@@ -49,7 +49,7 @@ namespace VecinoWpfApp.UserControls
 
         private async void ActionRequest_Click(object sender, RoutedEventArgs e)
         {
-            ServiceRequest item = (sender as Button).DataContext as ServiceRequest;
+            ServiceRequestDetail item = (sender as Button).DataContext as ServiceRequestDetail;
             StatusViewModel viewModel = new StatusViewModel();
             
             ApiClient<StatusViewModel> client = new ApiClient<StatusViewModel>();
@@ -58,9 +58,9 @@ namespace VecinoWpfApp.UserControls
             client.Port = 5269;
             client.Path = "api/Admin/ChangeRequestStatus";
 
-            viewModel.RequestId = item.RequestId;
+            viewModel.RequestId = item.ServiceRequest.RequestId;
 
-            switch (item.RequestStatus)
+            switch (item.ServiceRequest.RequestStatus)
             {
                 case "Pending":
                     viewModel.Status = "In Progress";
@@ -85,19 +85,22 @@ namespace VecinoWpfApp.UserControls
 
 
         }
-        private void ViewCreateRequestWindow(object sender)
+        private bool? ViewCreateRequestWindow(object sender)
         {
-            ServiceRequest serviceRequest = (sender as Button).DataContext as ServiceRequest;
+            ServiceRequestDetail serviceRequest = (sender as Button).DataContext as ServiceRequestDetail;
             if (this.requestDetail == null)
                 this.requestDetail = new ViewRequestDetail(serviceRequest);
             this.requestDetail.Owner = Window.GetWindow(this);
-            this.requestDetail.ShowDialog();
+            bool? response = this.requestDetail.ShowDialog();
             this.requestDetail = null;
+            return response;
           
         }
         private async void ViewDetailsClick(object sender, RoutedEventArgs e)
         {
-            ViewCreateRequestWindow(sender);
+           bool? response = ViewCreateRequestWindow(sender);
+            if (response == true)
+                await GetRequestList();
             
         }
     }

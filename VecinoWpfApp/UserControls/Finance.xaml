@@ -242,36 +242,10 @@
             </StackPanel>
         </Border>
 
-        <!-- ======= PROGRESS BAR ======= -->
-        <Border Canvas.Left="82" Canvas.Top="238" Width="1512" Height="66" Style="{StaticResource CardBorder}">
-            <Grid Margin="24,0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="0,0,20,0">
-                    <TextBlock Text="Monthly Collection Progress" FontFamily="Segoe UI" FontSize="13" FontWeight="SemiBold" Foreground="#1e293b"/>
-                    <TextBlock Text="18 of 24 residents paid this month" FontFamily="Segoe UI" FontSize="11" Foreground="#64748b"/>
-                </StackPanel>
-                <Grid Grid.Column="1" VerticalAlignment="Center">
-                    <Border Height="12" Background="#f1f5f9" CornerRadius="6"/>
-                    <!-- 75% fill — set Width in code-behind relative to actual track width, or use a converter -->
-                    <Border Height="12" CornerRadius="6" HorizontalAlignment="Left" Width="840">
-                        <Border.Background>
-                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                                <GradientStop Color="#14b8a6" Offset="0"/>
-                                <GradientStop Color="#22c55e" Offset="1"/>
-                            </LinearGradientBrush>
-                        </Border.Background>
-                    </Border>
-                </Grid>
-                <TextBlock Grid.Column="2" Text="75%" FontFamily="Segoe UI" FontSize="18" FontWeight="Bold" Foreground="#16a34a" VerticalAlignment="Center" Margin="20,0,0,0"/>
-            </Grid>
-        </Border>
+       
 
         <!-- ======= RESIDENT PAYMENT TABLE ======= -->
-        <Border Canvas.Left="82" Canvas.Top="328" Width="920" Height="700" Style="{StaticResource CardBorder}">
+        <Border Canvas.Left="82" Canvas.Top="234 " Width="920" Height="700" Style="{StaticResource CardBorder}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="54"/>
@@ -366,7 +340,7 @@
       
 
         <!-- ======= RECENT TRANSACTIONS CARD ======= -->
-        <Border Canvas.Left="1022" Canvas.Top="328" Width="572" Height="700" Style="{StaticResource CardBorder}">
+        <Border Canvas.Left="1022" Canvas.Top="234" Width="572" Height="700" Style="{StaticResource CardBorder}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="52"/>

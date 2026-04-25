@@ -32,7 +32,7 @@ namespace VecinoWpfApp.UserControls
         public Polls()
         {
             InitializeComponent();
-            GetPollsList();
+            _ = GetPollsList();
         }
         private async Task GetPollsList()
         {

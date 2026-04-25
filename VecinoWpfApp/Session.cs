@@ -4,13 +4,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VecinoBuildingMangement.DTO;
+using VecinoBuildingMangement.Models;
 
 namespace VecinoWpfApp
 {
     public static class Session
     {
 
+        public static Building CurrentBuilding { get; set; }
+
         public static string BuildingId { get; set; } = "";
+
+        public static string ResidentId { get; set; } = string.Empty;
 
         public static bool HasAccount { get; set; } = false;
 

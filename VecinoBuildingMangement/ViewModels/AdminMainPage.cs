@@ -9,9 +9,18 @@ namespace VecinoBuildingMangement.ViewModels
 {
     public class AdminMainPage
     {
-        public string JoinCode { get; set; }
+       
 
         public Building Building { get; set; }
+
+        public string ResidentName { get; set; }
+
+        public string CityName { get; set; }
+
+       
+
+
+
 
     }
 }
