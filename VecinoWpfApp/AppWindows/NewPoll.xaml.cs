@@ -55,26 +55,27 @@ namespace VecinoWpfApp.AppWindows
 
         private async void CreatePoll_Click(object sender, RoutedEventArgs e)
         {
-            
-          
 
-            Poll poll = new Poll();
-            poll.PollTitle = pollTitleTextBox.Text;
-            poll.PollDescription = pollDescription.Text;
-            poll.PollDate = pollDate.SelectedDate?.ToString("dd/MM/yyyy");
-            poll.IsActive = true;
-            poll.BuildingId = Session.BuildingId;
-            poll.PollId = ""; // temp value
 
-            
-            
+
            
 
-            createPollViewModel.Poll = poll;
-            createPollViewModel.Options = options.ToList();
+            createPollViewModel.Poll.PollTitle = pollTitleTextBox.Text;
+            createPollViewModel.Poll.PollDescription = pollDescription.Text;
+            createPollViewModel.Poll.PollDate = pollDate.SelectedDate?.ToString("dd/MM/yyyy");
+            createPollViewModel.Poll.IsActive = true;
+            createPollViewModel.Poll.BuildingId = Session.BuildingId;
+            createPollViewModel.Poll.PollId = ""; // temp value
 
 
             createPollViewModel.Poll.Validate();
+
+
+
+
+
+            createPollViewModel.Options = options.ToList();
+            //createPollViewModel.Poll.Validate();
             createPollViewModel.Options.ForEach(o => o.Validate());
 
             if(createPollViewModel.Options.Any(o=>o.HasErrors) || createPollViewModel.Poll.HasErrors)

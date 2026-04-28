@@ -288,7 +288,7 @@ VerticalAlignment="Center"/>
                          TextWrapping="Wrap"
                          AcceptsReturn="True"
                          Height="80"
-                         VerticalScrollBarVisibility="Auto" Text="{Binding Poll.PollDescription}"/>
+                         VerticalScrollBarVisibility="Auto" Text="{Binding Poll.PollDescription,UpdateSourceTrigger=PropertyChanged}"/>
             </Border>
 
             <!-- Category & Date row -->
@@ -305,7 +305,7 @@ VerticalAlignment="Center"/>
                     Height="52" FontSize="15"
                     Background="#f8fafc"
                     BorderBrush="#cbd5e1"
-                    BorderThickness="1" Width="469"/>
+                    BorderThickness="1" Width="469" SelectedDate="{Binding Poll.PollDate,UpdateSourceTrigger=PropertyChanged}"/>
                 </StackPanel>
             </Grid>
 
@@ -314,15 +314,15 @@ VerticalAlignment="Center"/>
                 <TextBlock Text="OPTIONS" Style="{StaticResource FieldLabel}"/>
                 <ItemsControl  x:Name="ItemControlOptions"
 
-Background="Transparent"
-HorizontalContentAlignment="Stretch">
+                    Background="Transparent"
+                    HorizontalContentAlignment="Stretch">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <DockPanel LastChildFill="True" > 
+                            <StackPanel> 
                                 <StackPanel Orientation="Horizontal" Margin="0,0,0,4"
                                     Visibility="{Binding (Validation.HasError),
-                                    Converter={StaticResource VisibilityConverter},
-                                    ElementName=OptionTextBox}">
+                                    Converter={StaticResource VisibilityConverter},ElementName=OptionTextBox
+                                   }">
                                     <Viewbox Width="14" Height="14" Margin="0,0,5,0" VerticalAlignment="Center">
                                         <Canvas Width="14" Height="14">
                                             <Ellipse Width="13" Height="13" Canvas.Left="0.5" Canvas.Top="0.5"
@@ -334,15 +334,17 @@ HorizontalContentAlignment="Stretch">
                                         </Canvas>
                                     </Viewbox>
                                     <TextBlock Text="{Binding (Validation.Errors)[0].ErrorContent, ElementName=OptionTextBox}"
-                                  FontFamily="Segoe UI" FontSize="11.5"
-                                  Foreground="#a32d2d"
-                                  VerticalAlignment="Center"/>
+                                FontFamily="Segoe UI" FontSize="11.5"
+                                Foreground="#a32d2d"
+                                VerticalAlignment="Center"/>
+
+
                                 </StackPanel>
-                                <TextBox x:Name="OptionTextBox" Text="{Binding OptionText, UpdateSourceTrigger=PropertyChanged}" 
+                                <TextBox x:Name="OptionTextBox" Text="{Binding OptionText, UpdateSourceTrigger=PropertyChanged,ValidatesOnNotifyDataErrors=True}" 
                             Style="{StaticResource InputField}" 
                             Margin="0,0,0,8" 
                             Height="38" />
-                            </DockPanel>
+                            </StackPanel>
                             
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
