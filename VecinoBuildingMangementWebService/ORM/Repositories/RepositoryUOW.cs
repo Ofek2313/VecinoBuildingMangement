@@ -68,7 +68,7 @@ namespace VecinoBuildingMangementWebService
             get
             {
                 if (eventTypeRepository == null)
-                    eventTypeRepository = new EventTypeRepository(this.dbHelperOleDb, this.modelCreators);
+                    eventTypeRepository = new EventTypeRepository(this.dbHelperOleDb, this.modelCreator);
                 return eventTypeRepository;
             }
         }
@@ -108,7 +108,7 @@ namespace VecinoBuildingMangementWebService
             get
             {
                 if (requestTypeRepository == null)
-                    requestTypeRepository = new RequestTypeRepository(this.dbHelperOleDb, this.modelCreators);
+                    requestTypeRepository = new RequestTypeRepository(this.dbHelperOleDb, this.modelCreator);
                 return requestTypeRepository;
             }
         }

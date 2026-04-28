@@ -26,11 +26,12 @@ namespace VecinoWpfApp.AppWindows
     {
         List<Resident> Residents;
         private List<ResidentCheckItem> allResidents = new List<ResidentCheckItem>();
-        CreateFee createFee;
+        CreateFee createFee = new CreateFee();
         public NewFee()
         {
             InitializeComponent();
             _ = GetResidentsList();
+            this.DataContext = createFee.Fee;
         }
         private async Task GetResidentsList()
         {
@@ -60,18 +61,36 @@ namespace VecinoWpfApp.AppWindows
 
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            createFee = new CreateFee();
-            var residents = allResidents.Where(r => r.IsChecked).Select(r => r.ResidentId).ToList();
+           
+            createFee.FeeRecipientIds = allResidents.Where(r => r.IsChecked).Select(r => r.ResidentId).ToList();
             
-            foreach(string id in residents)
+            if(!createFee.FeeRecipientIds.Any())
             {
-                MessageBox.Show(id);
-                createFee.FeeRecipientIds.Add(id);
+                MessageBox.Show("Please select at least one","Alert",MessageBoxButton.OK,MessageBoxImage.Warning);
+                return;
             }
 
-            createFee.FeeTitle = TxtFeeTitle.Text;
-            createFee.FeeAmount = Convert.ToDouble(TxtAmount.Text);
-            createFee.FeeDueDate = DpDueDate.SelectedDate.Value.ToString("dd/MM/yyyy");
+            createFee.Fee = new Fee
+            {
+                FeeId = "",
+                FeeTitle = TxtFeeTitle.Text,
+                FeeAmount = Convert.ToDouble(FeeAmountTextBox.Text),
+                FeeDueDate = DpDueDate.SelectedDate?.ToString("dd/MM/yyyy"),
+                IsPaid = false,
+                ResidentId = "",
+                PaymentDate = "",
+
+            };
+
+
+            createFee.Fee.Validate();
+
+            if (createFee.Fee.HasErrors)
+            {
+                MessageBox.Show(" The fee details are invalid. Please check your input. ", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+           
 
             ApiClient<CreateFee> client = new ApiClient<CreateFee>();
             client.Scheme = "http";
@@ -84,9 +103,15 @@ namespace VecinoWpfApp.AppWindows
                 this.DialogResult = true;
                 this.Close();
             }
-                
+
             else
                 MessageBox.Show("Failure");
+            
+            
+
+           
+
+           
         }
     }
 }

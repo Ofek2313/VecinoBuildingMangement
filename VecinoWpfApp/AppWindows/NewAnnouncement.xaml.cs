@@ -82,14 +82,15 @@ namespace VecinoWpfApp.AppWindows
             string Priority = CmbPriority.Text;
             bool IsPinned = ChkPinMessage.IsChecked == true;
 
-            var residents = allResidents.Where(r => r.IsChecked).Select(r => r.ResidentId).ToList();
-            foreach (string id in residents)
+            viewModel.ResidentIds = allResidents.Where(r => r.IsChecked).Select(r => r.ResidentId).ToList();
+            if (!viewModel.ResidentIds.Any())
             {
-                MessageBox.Show(id);
-                viewModel.ResidentIds.Add(id);
+                MessageBox.Show("Please select at least one resident", "Alert", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
             }
-            notification.NotificationId = "";
-            notification.NotificationMessage = AnnouncementMessage;
+
+           
+           
             notification.NotificationId = " ";
             notification.NotificationMessage = AnnouncementMessage;
             notification.NotificationTitle = AnnouncementTitle;
@@ -100,9 +101,12 @@ namespace VecinoWpfApp.AppWindows
 
 
             viewModel.Notification.Validate();
-
-            if(!viewModel.Notification.HasErrors)
+            if (viewModel.Notification.HasErrors)
             {
+                MessageBox.Show(" The announcement details are invalid. Please check your input. ", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            
                 ApiClient<SendNotificationViewModel> client = new ApiClient<SendNotificationViewModel>();
                 client.Scheme = "http";
                 client.Host = "localhost";
@@ -116,8 +120,16 @@ namespace VecinoWpfApp.AppWindows
                     this.DialogResult = true;
                     this.Close();
                 }
-            }
             
+            
+        }
+        private void SetLoading(bool loading)
+        {
+
+            if(loading)
+            {
+                
+            }
         }
     }
 }

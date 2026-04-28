@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -32,18 +33,29 @@ namespace VecinoWpfApp.UserControls
         }
         private async Task GetResidentsList()
         {
-            ApiClient<ManageResidentViewModel> client = new ApiClient<ManageResidentViewModel>();
-            client.Scheme = "http";
-            client.Host = "localhost";
-            client.Port = 5269;
-            client.Path = "api/Admin/ManageResident";
-            client.AddParameter("buildingId", Session.BuildingId);
-            viewModel = await client.GetAsync();
+            try
+            {
+                ApiClient<ManageResidentViewModel> client = new ApiClient<ManageResidentViewModel>();
+                client.Scheme = "http";
+                client.Host = "localhost";
+                client.Port = 5269;
+                client.Path = "api/Admin/ManageResident";
+                client.AddParameter("buildingId", Session.BuildingId);
+                viewModel = await client.GetAsync();
 
-            residentsList = viewModel.Residents;
-            ListViewResidents.ItemsSource = residentsList;
-            this.DataContext = viewModel;
+                residentsList = viewModel.Residents;
+                ListViewResidents.ItemsSource = residentsList;
+                this.DataContext = viewModel;
+            }
+
+            catch
+            {
+                MessageBox.Show("Error");
+            }
             
+
+
+
         }
 
         private void searchBox_TextChanged(object sender, TextChangedEventArgs e)

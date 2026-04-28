@@ -391,9 +391,9 @@ namespace VecinoBuildingMangementWebService.Controllers
                     Fee fee = new Fee
                     {
 
-                        FeeTitle = createFee.FeeTitle,
-                        FeeAmount = createFee.FeeAmount,
-                        FeeDueDate = createFee.FeeDueDate,
+                        FeeTitle = createFee.Fee.FeeTitle,
+                        FeeAmount = createFee.Fee.FeeAmount,
+                        FeeDueDate = createFee.Fee.FeeDueDate,
                         IsPaid = false,
                         ResidentId = id,
                         PaymentDate = ""

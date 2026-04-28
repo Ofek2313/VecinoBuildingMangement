@@ -11,11 +11,10 @@ namespace VecinoBuildingMangement.DTO
     {
         public List<string> FeeRecipientIds { get; set; } = new List<string>();
 
-        public string FeeTitle { get; set; }
 
-        public double FeeAmount { get; set; }   
+        public Fee Fee { get; set; } = new Fee();
 
-        public string FeeDueDate { get; set; }
+       
 
 
     }

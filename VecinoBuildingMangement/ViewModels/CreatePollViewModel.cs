@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +12,8 @@ namespace VecinoBuildingMangement
     {
         public List<Option> Options { get; set; } = new List<Option>();
         
-        public Poll Poll { get; set; }
+        public Poll Poll { get; set; } 
+
+       
     }
 }

@@ -54,12 +54,13 @@ namespace VecinoBuildingMangement.Models
 
         }
 
-        [Date(ErrorMessage = "Date needs to be a valid date")]
+        
         public string PollDate
         {
             get { return pollDate; }
             set { pollDate = value; }
         }
+
         public string BuildingId
         {
             get { return buildingId; }
