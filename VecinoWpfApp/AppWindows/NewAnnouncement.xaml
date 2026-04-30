@@ -224,7 +224,7 @@
                                   Background="Transparent"
                                   BorderThickness="0"
                                   Height="40" Padding="10,0"
-                                  VerticalContentAlignment="Center">
+                                  VerticalContentAlignment="Center" SelectedValuePath="Content" SelectedValue="{Binding Priority,UpdateSourceTrigger=PropertyChanged}">
                             <ComboBoxItem Content="Normal" IsSelected="True"/>
                             <ComboBoxItem Content="Important"/>
                             <ComboBoxItem Content="Urgent"/>
@@ -248,7 +248,7 @@
                                            Foreground="#64748b" Margin="0,2,0,0"/>
                             </StackPanel>
                             <CheckBox x:Name="ChkPinMessage"
-                                      Grid.Column="1" VerticalAlignment="Center"/>
+                                      Grid.Column="1" VerticalAlignment="Center" IsChecked="{Binding IsPinned}"/>
                         </Grid>
                     </Border>
 

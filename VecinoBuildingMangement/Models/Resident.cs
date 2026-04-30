@@ -36,9 +36,9 @@ namespace VecinoBuildingMangement.Models
             get { return residentId; }
             set
             {
-                if (value == null)
-                    residentId = "";
-                else
+                //if (value == null)
+                //    residentId = "";
+                //else
                     residentId = value;
 
             }

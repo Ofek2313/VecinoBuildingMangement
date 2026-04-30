@@ -19,7 +19,7 @@ namespace VecinoBuildingMangement.Models
 
         public Notification() { }
 
-        public string NotificationId
+        public string? NotificationId
         {
             get { return notificationId; }
             set { notificationId = value;
@@ -48,7 +48,7 @@ namespace VecinoBuildingMangement.Models
 
         //[Required(ErrorMessage = "Date can not be empty")]
         //[Date(ErrorMessage ="Date must be a vaild date")]
-        public string NotificationDate
+        public string? NotificationDate
         {
             get { return notificationDate; }
             set { notificationDate = value; }

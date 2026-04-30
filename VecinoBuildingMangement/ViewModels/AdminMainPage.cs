@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VecinoBuildingMangement.DTO;
 using VecinoBuildingMangement.Models;
 
 namespace VecinoBuildingMangement.ViewModels
@@ -17,7 +18,9 @@ namespace VecinoBuildingMangement.ViewModels
 
         public string CityName { get; set; }
 
-       
+        public BuildingStats BuildingStats { get; set; }
+
+        public NextEventViewModel NextEvent { get; set; }
 
 
 

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using System.Data;
+using VecinoBuildingMangement.DTO;
 using VecinoBuildingMangement.Models;
 using VecinoBuildingMangement.ViewModels;
 using VecinoBuildingMangementWebService.ORM.ModelCreators;
@@ -169,6 +170,7 @@ namespace VecinoBuildingMangementWebService
             this.dbHelperOleDb.AddParameter("@ResidentId", residentId);
             using (IDataReader dataReader = this.dbHelperOleDb.Select(sql))
             {
+                
                 if (dataReader.Read())
                 {
                     viewmodel.Building = this.modelCreator.CreateModel<Building>(dataReader);
@@ -179,6 +181,107 @@ namespace VecinoBuildingMangementWebService
                 
             }
             return viewmodel;
+        }
+        public BuildingStats GetBuildingStats(string buildingId)
+        {
+            string sql = @"SELECT
+                        (
+                            SELECT
+                                COUNT(*)
+                            FROM
+                                Fee
+                            WHERE
+                                IsPaid = 0
+                                AND ResidentId IN (
+                                    SELECT
+                                        ResidentId
+                                    FROM
+                                        Resident
+                                    WHERE
+                                        BuildingId = b.BuildingId
+                                )
+                        ) AS UnpaidFees,
+                        (
+                            SELECT
+                                COUNT(*)
+                            FROM
+                                ServiceRequest
+                            WHERE
+                                RequestStatus = 'Pending'
+                                AND ResidentId IN (
+                                    SELECT
+                                        ResidentId
+                                    FROM
+                                        Resident
+                                    WHERE
+                                        BuildingId = b.BuildingId
+                                )
+                        ) AS OpenRequests,
+                        (
+                            SELECT
+                                count(*)
+                            FROM
+                                Poll
+                            WHERE
+                                Poll.BuildingId = b.BuildingId
+                                AND Poll.IsActive = True
+                                AND Cdate (Poll.PollDate) >= Date()
+                        ) AS OpenPolls,
+                        (
+                            SELECT
+                                Count(*)
+                            FROM
+                                Resident
+                            WHERE
+                                Resident.BuildingId = b.BuildingId
+                        ) AS Occupancy,
+                        (
+                            SELECT
+                                COUNT(*)
+                            FROM
+                                Fee
+                            WHERE
+                                IsPaid = 1
+                                AND ResidentId IN (
+                                    SELECT
+                                        ResidentId
+                                    FROM
+                                        Resident
+                                    WHERE
+                                        BuildingId = b.BuildingId
+                                )
+                        ) AS PaidFees,
+                        (
+                            SELECT
+                                COUNT(*)
+                            FROM
+                                (
+                                    ResidentNotification AS rn
+                                    INNER JOIN Resident AS r ON rn.ResidentId = r.ResidentId
+                                )
+                                INNER JOIN Notification AS n ON rn.NotificationId = n.NotificationId
+                            WHERE
+                                r.BuildingId = b.BuildingId
+                                AND Month(CDate (n.NotificationDate)) = Month(Date())
+                                AND Year(CDate (n.NotificationDate)) = Year(Date())
+                        ) AS NotificationsSentThisMonth
+                    FROM
+                        Building AS b
+                    WHERE
+                        (((b.BuildingId) = @BuildingId));";
+
+            this.dbHelperOleDb.AddParameter("@BuildingId", buildingId);
+            BuildingStats buildingStats = new BuildingStats();
+            using (IDataReader dataReader = this.dbHelperOleDb.Select(sql))
+            {
+                if (dataReader.Read())
+                {
+                    buildingStats = this.modelCreator.CreateModel<BuildingStats>(dataReader);
+                }
+
+
+            }
+            return buildingStats;
         }
     }
     

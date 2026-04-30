@@ -71,9 +71,10 @@ namespace VecinoWpfApp.AppWindows
         {
             Event Newevent = new Event();
             ApiResponse<bool> response = new ApiResponse<bool> { Data = false, Success = false };
+
             Newevent.EventTitle = TitleInput.Text;
             Newevent.EventDescription = DescriptionInput.Text;
-            Newevent.EventDate = EventDatePicker.SelectedDate.Value.ToString("dd/MM/yyyy");
+            Newevent.EventDate = EventDatePicker.SelectedDate?.ToString("dd/MM/yyyy");
             //Newevent.EventImage = System.IO.Path.GetExtension(this.imagePath);
             Newevent.EventTypeId = TypeComboBox.SelectedValue.ToString();
             Newevent.StartTime = ((ComboBoxItem)StartTimeComboBox.SelectedItem).Content.ToString();

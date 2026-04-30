@@ -28,7 +28,7 @@ namespace VecinoWebApplication.Controllers
             return View(serviceRequestViewModel);
         }
         [HttpGet]
-        public async Task<IActionResult> ViewManagePayment()
+        public async Task<IActionResult> ViewManagePayment(int page = 1)
         {
             ApiClient<ManagePaymentViewModel> client = new ApiClient<ManagePaymentViewModel>();
             string residentId = HttpContext.Session.GetString("residentId");
@@ -37,6 +37,7 @@ namespace VecinoWebApplication.Controllers
             client.Port = 5269;
             client.Path = "api/Resident/GetManagePayment";
             client.AddParameter("residentId", residentId);
+            client.AddParameter("page", page.ToString());
             ManagePaymentViewModel managePaymentViewModel = await client.GetAsync();
             
             return View(managePaymentViewModel);

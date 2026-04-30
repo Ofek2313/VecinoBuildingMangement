@@ -18,7 +18,7 @@ namespace VecinoBuildingMangement.Models
         string paymentDate;
 
         public Fee() { }
-        public string FeeId
+        public string? FeeId
         {
             get { return this.feeId; }
             set { this.feeId = value; }
@@ -46,7 +46,7 @@ namespace VecinoBuildingMangement.Models
         }
 
         [Required(ErrorMessage = "Fee Due Date can not be empty")]
-        [Date(ErrorMessage = "Date needs to be a valid date")]
+        //[Date(ErrorMessage = "Date needs to be a valid date")]
         public string FeeDueDate
         {
             get { return this.feeDueDate; }

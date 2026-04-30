@@ -34,6 +34,7 @@ namespace VecinoWpfApp.UserControls
             apiClient.Host = "localhost";
             apiClient.Port = 5269;
             apiClient.Path = "api/Admin/GetAdminMainPage";
+            apiClient.AddParameter("buildingId", Session.BuildingId);
             apiClient.AddParameter("residentId", Session.ResidentId);
             this.DataContext = await apiClient.GetAsync();
         }

@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using System.Globalization;
 using System.Security.Cryptography;
+using System.Text;
 using System.Text.Json;
 using System.Transactions;
 using VecinoBuildingMangement;
@@ -500,27 +501,27 @@ namespace VecinoBuildingMangementWebService.Controllers
             }
         }
 
-        [HttpGet]
-        public AdminMainPage GetAdminMainPage(string residentId)
-        {
-            AdminMainPage building = new AdminMainPage();
-            try
-            {
-                this.repositoryUOW.DbHelperOleDb.OpenConnection();
-                return this.repositoryUOW.BuildingRepository.GetAdminOverlay(residentId);
+        //[HttpGet]
+        //public AdminMainPage GetAdminMainPage(string residentId)
+        //{
+        //    AdminMainPage building = new AdminMainPage();
+        //    try
+        //    {
+        //        this.repositoryUOW.DbHelperOleDb.OpenConnection();
+        //        return this.repositoryUOW.BuildingRepository.GetAdminOverlay(residentId);
                 
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-                return null;
-            }
-            finally
-            {
-                this.repositoryUOW.DbHelperOleDb.CloseConnection();
-            }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine(ex.ToString());
+        //        return null;
+        //    }
+        //    finally
+        //    {
+        //        this.repositoryUOW.DbHelperOleDb.CloseConnection();
+        //    }
 
-        }
+        //}
 
         [HttpGet]
         public ManagePolls ManagePolls(string buildingId)
@@ -831,7 +832,28 @@ namespace VecinoBuildingMangementWebService.Controllers
                 this.repositoryUOW.DbHelperOleDb.CloseConnection();
             }
         }
-        
+        [HttpGet]
+        public AdminMainPage GetAdminMainPage(string buildingId,string residentId)
+        {
+            AdminMainPage adminMainPage = new AdminMainPage();
+            try
+            {
+                this.repositoryUOW.DbHelperOleDb.OpenConnection();
+                adminMainPage = this.repositoryUOW.BuildingRepository.GetAdminOverlay(residentId);
+                adminMainPage.BuildingStats = this.repositoryUOW.BuildingRepository.GetBuildingStats(buildingId);
+                adminMainPage.NextEvent = this.repositoryUOW.EventRepository.GetNextEvenByBuildingId(buildingId);
+               
+                return adminMainPage;
+            }
+            catch
+            {
+                return null;
+            }
+            finally
+            {
+                this.repositoryUOW.DbHelperOleDb.CloseConnection();
+            }
+        }
     }
 }
 

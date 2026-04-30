@@ -49,13 +49,14 @@ namespace VecinoBuildingMangementWebService.Controllers
             return false;
         }
         [HttpGet]
-        public ManagePaymentViewModel GetManagePayment(string residentId)
+        public ManagePaymentViewModel GetManagePayment(string residentId,int page = 1)
         {
             ManagePaymentViewModel viewModel = new ManagePaymentViewModel();
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
                 viewModel.Fees = repositoryUOW.FeeRepository.GetFeesById(residentId);
+
                 List<Fee> Paid = viewModel.Fees.Where(f => f.IsPaid).ToList();
                 List<Fee> UnPaid = viewModel.Fees.Where(f => !f.IsPaid).ToList();
 
@@ -81,6 +82,14 @@ namespace VecinoBuildingMangementWebService.Controllers
                         viewModel.nextFee = fee;
 
                 }
+
+
+                viewModel.NumberOfPages = (int)Math.Ceiling(viewModel.Fees.Count / 5.0);
+                viewModel.Fees = viewModel.Fees.Skip(5 * (page - 1)).Take(5).ToList();
+                viewModel.CurrentPage = page;
+
+               
+               
                 return viewModel;
             }
             catch (Exception ex)
@@ -418,12 +427,8 @@ namespace VecinoBuildingMangementWebService.Controllers
 
                 bool created = this.repositoryUOW.VoteRepository.Create(vote);
                 if (created)
-
                     test =  this.repositoryUOW.PollRepository.GetPollResultById(vote.PollId);
-                foreach(OptionViewModel viewModel in test)
-                {
-                    Console.WriteLine(viewModel.voted);
-                }
+              
                 return test;
             }
             catch (Exception ex)

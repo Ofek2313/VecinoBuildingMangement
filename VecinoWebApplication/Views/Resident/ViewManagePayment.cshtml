@@ -114,11 +114,16 @@
                     </div>
                 }
             }
-           
 
-           
 
-          
+
+            <div class="pagination">
+                @for (int i = 1; i <= Model.NumberOfPages; i++)
+                {
+                    <a href="/Resident/ViewManagePayment?page=@i" class="page-btn @(i == Model.CurrentPage ? "active" : "")">@i</a>
+                }
+            </div>
+           
         </div>
     </div>
     <div id="overlay" class="overlay">

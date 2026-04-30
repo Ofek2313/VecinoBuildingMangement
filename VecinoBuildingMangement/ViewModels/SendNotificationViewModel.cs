@@ -9,7 +9,7 @@ namespace VecinoBuildingMangement.ViewModels
 {
     public class SendNotificationViewModel
     {
-        public Notification Notification { get; set; }
+        public Notification Notification { get; set; } = new Notification();
         public List<string> ResidentIds { get; set; } = new List<string>();
     }
 }

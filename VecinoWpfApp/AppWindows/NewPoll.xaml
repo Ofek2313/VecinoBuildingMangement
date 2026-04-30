@@ -340,7 +340,7 @@ VerticalAlignment="Center"/>
 
 
                                 </StackPanel>
-                                <TextBox x:Name="OptionTextBox" Text="{Binding OptionText, UpdateSourceTrigger=PropertyChanged,ValidatesOnNotifyDataErrors=True}" 
+                                <TextBox x:Name="OptionTextBox" Text="{Binding OptionText, UpdateSourceTrigger=PropertyChanged}" 
                             Style="{StaticResource InputField}" 
                             Margin="0,0,0,8" 
                             Height="38" />

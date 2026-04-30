@@ -42,8 +42,8 @@ namespace VecinoWpfApp.AppWindows
                 options.Add(
                new Option
                {
-                   OptionId = "",
-                   OptionText = "",
+                   
+                   
                    PollId = ""
                });
             }
@@ -105,15 +105,15 @@ namespace VecinoWpfApp.AppWindows
             options.Add(
                 new Option
                 {
-                    OptionId = "",
-                    OptionText = "",
+                   
+                    
                     PollId = ""
             });
             options.Add(
                new Option
                {
-                   OptionId = "",
-                   OptionText = "",
+                   
+                   
                    PollId = ""
             });
         }

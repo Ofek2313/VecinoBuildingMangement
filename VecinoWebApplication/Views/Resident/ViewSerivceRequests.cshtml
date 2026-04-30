@@ -124,9 +124,9 @@
     <form class="request-submit" asp-controller="Resident" asp-action="CreateServiceRequest" method="post">
 
         <input type="text" id="title" class="input title" placeholder="Request Title" asp-for="ServiceRequest.RequestTitle">
-        <span id="titleError"></span>
+        <span asp-validation-for ="ServiceRequest.RequestTitle" id="titleError"></span>
         <textarea id="description" class="input description" placeholder="Request Description" asp-for="ServiceRequest.RequestMessage"></textarea>
-        <span id="messageError"></span>
+        <span asp-validation-for="ServiceRequest.RequestMessage" id="messageError"></span>
         <Select class="input select" asp-for="ServiceRequest.RequestTypeId">
             @foreach (RequestTypes requestTypes in Model.RequestTypes)
             {
@@ -134,12 +134,14 @@
             }
 
         </Select>
-        <button class="sumbitbtn" type="button" onclick="check()">Submit</button>
+        <button class="sumbitbtn" type="submit" >Submit</button>
     </form>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
 </div>
 <script>
-
+  
     const popout = document.getElementById('popout');
     const overlay = document.getElementById('overlay');
     const openbtn = document.getElementById('openbtn');

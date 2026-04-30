@@ -264,7 +264,31 @@ namespace VecinoBuildingMangementWebService
             }
             return eventViewModels;
         }
-        
+        public NextEventViewModel GetNextEvenByBuildingId(string buildingId)
+        {
+            string sql = @"SELECT
+                        TOP 1 Event.EventTitle,
+                        Event.EventDate
+                    FROM
+                        [Event]
+                    WHERE
+                        BuildingId = @BuildingId
+                        AND CDate (EventDate) >= Date()
+                    ORDER BY
+                        CDate (EventDate) ASC;";
+
+            this.dbHelperOleDb.AddParameter("@BuildingId", buildingId);
+            NextEventViewModel nextEvent = new NextEventViewModel();
+            using (IDataReader dataReader = this.dbHelperOleDb.Select(sql))
+            {
+                if (dataReader.Read())
+                {
+                    return this.modelCreator.CreateModel<NextEventViewModel>(dataReader);
+                }
+
+            }
+            return nextEvent;
+        }
     }
     
 }

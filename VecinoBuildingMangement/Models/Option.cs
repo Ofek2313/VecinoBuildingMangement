@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace VecinoBuildingMangement.Models
 {
-    public class Option :Model
+    public class Option : Model
     {
         string optionId;
         string pollId;
         string optionText;
 
         public Option() { }
-        public string OptionId
+        public string? OptionId
         {
             get { return this.optionId; }
             set { this.optionId = value; }
@@ -30,7 +30,9 @@ namespace VecinoBuildingMangement.Models
         public string OptionText
         {
             get { return this.optionText; }
-            set { this.optionText = value; }
+            set { this.optionText = value;
+                ValidateProperty(value, "OptionText");
+            }
         }
     }
 }

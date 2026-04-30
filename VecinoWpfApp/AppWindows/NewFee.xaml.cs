@@ -70,17 +70,11 @@ namespace VecinoWpfApp.AppWindows
                 return;
             }
 
-            createFee.Fee = new Fee
-            {
-                FeeId = "",
-                FeeTitle = TxtFeeTitle.Text,
-                FeeAmount = Convert.ToDouble(FeeAmountTextBox.Text),
-                FeeDueDate = DpDueDate.SelectedDate?.ToString("dd/MM/yyyy"),
-                IsPaid = false,
-                ResidentId = "",
-                PaymentDate = "",
-
-            };
+            createFee.Fee.FeeId = "";
+            createFee.Fee.IsPaid = false;
+            createFee.Fee.ResidentId = "";
+            createFee.Fee.PaymentDate = "";
+            createFee.Fee.FeeDueDate = DpDueDate.SelectedDate?.ToString("DD/MM/YYYY");
 
 
             createFee.Fee.Validate();

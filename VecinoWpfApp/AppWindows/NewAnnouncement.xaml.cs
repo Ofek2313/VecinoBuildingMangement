@@ -26,14 +26,13 @@ namespace VecinoWpfApp.AppWindows
     {
         private List<ResidentCheckItem> allResidents = new List<ResidentCheckItem>();
         List<Resident> Residents;
-        Notification notification = new Notification();
-
+        SendNotificationViewModel viewModel = new SendNotificationViewModel();
         public NewAnnouncement()
         {
             InitializeComponent();
             _ = GetResidentsList();
 
-            this.DataContext = notification;
+            this.DataContext = viewModel.Notification;
         }
         private async Task GetResidentsList()
         {
@@ -75,7 +74,7 @@ namespace VecinoWpfApp.AppWindows
 
         private async void BtnPublish_Click(object sender, RoutedEventArgs e)
         {
-            SendNotificationViewModel viewModel = new SendNotificationViewModel();
+          
 
             string AnnouncementTitle = AnnouncementTitleTextBox.Text;
             string AnnouncementMessage = AnnouncementMessageTextBox.Text;
@@ -89,15 +88,15 @@ namespace VecinoWpfApp.AppWindows
                 return;
             }
 
+
+
+            //viewModel.Notification.NotificationId = " ";
+            //viewModel.Notification.NotificationMessage = AnnouncementMessage;
+            //viewModel.Notification.NotificationTitle = AnnouncementTitle;
+            viewModel.Notification.NotificationDate = " ";
+            //viewModel.Notification.Priority = Priority;
+            //viewModel.Notification.IsPinned = IsPinned;
            
-           
-            notification.NotificationId = " ";
-            notification.NotificationMessage = AnnouncementMessage;
-            notification.NotificationTitle = AnnouncementTitle;
-            notification.NotificationDate = " ";
-            notification.Priority = Priority;
-            notification.IsPinned = IsPinned;
-            viewModel.Notification = notification;
 
 
             viewModel.Notification.Validate();
