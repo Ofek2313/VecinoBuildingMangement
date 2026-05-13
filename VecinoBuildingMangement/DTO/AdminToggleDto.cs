@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace VecinoBuildingMangement.DTO
 {
-    public class BuildingResponse
+    public class AdminToggleDto
     {
-        public string BuildingId { get; set; }
+        public string ResidentId { get; set; }
 
-        public string? ResidentId { get; set; }
+        public string AdminId { get; set; }
     }
 }

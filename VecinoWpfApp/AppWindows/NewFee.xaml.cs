@@ -31,6 +31,8 @@ namespace VecinoWpfApp.AppWindows
         {
             InitializeComponent();
             _ = GetResidentsList();
+
+            createFee.Fee.IsValidationEnabled = true;
             this.DataContext = createFee.Fee;
         }
         private async Task GetResidentsList()
@@ -74,7 +76,7 @@ namespace VecinoWpfApp.AppWindows
             createFee.Fee.IsPaid = false;
             createFee.Fee.ResidentId = "";
             createFee.Fee.PaymentDate = "";
-            createFee.Fee.FeeDueDate = DpDueDate.SelectedDate?.ToString("DD/MM/YYYY");
+            createFee.Fee.FeeDueDate = DpDueDate.SelectedDate?.ToString("dd/MM/yyyy");
 
 
             createFee.Fee.Validate();

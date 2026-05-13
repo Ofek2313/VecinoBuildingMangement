@@ -16,6 +16,7 @@ namespace VecinoBuildingMangement
         public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
         private object threadLock = new object();
         private bool isValid;
+        public bool IsValidationEnabled { get; set; } = false; 
 
         public Model() { }
 

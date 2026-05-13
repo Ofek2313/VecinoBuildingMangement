@@ -53,6 +53,7 @@ namespace VecinoWpfApp.AppPages
                 Session.HasAccount = true;
                 if(apiResponse.Data.BuildingId == "0")
                 {
+                    Session.ResidentId = apiResponse.Data.ResidentId;
                     NavigationService.Navigate(new CreateBuilding());
                     
                     return;

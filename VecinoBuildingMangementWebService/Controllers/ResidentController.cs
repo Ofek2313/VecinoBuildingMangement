@@ -55,37 +55,12 @@ namespace VecinoBuildingMangementWebService.Controllers
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
-                viewModel.Fees = repositoryUOW.FeeRepository.GetFeesById(residentId);
-
-                List<Fee> Paid = viewModel.Fees.Where(f => f.IsPaid).ToList();
-                List<Fee> UnPaid = viewModel.Fees.Where(f => !f.IsPaid).ToList();
-
-                double totalFee = 0;
-                double unpaidfee = 0;
-                foreach (Fee fee in Paid)
-                {
-                    totalFee += fee.FeeAmount;
-                }
-                viewModel.TotalPaidFees = totalFee;
-                foreach (Fee fee in UnPaid)
-                {
-                    unpaidfee += fee.FeeAmount;
-                }
-                viewModel.TotalUnPaidFees = unpaidfee;
-                viewModel.paidFees = Paid.Count;
-                viewModel.unPaidFees = UnPaid.Count;
-                if (UnPaid.Count > 0)
-                    viewModel.nextFee = UnPaid[0];
-                foreach (Fee fee in UnPaid)
-                {
-                    if (IsBefore(fee.FeeDueDate, viewModel.nextFee.FeeDueDate))
-                        viewModel.nextFee = fee;
-
-                }
-
-
-                viewModel.NumberOfPages = (int)Math.Ceiling(viewModel.Fees.Count / 5.0);
-                viewModel.Fees = viewModel.Fees.Skip(5 * (page - 1)).Take(5).ToList();
+                viewModel.Fees = repositoryUOW.FeeRepository.GetFeesByResidentIdPage(residentId,5,page);
+                viewModel.ResidentFeeStats = this.repositoryUOW.FeeRepository.GetResidentFeeStats(residentId);
+                viewModel.nextFee = this.repositoryUOW.FeeRepository.GetNextFee(residentId);
+              
+                int totalFees = viewModel.ResidentFeeStats.PaidFees + viewModel.ResidentFeeStats.UnPaidFees;
+                viewModel.NumberOfPages = (int)Math.Ceiling(totalFees / 5.0);
                 viewModel.CurrentPage = page;
 
                

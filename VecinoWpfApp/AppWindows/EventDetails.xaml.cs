@@ -37,7 +37,7 @@ namespace VecinoWpfApp.AppWindows
         {
             InitializeComponent();
 
-    
+            @event.Event.IsValidationEnabled = true;
             LoadAttending(@event.Event.EventId);
   
             this.DataContext = @event;
@@ -75,6 +75,8 @@ namespace VecinoWpfApp.AppWindows
                 UploadImage.Visibility = Visibility.Visible;
                 MainScrollbar.ScrollToHome();
                 MainButton.Text = "Update";
+                DueDatePicker.Visibility = Visibility.Visible;
+                EventDateText.Visibility = Visibility.Collapsed;
 
 
             }
@@ -90,6 +92,8 @@ namespace VecinoWpfApp.AppWindows
                 client.Host = "localhost";
                 client.Port = 5269;
                 client.Path = "api/Admin/UpdateEvent";
+                if (DueDatePicker.SelectedDate.HasValue)
+                    viewModel.Event.EventDate = DueDatePicker.SelectedDate?.ToString("dd/MM/yyyy");
                 viewModel.Event.Validate();
                 if (!viewModel.Event.HasErrors)
                 {

@@ -203,6 +203,13 @@ namespace VecinoBuildingMangementWebService
             }
             return residents;
         }
+        public bool UpdateAdminRole(string residentId,bool IsAdmin)
+        {
+            string sql = @$"Update Resident Set IsAdmin=@IsAdmin Where ResidentId = @ResidentId";
+            this.dbHelperOleDb.AddParameter("@IsAdmin", IsAdmin);
+            this.dbHelperOleDb.AddParameter("@ResidentId", residentId);
+            return this.dbHelperOleDb.Update(sql) > 0;
+        }
 
     }
 }

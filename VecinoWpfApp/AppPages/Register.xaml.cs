@@ -56,9 +56,21 @@ namespace VecinoWpfApp.AppPages
             if (apiResponse.Data != null && apiResponse.Success)
             {
                 Session.BuildingId = apiResponse.Data.BuildingId;
+
+                Session.ResidentId = apiResponse.Data.ResidentId;
                 NavigationService.Navigate(new MainWindow());
             }
 
+        }
+
+        private void GoBackToBuilding(object sender, RoutedEventArgs e)
+        {
+            NavigationService.GoBack();
+        }
+        private void GoBackToSignIn(object sender, RoutedEventArgs e)
+        {
+            while (NavigationService.CanGoBack)
+                NavigationService.GoBack();
         }
     }
 }

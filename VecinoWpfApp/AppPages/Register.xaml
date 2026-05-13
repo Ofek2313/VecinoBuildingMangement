@@ -253,13 +253,13 @@
                 </Grid.ColumnDefinitions>
 
                 <Button Grid.Column="0" Height="50" Cursor="Hand"
-                        >
+                       Click="GoBackToBuilding" >
                     <Button.Template>
                         <ControlTemplate TargetType="Button">
                             <Border Background="White"
                                     BorderBrush="#e2e8f0" BorderThickness="1.5"
                                     CornerRadius="11">
-                                <TextBlock Text="Back to sign in"
+                                <TextBlock Text="Back to Building"
                                            FontFamily="Segoe UI" FontSize="15"
                                            FontWeight="SemiBold" Foreground="#64748b"
                                            HorizontalAlignment="Center"
@@ -288,7 +288,7 @@
                            FontFamily="Segoe UI" FontSize="13" Foreground="#64748b"/>
                 <Button Content="Sign in instead"
                         Style="{StaticResource GhostButton}"
-                        />
+                        x:Name="GoBackSignIn" Click="GoBackToSignIn"/>
             </StackPanel>
 
         </StackPanel>

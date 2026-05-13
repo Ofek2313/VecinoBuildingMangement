@@ -37,6 +37,7 @@ namespace VecinoWpfApp.UserControls
             apiClient.AddParameter("buildingId", Session.BuildingId);
             apiClient.AddParameter("residentId", Session.ResidentId);
             this.DataContext = await apiClient.GetAsync();
+           
         }
         private void Button_Click(object sender, RoutedEventArgs e)
         {

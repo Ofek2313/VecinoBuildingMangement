@@ -85,6 +85,8 @@ namespace VecinoWpfApp.AppPages
                         if (apiResponse.Data != null && apiResponse.Success)
                         {
                             MessageBox.Show("Success");
+                            Session.BuildingId = apiResponse.Data.BuildingId;
+                            NavigationService.Navigate(new MainWindow());
                         }
                     }
                     else

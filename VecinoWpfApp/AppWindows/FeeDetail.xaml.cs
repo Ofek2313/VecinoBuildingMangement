@@ -28,6 +28,7 @@ namespace VecinoWpfApp.AppWindows
         public FeeDetail(ResidentFeeViewModel residentFee)
         {
             InitializeComponent();
+            residentFee.Fee.IsValidationEnabled = true;
             this.DataContext = residentFee;
             
         }
@@ -42,13 +43,16 @@ namespace VecinoWpfApp.AppWindows
                 _savedResidentFee = viewModel.Clone();
                 FeeTitleTextBox.IsReadOnly = false;
                 FeeAmountTextBox.IsReadOnly = false;
-
+                TxtDueDate.Visibility = Visibility.Collapsed;
+                DueDatePicker.Visibility = Visibility.Visible;
 
 
             }
             else
             {
-               
+                if(DueDatePicker.SelectedDate.HasValue)
+                    viewModel.Fee.FeeDueDate = DueDatePicker.SelectedDate?.ToString("dd/MM/yyyy");
+
                 viewModel.Fee.Validate();
                 if(!viewModel.Fee.HasErrors)
                 {

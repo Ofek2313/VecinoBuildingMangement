@@ -33,10 +33,16 @@ namespace VecinoBuildingMangement.Models
 
         [Required(ErrorMessage ="Event Date can not be empty")]
         [Date(ErrorMessage ="Date must be a valid date")]
+        [FutureDate(ErrorMessage = "Please enter a date that is today or in the future")]
         public string EventDate
         {
             get { return eventDate; }
-            set { eventDate = value;}
+            set {
+               
+                    eventDate = value;
+                if (IsValidationEnabled)
+                    ValidateProperty(value, "EventDate");
+            }
         }
         [StringLength(50,MinimumLength =5,ErrorMessage ="Title must be between 5-50 characters")]
         [Required(ErrorMessage = "Event Title can not be empty")]
@@ -76,12 +82,15 @@ namespace VecinoBuildingMangement.Models
                     eventImage = value;
                 }
         }
+
+        [Required(ErrorMessage = "Please pick a start time")]
         public string StartTime
         {
             get { return startTime; }
             set { this.startTime = value; }
         }
 
+        [Required(ErrorMessage = "Please pick an end time")]
         public string EndTime
         {
             get{ return endTime; }

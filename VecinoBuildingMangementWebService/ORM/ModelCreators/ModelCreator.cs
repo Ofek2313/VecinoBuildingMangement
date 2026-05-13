@@ -6,10 +6,15 @@ namespace VecinoBuildingMangementWebService.ORM.ModelCreators
 {
     public class ModelCreator 
     {
-        public T CreateModel<T>(IDataReader dataReader) where T : new()
+        public T CreateModel<T>(IDataReader dataReader ,List<string> extraIgnore = null ) where T : new()
         {
             Type type = typeof(T);
-            var ignore = new[] { "HasErrors", "IsValid" };
+            
+            List<string> ignore =  new List<string>{ "HasErrors", "IsValid", "IsValidationEnabled" };
+            if (extraIgnore != null)
+            {
+                ignore.AddRange(extraIgnore);
+            }
             PropertyInfo[] properties = type.GetProperties().Where(p => !ignore.Contains(p.Name)).ToArray();
             T t = new T();
             Type propType;

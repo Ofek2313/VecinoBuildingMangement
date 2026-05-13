@@ -811,6 +811,7 @@ namespace VecinoBuildingMangementWebService.Controllers
                     BuildingResponse buildingResponse = new BuildingResponse
                     {
                         BuildingId = buildingId,
+                        ResidentId = this.repositoryUOW.ResidentRepository.GetLastId()
                     };
                     this.repositoryUOW.DbHelperOleDb.Commit();
                     return buildingResponse;
@@ -842,12 +843,98 @@ namespace VecinoBuildingMangementWebService.Controllers
                 adminMainPage = this.repositoryUOW.BuildingRepository.GetAdminOverlay(residentId);
                 adminMainPage.BuildingStats = this.repositoryUOW.BuildingRepository.GetBuildingStats(buildingId);
                 adminMainPage.NextEvent = this.repositoryUOW.EventRepository.GetNextEvenByBuildingId(buildingId);
-               
+                adminMainPage.ActivityViewModels = this.repositoryUOW.BuildingRepository.GetActivityViewModelsByBuildingId(buildingId);
+
                 return adminMainPage;
             }
             catch
             {
                 return null;
+            }
+            finally
+            {
+                this.repositoryUOW.DbHelperOleDb.CloseConnection();
+            }
+        }
+
+        [HttpGet]
+        public AnnouncementDetailsViewModel GetResidentsNotification(string notificationId)
+        {
+            AnnouncementDetailsViewModel viewModel = new AnnouncementDetailsViewModel();
+            try
+            {
+                this.repositoryUOW.DbHelperOleDb.OpenConnection();
+                viewModel.Residents =  this.repositoryUOW.NotificationRepository.GetResidentsNotification(notificationId);
+                viewModel.ResidentCount = viewModel.Residents.Count;
+                viewModel.Admin = this.repositoryUOW.NotificationRepository.GetNotificationSender(notificationId);
+
+                return viewModel;
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return null;
+            }
+            finally
+            {
+                this.repositoryUOW.DbHelperOleDb.CloseConnection();
+            }
+        }
+
+        [HttpPost]
+        public bool DemoteAdmin([FromBody] AdminToggleDto adminToggleDto) 
+        {
+            if(adminToggleDto.ResidentId == adminToggleDto.AdminId)
+            {
+                return false;
+            }
+            try
+            {
+                this.repositoryUOW.DbHelperOleDb.OpenConnection();
+                return this.repositoryUOW.ResidentRepository.UpdateAdminRole(adminToggleDto.ResidentId, false);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return false;
+            }
+            finally
+            {
+                this.repositoryUOW.DbHelperOleDb.CloseConnection();
+            }
+        }
+
+        [HttpPost]
+        public bool PromoteAdmin([FromBody] AdminToggleDto adminToggleDto)
+        {
+            try
+            {
+                this.repositoryUOW.DbHelperOleDb.OpenConnection();
+                return this.repositoryUOW.ResidentRepository.UpdateAdminRole(adminToggleDto.ResidentId, true);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return false;
+            }
+            finally
+            {
+                this.repositoryUOW.DbHelperOleDb.CloseConnection();
+            }
+        }
+
+        [HttpPost]
+        public bool UpdateNotification(Notification notification)
+        {
+            try
+            {
+                this.repositoryUOW.DbHelperOleDb.OpenConnection();
+                return this.repositoryUOW.NotificationRepository.Update(notification);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return false;
             }
             finally
             {

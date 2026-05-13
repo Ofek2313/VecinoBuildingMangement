@@ -18,7 +18,7 @@
 
     <div class="payment-hero">
         <div class="payment-hero-info">
-         @if(Model.unPaidFees > 0)
+         @if(Model.ResidentFeeStats.UnPaidFees > 0)
             {
                 <p>Next Payment Due</p>
                 <h2>@Model.nextFee.FeeAmount₪</h2>
@@ -33,7 +33,7 @@
             
            
         </div>
-        @if(Model.unPaidFees > 0)
+        @if(Model.ResidentFeeStats.UnPaidFees > 0)
         {
             <button class="pay-btn" id="pay-btn" onclick="OpenPopUp('@Model.nextFee.FeeId')">💳 Pay Now</button>
         }
@@ -49,21 +49,21 @@
                 <div class="stat-label">
                     💵 Total Paid (2025)
                 </div>
-                <div class="stat-value">@Model.TotalPaidFees₪</div>
+                <div class="stat-value">@Model.ResidentFeeStats.TotalPaidFees₪</div>
             </div>
 
             <div class="stat-box blue">
                 <div class="stat-label">
                     💵 Total Unpaid
                 </div>
-                <div class="stat-value">@Model.TotalUnPaidFees₪</div>
+                <div class="stat-value">@Model.ResidentFeeStats.TotalUnPaidFees₪</div>
             </div>
 
             <div class="stat-box purple">
                 <div class="stat-label">
                     💰 Fees Paid
                 </div>
-                <div class="stat-value">@(Model.paidFees)/@(Model.unPaidFees+Model.paidFees)</div>
+                <div class="stat-value">@(Model.ResidentFeeStats.PaidFees)/@(Model.ResidentFeeStats.UnPaidFees+Model.ResidentFeeStats.PaidFees)</div>
 
             </div>
         </div>

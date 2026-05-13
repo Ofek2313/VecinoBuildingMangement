@@ -16,7 +16,7 @@ namespace VecinoBuildingMangement.Models
         string notificationDate;
         string priority;
         bool isPinned;
-
+        string createdBy;
         public Notification() { }
 
         public string? NotificationId
@@ -71,6 +71,27 @@ namespace VecinoBuildingMangement.Models
                   else
                     this.isPinned = value;
             }
+        }
+
+        public string CreatedBy
+        {
+            get { return this.createdBy; }
+            set { this.createdBy = value; }
+        }
+
+        public Notification Clone()
+        {
+            return new Notification
+            {
+                notificationId = notificationId,
+                notificationTitle = notificationTitle,
+                notificationMessage = notificationMessage,
+                notificationDate = notificationDate,
+                priority = priority,
+                isPinned = isPinned,
+                createdBy = createdBy,
+
+            };
         }
     }
 }

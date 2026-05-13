@@ -145,7 +145,7 @@
                     <ListView x:Name="ListViewActivity" Grid.Row="1"
                               BorderThickness="0" Background="Transparent"
                               HorizontalContentAlignment="Stretch"
-                              ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                              ScrollViewer.HorizontalScrollBarVisibility="Disabled" ItemsSource="{Binding ActivityViewModels}">
                         <ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">
                                 <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
@@ -180,10 +180,10 @@
 
                                         <!-- Title + timestamp -->
                                         <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="0,0,12,0">
-                                            <TextBlock Text="{Binding Title}" FontFamily="Segoe UI"
+                                            <TextBlock Text="{Binding ActivityDescription}" FontFamily="Segoe UI"
                                                        FontSize="12" FontWeight="SemiBold" Foreground="#1e293b"
                                                        TextTrimming="CharacterEllipsis"/>
-                                            <TextBlock Text="{Binding Timestamp}" FontFamily="Segoe UI"
+                                            <TextBlock Text="{Binding ActivityDate}" FontFamily="Segoe UI"
                                                        FontSize="11" Foreground="#94a3b8" Margin="0,2,0,0"/>
                                         </StackPanel>
 

@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using VecinoBuildingMangement.DTO;
 using VecinoBuildingMangement.Models;
 using VecinoBuildingMangementWebService.ORM.ModelCreators;
 
@@ -69,7 +70,7 @@ namespace VecinoBuildingMangementWebService
 
         public List<Notification> GetNotificationsByResidentId(string residentId)
         {
-            string sql = "SELECT Notification.NotificationId,NotificationMessage,NotificationTitle,NotificationDate,Priority,IsPinned FROM Notification INNER JOIN ResidentNotification rn ON Notification.NotificationId = rn.NotificationId WHERE rn.ResidentId = @ResidentId";
+            string sql = "SELECT Notification.* FROM Notification INNER JOIN ResidentNotification rn ON Notification.NotificationId = rn.NotificationId WHERE rn.ResidentId = @ResidentId";
             this.dbHelperOleDb.AddParameter("@ResidentId", residentId);
 
             List<Notification> notifications = new List<Notification>();
@@ -88,7 +89,7 @@ namespace VecinoBuildingMangementWebService
 
         public List<Notification> GetPinnedNotificationsByResidentId(string residentId)
         {
-            string sql = "SELECT Notification.NotificationId,NotificationMessage,NotificationTitle,NotificationDate,Priority,IsPinned FROM Notification INNER JOIN ResidentNotification rn ON Notification.NotificationId = rn.NotificationId WHERE rn.ResidentId = @ResidentId AND IsPinned=true";
+            string sql = "SELECT Notification.* FROM Notification INNER JOIN ResidentNotification rn ON Notification.NotificationId = rn.NotificationId WHERE rn.ResidentId = @ResidentId AND IsPinned=true";
             this.dbHelperOleDb.AddParameter("@ResidentId", residentId);
 
             List<Notification> notifications = new List<Notification>();
@@ -106,7 +107,7 @@ namespace VecinoBuildingMangementWebService
         }
         public List<Notification> GetAllNotificationsByResidentId(string residentId)
         {
-            string sql = "SELECT Notification.NotificationId,NotificationMessage,NotificationTitle,NotificationDate,Priority,IsPinned FROM Notification INNER JOIN ResidentNotification rn ON Notification.NotificationId = rn.NotificationId WHERE rn.ResidentId = @ResidentId";
+            string sql = "SELECT Notification.* FROM Notification INNER JOIN ResidentNotification rn ON Notification.NotificationId = rn.NotificationId WHERE rn.ResidentId = @ResidentId";
             this.dbHelperOleDb.AddParameter("@ResidentId", residentId);
 
             List<Notification> notifications = new List<Notification>();
@@ -155,6 +156,48 @@ namespace VecinoBuildingMangementWebService
             this.dbHelperOleDb.AddParameter("@ResidentId", residentId);
             this.dbHelperOleDb.AddParameter("@NotificationId", notificationId);
             return this.dbHelperOleDb.Insert(sql) > 0;
+        }
+        public List<ResidentSummaryDTO> GetResidentsNotification(string notificationId)
+        {
+            string sql = @"SELECT
+                            Resident.ResidentName,
+                            Resident.ResidentImage
+                        FROM
+                            Resident
+                            INNER JOIN ResidentNotification ON Resident.ResidentId = ResidentNotification.ResidentId
+                        WHERE
+                            ResidentNotification.NotificationId = @NotificationId";
+            this.dbHelperOleDb.AddParameter("@NotificationId", notificationId);
+            List<ResidentSummaryDTO> residents = new List<ResidentSummaryDTO>();
+            using (IDataReader reader = this.dbHelperOleDb.Select(sql))
+            {
+                while (reader.Read())
+                {
+
+                    residents.Add(this.modelCreator.CreateModel<ResidentSummaryDTO>(reader));
+
+                }
+            }
+
+            return residents;
+        }
+        public ResidentSummaryDTO GetNotificationSender(string notificationId)
+        {
+            string sql = @"SELECT
+                    Resident.ResidentName,
+                    Resident.ResidentImage
+                FROM
+                    Resident
+                    INNER JOIN Notification ON Notification.CreatedBy = Resident.ResidentId
+                WHERE
+                    NotificationId = @NotificationId";
+            this.dbHelperOleDb.AddParameter("@NotificationId", notificationId);        
+            using (IDataReader reader = this.dbHelperOleDb.Select(sql))
+            {
+                if (reader.Read())
+                    return this.modelCreator.CreateModel<ResidentSummaryDTO>(reader);
+            }
+            return new ResidentSummaryDTO();
         }
     }
 }

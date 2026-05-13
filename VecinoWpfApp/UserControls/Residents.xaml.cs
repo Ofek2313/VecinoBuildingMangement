@@ -16,6 +16,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using VecinoBuildingMangement.Models;
 using VecinoBuildingMangement.ViewModels;
+using VecinoBuildingMangement.DTO;
 
 namespace VecinoWpfApp.UserControls
 {
@@ -86,6 +87,28 @@ namespace VecinoWpfApp.UserControls
             else
                 MessageBox.Show("Failure To Remove Resident");
               
+        }
+        private async void ToggleAdmin(object sender, RoutedEventArgs e)
+        {
+            Resident resident = (sender as Button).DataContext as Resident;
+            AdminToggleDto toggleDto = new AdminToggleDto();
+            toggleDto.ResidentId = resident.ResidentId;
+            toggleDto.AdminId = Session.ResidentId;
+            ApiClient<AdminToggleDto> client = new ApiClient<AdminToggleDto>();
+            client.Scheme = "http";
+            client.Host = "localhost";
+            client.Port = 5269;
+
+            if (resident.IsAdmin)
+                client.Path = "api/Admin/DemoteAdmin";
+            else
+                client.Path = "api/Admin/PromoteAdmin";
+
+            ApiResponse<bool> apiResponse = await client.PostAsyncReturn<AdminToggleDto, bool>(toggleDto);
+            if (apiResponse.Success && apiResponse.Data)
+                await GetResidentsList();
+            else
+                MessageBox.Show("Error");
         }
     }
 }

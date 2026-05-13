@@ -5,7 +5,7 @@
         Title="Create New Fee"
         Height="660" Width="520"
         WindowStartupLocation="CenterOwner"
-     
+        xmlns:conv="clr-namespace:VecinoWpfApp"
         
         Background="Transparent">
 
@@ -116,6 +116,7 @@
             <Setter Property="Margin" Value="0,0,0,6"/>
         </Style>
         <BooleanToVisibilityConverter x:Key="VisibilityConverter"></BooleanToVisibilityConverter>
+        <conv:StringToDateConverter x:Key="StringToDateConverter" ></conv:StringToDateConverter>
     </Window.Resources>
 
     <!-- Drop shadow wrapper -->
@@ -226,7 +227,7 @@
                                         FontSize="13"
                                         BorderBrush="#e2e8f0"
                                         Background="#f8fafc"
-                                        Foreground="#0f172a" SelectedDate="{Binding FeeDueDate,UpdateSourceTrigger=PropertyChanged}"/>
+                                        Foreground="#0f172a" SelectedDate="{Binding FeeDueDate,Converter={StaticResource StringToDateConverter},UpdateSourceTrigger=PropertyChanged}"/>
                         </StackPanel>
                     </Grid>
 

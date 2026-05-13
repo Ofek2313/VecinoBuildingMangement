@@ -92,6 +92,58 @@ namespace VecinoBuildingMangementWebService
 
             return fees;
         }
+
+        public List<Fee> GetFeesByResidentIdPage(string residentId, int FeesPerPage, int pageNumber = 1)
+        {
+            string sql;
+            if(pageNumber > 1)
+            {
+                sql = $@"SELECT
+                                TOP {FeesPerPage} *
+                            FROM
+                                Fee
+                            WHERE
+                                FeeId NOT IN (
+                                    SELECT
+                                        TOP {(pageNumber - 1) * FeesPerPage} FeeId
+                                    FROM
+                                        Fee
+                                    WHERE
+                                        ResidentId = @ResidentId
+                                    ORDER BY
+                                        FeeId
+                                )
+                                AND ResidentId = @ResidentId;
+                           ";
+                this.dbHelperOleDb.AddParameter("ResidentId", residentId);
+                this.dbHelperOleDb.AddParameter("ResidentId", residentId);
+            }
+            else
+            {
+                 sql = $@"SELECT
+                                TOP {FeesPerPage} *
+                            FROM
+                                Fee
+                            WHERE
+                                ResidentId = @ResidentId
+                             ORDER BY
+                                        FeeId";
+                this.dbHelperOleDb.AddParameter("ResidentId", residentId);
+            }
+            
+            List<Fee> fees = new List<Fee>();
+            using (IDataReader reader = this.dbHelperOleDb.Select(sql))
+            {
+                while (reader.Read())
+                {
+
+                    fees.Add(this.modelCreator.CreateModel<Fee>(reader));
+
+                }
+            }
+
+            return fees;
+        }
         public List<Fee> GetUnPaidFeeById(string id)
         {
             string sql = @"SELECT * FROM Fee WHERE IsPaid = False And ResidentId = @ResidentId";
@@ -255,6 +307,53 @@ namespace VecinoBuildingMangementWebService
             return feeSummary;
 
             
+        }
+        public ResidentFeeStats GetResidentFeeStats(string residentId)
+        {
+            string sql = @"SELECT
+                Sum(IIF(IsPaid = False, FeeAmount, 0)) AS TotalUnPaidFees,
+                Sum(IIF(IsPaid = True, FeeAmount, 0)) AS TotalPaidFees,
+                SUM(IIF(IsPaid = True, 1, 0)) AS PaidFees,
+                SUM(IIF(IsPaid = False, 1, 0)) AS UnPaidFees
+            FROM
+                Fee
+            WHERE
+                ResidentId = @ResidentId";
+            this.dbHelperOleDb.AddParameter("ResidentId", residentId);
+            ResidentFeeStats residentFeeStats = new ResidentFeeStats();
+
+            using(IDataReader dataReader = this.dbHelperOleDb.Select(sql))
+            {
+                if(dataReader.Read())
+                {
+                    residentFeeStats = this.modelCreator.CreateModel<ResidentFeeStats>(dataReader);
+                }
+            }
+            return residentFeeStats;
+        }
+        public Fee GetNextFee(string residentId)
+        {
+            string sql = @"SELECT
+                    TOP 1 *
+                FROM
+                    Fee
+                WHERE
+                    ResidentId = @ResidentId
+                    AND IsPaid = FALSE
+                ORDER BY
+                    CDate (Fee.FeeDueDate)";
+            this.dbHelperOleDb.AddParameter("ResidentId", residentId);
+            using (IDataReader reader = this.dbHelperOleDb.Select(sql))
+            {
+                while (reader.Read())
+                {
+                    return this.modelCreator.CreateModel<Fee>(reader);
+
+
+                }
+            }
+            return null;
+
         }
 
        

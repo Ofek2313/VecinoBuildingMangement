@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace VecinoBuildingMangement.DTO
 {
-    public class BuildingResponse
+    public class ResidentSummaryDTO
     {
-        public string BuildingId { get; set; }
 
-        public string? ResidentId { get; set; }
+        public string ResidentName { get; set; } = "None";
+
+        public string ResidentImage { get; set; } = "0.jpg";
     }
 }

@@ -1,0 +1,287 @@
+﻿<Window x:Class="VecinoWpfApp.AppWindows.AnnouncementDetails"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Announcement Details"
+        Width="680"
+        Height="480"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent">
+
+    <Window.Resources>
+        <Style x:Key="MetaCard" TargetType="Border">
+            <Setter Property="Background" Value="#f8fafc"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Padding" Value="14,12"/>
+        </Style>
+
+        <Style x:Key="ActionButton" TargetType="Button">
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="20,8"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="8" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Opacity" Value="0.85"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="borderEdit" TargetType="TextBox">
+            <Setter Property="IsReadOnly" Value="True"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Style.Triggers>
+                <Trigger Property="IsReadOnly" Value="False">
+                    <Setter Property="Background" Value="#F9FAFB"/>
+                    <Setter Property="BorderThickness" Value="0,0,0,2"/>
+                    <Setter Property="BorderBrush" Value="#6366f1"/>
+                    <Setter Property="CaretBrush" Value="#6366f1"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <BooleanToVisibilityConverter x:Key="VisibilityConverter"></BooleanToVisibilityConverter>
+    </Window.Resources>
+
+    <!-- Drop-shadow wrapper -->
+    <Border Margin="12" CornerRadius="16" Background="White">
+        <Border.Effect>
+            <DropShadowEffect Color="Black" Opacity="0.12" BlurRadius="24" ShadowDepth="4" Direction="270"/>
+        </Border.Effect>
+
+        <!-- DockPanel pins header/footer; ScrollViewer fills the middle -->
+        <DockPanel>
+
+            <!-- ══ HEADER ══════════════════════════════════════════════ -->
+            <Border DockPanel.Dock="Top" Background="#6366f1" CornerRadius="16,16,0,0" Padding="20,16">
+                <Grid>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <Path Width="16" Height="16" Fill="White" Stretch="Uniform" VerticalAlignment="Center"
+                              Data="M10 2a6 6 0 0 0-6 6c0 5-3 7-3 7h18s-3-2-3-7a6 6 0 0 0-6-6zm0 18a2 2 0 0 0 2-2H8a2 2 0 0 0 2 2z"/>
+                        <TextBlock Text="Announcement Details"
+                                   FontFamily="Segoe UI" FontSize="15" FontWeight="SemiBold"
+                                   Foreground="White" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                    </StackPanel>
+                    <Button x:Name="btnClose" HorizontalAlignment="Right" Cursor="Hand">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border CornerRadius="13" Width="26" Height="26">
+                                    <Path Width="10" Height="10" Stroke="White" StrokeThickness="1.8"
+                                          StrokeStartLineCap="Round" StrokeEndLineCap="Round"
+                                          Stretch="Uniform" Data="M1,1 L9,9 M9,1 L1,9"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Opacity" Value="0.85"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                </Grid>
+            </Border>
+
+            <!-- ══ FOOTER BUTTONS ══════════════════════════════════════ -->
+            <Border DockPanel.Dock="Bottom" Padding="20,14" CornerRadius="0,0,16,16"
+                    Background="#fafafa" BorderBrush="#e2e8f0" BorderThickness="0,1,0,0">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button x:Name="btnCloseFooter" Content="Close" Style="{StaticResource ActionButton}"
+                            Background="White" BorderBrush="#e2e8f0" BorderThickness="1"
+                            Foreground="#374151" Margin="0,0,10,0" Click="btnCloseFooter_Click"/>
+                    <Button x:Name="btnEdit" Style="{StaticResource ActionButton}"
+                            Background="#6366f1" BorderThickness="0" Foreground="White"
+                            Padding="16,8" Margin="0,0,8,0" Click="btnEdit_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <Path Width="12" Height="12" Fill="White" Stretch="Uniform" Margin="0,0,8,0"
+                                  Data="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/>
+                            <TextBlock Text="Edit Announcement"/>
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="btnDelete" Content="Delete Announcement"
+                            Style="{StaticResource ActionButton}"
+                            Background="#fee2e2" BorderThickness="0" Foreground="#e11d48"/>
+                </StackPanel>
+            </Border>
+
+            <!-- ══ SCROLLABLE MIDDLE CONTENT ══════════════════════════ -->
+            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                <StackPanel>
+
+                    <!-- ══ PRIORITY / DATE BAR ════════════════════════ -->
+                    <Border Padding="20,12" BorderBrush="#e2e8f0" BorderThickness="0,0,0,1">
+                        <Grid>
+                            <StackPanel Orientation="Horizontal">
+                                <Border CornerRadius="10" Padding="12,4" Background="#fee2e2">
+                                    <TextBlock Text="{Binding Notification.Priority}" FontFamily="Segoe UI" FontSize="12"
+                                               FontWeight="SemiBold" Foreground="#e11d48"/>
+                                </Border>
+                                <Border CornerRadius="10" Padding="12,4" Margin="8,0,0,0"
+                                        Background="#f1f5f9" BorderBrush="#e2e8f0" BorderThickness="1">
+                                    <TextBlock Text="System" FontFamily="Segoe UI" FontSize="12"
+                                               FontWeight="SemiBold" Foreground="#64748b"/>
+                                </Border>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                <Path Width="13" Height="13" Fill="#9ca3af" VerticalAlignment="Center" Stretch="Uniform"
+                                      Data="M9 2a1 1 0 0 1 1 1v1h4V3a1 1 0 1 1 2 0v1h3a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h3V3a1 1 0 0 1 1-1zM8 6H5v3h14V6h-3v1a1 1 0 1 1-2 0V6h-4v1a1 1 0 0 1-2 0V6zm11 5H5v8h14v-8z"/>
+                                <TextBlock Text="{Binding Notification.NotificationDate}" FontFamily="Segoe UI" FontSize="12"
+                                           Foreground="#9ca3af" Margin="7,0,0,0" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <!-- ══ TITLE + MESSAGE ════════════════════════════ -->
+                    <StackPanel Margin="20,16">
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,4"
+                  Visibility="{Binding (Validation.HasError),
+                  Converter={StaticResource VisibilityConverter},
+                  ElementName=NotificationTitleTextBox}">
+                            <Viewbox Width="14" Height="14" Margin="0,0,5,0" VerticalAlignment="Center">
+                                <Canvas Width="14" Height="14">
+                                    <Ellipse Width="13" Height="13" Canvas.Left="0.5" Canvas.Top="0.5"
+                                    Stroke="#e24b4a" StrokeThickness="1" Fill="Transparent"/>
+                                                            <Rectangle Width="1.3" Height="3.5" Canvas.Left="6.35" Canvas.Top="3.5"
+                                    Fill="#e24b4a" RadiusX="0.65" RadiusY="0.65"/>
+                                                            <Ellipse Width="1.4" Height="1.4" Canvas.Left="6.3" Canvas.Top="9.3"
+                                    Fill="#e24b4a"/>
+                                </Canvas>
+                            </Viewbox>
+                            <TextBlock Text="{Binding (Validation.Errors)[0].ErrorContent, ElementName=NotificationTitleTextBox}"
+                        FontFamily="Segoe UI" FontSize="11.5"
+                        Foreground="#a32d2d"
+                        VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <TextBox x:Name="NotificationTitleTextBox"
+                                 Text="{Binding Notification.NotificationTitle,UpdateSourceTrigger=PropertyChanged}"
+                                 FontFamily="Segoe UI" FontSize="18" FontWeight="SemiBold"
+                                 Foreground="#0f172a" TextWrapping="Wrap" Margin="0,0,0,10"
+                                 Style="{StaticResource borderEdit}"/>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,4"
+Visibility="{Binding (Validation.HasError),
+Converter={StaticResource VisibilityConverter},
+ElementName=NotificationMessageTextBox}">
+                            <Viewbox Width="14" Height="14" Margin="0,0,5,0" VerticalAlignment="Center">
+                                <Canvas Width="14" Height="14">
+                                    <Ellipse Width="13" Height="13" Canvas.Left="0.5" Canvas.Top="0.5"
+                  Stroke="#e24b4a" StrokeThickness="1" Fill="Transparent"/>
+                                    <Rectangle Width="1.3" Height="3.5" Canvas.Left="6.35" Canvas.Top="3.5"
+                  Fill="#e24b4a" RadiusX="0.65" RadiusY="0.65"/>
+                                    <Ellipse Width="1.4" Height="1.4" Canvas.Left="6.3" Canvas.Top="9.3"
+                  Fill="#e24b4a"/>
+                                </Canvas>
+                            </Viewbox>
+                            <TextBlock Text="{Binding (Validation.Errors)[0].ErrorContent, ElementName=NotificationMessageTextBox}"
+      FontFamily="Segoe UI" FontSize="11.5"
+      Foreground="#a32d2d"
+      VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <TextBox x:Name="NotificationMessageTextBox"
+                                 FontFamily="Segoe UI" FontSize="13" Foreground="#64748b"
+                                 TextWrapping="Wrap"
+                                 Text="{Binding Notification.NotificationMessage,UpdateSourceTrigger=PropertyChanged}"
+                                 Style="{StaticResource borderEdit}"/>
+                    </StackPanel>
+
+                    <!-- ══ SENT TO ════════════════════════════════════ -->
+                    <StackPanel Margin="20,0,20,14">
+                        <TextBlock Text="SENT TO" FontFamily="Segoe UI" FontSize="11"
+                                   FontWeight="SemiBold" Foreground="#64748b" Margin="0,0,0,10"/>
+                        <Expander Header="View Residents" ExpandDirection="Down">
+                            <ScrollViewer MaxHeight="150" VerticalScrollBarVisibility="Auto" Margin="0,5,0,0">
+                                <ListView x:Name="ResidentsListView" Background="Transparent"
+                                          BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                    <ListView.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel/>
+                                        </ItemsPanelTemplate>
+                                    </ListView.ItemsPanel>
+                                    <ListView.ItemContainerStyle>
+                                        <Style TargetType="ListViewItem">
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="ListViewItem">
+                                                        <ContentPresenter/>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </ListView.ItemContainerStyle>
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border CornerRadius="14" Background="#f1f5f9"
+                                                    BorderBrush="#e2e8f0" BorderThickness="1"
+                                                    Padding="6,5,12,5" Margin="0,0,8,8">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Border Width="22" Height="22" CornerRadius="11" Background="#e0e7ff">
+                                                        <TextBlock Text="A" FontFamily="Segoe UI" FontSize="10"
+                                                                   FontWeight="SemiBold" Foreground="#4338ca"
+                                                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                    </Border>
+                                                    <TextBlock Text="{Binding ResidentName}" FontFamily="Segoe UI"
+                                                               FontSize="12" Foreground="#374151"
+                                                               VerticalAlignment="Center" Margin="7,0,0,0"/>
+                                                </StackPanel>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+                                </ListView>
+                            </ScrollViewer>
+                        </Expander>
+                    </StackPanel>
+
+                    <Grid Margin="20,0,20,14">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="12"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Border Grid.Column="0" Style="{StaticResource MetaCard}">
+                            <StackPanel>
+                                <TextBlock Text="Posted by" FontFamily="Segoe UI" FontSize="11"
+                       Foreground="#94a3b8" Margin="0,0,0,6"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <Border Width="28" Height="28" CornerRadius="14" Background="#e0e7ff">
+                                        <TextBlock Text="JR" FontFamily="Segoe UI" FontSize="11"
+                               FontWeight="SemiBold" Foreground="#4338ca"
+                               HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                    <TextBlock Text="{Binding Admin.ResidentName}" FontFamily="Segoe UI" FontSize="13"
+                           FontWeight="SemiBold" Foreground="#0f172a"
+                           VerticalAlignment="Center" Margin="8,0,0,0"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Grid.Column="2" Style="{StaticResource MetaCard}">
+                            <StackPanel>
+                                <TextBlock Text="Recipients" FontFamily="Segoe UI" FontSize="11"
+                       Foreground="#94a3b8" Margin="0,0,0,6"/>
+                                <TextBlock Text="{Binding ResidentCount, StringFormat={}{0} residents}"
+                       FontFamily="Segoe UI" FontSize="13"
+                       FontWeight="SemiBold" Foreground="#0f172a"/>
+                            </StackPanel>
+                        </Border>
+
+                    </Grid>
+
+                </StackPanel>
+            </ScrollViewer>
+
+        </DockPanel>
+    </Border>
+</Window>

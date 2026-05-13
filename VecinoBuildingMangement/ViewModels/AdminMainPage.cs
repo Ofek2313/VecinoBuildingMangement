@@ -22,7 +22,7 @@ namespace VecinoBuildingMangement.ViewModels
 
         public NextEventViewModel NextEvent { get; set; }
 
-
+        public List<ActivityViewModel> ActivityViewModels { get; set; }
 
 
     }

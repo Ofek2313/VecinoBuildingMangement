@@ -94,6 +94,7 @@ namespace VecinoWpfApp.AppWindows
             //viewModel.Notification.NotificationMessage = AnnouncementMessage;
             //viewModel.Notification.NotificationTitle = AnnouncementTitle;
             viewModel.Notification.NotificationDate = " ";
+            viewModel.Notification.CreatedBy = Session.ResidentId;
             //viewModel.Notification.Priority = Priority;
             //viewModel.Notification.IsPinned = IsPinned;
            

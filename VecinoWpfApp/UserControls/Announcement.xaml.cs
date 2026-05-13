@@ -26,6 +26,7 @@ namespace VecinoWpfApp.UserControls
     {
         //List<Notification> annoucnemnetslist;
         NewAnnouncement newAnnouncement;
+        AnnouncementDetails announcementDetails;
         public Announcement()
         {
             InitializeComponent();
@@ -80,6 +81,26 @@ namespace VecinoWpfApp.UserControls
                 MessageBox.Show("Deleted");
                 await GetAnnouncementList();
             }
+        }
+        private bool? OpenViewDetailsWindow(Notification model)
+        {
+            if (this.announcementDetails == null)
+                this.announcementDetails = new AnnouncementDetails(model);
+            this.announcementDetails.Owner = Window.GetWindow(this);
+            bool? response = this.announcementDetails.ShowDialog();
+            this.announcementDetails = null;
+            return response;
+        }
+        private async void ViewDetails_Click(object sender, RoutedEventArgs e)
+        {
+            Notification model = (sender as Button).DataContext as Notification;
+            bool? response = OpenViewDetailsWindow(model.Clone());
+
+            if (response == true)
+                await GetAnnouncementList();
+
+
+
         }
     }
 }

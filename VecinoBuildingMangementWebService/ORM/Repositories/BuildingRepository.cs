@@ -283,6 +283,63 @@ namespace VecinoBuildingMangementWebService
             }
             return buildingStats;
         }
+
+        public List<ActivityViewModel> GetActivityViewModelsByBuildingId(string buildingId)
+        {
+            string sql = @"SELECT
+                    TOP 5 *
+                FROM
+                    (
+                        SELECT
+                            FeeTitle AS ActivityTitle,
+                            PaymentDate AS ActivityDate,
+                            'Fee' AS ActivityType,
+                            Resident.ResidentName
+                        FROM
+                            Fee
+                            INNER JOIN Resident ON Resident.ResidentId = Fee.ResidentId
+                        WHERE
+                            Resident.BuildingId = @BuildingId
+                            AND IsPaid = True
+                        UNION ALL
+                        SELECT
+                            RequestTitle AS ActivityTitle,
+                            RequestDate AS ActivityDate,
+                            'Request' AS ActivityType,
+                            ResidentName
+                        FROM
+                            ServiceRequest
+                            INNER JOIN Resident ON Resident.ResidentId = ServiceRequest.ResidentId
+                        WHERE
+                            Resident.BuildingId = @BuildingId
+                        UNION ALL
+                        SELECT
+                            'Voted' AS ActivityTitle,
+                            VoteDate AS ActivityDate,
+                            'Vote' AS ActivityType,
+                            ResidentName
+                        FROM
+                            Vote
+                            INNER JOIN Resident ON Resident.ResidentId = Vote.ResidentId
+                        WHERE
+                            Resident.BuildingId = @BuildingId
+                    )
+                ORDER BY
+                    Cdate (ActivityDate) DESC;";
+            this.dbHelperOleDb.AddParameter("@BuildingId", buildingId);
+            this.dbHelperOleDb.AddParameter("@BuildingId", buildingId);
+            this.dbHelperOleDb.AddParameter("@BuildingId", buildingId);
+            List<ActivityViewModel> activityViewModels = new List<ActivityViewModel>();
+            using(IDataReader dataReader = this.dbHelperOleDb.Select(sql))
+            {
+                while(dataReader.Read())
+                {
+                    activityViewModels.Add(this.modelCreator.CreateModel<ActivityViewModel>(dataReader,new List<string>{ "ActivityDescription"}));
+                }
+            }
+            return activityViewModels;
+        }
     }
+
     
 }

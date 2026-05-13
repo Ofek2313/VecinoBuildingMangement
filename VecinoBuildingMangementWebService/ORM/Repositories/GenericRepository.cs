@@ -24,7 +24,7 @@ namespace VecinoBuildingMangementWebService
         {
             string sql = "";
             Type type = typeof(T);
-            var ignore = new[] { "HasErrors", "IsValid" };
+            var ignore = new[] { "HasErrors", "IsValid", "IsValidationEnabled" };
             PropertyInfo[] properties = type.GetProperties().Skip(1).Where(p => !ignore.Contains(p.Name)).ToArray();
             string prop = string.Join(",", properties.Select(p => p.Name));
             string val = string.Join(",", properties.Select(p => "@" + p.Name));
@@ -43,7 +43,7 @@ namespace VecinoBuildingMangementWebService
         public bool Delete(string id)
         {
             Type type = typeof(T);
-            var ignore = new[] { "HasErrors", "IsValid" };
+            var ignore = new[] { "HasErrors", "IsValid", "IsValidationEnabled" };
             PropertyInfo[] properties = type.GetProperties().Where(p => !ignore.Contains(p.Name)).ToArray();
             string sql = $@"Delete from {type.Name} where {properties[0].Name}=@{properties[0].Name}";
             this.dbHelperOleDb.AddParameter($@"@{properties[0].Name}", id);
@@ -74,7 +74,7 @@ namespace VecinoBuildingMangementWebService
         public T GetById(string id)
         {
             Type type = typeof(T);
-            var ignore = new[] { "HasErrors", "IsValid" };
+            var ignore = new[] { "HasErrors", "IsValid", "IsValidationEnabled" };
             PropertyInfo[] properties = type.GetProperties().Where(p => !ignore.Contains(p.Name)).ToArray();
             string sql = @$"Select * From {type.Name} Where {properties[0].Name}=@{properties[0].Name}";
             dbHelperOleDb.AddParameter(@$"@{properties[0].Name}", id);
@@ -90,7 +90,7 @@ namespace VecinoBuildingMangementWebService
         public bool Update(T model)
         {
             Type type = typeof(T);
-            var ignore = new[] { "HasErrors", "IsValid" };
+            var ignore = new[] { "HasErrors", "IsValid", "IsValidationEnabled" };
             PropertyInfo[] properties = type.GetProperties().Skip(1).Where(p => !ignore.Contains(p.Name)).ToArray();
             string sql = $@"Update {type.Name} set ";
             string val = string.Join(", ", properties.Select(p => $@"{p.Name} = @{p.Name}"));
