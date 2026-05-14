@@ -1,4 +1,6 @@
 
+using VecinoBuildingMangementWebService.Helpers;
+
 namespace VecinoBuildingMangementWebService
 {
     public class Program
@@ -7,6 +9,7 @@ namespace VecinoBuildingMangementWebService
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            GeoCodingHelper.Init(builder.Configuration);
             // Add services to the container.
 
             builder.Services.AddControllers();

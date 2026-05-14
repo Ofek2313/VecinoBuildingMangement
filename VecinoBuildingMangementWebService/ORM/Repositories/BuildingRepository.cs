@@ -339,6 +339,18 @@ namespace VecinoBuildingMangementWebService
             }
             return activityViewModels;
         }
+        public string GetBuildingPhotoById(string buildingId)
+        {
+            string sql = "Select BuildingImage From Building Where BuildingId = @BuildingId";
+            this.dbHelperOleDb.AddParameter("@BuildingId", buildingId);
+            using (IDataReader dataReader = this.dbHelperOleDb.Select(sql))
+            {
+                if (dataReader.Read())
+                    return Convert.ToString(dataReader["BuildingImage"]);
+                else
+                    return "";
+            }
+        }
     }
 
     

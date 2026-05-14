@@ -18,6 +18,8 @@ namespace VecinoBuildingMangement.Models
         string joinCode;
         string buildingImage;
         string entranceName;
+        double longitude;
+        double latitude;
 
         public string BuildingId
         {
@@ -88,6 +90,17 @@ namespace VecinoBuildingMangement.Models
         {
             get { return entranceName; }
             set { entranceName = value; }
+        }
+
+        public double Longitude
+        {
+            get { return longitude; }
+            set { longitude = value; }
+        }
+        public double Latitude
+        {
+            get { return latitude; }
+            set { latitude = value; }
         }
     }
 }

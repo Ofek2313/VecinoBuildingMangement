@@ -113,7 +113,7 @@
                     </Button>
                     <Button x:Name="btnDelete" Content="Delete Announcement"
                             Style="{StaticResource ActionButton}"
-                            Background="#fee2e2" BorderThickness="0" Foreground="#e11d48"/>
+                            Background="#fee2e2" BorderThickness="0" Foreground="#e11d48" Click="DeleteAnnouncement"/>
                 </StackPanel>
             </Border>
 
@@ -171,9 +171,9 @@
                                  Foreground="#0f172a" TextWrapping="Wrap" Margin="0,0,0,10"
                                  Style="{StaticResource borderEdit}"/>
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,4"
-Visibility="{Binding (Validation.HasError),
-Converter={StaticResource VisibilityConverter},
-ElementName=NotificationMessageTextBox}">
+                    Visibility="{Binding (Validation.HasError),
+                    Converter={StaticResource VisibilityConverter},
+                    ElementName=NotificationMessageTextBox}">
                             <Viewbox Width="14" Height="14" Margin="0,0,5,0" VerticalAlignment="Center">
                                 <Canvas Width="14" Height="14">
                                     <Ellipse Width="13" Height="13" Canvas.Left="0.5" Canvas.Top="0.5"

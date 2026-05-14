@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System.Text.Json;
 using VecinoBuildingMangement.Models;
 using VecinoBuildingMangement.ViewModels;
@@ -94,6 +95,32 @@ namespace VecinoBuildingMangementWebService.Controllers
                 this.repositoryUOW.DbHelperOleDb.CloseConnection();
             }
             
+        }
+
+        [HttpGet]
+        public IActionResult GetBuildingPhoto(string buildingId)
+        {
+            try
+            {
+                this.repositoryUOW.DbHelperOleDb.OpenConnection();
+                string photo = this.repositoryUOW.BuildingRepository.GetBuildingPhotoById(buildingId);
+                string extension = Path.GetExtension(photo).TrimStart('.');
+                string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images","BuildingImages", photo);
+
+
+                FileStream stream = System.IO.File.OpenRead(path);
+
+                return File(stream, $"image/{extension}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return StatusCode(500, "Image Failed To Load");
+            }
+            finally
+            {
+                this.repositoryUOW.DbHelperOleDb.CloseConnection();
+            }
         }
 
     }

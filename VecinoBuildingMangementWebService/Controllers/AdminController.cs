@@ -6,11 +6,13 @@ using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
+using System.Threading.Tasks;
 using System.Transactions;
 using VecinoBuildingMangement;
 using VecinoBuildingMangement.DTO;
 using VecinoBuildingMangement.Models;
 using VecinoBuildingMangement.ViewModels;
+using VecinoBuildingMangementWebService.Helpers;
 
 
 namespace VecinoBuildingMangementWebService.Controllers
@@ -461,14 +463,18 @@ namespace VecinoBuildingMangementWebService.Controllers
         }
 
         [HttpPost]
-        public BuildingResponse CreateBuilding([FromForm] string model, IFormFile file)
+        public async Task<BuildingResponse> CreateBuilding([FromForm] string model, IFormFile file)
         {
-            Building building = JsonSerializer.Deserialize<Building>(model);
+            CreateBuildingDto buildingDto = JsonSerializer.Deserialize<CreateBuildingDto>(model);
             try
             {
+                
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
                 this.repositoryUOW.DbHelperOleDb.OpenTransaction();
-                this.repositoryUOW.BuildingRepository.Create(building);
+                CordsDto cords = await GeoCodingHelper.GetCoordinatesAsync(buildingDto.Building.Address);
+                buildingDto.Building.Longitude = cords.Longitude;
+                buildingDto.Building.Latitude = cords.Latitude;
+                this.repositoryUOW.BuildingRepository.Create(buildingDto.Building);
                 string buildingId = this.repositoryUOW.BuildingRepository.GetLastId();
                 string ext = Path.GetExtension(file.FileName).TrimStart('.').ToLower();
                 string fileName = "building" + buildingId + "." + ext;
@@ -479,6 +485,9 @@ namespace VecinoBuildingMangementWebService.Controllers
                 {
                     file.CopyTo(fileStream);
                 }
+                bool response2 = this.repositoryUOW.ResidentRepository.UpdateResidentBuilding(buildingDto.ResidentId, buildingId);
+            
+               
                 BuildingResponse buildingResponse = new BuildingResponse
                 {
                     BuildingId = buildingId,
@@ -784,14 +793,16 @@ namespace VecinoBuildingMangementWebService.Controllers
         }
 
         [HttpPost]
-        public BuildingResponse CreateBuildingAndRegister([FromForm] string model, IFormFile file)
+        public async  Task<BuildingResponse> CreateBuildingAndRegister([FromForm] string model, IFormFile file)
         {
             CreateBuildingRegister createBuildingRegister = JsonSerializer.Deserialize<CreateBuildingRegister>(model);
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
                 this.repositoryUOW.DbHelperOleDb.OpenTransaction();
-      
+                CordsDto cords = await GeoCodingHelper.GetCoordinatesAsync(createBuildingRegister.Building.Address);
+                createBuildingRegister.Building.Longitude = cords.Longitude;
+                createBuildingRegister.Building.Latitude = cords.Latitude;
                 this.repositoryUOW.BuildingRepository.Create(createBuildingRegister.Building);
                 string buildingId = this.repositoryUOW.BuildingRepository.GetLastId();
                 string ext = Path.GetExtension(file.FileName).TrimStart('.').ToLower();
@@ -805,8 +816,8 @@ namespace VecinoBuildingMangementWebService.Controllers
                 }
                 createBuildingRegister.Resident.BuildingId = buildingId;
                 bool responseRegister = this.repositoryUOW.ResidentRepository.Create(createBuildingRegister.Resident);
-
-                if(responseRegister && responseBuilding)
+              ;
+                if (responseRegister && responseBuilding)
                 {
                     BuildingResponse buildingResponse = new BuildingResponse
                     {
@@ -941,6 +952,8 @@ namespace VecinoBuildingMangementWebService.Controllers
                 this.repositoryUOW.DbHelperOleDb.CloseConnection();
             }
         }
+
+        
     }
 }
 

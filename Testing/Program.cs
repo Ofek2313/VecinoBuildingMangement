@@ -106,7 +106,7 @@ namespace Testing
 
 
             Console.ReadLine();
-            TestVecinoClient("11", "1CD34");
+            
             Console.ReadLine();
 
         }
@@ -137,28 +137,7 @@ namespace Testing
 
         }   
 
-        static async Task CurrentWeather(string city)
-        {
-            var client = new HttpClient();
-            var request = new HttpRequestMessage
-            {
-                Method = HttpMethod.Get,
-                RequestUri = new Uri($"https://open-weather13.p.rapidapi.com/city?city={city}&lang=EN"),
-                Headers =
-    {
-        { "x-rapidapi-key", "2e7ae9391bmsh986aa861799c8eap1309edjsn48487fbebaa3" },
-        { "x-rapidapi-host", "open-weather13.p.rapidapi.com" },
-    },
-            };
-            using (var response = await client.SendAsync(request))
-            {
-                response.EnsureSuccessStatusCode();
-                var body = await response.Content.ReadAsStringAsync();
-  
-                WeatherResponse weatherResponse = JsonSerializer.Deserialize<WeatherResponse>(body);
-
-                Console.WriteLine($"Weather: {weatherResponse.weather[0].main}, {weatherResponse.weather[0].description}, Tempeture: {Math.Round((weatherResponse.main.temp-32)/1.8)}");
-            }
-        }
+       
+       
     }
 }

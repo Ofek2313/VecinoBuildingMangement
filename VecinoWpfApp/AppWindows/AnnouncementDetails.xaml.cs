@@ -103,5 +103,26 @@ namespace VecinoWpfApp.AppWindows
                 
             }
         }
+
+        private async void DeleteAnnouncement(object sender, RoutedEventArgs e)
+        {
+          
+            string notificationId = viewModel.Notification.NotificationId;
+
+
+            ApiClient<string> client = new ApiClient<string>();
+            client.Scheme = "http";
+            client.Host = "localhost";
+            client.Port = 5269;
+            client.Path = "api/Admin/RemoveNotification";
+            //client.AddParameter("notificationId", notificationIdId);
+            ApiResponse<bool> apiResponse = await client.PostAsyncReturn<string, bool>(notificationId);
+            if (apiResponse.Success && apiResponse.Data)
+            {
+                MessageBox.Show("Deleted");
+                this.DialogResult = true;
+                
+            }
+        }
     }
 }

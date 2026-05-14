@@ -1,6 +1,8 @@
 ﻿using BuildingManagementWsClient;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using NuGet.Protocol;
+using System.Text;
 using VecinoBuildingMangement.Models;
 using VecinoBuildingMangement.ViewModels;
 
@@ -63,7 +65,19 @@ namespace VecinoWebApplication.Controllers
 
 
         }
-
+        public async Task<IActionResult> GetBuildingPhoto(string buildingId)
+        {
+            ApiClient<bool> client = new ApiClient<bool>(); // The types does not matter since working with a file I dont need any model
+            client.Scheme = "http";
+            client.Host = "localhost";
+            client.Port = 5269;
+            client.Path = "api/Guest/GetBuildingPhoto";
+            client.AddParameter("buildingId", buildingId);
+            (byte[] bytes, string contentType) = await client.GetFileAsync();
+            if (bytes != null || contentType != null)
+                return File(bytes, contentType);
+            return BadRequest();
+        }
        
     }
 }

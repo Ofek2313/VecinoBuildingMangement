@@ -68,20 +68,25 @@ namespace VecinoWpfApp.AppPages
                 building.BuildingImage = " ";
 
                 building.Validate();
+            CreateBuildingDto buildingDto = new CreateBuildingDto
+            {
+                Building = building,
+                ResidentId = Session.ResidentId
+            };
 
                 if (!building.HasErrors)
                 {
 
                     if(Session.HasAccount)
                     {
-                        ApiClient<Building> client = new ApiClient<Building>();
+                        ApiClient<CreateBuildingDto> client = new ApiClient<CreateBuildingDto>();
                         client.Scheme = "http";
                         client.Host = "localhost";
                         client.Port = 5269;
                         client.Path = "api/Admin/CreateBuilding";
 
                         Stream stream = new FileStream(this.imagePath, FileMode.Open, FileAccess.Read);
-                        ApiResponse<BuildingResponse> apiResponse = await client.PostAsyncReturn<Building, BuildingResponse>(building, stream, imagePath);
+                        ApiResponse<BuildingResponse> apiResponse = await client.PostAsyncReturn<CreateBuildingDto, BuildingResponse>(buildingDto, stream, imagePath);
                         if (apiResponse.Data != null && apiResponse.Success)
                         {
                             MessageBox.Show("Success");
