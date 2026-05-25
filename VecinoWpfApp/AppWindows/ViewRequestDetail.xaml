@@ -96,6 +96,7 @@
         <conv:RequestStatusConverter x:Key="requestStatusConverter">
 
         </conv:RequestStatusConverter>
+        <conv:UrlConverter x:Key="urlConverter"></conv:UrlConverter>
     </Window.Resources>
 
     <!-- ── Drop shadow wrapper ── -->
@@ -246,10 +247,10 @@
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,18">
                                 <Border Width="32" Height="32" CornerRadius="16"
                                         Background="#ff8c42" Margin="0,0,10,0">
-                                    <TextBlock Text="JD" FontSize="12" FontWeight="Bold"
-                                               Foreground="White"
-                                               HorizontalAlignment="Center"
-                                               VerticalAlignment="Center"/>
+                                    <Border.Clip>
+                                        <EllipseGeometry Center="16,16" RadiusX="16" RadiusY="16"/>
+                                    </Border.Clip>
+                                    <Image  Stretch="UniformToFill" Source="{Binding ResidentImage,Converter={StaticResource urlConverter}}"></Image>
                                 </Border>
                                 <StackPanel VerticalAlignment="Center">
                                     <TextBlock Text="{Binding ResidentName}"
@@ -272,74 +273,7 @@
                        
                     </Grid>
 
-                    <Separator Style="{StaticResource Divider}"/>
-
-                    <!-- ─ Timeline ─ -->
-                    <TextBlock Style="{StaticResource SectionLabel}" Text="ACTIVITY TIMELINE"/>
-
-                    <!-- Event 1 -->
-                    <Grid Margin="0,0,0,14">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <StackPanel Grid.Column="0" Width="40" HorizontalAlignment="Center">
-                            <Border Width="14" Height="14" CornerRadius="7"
-                                    Background="#ff8c42" HorizontalAlignment="Center"/>
-                            <Rectangle Width="2" Height="30" Fill="#e5e7eb"
-                                       HorizontalAlignment="Center" Margin="0,2,0,0"/>
-                        </StackPanel>
-                        <StackPanel Grid.Column="1" Margin="8,0,0,0">
-                            <TextBlock Text="Request Submitted"
-                                       FontFamily="Segoe UI" FontSize="13" FontWeight="SemiBold"
-                                       Foreground="#1f2937"/>
-                            <TextBlock Text="Feb 24, 2025 · 10:32 AM"
-                                       FontFamily="Segoe UI" FontSize="12"
-                                       Foreground="#9ca3af" Margin="0,2,0,0"/>
-                        </StackPanel>
-                    </Grid>
-
-                    <!-- Event 2 -->
-                    <Grid Margin="0,0,0,14">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <StackPanel Grid.Column="0" Width="40" HorizontalAlignment="Center">
-                            <Border Width="14" Height="14" CornerRadius="7"
-                                    Background="#5b9cf5" HorizontalAlignment="Center"/>
-                            <Rectangle Width="2" Height="30" Fill="#e5e7eb"
-                                       HorizontalAlignment="Center" Margin="0,2,0,0"/>
-                        </StackPanel>
-                        <StackPanel Grid.Column="1" Margin="8,0,0,0">
-                            <TextBlock Text="Assigned to Mike Thompson"
-                                       FontFamily="Segoe UI" FontSize="13" FontWeight="SemiBold"
-                                       Foreground="#1f2937"/>
-                            <TextBlock Text="Feb 24, 2025 · 02:15 PM"
-                                       FontFamily="Segoe UI" FontSize="12"
-                                       Foreground="#9ca3af" Margin="0,2,0,0"/>
-                        </StackPanel>
-                    </Grid>
-
-                    <!-- Event 3 (pending — no line below) -->
-                    <Grid Margin="0,0,0,0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <StackPanel Grid.Column="0" Width="40" HorizontalAlignment="Center">
-                            <Border Width="14" Height="14" CornerRadius="7"
-                                    Background="#d1d5db" HorizontalAlignment="Center"/>
-                        </StackPanel>
-                        <StackPanel Grid.Column="1" Margin="8,0,0,0">
-                            <TextBlock Text="Awaiting Resolution"
-                                       FontFamily="Segoe UI" FontSize="13" FontWeight="SemiBold"
-                                       Foreground="#9ca3af"/>
-                            <TextBlock Text="Estimated: Feb 27, 2025"
-                                       FontFamily="Segoe UI" FontSize="12"
-                                       Foreground="#d1d5db" Margin="0,2,0,0"/>
-                        </StackPanel>
-                    </Grid>
+                    
 
                     <Rectangle Height="24"/>
                 </StackPanel>

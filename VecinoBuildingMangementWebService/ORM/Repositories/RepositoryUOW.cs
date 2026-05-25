@@ -48,7 +48,7 @@ namespace VecinoBuildingMangementWebService
             get
             {
                 if (cityRepository == null)
-                    cityRepository = new CityRepository(this.dbHelperOleDb, this.modelCreators);
+                    cityRepository = new CityRepository(this.dbHelperOleDb, this.modelCreator);
                 return cityRepository;
             }
         }

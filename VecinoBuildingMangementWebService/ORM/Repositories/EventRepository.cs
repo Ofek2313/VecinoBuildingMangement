@@ -204,19 +204,25 @@ namespace VecinoBuildingMangementWebService
             this.dbHelperOleDb.AddParameter("@EventId", eventId);
             return this.dbHelperOleDb.Update(sql) > 0;
         }
-        public List<string> GetResidentsAttendingEventByEventId(string eventId)
+        public List<ResidentSummaryDTO> GetResidentsAttendingEventByEventId(string eventId)
         {
-            string sql = $"SELECT Resident.ResidentName FROM Resident INNER JOIN (Event INNER JOIN EventAttendance ON Event.EventId = EventAttendance.EventId) ON Resident.ResidentId = EventAttendance.ResidentId WHERE  Event.EventId = @EventId";
+            string sql = @$"SELECT Resident.ResidentName,Resident.ResidentImage FROM Resident
+                        INNER JOIN (Event INNER JOIN EventAttendance ON Event.EventId = EventAttendance.EventId)
+                        ON Resident.ResidentId = EventAttendance.ResidentId WHERE  Event.EventId = @EventId";
             this.dbHelperOleDb.AddParameter("@EventId", eventId);
-            List<string> ResidentNames = new List<string>();
+            List<ResidentSummaryDTO> residents = new List<ResidentSummaryDTO>();
             using (IDataReader dataReader = this.dbHelperOleDb.Select(sql))
             {
                 while (dataReader.Read())
                 {
-                    ResidentNames.Add(Convert.ToString(dataReader["ResidentName"]));
+                    residents.Add(new ResidentSummaryDTO()
+                    {
+                        ResidentName = Convert.ToString(dataReader["ResidentName"]),
+                        ResidentImage = Convert.ToString(dataReader["ResidentImage"])
+                    });
                 }
             }
-            return ResidentNames;
+            return residents;
         }
 
         public List<EventViewModelResident> GetEventViewModelsByBuildingIdResident(string buildingId, string residentId)

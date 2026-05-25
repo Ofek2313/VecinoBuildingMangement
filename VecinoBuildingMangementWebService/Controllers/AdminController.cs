@@ -2,12 +2,14 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+using System.Data.OleDb;
 using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Transactions;
+using System.IO;
 using VecinoBuildingMangement;
 using VecinoBuildingMangement.DTO;
 using VecinoBuildingMangement.Models;
@@ -172,7 +174,19 @@ namespace VecinoBuildingMangementWebService.Controllers
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
-                return this.repositoryUOW.EventRepository.Delete(eventId);
+                Event @event = this.repositoryUOW.EventRepository.GetById(eventId);
+
+                if (@event == null) return false;
+
+                bool deleteResponse =  this.repositoryUOW.EventRepository.Delete(eventId);
+                if(deleteResponse && !string.IsNullOrWhiteSpace(@event.EventImage))
+                {
+                    string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images", @event.EventImage);
+                    if(System.IO.File.Exists(filePath))
+                        System.IO.File.Delete(filePath);
+                }
+                return deleteResponse;
+
             }
             catch (Exception ex)
             {
@@ -196,6 +210,12 @@ namespace VecinoBuildingMangementWebService.Controllers
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
                 if(file != null)
                 {
+                    string deletePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images", @event.EventImage);
+                    if (System.IO.File.Exists(deletePath))
+                    {
+                        System.IO.File.Delete(deletePath);
+                        Console.WriteLine("File deleted successfully.");
+                    }
                     string ext = Path.GetExtension(file.FileName).TrimStart('.').ToLower();
                     @event.EventImage = $"event{@event.EventId}.{ext}";
                     response = this.repositoryUOW.EventRepository.Update(@event);
@@ -224,7 +244,7 @@ namespace VecinoBuildingMangementWebService.Controllers
         }
 
         [HttpGet]
-        public List<string> GetResidentsAttendingEvent(string eventId)
+        public List<ResidentSummaryDTO> GetResidentsAttendingEvent(string eventId)
         {
             try
             {
@@ -474,7 +494,20 @@ namespace VecinoBuildingMangementWebService.Controllers
                 CordsDto cords = await GeoCodingHelper.GetCoordinatesAsync(buildingDto.Building.Address);
                 buildingDto.Building.Longitude = cords.Longitude;
                 buildingDto.Building.Latitude = cords.Latitude;
-                this.repositoryUOW.BuildingRepository.Create(buildingDto.Building);
+                for (int i = 0; i < 10; i++)
+                {
+                    try
+                    {
+                        buildingDto.Building.JoinCode = GenerateCode();
+                        this.repositoryUOW.BuildingRepository.Create(buildingDto.Building);
+                        break;
+                    }
+                    catch (OleDbException ex) when (ex.ErrorCode == -2147217900)
+                    {
+                        continue;
+                    }
+                }
+                
                 string buildingId = this.repositoryUOW.BuildingRepository.GetLastId();
                 string ext = Path.GetExtension(file.FileName).TrimStart('.').ToLower();
                 string fileName = "building" + buildingId + "." + ext;
@@ -485,7 +518,7 @@ namespace VecinoBuildingMangementWebService.Controllers
                 {
                     file.CopyTo(fileStream);
                 }
-                bool response2 = this.repositoryUOW.ResidentRepository.UpdateResidentBuilding(buildingDto.ResidentId, buildingId);
+                bool response2 = this.repositoryUOW.ResidentRepository.UpdateAdminCreationResidentBuilding(buildingDto.ResidentId, buildingId);
             
                
                 BuildingResponse buildingResponse = new BuildingResponse
@@ -768,11 +801,12 @@ namespace VecinoBuildingMangementWebService.Controllers
                 manageAdminFinance.TotalUnPaid = feeSummary.TotalUnPaid;
                 manageAdminFinance.TotalCollected = feeSummary.TotalCollected;
                 manageAdminFinance.Outstanding = feeSummary.Outstanding;
+                manageAdminFinance.TotalCollectedCurrentMonth = feeSummary.TotalCollectedCurrentMonth;
 
                 manageAdminFinance.Transaction = this.repositoryUOW.FeeRepository.GetLastTransactionsByBuildingId(buildingId);
 
                 manageAdminFinance.CollectionRate = (int)((double)manageAdminFinance.TotalPaid / buildingFees.Count * 100);
-                manageAdminFinance.TotalCollectedCurrentMonth = 0;
+        
 
                 manageAdminFinance.Transaction =
                 manageAdminFinance.Transaction.OrderByDescending(t => DateTime.ParseExact(t.Fee.PaymentDate, "dd/MM/yyyy", CultureInfo.InvariantCulture))
@@ -792,6 +826,18 @@ namespace VecinoBuildingMangementWebService.Controllers
             }
         }
 
+        private string GenerateCode()
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            Random rand = new Random();
+            string code = "";
+            for (int i = 0; i < 5; i++)
+            {
+                code += chars[rand.Next(0, chars.Length)];
+            }
+            return code;
+        }
+
         [HttpPost]
         public async  Task<BuildingResponse> CreateBuildingAndRegister([FromForm] string model, IFormFile file)
         {
@@ -803,7 +849,20 @@ namespace VecinoBuildingMangementWebService.Controllers
                 CordsDto cords = await GeoCodingHelper.GetCoordinatesAsync(createBuildingRegister.Building.Address);
                 createBuildingRegister.Building.Longitude = cords.Longitude;
                 createBuildingRegister.Building.Latitude = cords.Latitude;
-                this.repositoryUOW.BuildingRepository.Create(createBuildingRegister.Building);
+                for(int i = 0; i < 10; i++)
+                {
+                    try
+                    {
+                        createBuildingRegister.Building.JoinCode = GenerateCode();
+                        this.repositoryUOW.BuildingRepository.Create(createBuildingRegister.Building);
+                        break;
+                    }
+                    catch(OleDbException ex) when (ex.ErrorCode == -2147217900)
+                    {
+                        continue;
+                    }
+                }
+               
                 string buildingId = this.repositoryUOW.BuildingRepository.GetLastId();
                 string ext = Path.GetExtension(file.FileName).TrimStart('.').ToLower();
                 string fileName = "building" + buildingId + "." + ext;
@@ -952,8 +1011,47 @@ namespace VecinoBuildingMangementWebService.Controllers
                 this.repositoryUOW.DbHelperOleDb.CloseConnection();
             }
         }
+        [HttpGet]
+        public List<City> GetCities()
+        {
+            try
+            {
+                this.repositoryUOW.DbHelperOleDb.OpenConnection();
+                return this.repositoryUOW.CityRepository.GetAll();
+            }
+            catch (Exception ex)
+            {
 
-        
+                Console.WriteLine(ex.ToString());
+                return null;
+            }
+            finally
+            {
+                this.repositoryUOW.DbHelperOleDb.CloseConnection();
+            }
+        }
+        [HttpPost]
+        public async Task<bool> UpdateBuilding([FromBody] BuildingUpdateDto building)
+        {
+            try
+            {
+                this.repositoryUOW.DbHelperOleDb.OpenConnection();
+                CordsDto cords = null;
+                if (building.AddressChangedFlag)
+                    cords = await GeoCodingHelper.GetCoordinatesAsync(building.Address);
+                return this.repositoryUOW.BuildingRepository.UpdateBuildingWithCords(building, cords);
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return false;
+            }
+            finally
+            {
+                this.repositoryUOW.DbHelperOleDb.CloseConnection();
+            }
+        }
     }
 }
 

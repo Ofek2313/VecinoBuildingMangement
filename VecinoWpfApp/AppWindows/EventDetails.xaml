@@ -362,7 +362,7 @@ ElementName=EventTitleText}">
                                     <TextBlock Text="{Binding (Validation.Errors)[0].ErrorContent, ElementName=DueDatePicker}"
                                  FontFamily="Segoe UI" FontSize="11.5"
                                  Foreground="#a32d2d"
-                                 VerticalAlignment="Center"/>
+                                 VerticalAlignment="Center" TextWrapping="Wrap" MaxWidth="150"/>
                                 </StackPanel>
                                 <TextBlock x:Name="EventDateText"
                                            Text="{Binding Event.EventDate}"
@@ -505,23 +505,17 @@ ElementName=EventDescriptionText}">
                                             <Border Grid.Column="0"
                                                     Width="44" Height="44"
                                                     CornerRadius="22">
-                                                <Border.Background>
-                                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                                        <GradientStop Color="#EDE9FE" Offset="0"/>
-                                                        <GradientStop Color="#FCE7F3" Offset="1"/>
-                                                    </LinearGradientBrush>
-                                                </Border.Background>
-                                                <TextBlock Text="OF"
-                                                           FontSize="15"
-                                                           FontWeight="SemiBold"
-                                                           Foreground="#7C3AED"
-                                                           HorizontalAlignment="Center"
-                                                           VerticalAlignment="Center"/>
-                                            </Border>
+                                                
+                                                <Border.Clip>
+                                                    <EllipseGeometry Center="22,22" RadiusX="22" RadiusY="22"/>
+                                                </Border.Clip>
+                                                <Image Stretch="UniformToFill" Source="{Binding ResidentImage,Converter={StaticResource urlConverter}}"></Image>
+                                            
+                                    </Border>
 
                                             <!-- Name & Role -->
                                             <StackPanel Grid.Column="2" VerticalAlignment="Center">
-                                                <TextBlock Text="{Binding}"
+                                                <TextBlock Text="{Binding ResidentName}"
                                                            FontSize="15"
                                                            FontWeight="SemiBold"
                                                            Foreground="#111827"/>

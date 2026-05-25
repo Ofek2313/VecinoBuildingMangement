@@ -4,41 +4,461 @@
     ViewData["Title"] = "RegisterForm";
     Layout = "~/Views/Shared/MasterGuestPage.cshtml";
 }
+<style>
+    *, *::before, *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
 
-<main>
-    <div class="box">
-        <h2 class="header2">Register</h2>
-       
-        <form asp-controller="Guest" asp-action="Register" method="post">
-            <div class="field">
-                <input type="text" placeholder="Full Name" class="input" asp-for="ResidentName" value="Ofek">
-                 <span class="errorData" asp-validation-for="ResidentName"></span>
-            </div>
-           
-            <div class="field">
-                <input type="password" placeholder="Password" class="input" asp-for="ResidentPassword" value="Test22$$">
-                <span class="errorData" asp-validation-for="ResidentPassword"></span>
-            </div>
+    :root {
+        --teal: #14b8a6;
+        --teal-dark: #0f9488;
+        --blue: #3b82f6;
+        --blue-dark: #1d4ed8;
+        --slate: #1e293b;
+        --muted: #64748b;
+        --muted-light: #94a3b8;
+        --border: #e2e8f0;
+        --surface: #f8fafc;
+        --white: #ffffff;
+        --danger: #dc2626;
+    }
 
-          @*   <div class="field">
-                <input type="password" placeholder="Confirm Password" class="input" asp-for="ResidentPassword">
-                <span class="errorData" asp-validation-for="ResidentPassword"></span>
-            </div> *@
+    html, body {
+        height: 100%;
+        font-family: 'Segoe UI', sans-serif;
+        background: var(--surface);
+        color: var(--slate);
+        overflow: hidden;
+    }
 
-            <div class="field">
-                <input type="text" placeholder="Phone" class="input" asp-for="ResidentPhone" value="050000001">
-                <span class="errorData" asp-validation-for="ResidentPhone"></span>
-            </div>
+    .bg {
+        position: fixed;
+        inset: 0;
+        background: var(--surface);
+        z-index: 0;
+    }
 
-            <div class="field">
-                <input type="email" placeholder="Email" class="input" asp-for="ResidentEmail" value="ofekcohen1981@gmail.com">
-                <span class="errorData" asp-validation-for="ResidentEmail"></span>
+        .bg::before {
+            content: '';
+            position: absolute;
+            top: -140px;
+            right: -140px;
+            width: 520px;
+            height: 520px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(59,130,246,0.15) 0%, transparent 70%);
+        }
+
+        .bg::after {
+            content: '';
+            position: absolute;
+            bottom: -120px;
+            left: -100px;
+            width: 440px;
+            height: 440px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(20,184,166,0.13) 0%, transparent 70%);
+        }
+
+    .bg-grid {
+        position: fixed;
+        inset: 0;
+        background-image: linear-gradient(rgba(59,130,246,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(59,130,246,0.04) 1px, transparent 1px);
+        background-size: 48px 48px;
+        z-index: 0;
+    }
+
+    .page {
+        position: relative;
+        z-index: 1;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 1rem;
+    }
+
+    .card {
+        width: 100%;
+        max-width: 420px;
+        background: var(--white);
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1), 0 12px 40px rgba(59,130,246,0.08);
+        overflow: hidden;
+    }
+
+    .card-top-bar {
+        height: 4px;
+        background: linear-gradient(135deg, var(--teal) 0%, var(--blue) 100%);
+    }
+
+    .card-header {
+        padding: 2rem 2rem 1.5rem;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 1.75rem;
+    }
+
+    .brand-icon {
+        width: 38px;
+        height: 38px;
+        background: linear-gradient(135deg, var(--teal), var(--blue));
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        box-shadow: 0 2px 8px rgba(59,130,246,0.25);
+    }
+
+        .brand-icon svg {
+            width: 18px;
+            height: 18px;
+            stroke: white;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+    .brand-name {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 22px;
+        font-weight: 500;
+        color: var(--slate);
+        letter-spacing: -0.01em;
+        line-height: 1;
+    }
+
+    .brand-tagline {
+        font-size: 10px;
+        font-weight: 400;
+        color: var(--muted);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        margin-top: 2px;
+    }
+
+    .header-title {
+        font-size: 1.75rem;
+        font-weight: 600;
+        color: var(--slate);
+        line-height: 1.2;
+        margin-bottom: 4px;
+    }
+
+    .header-sub {
+        font-size: 0.938rem;
+        color: var(--muted);
+        line-height: 1.5;
+    }
+
+    .card-body {
+        padding: 1.75rem 2rem 2rem;
+    }
+
+    .field {
+        margin-bottom: 1.1rem;
+    }
+
+        .field label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--muted);
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+
+    .input-wrap {
+        position: relative;
+    }
+
+    .input-icon {
+        position: absolute;
+        left: 13px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 16px;
+        height: 16px;
+        stroke: var(--muted-light);
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        pointer-events: none;
+        transition: stroke 0.2s;
+    }
+
+    .input-wrap:focus-within .input-icon {
+        stroke: var(--blue);
+    }
+
+    .field input {
+        width: 100%;
+        padding: 10.5px 13px 10.5px 40px;
+        font-family: 'Segoe UI', sans-serif;
+        font-size: 0.938rem;
+        color: var(--slate);
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        outline: none;
+        transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+    }
+
+        .field input::placeholder {
+            color: #b0bec9;
+        }
+
+        .field input:focus {
+            background: var(--white);
+            border-color: var(--blue);
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
+        }
+
+    .pw-toggle {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 2px;
+        color: var(--muted-light);
+        display: flex;
+        align-items: center;
+        transition: color 0.2s;
+    }
+
+        .pw-toggle:hover {
+            color: var(--blue);
+        }
+
+        .pw-toggle svg {
+            width: 16px;
+            height: 16px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+    .error-msg {
+        display: block;
+        font-size: 0.75rem;
+        color: var(--danger);
+        margin-top: 5px;
+        padding-left: 2px;
+    }
+
+    .btn-submit {
+        width: 100%;
+        padding: 12px;
+        background: linear-gradient(135deg, var(--teal), var(--blue));
+        color: white;
+        font-family: 'Segoe UI', sans-serif;
+        font-size: 0.938rem;
+        font-weight: 600;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+        .btn-submit:hover {
+            opacity: 0.92;
+            box-shadow: 0 6px 16px rgba(59,130,246,0.3);
+        }
+
+        .btn-submit:active {
+            transform: scale(0.985);
+        }
+
+        .btn-submit svg {
+            width: 15px;
+            height: 15px;
+            stroke: white;
+            fill: none;
+            stroke-width: 2.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            flex-shrink: 0;
+        }
+
+    .divider {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin: 1.25rem 0;
+        font-size: 0.75rem;
+        color: #b0bec9;
+    }
+
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+    .btn-ghost {
+        width: 100%;
+        padding: 10.5px;
+        background: transparent;
+        color: var(--slate);
+        font-family: 'Segoe UI', sans-serif;
+        font-size: 0.875rem;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition: background 0.2s, border-color 0.2s;
+    }
+
+        .btn-ghost:hover {
+            background: var(--surface);
+            border-color: var(--blue);
+        }
+
+        .btn-ghost svg {
+            width: 15px;
+            height: 15px;
+            stroke: var(--muted);
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+    .card-footer {
+        padding: 1rem 2rem 1.5rem;
+        border-top: 1px solid var(--border);
+        text-align: center;
+    }
+
+        .card-footer p {
+            font-size: 0.813rem;
+            color: var(--muted);
+        }
+
+        .card-footer a {
+            color: var(--blue);
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+            .card-footer a:hover {
+                text-decoration: underline;
+            }
+
+    .page-footer {
+        position: fixed;
+        bottom: 1.25rem;
+        left: 0;
+        right: 0;
+        text-align: center;
+        font-size: 0.688rem;
+        color: var(--muted-light);
+        z-index: 1;
+    }
+</style>
+<main class="page">
+    <div class="card">
+        <div class="card-top-bar"></div>
+
+        <div class="card-header">
+            <div class="brand">
+                <div class="brand-icon">
+                    <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></svg>
+                </div>
+                <div>
+                    <div class="brand-name">Vecino</div>
+                    <div class="brand-tagline">Building Management</div>
+                </div>
             </div>
-            <div class="btns">
-                <button class="button" type="submit">Register</button>
-                <button type="reset" class="button">Clear</button>
-            </div>
-        </form>
+            <h1 class="header-title">Create account</h1>
+            <p class="header-sub">Register to access your resident portal.</p>
+        </div>
+
+        <div class="card-body">
+            <form asp-controller="Guest" asp-action="Register" method="post">
+
+                <div class="field">
+                    <label for="ResidentName">Full name</label>
+                    <div class="input-wrap">
+                        <svg class="input-icon" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
+                        <input type="text" id="ResidentName" placeholder="Full Name" asp-for="ResidentName" />
+                    </div>
+                    <span class="error-msg" asp-validation-for="ResidentName"></span>
+                </div>
+
+                <div class="field">
+                    <label for="ResidentEmail">Email</label>
+                    <div class="input-wrap">
+                        <svg class="input-icon" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg>
+                        <input type="email" id="ResidentEmail" placeholder="you@example.com" asp-for="ResidentEmail" />
+                    </div>
+                    <span class="error-msg" asp-validation-for="ResidentEmail"></span>
+                </div>
+
+                <div class="field">
+                    <label for="ResidentPhone">Phone</label>
+                    <div class="input-wrap">
+                        <svg class="input-icon" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8 19.79 19.79 0 01.22 1.17 2 2 0 012.22 0h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z" /></svg>
+                        <input type="text" id="ResidentPhone" placeholder="050-000-0000" asp-for="ResidentPhone" />
+                    </div>
+                    <span class="error-msg" asp-validation-for="ResidentPhone"></span>
+                </div>
+
+                <div class="field">
+                    <label for="ResidentPassword">Password</label>
+                    <div class="input-wrap">
+                        <svg class="input-icon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0110 0v4" /></svg>
+                        <input type="password" id="ResidentPassword" placeholder="••••••••" asp-for="ResidentPassword" />
+                        <button type="button" class="pw-toggle" id="pwToggle" aria-label="Toggle password visibility">
+                            <svg id="eyeIcon" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
+                        </button>
+                    </div>
+                    <span class="error-msg" asp-validation-for="ResidentPassword"></span>
+                </div>
+
+                <button type="submit" class="btn-submit">
+                    <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2" /><circle cx="9" cy="7" r="4" /><line x1="19" y1="8" x2="19" y2="14" /><line x1="22" y1="11" x2="16" y2="11" /></svg>
+                    Create account
+                </button>
+
+                <div class="divider">or</div>
+
+                <button type="reset" class="btn-ghost">
+                    <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10" /><path d="M3.51 15a9 9 0 102.13-9.36L1 10" /></svg>
+                    Clear form
+                </button>
+
+            </form>
+        </div>
+
+        <div class="card-footer">
+            <p>Already have an account? <a asp-controller="Resident" asp-action="LogIn">Sign in here.</a></p>
+        </div>
     </div>
 </main>
-

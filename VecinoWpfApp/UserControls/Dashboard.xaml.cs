@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using VecinoBuildingMangement.ViewModels;
+using VecinoWpfApp.AppWindows;
 
 namespace VecinoWpfApp.UserControls
 {
@@ -22,12 +23,14 @@ namespace VecinoWpfApp.UserControls
     /// </summary>
     public partial class Dashboard : UserControl
     {
+        AdminMainPage adminMainPage;
+        EditBuilding editBuilding;
         public Dashboard()
         {
             InitializeComponent();
             LoadBuilding();
         }
-        private async void LoadBuilding()
+        private async Task LoadBuilding()
         {
             ApiClient<AdminMainPage> apiClient = new ApiClient<AdminMainPage>();
             apiClient.Scheme = "http";
@@ -36,12 +39,38 @@ namespace VecinoWpfApp.UserControls
             apiClient.Path = "api/Admin/GetAdminMainPage";
             apiClient.AddParameter("buildingId", Session.BuildingId);
             apiClient.AddParameter("residentId", Session.ResidentId);
-            this.DataContext = await apiClient.GetAsync();
+            adminMainPage = await apiClient.GetAsync();
+            this.DataContext = adminMainPage;
            
         }
-        private void Button_Click(object sender, RoutedEventArgs e)
+       
+
+        private void CopyButton(object sender, RoutedEventArgs e)
+        {
+            Clipboard.SetText(adminMainPage.Building.JoinCode);
+        }
+        private async void RefreshButton(object sender, RoutedEventArgs e)
+        {
+            ApiClient<string> apiClient = new ApiClient<string>();
+            apiClient.Scheme = "http";
+            apiClient.Host = "localhost";
+            apiClient.Port = 5269;
+            apiClient.Path = "api/Admin/GenerateNewBuildingCode";
+            apiClient.AddParameter("buildingId", Session.BuildingId);
+            ApiResponse<bool> apiResponse = await apiClient.PostAsyncReturn<object, bool>(null);
+            if (apiResponse.Success && apiResponse.Data)
+                await LoadBuilding();
+        }
+        private async void OpenEditWindow(object sender, RoutedEventArgs e)
         {
 
+            if (this.editBuilding == null)
+                this.editBuilding = new EditBuilding(adminMainPage.Building);
+            this.editBuilding.Owner = Window.GetWindow(this);
+            bool? response = this.editBuilding.ShowDialog();
+            this.editBuilding = null;
+           
         }
+        
     }
 }

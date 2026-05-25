@@ -42,9 +42,12 @@ namespace VecinoWpfApp.AppWindows
             client.Port = 5269;
             client.Path = "api/Admin/GetEventTypes";
             createEventView = await client.GetAsync();
+    
             this.createEventView.Event = new Event();
+            createEventView.Event.IsValidationEnabled = true;
             TypeComboBox.ItemsSource = createEventView.eventTypes;
             this.DataContext = createEventView;
+
         }
 
         private void ButtonSelectImage_Click(object sender, RoutedEventArgs e)
@@ -69,20 +72,22 @@ namespace VecinoWpfApp.AppWindows
 
         private async void ButtonAddEvent_Click(object sender, RoutedEventArgs e)
         {
-            Event Newevent = new Event();
+           
             ApiResponse<bool> response = new ApiResponse<bool> { Data = false, Success = false };
 
-            Newevent.EventTitle = TitleInput.Text;
-            Newevent.EventDescription = DescriptionInput.Text;
-            Newevent.EventDate = EventDatePicker.SelectedDate?.ToString("dd/MM/yyyy");
-            //Newevent.EventImage = System.IO.Path.GetExtension(this.imagePath);
-            Newevent.EventTypeId = TypeComboBox.SelectedValue.ToString();
-            Newevent.StartTime = ((ComboBoxItem)StartTimeComboBox.SelectedItem).Content.ToString();
-            Newevent.EndTime = ((ComboBoxItem)EndTimeComboBox.SelectedItem).Content.ToString();
-            Newevent.BuildingId = Session.BuildingId;
 
-            Newevent.Validate();
-            if(!Newevent.HasErrors)
+            //Newevent.EventTitle = TitleInput.Text;
+            //Newevent.EventDescription = DescriptionInput.Text;
+            //Newevent.EventDate = EventDatePicker.SelectedDate?.ToString("dd/MM/yyyy");
+            //Newevent.EventImage = System.IO.Path.GetExtension(this.imagePath);
+            /*     Newevent.EventTypeId = TypeComboBox.SelectedValue.ToString();
+                 Newevent.StartTime = ((ComboBoxItem)StartTimeComboBox.SelectedItem).Content.ToString();
+                 Newevent.EndTime = ((ComboBoxItem)EndTimeComboBox.SelectedItem).Content.ToString();*/
+            createEventView.Event.BuildingId = Session.BuildingId;
+            createEventView.Event.EventImage = System.IO.Path.GetExtension(this.imagePath);
+
+            createEventView.Event.Validate();
+            if(!createEventView.Event.HasErrors)
             {
                 ApiClient<Event> client = new ApiClient<Event>();
                 client.Scheme = "http";
@@ -91,7 +96,7 @@ namespace VecinoWpfApp.AppWindows
                 client.Path = "api/Admin/AddUpComingEvent";
                 Stream stream = new FileStream(this.imagePath,FileMode.Open,FileAccess.Read);
                 
-               response = await client.PostAsyncReturn<Event,bool>(Newevent,stream,imagePath);
+               response = await client.PostAsyncReturn<Event,bool>(createEventView.Event, stream,imagePath);
             }
             if(response.Data && response.Success)
             {

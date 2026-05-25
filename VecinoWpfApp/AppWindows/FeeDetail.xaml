@@ -225,7 +225,7 @@
                             <TextBlock Text="{Binding (Validation.Errors)[0].ErrorContent, ElementName=DueDatePicker}"
                             FontFamily="Segoe UI" FontSize="11.5"
                             Foreground="#a32d2d"
-                            VerticalAlignment="Center"/>
+                            VerticalAlignment="Center" TextWrapping="Wrap" MaxWidth="150" />
                         </StackPanel>
                         <TextBlock Text="Due date" Style="{StaticResource DetailLabelStyle}"/>
                         </StackPanel>

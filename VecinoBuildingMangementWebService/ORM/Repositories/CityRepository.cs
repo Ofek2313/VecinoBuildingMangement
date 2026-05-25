@@ -1,64 +1,65 @@
 ﻿using System.Data;
 using VecinoBuildingMangement.Models;
+using VecinoBuildingMangementWebService.ORM.ModelCreators;
 
 namespace VecinoBuildingMangementWebService
 {
-    public class CityRepository : Repository, IRepository<City>
+    public class CityRepository : GenericRepository<City>, IRepository<City>
     {
-        public CityRepository(DbHelperOleDb dbHelperOleDb, ModelCreators modelCreators)
-            : base(dbHelperOleDb, modelCreators) { }
-        public bool Create(City model)
-        {
-            string sql = @$"Insert Into Cities(CityName)
-                            Values(@CityName)";
-            this.dbHelperOleDb.AddParameter("@CityName", model.CityName);
+        public CityRepository(DbHelperOleDb dbHelperOleDb, ModelCreator modelCreator)
+            : base(dbHelperOleDb, modelCreator) { }
+        //public bool Create(City model)
+        //{
+        //    string sql = @$"Insert Into Cities(CityName)
+        //                    Values(@CityName)";
+        //    this.dbHelperOleDb.AddParameter("@CityName", model.CityName);
 
-            return this.dbHelperOleDb.Insert(sql) > 0;
-        }
+        //    return this.dbHelperOleDb.Insert(sql) > 0;
+        //}
 
-        public bool Delete(string id)
-        {
-            string sql = @"Delete from Cities where CityId=@CityId";
-            this.dbHelperOleDb.AddParameter("@CityId", id);
-            return this.dbHelperOleDb.Delete(sql) > 0;
-        }
+        //public bool Delete(string id)
+        //{
+        //    string sql = @"Delete from Cities where CityId=@CityId";
+        //    this.dbHelperOleDb.AddParameter("@CityId", id);
+        //    return this.dbHelperOleDb.Delete(sql) > 0;
+        //}
 
-        public List<City> GetAll()
-        {
-            string sql = "Select * From Cities";
+        //public List<City> GetAll()
+        //{
+        //    string sql = "Select * From Cities";
 
-            List<City> cities = new List<City>();
-            using (IDataReader reader = this.dbHelperOleDb.Select(sql))
-            {
-                while (reader.Read())
-                {
+        //    List<City> cities = new List<City>();
+        //    using (IDataReader reader = this.dbHelperOleDb.Select(sql))
+        //    {
+        //        while (reader.Read())
+        //        {
 
-                    cities.Add(this.modelCreators.CityCreator.CreateModel(reader));
+        //            cities.Add(this.modelCreators.CityCreator.CreateModel(reader));
 
-                }
-            }
+        //        }
+        //    }
 
-            return cities;
-        }
+        //    return cities;
+        //}
 
-        public City GetById(string id)
-        {
-            string sql = "Select * From Cities Where CityId=@CityId";
-            dbHelperOleDb.AddParameter("@CityId", id);
+        //public City GetById(string id)
+        //{
+        //    string sql = "Select * From Cities Where CityId=@CityId";
+        //    dbHelperOleDb.AddParameter("@CityId", id);
 
-            using (IDataReader dataReader = this.dbHelperOleDb.Select(sql))
-            {
-                dataReader.Read();
-                return this.modelCreators.CityCreator.CreateModel(dataReader);
-            }
-        }
+        //    using (IDataReader dataReader = this.dbHelperOleDb.Select(sql))
+        //    {
+        //        dataReader.Read();
+        //        return this.modelCreators.CityCreator.CreateModel(dataReader);
+        //    }
+        //}
 
-        public bool Update(City model)
-        {
-            string sql = @"Update Cities set CityName = @CityName";
-            this.dbHelperOleDb.AddParameter("@CityName", model.CityName);
+        //public bool Update(City model)
+        //{
+        //    string sql = @"Update Cities set CityName = @CityName";
+        //    this.dbHelperOleDb.AddParameter("@CityName", model.CityName);
 
-            return this.dbHelperOleDb.Update(sql) > 0;
-        }
+        //    return this.dbHelperOleDb.Update(sql) > 0;
+        //}
     }
 }

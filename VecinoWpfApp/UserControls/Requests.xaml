@@ -197,7 +197,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
-
+        <conv:UrlConverter x:Key="urlConverter"></conv:UrlConverter>
     </UserControl.Resources>
 
     <!-- ===================================================
@@ -332,10 +332,10 @@
                        VerticalAlignment="Center"/>
 
             <StackPanel Grid.Column="2" Orientation="Horizontal">
-                <Button Content="All"         Style="{StaticResource FilterPillActive}"/>
-                <Button Content="Pending"     Style="{StaticResource FilterPill}"/>
-                <Button Content="In Progress" Style="{StaticResource FilterPill}"/>
-                <Button Content="Completed"   Style="{StaticResource FilterPill}"/>
+                <Button Content="All"         Style="{StaticResource FilterPillActive}" Tag="all" x:Name="AllButton" Click="FilterButton_Click"/>
+                <Button Content="Pending"     Style="{StaticResource FilterPill}" Tag="Pending" x:Name="PendingButton" Click="FilterButton_Click"/>
+                <Button Content="In Progress" Style="{StaticResource FilterPill}" Tag="In Progress" x:Name="InProgressButton" Click="FilterButton_Click"/>
+                <Button Content="Completed"   Style="{StaticResource FilterPill}" Tag="Completed" x:Name="CompletedButton" Click="FilterButton_Click"/>
             </StackPanel>
         </Grid>
 
@@ -425,17 +425,14 @@
                                 <!-- Avatar + Name + Unit -->
                                 <StackPanel Orientation="Horizontal" Margin="0,0,20,0" VerticalAlignment="Center">
                                     <Border Width="28" Height="28"
-                                            CornerRadius="14"
-                                            Background="#fff0e0"
-                                            BorderBrush="#ffd4a8"
-                                            BorderThickness="1.5"
+                                            
+                                           
                                             Margin="0,0,8,0">
-                                        <TextBlock Text="{Binding ResidentInitials}"
-                                                   FontSize="10" FontWeight="SemiBold"
-                                                   FontFamily="Segoe UI"
-                                                   Foreground="#bf5000"
-                                                   HorizontalAlignment="Center"
-                                                   VerticalAlignment="Center"/>
+                                        <Border.Clip>
+                                            <EllipseGeometry Center="14,14" RadiusX="14" RadiusY="14"/>
+                                        </Border.Clip>
+                                        <Image  Stretch="UniformToFill" Width="28" Height="28" Source="{Binding ResidentImage,Converter={StaticResource urlConverter}}"/>
+                                        
                                     </Border>
                                     <StackPanel VerticalAlignment="Center">
                                         <TextBlock Text="{Binding ResidentName}"

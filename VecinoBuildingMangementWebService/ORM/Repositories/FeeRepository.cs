@@ -286,7 +286,8 @@ namespace VecinoBuildingMangementWebService
                             COUNT(IIF(IsPaid = True, 1, NULL)) AS TotalPaid,
                             COUNT(IIF(IsPaid = False, 1, NULL)) AS TotalUnPaid,
                             SUM(IIF(IsPaid = True, FeeAmount, 0)) AS TotalCollected,
-                            SUM(IIF(IsPaid = False, FeeAmount, 0)) AS Outstanding
+                            SUM(IIF(IsPaid = False, FeeAmount, 0)) AS Outstanding,
+                            SUM(IIF(IsPaid = True AND Month(CDate(FeeDueDate)) = Month(Date()) AND Year(CDate(FeeDueDate)) = Year(Date()), FeeAmount, 0)) AS TotalCollectedCurrentMonth
                         FROM
                             Fee
                             INNER JOIN Resident ON Fee.ResidentId = Resident.ResidentId

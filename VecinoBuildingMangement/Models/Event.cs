@@ -64,8 +64,8 @@ namespace VecinoBuildingMangement.Models
             }
         }
 
-        
-       
+
+        [Required(ErrorMessage ="Please Choose An Event Type")]
         public string EventTypeId
         {
             get { return eventTypeId; }
@@ -83,14 +83,14 @@ namespace VecinoBuildingMangement.Models
                 }
         }
 
-        [Required(ErrorMessage = "Please pick a start time")]
+        [Required(ErrorMessage = "Please Choose a Start Time")]
         public string StartTime
         {
             get { return startTime; }
             set { this.startTime = value; }
         }
 
-        [Required(ErrorMessage = "Please pick an end time")]
+        [Required(ErrorMessage = "Please Choose an End Time")]
         public string EndTime
         {
             get{ return endTime; }

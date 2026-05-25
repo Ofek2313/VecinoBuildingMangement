@@ -66,52 +66,78 @@
                 </LinearGradientBrush>
             </Border.Background>
             <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="1"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="1"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
 
-                <!-- Entrance code -->
-                <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="32,0">
-                    <TextBlock Text="ENTRANCE CODE" FontFamily="Segoe UI" FontSize="10"
-                               FontWeight="SemiBold" Foreground="White" Opacity="0.6"/>
-                    <TextBlock Text="{Binding Building.EntranceCode}" FontFamily="Segoe UI Mono"
-                               FontSize="28" FontWeight="SemiBold" Foreground="White" Margin="0,5,0,0"/>
-                    <TextBlock Text="{Binding Building.EntranceName}" FontFamily="Segoe UI"
-                               FontSize="11" Foreground="White" Opacity="0.55" Margin="0,2,0,0"/>
-                </StackPanel>
+                <!-- Columns grid -->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="1"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="1"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="1"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
 
-                <Rectangle Grid.Column="1" Fill="White" Opacity="0.18" Margin="0,16"/>
-
-                <!-- Join code -->
-                <StackPanel Grid.Column="2" VerticalAlignment="Center" Margin="32,0">
-                    <TextBlock Text="JOIN CODE" FontFamily="Segoe UI" FontSize="10"
-                               FontWeight="SemiBold" Foreground="White" Opacity="0.6"/>
-                    <TextBlock Text="{Binding Building.JoinCode}" FontFamily="Segoe UI Mono"
-                               FontSize="28" FontWeight="SemiBold" Foreground="White" Margin="0,5,0,0"/>
-                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                        <Button x:Name="BtnCopyJoinCode" Content="Copy"
-                                Style="{StaticResource GhostButton}" Padding="10,4" Margin="0,0,6,0"/>
-                        <Button x:Name="BtnRefreshJoinCode" Content="Refresh"
-                                Style="{StaticResource GhostButton}" Padding="10,4"/>
+                    <!-- Address + City -->
+                    <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="22,0">
+                        <TextBlock Text="ADDRESS" FontFamily="Segoe UI" FontSize="10"
+                           FontWeight="SemiBold" Foreground="White" Opacity="0.6"/>
+                        <TextBlock Text="{Binding Building.Address}" FontFamily="Segoe UI"
+                           FontSize="16" FontWeight="SemiBold" Foreground="White"
+                           Margin="0,5,0,0" TextTrimming="CharacterEllipsis"/>
+                        <TextBlock Text="{Binding CityName}" FontFamily="Segoe UI"
+                           FontSize="11" Foreground="White" Opacity="0.55" Margin="0,2,0,0"/>
                     </StackPanel>
-                </StackPanel>
 
-                <Rectangle Grid.Column="3" Fill="White" Opacity="0.18" Margin="0,16"/>
+                    <Rectangle Grid.Column="1" Fill="White" Opacity="0.18" Margin="0,16"/>
 
-                <!-- Next event -->
-                <StackPanel Grid.Column="4" VerticalAlignment="Center" Margin="32,0">
-                    <TextBlock Text="NEXT EVENT" FontFamily="Segoe UI" FontSize="10"
-                               FontWeight="SemiBold" Foreground="White" Opacity="0.6"/>
-                    <TextBlock Text="{Binding NextEvent.EventTitle}" FontFamily="Segoe UI"
-                               FontSize="16" FontWeight="SemiBold" Foreground="White" Margin="0,5,0,0"
-                               TextTrimming="CharacterEllipsis"/>
-                    <TextBlock Text="{Binding NextEvent.EventDate}" FontFamily="Segoe UI"
-                               FontSize="11" Foreground="White" Opacity="0.55" Margin="0,2,0,0"/>
-                </StackPanel>
+                    <!-- Entrance code (smaller) -->
+                    <StackPanel Grid.Column="2" VerticalAlignment="Center" Margin="22,0">
+                        <TextBlock Text="ENTRANCE CODE" FontFamily="Segoe UI" FontSize="10"
+                           FontWeight="SemiBold" Foreground="White" Opacity="0.6"/>
+                        <TextBlock Text="{Binding Building.EntranceCode}" FontFamily="Segoe UI Mono"
+                           FontSize="20" FontWeight="SemiBold" Foreground="White" Margin="0,5,0,0"/>
+                        <TextBlock Text="{Binding Building.EntranceName}" FontFamily="Segoe UI"
+                           FontSize="11" Foreground="White" Opacity="0.55" Margin="0,2,0,0"/>
+                    </StackPanel>
+
+                    <Rectangle Grid.Column="3" Fill="White" Opacity="0.18" Margin="0,16"/>
+
+                    <!-- Join code -->
+                    <StackPanel Grid.Column="4" VerticalAlignment="Center" Margin="22,0">
+                        <TextBlock Text="JOIN CODE" FontFamily="Segoe UI" FontSize="10"
+                           FontWeight="SemiBold" Foreground="White" Opacity="0.6"/>
+                        <TextBlock Text="{Binding Building.JoinCode}" FontFamily="Segoe UI Mono"
+                           FontSize="20" FontWeight="SemiBold" Foreground="White" Margin="0,5,0,0"/>
+                        <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                            <Button x:Name="BtnCopyJoinCode" Content="Copy" Click="CopyButton"
+                            Style="{StaticResource GhostButton}" Padding="10,4" Margin="0,0,6,0"/>
+                            <Button x:Name="BtnRefreshJoinCode" Content="Refresh" Click="RefreshButton"
+                            Style="{StaticResource GhostButton}" Padding="10,4"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <Rectangle Grid.Column="5" Fill="White" Opacity="0.18" Margin="0,16"/>
+
+                    <!-- Next event -->
+                    <StackPanel Grid.Column="6" VerticalAlignment="Center" Margin="22,0">
+                        <TextBlock Text="NEXT EVENT" FontFamily="Segoe UI" FontSize="10"
+                           FontWeight="SemiBold" Foreground="White" Opacity="0.6"/>
+                        <TextBlock Text="{Binding NextEvent.EventTitle}" FontFamily="Segoe UI"
+                           FontSize="15" FontWeight="SemiBold" Foreground="White"
+                           Margin="0,5,0,0" TextTrimming="CharacterEllipsis"/>
+                        <TextBlock Text="{Binding NextEvent.EventDate}" FontFamily="Segoe UI"
+                           FontSize="11" Foreground="White" Opacity="0.55" Margin="0,2,0,0"/>
+                    </StackPanel>
+                </Grid>
+
+                <!-- Edit button: floats top-right over the whole strip -->
+                <Button Content="✎  Edit building"  Click="OpenEditWindow"
+                HorizontalAlignment="Right" VerticalAlignment="Top"
+                Margin="0,10,14,0"
+                Style="{StaticResource GhostButton}" Padding="12,5"/>
+
             </Grid>
         </Border>
 

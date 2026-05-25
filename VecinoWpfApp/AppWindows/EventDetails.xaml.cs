@@ -15,6 +15,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using VecinoBuildingMangement.DTO;
 using VecinoBuildingMangement.Models;
 using VecinoBuildingMangement.ViewModels;
 using VecinoWpfApp.UserControls;
@@ -135,7 +136,7 @@ namespace VecinoWpfApp.AppWindows
         private async void LoadAttending(string eventId)
         {
            
-            ApiClient<List<string>> client = new ApiClient<List<string>>();
+            ApiClient<List<ResidentSummaryDTO>> client = new ApiClient<List<ResidentSummaryDTO>>();
             client.Scheme = "http";
             client.Host = "localhost";
             client.Port = 5269;

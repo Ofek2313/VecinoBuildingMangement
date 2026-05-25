@@ -15,5 +15,7 @@ namespace VecinoBuildingMangement.DTO
         public double TotalCollected { get; set; }
 
         public double Outstanding { get; set; }
+
+        public double TotalCollectedCurrentMonth { get; set; }
     }
 }

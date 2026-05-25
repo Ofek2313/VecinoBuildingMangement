@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.DataProtection;
+using Microsoft.Extensions.Logging.Abstractions;
 using System.Text.Json;
 using Testing;
 using VecinoBuildingMangement.DTO;
@@ -30,14 +31,19 @@ namespace VecinoBuildingMangementWebService.Helpers
                 GeoApifyReponse apifyReponse = JsonSerializer.Deserialize<GeoApifyReponse>(body);
                 if(apifyReponse != null)
                 {
-                    if (apifyReponse.features.Count > 0)
+                    if (apifyReponse.features != null && apifyReponse.features.Count > 0  )
                     {
-                        return new CordsDto
+                        
+                        if (apifyReponse.features[0].geometry?.coordinates != null && apifyReponse.features[0].geometry.coordinates.Count >= 2)
                         {
-                            Longitude = apifyReponse.features[0].geometry.coordinates[0],
-                            Latitude = apifyReponse.features[0].geometry.coordinates[1]
-                        };
+                            return new CordsDto
+                            {
+                                Longitude = apifyReponse.features[0].geometry.coordinates[0],
+                                Latitude = apifyReponse.features[0].geometry.coordinates[1]
+                            };
+                        }
                     }
+                       
                 }
                 
                 

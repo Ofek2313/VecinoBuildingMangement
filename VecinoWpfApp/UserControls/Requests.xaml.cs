@@ -1,4 +1,6 @@
-﻿using System;
+﻿using BuildingManagementWsClient;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,7 +16,6 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using VecinoBuildingMangement.Models;
 using VecinoBuildingMangement.ViewModels;
-using BuildingManagementWsClient;
 using VecinoWpfApp.AppWindows;
 
 namespace VecinoWpfApp.UserControls
@@ -102,6 +103,29 @@ namespace VecinoWpfApp.UserControls
             if (response == true)
                 await GetRequestList();
             
+        }
+
+        private void FilterButton_Click(object sender, RoutedEventArgs e)
+        {
+
+            string filter = (sender as Button).Tag.ToString();
+            if (filter != "all")
+            {
+                List<ServiceRequestDetail> filteredList = serviceRequestViewModel.serviceRequests.Where(s => s.ServiceRequest.RequestStatus.Equals(filter)).ToList();
+                listViewRequests.ItemsSource = filteredList;
+            }
+            else
+                listViewRequests.ItemsSource = serviceRequestViewModel.serviceRequests;
+
+            Style Active = this.FindResource("FilterPillActive") as Style;
+            Style NotActive = this.FindResource("FilterPill") as Style;
+            PendingButton.Style = NotActive;
+            AllButton.Style = NotActive;
+            InProgressButton.Style = NotActive;
+            CompletedButton.Style = NotActive;
+            (sender as Button).Style = Active;
+
+
         }
     }
 }
