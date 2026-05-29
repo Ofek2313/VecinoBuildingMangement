@@ -41,6 +41,7 @@ namespace BuildingManagementWsClient
                 this.uriBuilder.Path = value;
             }
         }
+
         public void AddParameter(string key,string value)
         {
             if (this.uriBuilder.Query == string.Empty)
@@ -49,6 +50,7 @@ namespace BuildingManagementWsClient
                 this.uriBuilder.Query += "&";
             this.uriBuilder.Query += $"{key}={value}";
         }
+
         public async Task<T> GetAsync() // getting data from webservices 
         {
             using (HttpRequestMessage httpRequest = new HttpRequestMessage())
@@ -74,6 +76,7 @@ namespace BuildingManagementWsClient
                 }
             }
         }
+
         public async Task<(byte[] bytes,string contentType)> GetFileAsync() // getting data from webservices 
         {
             using (HttpRequestMessage httpRequest = new HttpRequestMessage())

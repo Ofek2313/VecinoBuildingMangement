@@ -35,8 +35,9 @@ namespace VecinoWpfApp.AppWindows
 
         private async void EditFeeButton_Click(object sender, RoutedEventArgs e)
         {
-            
+          
             var viewModel = (ResidentFeeViewModel)this.DataContext;
+            viewModel.Fee.IsValidationEnabled = true;
             if (!_IsEditing)
             {
                 _IsEditing = true;
@@ -85,6 +86,35 @@ namespace VecinoWpfApp.AppWindows
               
             }
             
+        }
+
+        private async void DeleteFeeButton_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult result = MessageBox.Show(
+        "Are you sure you want to permanently delete this fee?", 
+        "Confirm Delete",                                       
+        MessageBoxButton.YesNo, MessageBoxImage.Warning );
+
+            if (result != MessageBoxResult.Yes) return;
+
+            ResidentFeeViewModel viewModel = this.DataContext as ResidentFeeViewModel;
+            viewModel.Fee.IsValidationEnabled = false;
+            if(viewModel != null)
+            {
+                ApiClient<Fee> client = new ApiClient<Fee>();
+                client.Host = "localhost";
+                client.Port = 5269;
+                client.Path = "api/Admin/RemoveFee";
+                ApiResponse<bool> apiResponse = await client.PostAsyncReturn<Fee, bool>(viewModel.Fee);
+                if (apiResponse.Success && apiResponse.Data)
+                {
+                    this.DialogResult = true;
+                    this.Close();
+                }
+                else
+                    this.DialogResult = false;
+
+            }
         }
     }
 }

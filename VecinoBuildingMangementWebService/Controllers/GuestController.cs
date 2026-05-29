@@ -19,37 +19,21 @@ namespace VecinoBuildingMangementWebService.Controllers
         }
 
         [HttpGet]
-        public BuildingCatalouge GetBuildingCatalogue(string cityId=null,int page=0) // Reminder To Fix - Also Fix Website
+        public BuildingCatalouge GetBuildingCatalogue(int page=1) // Reminder To Fix - Also Fix Website
         {
             
             BuildingCatalouge buildingCatalouge = new BuildingCatalouge();
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
-                if (cityId == null && page == 0)
-                {
-                    buildingCatalouge.Buildings = this.repositoryUOW.BuildingRepository.GetAll();
-
-                }
-                else if (cityId != null && page == 0)
-                {
-                    buildingCatalouge.Buildings = this.repositoryUOW.BuildingRepository.GetByCityId(cityId);
-                }
-                else if(cityId == null && page != 0)
-                {
-                    buildingCatalouge.Buildings = this.repositoryUOW.BuildingRepository.GetBuildingByPage(page);
-                }
-                else if(cityId != null && page != 0)
-                {
-                    int buildingPerPage = 5;
-                    buildingCatalouge.Buildings = this.repositoryUOW.BuildingRepository.GetByCityId(cityId);
-                    buildingCatalouge.Buildings.Skip(buildingPerPage * (page - 1)).Take(buildingPerPage).ToList();
-
-                }
-                int buildingCount = this.repositoryUOW.BuildingRepository.GetBuildingCount();
-                buildingCatalouge.PageCount = buildingCount / 5;
-                if (buildingCount % 5 > 0)
-                    buildingCatalouge.PageCount++;
+                buildingCatalouge.NumberOfBuildings = this.repositoryUOW.BuildingRepository.GetBuildingStats();
+                buildingCatalouge.Buildings = this.repositoryUOW.BuildingRepository.GetBuildingsPerPage(page, 10);
+               
+               
+                buildingCatalouge.PageCount = buildingCatalouge.NumberOfBuildings / 10;
+                if (buildingCatalouge.NumberOfBuildings % 14 > 0)
+                    buildingCatalouge.PageCount+=1;
+                buildingCatalouge.Page = page;
                 return buildingCatalouge;
             }
             catch (Exception ex)
@@ -116,6 +100,24 @@ namespace VecinoBuildingMangementWebService.Controllers
             {
                 Console.WriteLine(ex.ToString());
                 return StatusCode(500, "Image Failed To Load");
+            }
+            finally
+            {
+                this.repositoryUOW.DbHelperOleDb.CloseConnection();
+            }
+        }
+        [HttpGet]
+        public List<Building> GetBuildingsMap()
+        {
+            try
+            {
+                this.repositoryUOW.DbHelperOleDb.OpenConnection();
+                return this.repositoryUOW.BuildingRepository.GetAll();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return null;
             }
             finally
             {

@@ -17,6 +17,7 @@ namespace VecinoBuildingMangementWebService
         ServiceRequestRepository serviceRequestRepository;
         VoteRepository voteRepository;
         OptionRepository optionRepository;
+        BookingRepository bookingRepository;
 
         DbHelperOleDb dbHelperOleDb;
         ModelCreators modelCreators;
@@ -151,7 +152,15 @@ namespace VecinoBuildingMangementWebService
                 return optionRepository;
             }
         }
-
+        public BookingRepository BookingRepository
+        {
+            get
+            {
+                if (bookingRepository == null)
+                    bookingRepository = new BookingRepository(this.dbHelperOleDb, this.modelCreator);
+                return bookingRepository;
+            }
+        }
 
     }
 }

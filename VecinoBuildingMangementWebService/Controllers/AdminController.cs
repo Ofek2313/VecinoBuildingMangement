@@ -1052,6 +1052,27 @@ namespace VecinoBuildingMangementWebService.Controllers
                 this.repositoryUOW.DbHelperOleDb.CloseConnection();
             }
         }
+
+        [HttpPost]
+        public bool RemoveFee([FromBody] Fee Fee)
+        {
+            try
+            {
+                this.repositoryUOW.DbHelperOleDb.OpenConnection();
+                return this.repositoryUOW.FeeRepository.Delete(Fee.FeeId);
+
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return false;
+            }
+            finally
+            {
+                this.repositoryUOW.DbHelperOleDb.CloseConnection();
+            }
+        }
+      
     }
 }
 

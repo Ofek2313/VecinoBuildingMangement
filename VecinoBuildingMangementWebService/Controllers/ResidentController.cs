@@ -1,11 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Globalization;
-using System.IO;
-using System.Reflection.Metadata.Ecma335;
-using System.Text;
 using System.Text.Json;
 using VecinoBuildingMangement.DTO;
 using VecinoBuildingMangement.Models;
@@ -49,22 +43,22 @@ namespace VecinoBuildingMangementWebService.Controllers
             return false;
         }
         [HttpGet]
-        public ManagePaymentViewModel GetManagePayment(string residentId,int page = 1)
+        public ManagePaymentViewModel GetManagePayment(string residentId, int page = 1)
         {
             ManagePaymentViewModel viewModel = new ManagePaymentViewModel();
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
-                viewModel.Fees = repositoryUOW.FeeRepository.GetFeesByResidentIdPage(residentId,5,page);
+                viewModel.Fees = repositoryUOW.FeeRepository.GetFeesByResidentIdPage(residentId, 5, page);
                 viewModel.ResidentFeeStats = this.repositoryUOW.FeeRepository.GetResidentFeeStats(residentId);
                 viewModel.nextFee = this.repositoryUOW.FeeRepository.GetNextFee(residentId);
-              
+
                 int totalFees = viewModel.ResidentFeeStats.PaidFees + viewModel.ResidentFeeStats.UnPaidFees;
                 viewModel.NumberOfPages = (int)Math.Ceiling(totalFees / 5.0);
                 viewModel.CurrentPage = page;
 
-               
-               
+
+
                 return viewModel;
             }
             catch (Exception ex)
@@ -199,10 +193,10 @@ namespace VecinoBuildingMangementWebService.Controllers
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
                 viewEventViewModel.EventTypes = this.repositoryUOW.EventTypeRepository.GetAll();
                 Building building = this.repositoryUOW.BuildingRepository.GetBuildingByResidentId(residentId);
-                List<EventViewModelResident> eventsview = this.repositoryUOW.EventRepository.GetEventViewModelsByBuildingIdResident(building.BuildingId,residentId);
-                viewEventViewModel.CurrEvents = eventsview.Where(e => DateTime.ParseExact(e.Event.EventDate,"dd/MM/yyyy",CultureInfo.InvariantCulture) >= DateTime.Today).ToList();
+                List<EventViewModelResident> eventsview = this.repositoryUOW.EventRepository.GetEventViewModelsByBuildingIdResident(building.BuildingId, residentId);
+                viewEventViewModel.CurrEvents = eventsview.Where(e => DateTime.ParseExact(e.Event.EventDate, "dd/MM/yyyy", CultureInfo.InvariantCulture) >= DateTime.Today).ToList();
                 viewEventViewModel.PreEvents = eventsview.Where(e => DateTime.ParseExact(e.Event.EventDate, "dd/MM/yyyy", CultureInfo.InvariantCulture) < DateTime.Today).ToList();
-               
+
 
                 return viewEventViewModel;
             }
@@ -245,7 +239,7 @@ namespace VecinoBuildingMangementWebService.Controllers
                 return this.repositoryUOW.EventRepository.UnAttendEvent(attendEvent.eventId, attendEvent.residentId);
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
                 return false;
@@ -263,9 +257,9 @@ namespace VecinoBuildingMangementWebService.Controllers
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
 
-                string buildingId = this.repositoryUOW.BuildingRepository.GetBuildingIdByCode(joinBuildingRequest.buildingCode);
+                string buildingId = this.repositoryUOW.BuildingRepository.GetBuildingIdByCode(joinBuildingRequest.BuildingCode);
                 if (buildingId != null)
-                    return this.repositoryUOW.ResidentRepository.UpdateResidentBuilding(joinBuildingRequest.residentId, buildingId);
+                    return this.repositoryUOW.ResidentRepository.JoinBuildingUpdate(joinBuildingRequest.ResidentId, buildingId, joinBuildingRequest.UnitNumber);
                 else
                     return false;
             }
@@ -361,7 +355,7 @@ namespace VecinoBuildingMangementWebService.Controllers
         [HttpGet]
         public List<PollViewModel> PollViewModel(string residentId)
         {
-           
+
 
             try
             {
@@ -370,9 +364,9 @@ namespace VecinoBuildingMangementWebService.Controllers
                 string buildingId = building.BuildingId;
 
                 return this.repositoryUOW.PollRepository.GetPollViewModels(buildingId, residentId);
-                
 
-               
+
+
 
             }
             catch (Exception ex)
@@ -390,10 +384,10 @@ namespace VecinoBuildingMangementWebService.Controllers
 
 
         [HttpPost]
-       
+
         public List<OptionViewModel> VoteInPoll(Vote vote)
         {
-            List <OptionViewModel> test = new List<OptionViewModel> ();
+            List<OptionViewModel> test = new List<OptionViewModel>();
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
@@ -402,8 +396,8 @@ namespace VecinoBuildingMangementWebService.Controllers
 
                 bool created = this.repositoryUOW.VoteRepository.Create(vote);
                 if (created)
-                    test =  this.repositoryUOW.PollRepository.GetPollResultById(vote.PollId);
-              
+                    test = this.repositoryUOW.PollRepository.GetPollResultById(vote.PollId);
+
                 return test;
             }
             catch (Exception ex)
@@ -436,7 +430,7 @@ namespace VecinoBuildingMangementWebService.Controllers
             }
         }
 
-       
+
         [HttpGet]
         public BuildingModel GetBuildingId(string residentId)
         {
@@ -530,7 +524,7 @@ namespace VecinoBuildingMangementWebService.Controllers
 
                 FileStream stream = System.IO.File.OpenRead(path);
 
-                return File(stream, $"image/{extension}"); 
+                return File(stream, $"image/{extension}");
             }
             catch (Exception ex)
             {
@@ -562,7 +556,7 @@ namespace VecinoBuildingMangementWebService.Controllers
             }
         }
         [HttpPost]
-        public bool UpdateResident([FromBody]Resident resident)
+        public bool UpdateResident([FromBody] Resident resident)
         {
             try
             {
@@ -579,7 +573,49 @@ namespace VecinoBuildingMangementWebService.Controllers
                 this.repositoryUOW.DbHelperOleDb.CloseConnection();
             }
         }
-    }
-       
 
+        [HttpPost]
+        public bool CreateBooking([FromBody] Booking booking)
+        {
+            try
+            {
+                this.repositoryUOW.DbHelperOleDb.OpenConnection();
+                return this.repositoryUOW.BookingRepository.Create(booking);
+            }
+            catch (Exception ex)
+            {
+
+                Console.WriteLine(ex.ToString());
+                return false;
+            }
+            finally
+            {
+                this.repositoryUOW.DbHelperOleDb.CloseConnection();
+            }
+
+        }
+        [HttpGet]
+        public BookingViewModel GetAllBookings(string residentId,string date)
+        {
+            BookingViewModel bookingViewModel = new BookingViewModel();
+            try
+            {
+                this.repositoryUOW.DbHelperOleDb.OpenConnection();
+                Building building = this.repositoryUOW.BuildingRepository.GetBuildingByResidentId(residentId);
+                bookingViewModel.Bookings =  this.repositoryUOW.BookingRepository.GetBookingsByBuildingId(building.BuildingId,date);
+                bookingViewModel.SelectedDate = date;
+                return bookingViewModel;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return bookingViewModel;
+            }
+            finally
+            {
+                this.repositoryUOW.DbHelperOleDb.CloseConnection();
+            }
+        }
+
+    }
 }

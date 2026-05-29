@@ -384,6 +384,70 @@ namespace VecinoBuildingMangementWebService
 
             return this.dbHelperOleDb.Update(sql) > 0;
         }
+        public int GetBuildingStats()
+        {
+            string sql = @"Select Count(*) From Building";
+            return Convert.ToInt32(this.dbHelperOleDb.ExecuteScalar(sql));
+        }
+        public List<BuildingViewModel> GetBuildingsPerPage( int pageNumber, int FeesPerPage)
+        {
+            string sql;
+            if (pageNumber > 1)
+            {
+                sql = $@"SELECT
+                            TOP {FeesPerPage}
+                            Building.*,
+                            City.CityName
+                        FROM
+                            Building
+                        INNER JOIN
+                            City
+                        ON
+                            Building.CityId = City.CityId
+                        WHERE
+                            Building.BuildingId NOT IN (
+                                SELECT TOP {(pageNumber - 1) * FeesPerPage}
+                                    BuildingId
+                                FROM
+                                    Building
+                                ORDER BY
+                                    BuildingId
+                            )
+                        ORDER BY
+                            Building.BuildingId;";
+                
+            }
+            else
+            {
+                sql = $@"SELECT TOP {FeesPerPage}
+                        Building.*,
+                        City.CityName
+                    FROM
+                        Building
+                    INNER JOIN
+                        City ON Building.CityId = City.CityId
+                    ORDER BY
+                        Building.BuildingId;";
+                
+            }
+
+            List<BuildingViewModel> buildings = new List<BuildingViewModel>();
+            using (IDataReader reader = this.dbHelperOleDb.Select(sql))
+            {
+                while (reader.Read())
+                {
+
+                    buildings.Add(new BuildingViewModel 
+                    { 
+                        Building = this.modelCreator.CreateModel<Building>(reader), 
+                        CityName = Convert.ToString(reader["CityName"]) 
+                    });
+
+                }
+            }
+
+            return buildings;
+        }
     }
 
     

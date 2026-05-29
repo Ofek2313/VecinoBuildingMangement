@@ -25,41 +25,47 @@ namespace VecinoWpfApp.AppPages
     {
         private readonly string _imagepath;
         private readonly CreateBuildingRegister _createBuildingRegister;
-
+        Resident resident = new Resident();
         public Register(string imagepath,CreateBuildingRegister createBuildingRegister)
         {
             InitializeComponent();
             _imagepath = imagepath;
             _createBuildingRegister = createBuildingRegister;
+            this.DataContext = resident;
         }
 
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            Resident resident = new Resident();
-            resident.ResidentName = NameTextBox.Text;
-            resident.ResidentPassword = PasswordTextBox.Password;
-            resident.ResidentPhone = PhoneTextBox.Text;
-            resident.ResidentEmail = EmailTextBox.Text;
-            resident.UnitNumber = 0;
+            
+           
             resident.IsAdmin = true;
-
-            _createBuildingRegister.Resident = resident;
-            ApiClient<CreateBuildingRegister> client = new ApiClient<CreateBuildingRegister>();
-            client.Scheme = "http";
-            client.Host = "localhost";
-            client.Port = 5269;
-            client.Path = "api/Admin/CreateBuildingAndRegister";
-
-            Stream stream = new FileStream(_imagepath, FileMode.Open, FileAccess.Read);
-            ApiResponse<BuildingResponse> apiResponse = await client.PostAsyncReturn<CreateBuildingRegister, BuildingResponse>(_createBuildingRegister, stream, _imagepath);
-
-            if (apiResponse.Data != null && apiResponse.Success)
+            resident.Validate();
+            if(!resident.HasErrors)
             {
-                Session.BuildingId = apiResponse.Data.BuildingId;
+                _createBuildingRegister.Resident = resident;
+                ApiClient<CreateBuildingRegister> client = new ApiClient<CreateBuildingRegister>();
+                client.Scheme = "http";
+                client.Host = "localhost";
+                client.Port = 5269;
+                client.Path = "api/Admin/CreateBuildingAndRegister";
 
-                Session.ResidentId = apiResponse.Data.ResidentId;
-                NavigationService.Navigate(new MainWindow());
+                Stream stream = new FileStream(_imagepath, FileMode.Open, FileAccess.Read);
+                ApiResponse<BuildingResponse> apiResponse = await client.PostAsyncReturn<CreateBuildingRegister, BuildingResponse>(_createBuildingRegister, stream, _imagepath);
+
+                if (apiResponse.Data != null && apiResponse.Success)
+                {
+                    Session.BuildingId = apiResponse.Data.BuildingId;
+
+                    Session.ResidentId = apiResponse.Data.ResidentId;
+                    NavigationService.Navigate(new MainWindow());
+                }
             }
+            else
+            {
+                MessageBox.Show(" The Register details are invalid. Please check your input. ", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            
 
         }
 

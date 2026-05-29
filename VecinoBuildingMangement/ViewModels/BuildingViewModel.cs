@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VecinoBuildingMangement.Models;
 
 namespace VecinoBuildingMangement.ViewModels
 {
-    public class JoinBuildingRequest
+    public class BuildingViewModel
     {
-        public string BuildingCode {  get; set; }
-        public string ResidentId { get; set; }  
+        public Building Building { get; set; }
 
-        public int UnitNumber { get; set; }
+        public string CityName { get; set; }
     }
 }

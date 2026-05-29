@@ -47,7 +47,7 @@ namespace VecinoBuildingMangement.Models
 
         [Required(ErrorMessage = "Fee Due Date can not be empty")]
         //[Date(ErrorMessage = "Date needs to be a valid date")]
-        [FutureDate(ErrorMessage = "Please enter a date that is today or in the future")]
+        //[FutureDate(ErrorMessage = "Please enter a date that is today or in the future")]
         public string FeeDueDate
         {
             get { return this.feeDueDate; }

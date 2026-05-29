@@ -217,6 +217,14 @@ namespace VecinoBuildingMangementWebService
             this.dbHelperOleDb.AddParameter("@ResidentId", residentId);
             return this.dbHelperOleDb.Update(sql) > 0;
         }
+        public bool JoinBuildingUpdate(string residentId,string buildingId, int unitNumber)
+        {
+            string sql = @"Update Resident Set UnitNumber = @UnitNumber, BuildingId = @BuildingId where ResidentId = @ResidentId";
+            this.dbHelperOleDb.AddParameter("@UnitNumber", unitNumber);
+            this.dbHelperOleDb.AddParameter("@BuildingId", buildingId);
+            this.dbHelperOleDb.AddParameter("@ResidentId", residentId);
+            return this.dbHelperOleDb.Update(sql) > 0;
+        }
 
     }
 }

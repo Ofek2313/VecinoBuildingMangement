@@ -546,3 +546,38 @@ body {
         grid-template-columns: 1fr;
     }
 }
+.pagination {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+    margin-top: auto;
+    padding-top: 1rem;
+    flex-wrap: wrap;
+}
+
+.page-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background: #fff;
+    color: #333;
+    font-size: 14px;
+    text-decoration: none;
+    transition: all 0.15s ease;
+}
+
+    .page-btn:hover {
+        background: #f0f0f0;
+        border-color: #bbb;
+    }
+
+    .page-btn.active {
+        background: #4f46e5;
+        color: #fff;
+        border-color: #4f46e5;
+        font-weight: 500;
+    }

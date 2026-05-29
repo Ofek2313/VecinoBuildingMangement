@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace VecinoBuildingMangement.ViewModels
 {
-    public class JoinBuildingRequest
+    public class JoinBuildingViewModel
     {
         public string BuildingCode {  get; set; }
-        public string ResidentId { get; set; }  
 
         public int UnitNumber { get; set; }
     }

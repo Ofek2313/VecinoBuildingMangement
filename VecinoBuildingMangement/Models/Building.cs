@@ -21,7 +21,7 @@ namespace VecinoBuildingMangement.Models
         double longitude;
         double latitude;
 
-        public string BuildingId
+        public string? BuildingId
         {
             get { return buildingId; }
             set { buildingId = value; }
@@ -71,12 +71,12 @@ namespace VecinoBuildingMangement.Models
 
         }
 
-        [Required(ErrorMessage = "Join Code Can Not Be Empty")]
-        public string JoinCode
+      
+        public string? JoinCode
         {
             get { return joinCode; }
             set { joinCode = value;
-                ValidateProperty(value, "JoinCode");
+                //ValidateProperty(value, "JoinCode");
             }
         }
 

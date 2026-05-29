@@ -52,6 +52,11 @@ namespace VecinoWpfApp.AppWindows
 
            
         }
+        private void RemoveOption(object sender,RoutedEventArgs e)
+        {
+            if (sender is Button btn && btn.DataContext is Option option)
+                options.Remove(option);
+        }
 
         private async void CreatePoll_Click(object sender, RoutedEventArgs e)
         {

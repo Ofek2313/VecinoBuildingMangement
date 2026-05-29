@@ -21,7 +21,7 @@ namespace VecinoBuildingMangementWebService
         {
             this.oleDbConnection = new OleDbConnection();
 
-            oleDbConnection.ConnectionString =
+            
             this.oleDbConnection.ConnectionString = $@"Provider=Microsoft.ACE.OLEDB.12.0;Data Source={Directory.GetCurrentDirectory()}\App_Data\\BuildingMangement.accdb;Persist Security Info=True";
 
 

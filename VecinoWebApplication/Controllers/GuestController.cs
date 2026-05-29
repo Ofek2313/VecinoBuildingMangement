@@ -16,15 +16,14 @@ namespace VecinoWebApplication.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ViewBuildingCatalogue(string cityId = null,int page = 0)
+        public async Task<IActionResult> ViewBuildingCatalogue(int page = 1)
         {
             ApiClient<BuildingCatalouge> client = new ApiClient<BuildingCatalouge>();
             client.Scheme = "http";
             client.Host = "localhost";
             client.Port = 5269;
             client.Path = "api/Guest/GetBuildingCatalogue";
-            if (cityId != null) 
-                client.AddParameter("cityId", cityId);
+          
             client.AddParameter("page", page.ToString());
             BuildingCatalouge buildingCatalouge = await client.GetAsync();
             return View(buildingCatalouge);
@@ -40,18 +39,19 @@ namespace VecinoWebApplication.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(Resident resident)
         {
-            if (!resident.IsValid)
+            
+            if (!ModelState.IsValid)
                 return View("RegisterForm", resident);
      
             ApiClient<Resident> client = new ApiClient<Resident>();
             client.Scheme = "http";
             client.Host = "localhost";
-            client.Port = 5269;
+            client.Port = 5268;
             client.Path = "api/Guest/Register";
 
             ApiResponse<Resident> resident1 = await client.PostAsyncReturn<Resident,Resident>(resident);
             if (resident1 == null || !resident1.Success )
-                return View("RegisterForm");
+                return View("RegisterForm",resident);
             if (resident1.Data.ResidentId != null && resident1.Data.ResidentId != "")
             {
                 HttpContext.Session.SetString("residentId", resident1.Data.ResidentId);
@@ -78,6 +78,18 @@ namespace VecinoWebApplication.Controllers
                 return File(bytes, contentType);
             return BadRequest();
         }
-       
+
+        [HttpGet]
+        public async Task<IActionResult> GetBuildingsMap()
+        {
+            ApiClient<List<Building>> apiClient = new ApiClient<List<Building>>();
+            apiClient.Host = "localhost";
+            apiClient.Port = 5269;
+            apiClient.Path = "api/Guest/GetBuildingsMap";
+            List<Building> buildings = await apiClient.GetAsync();
+            return Json(buildings);
+        }
+
+
     }
 }

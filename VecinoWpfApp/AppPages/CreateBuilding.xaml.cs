@@ -25,9 +25,12 @@ namespace VecinoWpfApp.AppPages
     public partial class CreateBuilding : Page
     {
         string imagePath;
+        Building buildingCreation = new Building();
         public CreateBuilding()
         {
             InitializeComponent();
+            GetCitiesList();
+            this.DataContext = buildingCreation;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -35,6 +38,17 @@ namespace VecinoWpfApp.AppPages
             NavigationService.GoBack();
         }
 
+        private async void GetCitiesList()
+        {
+            ApiClient<List<City>> apiClient = new ApiClient<List<City>>();
+            apiClient.Scheme = "http";
+            apiClient.Host = "localhost";
+            apiClient.Port = 5269;
+            apiClient.Path = "api/Admin/GetCities";
+            CmbCity.ItemsSource = await apiClient.GetAsync();
+             
+
+        }
         private void ImageUploadButton_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -55,26 +69,18 @@ namespace VecinoWpfApp.AppPages
 
         private async void CreateBuildingButton_Click(object sender, RoutedEventArgs e)
         {
-            
-                Building building = new Building();
-                building.BuildingId = " ";
-                building.Address = AddressTextBox.Text;
-                building.CityId = "1";
-                building.EntranceCode = CodeTextBox.Text;
-                building.TotalUnits = Convert.ToInt32(TotalUnitsTextBox.Text);
-                building.Floors = Convert.ToInt32(FloorsTextBox.Text);
-                building.JoinCode = "Test";
-                building.EntranceName = "A";
-                building.BuildingImage = " ";
 
-                building.Validate();
+
+            buildingCreation.BuildingImage = " ";
+
+            buildingCreation.Validate();
             CreateBuildingDto buildingDto = new CreateBuildingDto
             {
-                Building = building,
+                Building = buildingCreation,
                 ResidentId = Session.ResidentId
             };
 
-                if (!building.HasErrors)
+                if (!buildingCreation.HasErrors)
                 {
 
                     if(Session.HasAccount)
@@ -98,7 +104,7 @@ namespace VecinoWpfApp.AppPages
                     {
                         CreateBuildingRegister createBuildingRegister = new CreateBuildingRegister();
 
-                        createBuildingRegister.Building = building;
+                        createBuildingRegister.Building = buildingCreation;
                         Session.PendingImagePath = imagePath;
                         NavigationService.Navigate(new Register(imagePath, createBuildingRegister));
                     }

@@ -1,21 +1,735 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "HomePage";
     Layout = "~/Views/Shared/MasterGuestPage.cshtml";
 }
 
-<link href="~/css/guest.css" rel="stylesheet" />
-<main>
+<style>
+    /* ── Reset & tokens (extend navbar's root) ── */
+    :root {
+        --teal: #14b8a6;
+        --teal-dark: #0f9488;
+        --teal-glow: rgba(20,184,166,0.18);
+        --blue: #3b82f6;
+        --blue-dark: #1d4ed8;
+        --slate: #1e293b;
+        --muted: #64748b;
+        --muted-light: #94a3b8;
+        --border: rgba(226,232,240,0.6);
+        --surface: #f8fafc;
+        --white: #ffffff;
+    }
 
-    <img src="~/Images/buildings.svg"/>
-    <div>
-        <h1 class="title">Vecino</h1>
-        <p class="text">Vecino is a modern platform that makes managing residential buildings simple and transparent. Committees can collect payments, handle service requests, and organize votes with ease, while residents enjoy clear communication, real-time updates, and a stronger sense of community — all in one app.</p>
-      
-        <a class="btn" href="http://localhost:5086/Resident/LoginForm">Get Started</a>
-        
-       
+    html, body {
+        height: 100%;
+    }
+
+    /* ── Page wrapper ── */
+    .home-page {
+        min-height: calc(100vh - 64px);
+        background: var(--surface);
+        overflow: hidden;
+        position: relative;
+    }
+
+        /* ── Ambient background blobs ── */
+        .home-page::before,
+        .home-page::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .home-page::before {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(20,184,166,0.12) 0%, transparent 70%);
+            top: -120px;
+            left: -100px;
+            animation: drift1 12s ease-in-out infinite alternate;
+        }
+
+        .home-page::after {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(59,130,246,0.10) 0%, transparent 70%);
+            bottom: 0;
+            right: -80px;
+            animation: drift2 14s ease-in-out infinite alternate;
+        }
+    @@keyframes drift1 {
+        to
+
+    {
+        transform: translate(30px, 40px);
+    }
+
+    }
+    @@keyframes drift2 {
+        to
+
+    {
+        transform: translate(-30px, -40px);
+    }
+
+    }
+
+    /* ── Hero ── */
+    .hero {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        align-items: center;
+        gap: 3rem;
+        max-width: 1140px;
+        margin: 0 auto;
+        padding: 5rem 2rem 4rem;
+    }
+
+    /* ── Left copy ── */
+    .hero-copy {
+        display: flex;
+        flex-direction: column;
+        gap: 1.75rem;
+    }
+
+    .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+        color: var(--teal-dark);
+        background: rgba(20,184,166,0.08);
+        border: 1px solid rgba(20,184,166,0.25);
+        border-radius: 100px;
+        padding: 0.35rem 0.9rem;
+        width: fit-content;
+        opacity: 0;
+        animation: fadeUp 0.6s 0.1s ease forwards;
+    }
+
+        .eyebrow span {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--teal);
+            display: block;
+        }
+
+    .hero-headline {
+        font-family: 'Cormorant Garamond', Georgia, serif;
+        font-size: clamp(2.6rem, 5vw, 3.8rem);
+        font-weight: 600;
+        line-height: 1.1;
+        color: var(--slate);
+        letter-spacing: -0.02em;
+        opacity: 0;
+        animation: fadeUp 0.6s 0.2s ease forwards;
+    }
+
+        .hero-headline em {
+            font-style: normal;
+            background: linear-gradient(135deg, var(--teal), var(--blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+    .hero-body {
+        font-size: 1.05rem;
+        line-height: 1.75;
+        color: var(--muted);
+        max-width: 480px;
+        opacity: 0;
+        animation: fadeUp 0.6s 0.35s ease forwards;
+    }
+
+    /* ── Stats row ── */
+    .stats-row {
+        display: flex;
+        gap: 2rem;
+        opacity: 0;
+        animation: fadeUp 0.6s 0.45s ease forwards;
+    }
+
+    .stat {
+        display: flex;
+        flex-direction: column;
+        gap: 0.2rem;
+    }
+
+    .stat-num {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 1.9rem;
+        font-weight: 700;
+        color: var(--slate);
+        line-height: 1;
+    }
+
+    .stat-label {
+        font-size: 0.78rem;
+        color: var(--muted-light);
+        font-weight: 500;
+    }
+
+    .stat-divider {
+        width: 1px;
+        background: var(--border);
+        align-self: stretch;
+    }
+
+    /* ── CTA buttons ── */
+    .cta-row {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        opacity: 0;
+        animation: fadeUp 0.6s 0.55s ease forwards;
+    }
+
+    .btn-primary {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.8rem 1.75rem;
+        border-radius: 0.875rem;
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: white;
+        text-decoration: none;
+        background: linear-gradient(135deg, var(--teal), var(--blue));
+        box-shadow: 0 4px 18px rgba(20,184,166,0.35);
+        transition: all 0.2s;
+    }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(20,184,166,0.4);
+            opacity: 0.93;
+        }
+
+        .btn-primary:active {
+            transform: scale(0.975);
+        }
+
+        .btn-primary svg {
+            width: 1rem;
+            height: 1rem;
+        }
+
+    .btn-ghost {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.8rem 1.5rem;
+        border-radius: 0.875rem;
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: var(--muted);
+        text-decoration: none;
+        background: white;
+        border: 1px solid var(--border);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        transition: all 0.2s;
+    }
+
+        .btn-ghost:hover {
+            color: var(--slate);
+            border-color: rgba(20,184,166,0.4);
+            box-shadow: 0 4px 12px rgba(20,184,166,0.12);
+        }
+
+        .btn-ghost svg {
+            width: 1rem;
+            height: 1rem;
+        }
+
+    /* ── Right visual ── */
+    .hero-visual {
+        position: relative;
+        opacity: 0;
+        animation: fadeRight 0.7s 0.4s ease forwards;
+    }
+
+    /* Dashboard card mockup */
+    .mockup-card {
+        background: white;
+        border-radius: 1.25rem;
+        border: 1px solid var(--border);
+        box-shadow: 0 20px 60px rgba(0,0,0,0.09), 0 4px 16px rgba(0,0,0,0.04);
+        padding: 1.5rem;
+        position: relative;
+    }
+
+    .mockup-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1.25rem;
+    }
+
+    .mockup-title {
+        font-size: 0.875rem;
+        font-weight: 700;
+        color: var(--slate);
+    }
+
+    .mockup-badge {
+        font-size: 0.7rem;
+        font-weight: 600;
+        padding: 0.25rem 0.6rem;
+        border-radius: 100px;
+        background: rgba(20,184,166,0.1);
+        color: var(--teal-dark);
+    }
+
+    .mockup-stats {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.75rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .mockup-stat {
+        background: var(--surface);
+        border-radius: 0.75rem;
+        padding: 0.875rem;
+        border: 1px solid var(--border);
+    }
+
+    .mockup-stat-label {
+        font-size: 0.68rem;
+        color: var(--muted-light);
+        font-weight: 500;
+        margin-bottom: 0.3rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .mockup-stat-val {
+        font-size: 1.35rem;
+        font-weight: 700;
+        color: var(--slate);
+    }
+
+        .mockup-stat-val.green {
+            color: #16a34a;
+        }
+
+        .mockup-stat-val.orange {
+            color: #ea580c;
+        }
+
+    .mockup-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+    }
+
+    .mockup-row {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.6rem 0.75rem;
+        border-radius: 0.6rem;
+        background: var(--surface);
+        border: 1px solid var(--border);
+    }
+
+    .mockup-avatar {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.65rem;
+        font-weight: 700;
+        color: white;
+    }
+
+    .mockup-row-info {
+        flex: 1;
+    }
+
+    .mockup-row-name {
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: var(--slate);
+    }
+
+    .mockup-row-sub {
+        font-size: 0.68rem;
+        color: var(--muted-light);
+    }
+
+    .mockup-chip {
+        font-size: 0.65rem;
+        font-weight: 600;
+        padding: 0.18rem 0.55rem;
+        border-radius: 100px;
+    }
+
+    .chip-paid {
+        background: #dcfce7;
+        color: #16a34a;
+    }
+
+    .chip-unpaid {
+        background: #fee2e2;
+        color: #dc2626;
+    }
+
+    .chip-open {
+        background: #fef9c3;
+        color: #ca8a04;
+    }
+
+    /* Floating accent cards */
+    .float-card {
+        position: absolute;
+        background: white;
+        border-radius: 1rem;
+        border: 1px solid var(--border);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        padding: 0.75rem 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--slate);
+        animation: floatBob 4s ease-in-out infinite;
+    }
+
+        .float-card .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+    .float-card-a {
+        top: -1rem;
+        right: -1.5rem;
+        animation-delay: 0s;
+    }
+
+    .float-card-b {
+        bottom: 2rem;
+        left: -1.5rem;
+        animation-delay: 2s;
+    }
+    @@keyframes floatBob {
+        0%,100%
+
+    {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-6px);
+    }
+
+    }
+
+    /* ── Feature strip ── */
+    .feature-strip {
+        position: relative;
+        z-index: 1;
+        max-width: 1140px;
+        margin: 0 auto 4rem;
+        padding: 0 2rem;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.25rem;
+        opacity: 0;
+        animation: fadeUp 0.7s 0.7s ease forwards;
+    }
+
+    .feature-card {
+        background: white;
+        border: 1px solid var(--border);
+        border-radius: 1.1rem;
+        padding: 1.5rem;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+        transition: all 0.25s;
+    }
+
+        .feature-card:hover {
+            box-shadow: 0 8px 24px rgba(20,184,166,0.1);
+            border-color: rgba(20,184,166,0.3);
+            transform: translateY(-3px);
+        }
+
+    .feature-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 0.75rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1rem;
+    }
+
+        .feature-icon svg {
+            width: 20px;
+            height: 20px;
+            stroke: white;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+    .feature-title {
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: var(--slate);
+        margin-bottom: 0.4rem;
+    }
+
+    .feature-desc {
+        font-size: 0.85rem;
+        color: var(--muted);
+        line-height: 1.6;
+    }
+
+    /* ── Animations ── */
+    @@keyframes fadeUp {
+        from
+
+    {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    }
+    @@keyframes fadeRight {
+        from
+
+    {
+        opacity: 0;
+        transform: translateX(24px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    }
+
+    /* ── Responsive ── */
+    @@media (max-width: 860px) {
+        .hero
+
+    {
+        grid-template-columns: 1fr;
+        padding: 3rem 1.5rem 2rem;
+    }
+
+    .hero-visual {
+        display: none;
+    }
+
+    .feature-strip {
+        grid-template-columns: 1fr;
+        padding: 0 1.5rem;
+    }
+
+    .stats-row {
+        gap: 1.25rem;
+    }
+
+    }
+</style>
+
+<div class="home-page">
+
+    <!-- ── Hero ── -->
+    <section class="hero">
+
+        <!-- Left: copy -->
+        <div class="hero-copy">
+
+            <span class="eyebrow">
+                <span></span>
+                Building Management Simplified
+            </span>
+
+            <h1 class="hero-headline">
+                Your building,<br>
+                <em>perfectly managed.</em>
+            </h1>
+
+            <p class="hero-body">
+                Vecino brings residents and committees together in one platform —
+                transparent payments, instant service requests, community polls,
+                and real-time updates for everyone in the building.
+            </p>
+
+            <div class="stats-row">
+                <div class="stat">
+                    <span class="stat-num">100%</span>
+                    <span class="stat-label">Fee transparency</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat">
+                    <span class="stat-num">Real‑time</span>
+                    <span class="stat-label">Status updates</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat">
+                    <span class="stat-num">All-in-one</span>
+                    <span class="stat-label">Dashboard</span>
+                </div>
+            </div>
+
+            <div class="cta-row">
+                <a class="btn-primary" href="http://localhost:5086/Resident/LoginForm">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                    </svg>
+                    Get Started
+                </a>
+                <a class="btn-ghost" href="http://localhost:5086/Guest/ViewBuildingCatalogue">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                    </svg>
+                    Browse Buildings
+                </a>
+            </div>
+
+        </div>
+
+        <!-- Right: mockup dashboard -->
+        <div class="hero-visual">
+
+            <!-- Floating notification chips -->
+            <div class="float-card float-card-a">
+                <div class="dot" style="background:#16a34a"></div>
+                Fee collected · ₪500
+            </div>
+            <div class="float-card float-card-b">
+                <div class="dot" style="background:#3b82f6"></div>
+                New service request
+            </div>
+
+            <div class="mockup-card">
+                <div class="mockup-header">
+                    <span class="mockup-title">Finance Overview</span>
+                    <span class="mockup-badge">Live</span>
+                </div>
+
+                <div class="mockup-stats">
+                    <div class="mockup-stat">
+                        <div class="mockup-stat-label">Collected</div>
+                        <div class="mockup-stat-val green">₪8,617</div>
+                    </div>
+                    <div class="mockup-stat">
+                        <div class="mockup-stat-label">Outstanding</div>
+                        <div class="mockup-stat-val orange">₪43,101</div>
+                    </div>
+                    <div class="mockup-stat">
+                        <div class="mockup-stat-label">Residents Paid</div>
+                        <div class="mockup-stat-val">6</div>
+                    </div>
+                    <div class="mockup-stat">
+                        <div class="mockup-stat-label">Collection Rate</div>
+                        <div class="mockup-stat-val">35%</div>
+                    </div>
+                </div>
+
+                <div class="mockup-list">
+                    <div class="mockup-row">
+                        <div class="mockup-avatar" style="background:linear-gradient(135deg,#14b8a6,#3b82f6)">OC</div>
+                        <div class="mockup-row-info">
+                            <div class="mockup-row-name">Ofek Cohen</div>
+                            <div class="mockup-row-sub">Monthly Fee · Unit 101</div>
+                        </div>
+                        <span class="mockup-chip chip-unpaid">Unpaid</span>
+                    </div>
+                    <div class="mockup-row">
+                        <div class="mockup-avatar" style="background:linear-gradient(135deg,#f59e0b,#ef4444)">JC</div>
+                        <div class="mockup-row-info">
+                            <div class="mockup-row-name">John Cena</div>
+                            <div class="mockup-row-sub">Repair Fee · Unit 101</div>
+                        </div>
+                        <span class="mockup-chip chip-open">Overdue</span>
+                    </div>
+                    <div class="mockup-row">
+                        <div class="mockup-avatar" style="background:linear-gradient(135deg,#8b5cf6,#ec4899)">OA</div>
+                        <div class="mockup-row-info">
+                            <div class="mockup-row-name">Ofek Admin</div>
+                            <div class="mockup-row-sub">Monthly Fee · Unit 101</div>
+                        </div>
+                        <span class="mockup-chip chip-paid">Paid</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- ── Feature strip ── -->
+    <div class="feature-strip">
+
+        <div class="feature-card">
+            <div class="feature-icon" style="background:linear-gradient(135deg,#14b8a6,#0d9488)">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" />
+                    <path d="M9 12l2 2 4-4" />
+                </svg>
+            </div>
+            <div class="feature-title">Fee Management</div>
+            <div class="feature-desc">
+                Create, track, and collect fees with automated reminders.
+                Every resident sees exactly what they owe and when.
+            </div>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8)">
+                <svg viewBox="0 0 24 24">
+                    <path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z" />
+                </svg>
+            </div>
+            <div class="feature-title">Service Requests</div>
+            <div class="feature-desc">
+                Residents report issues instantly. Admins manage and resolve
+                them with full status tracking from open to complete.
+            </div>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon" style="background:linear-gradient(135deg,#8b5cf6,#6d28d9)">
+                <svg viewBox="0 0 24 24">
+                    <path d="M9 11l3 3L22 4" />
+                    <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" />
+                </svg>
+            </div>
+            <div class="feature-title">Community Polls</div>
+            <div class="feature-desc">
+                Run transparent building-wide votes. Residents participate,
+                results are visible to all, and decisions are recorded.
+            </div>
+        </div>
 
     </div>
-</main>
 
+</div>

@@ -141,7 +141,7 @@ namespace VecinoWebApplication.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> JoinBuilding(string buildingCode)
+        public async Task<IActionResult> JoinBuilding(JoinBuildingRequest buildingRequest)
         {
             
             ApiClient<JoinBuildingRequest> client = new ApiClient<JoinBuildingRequest>();
@@ -151,12 +151,9 @@ namespace VecinoWebApplication.Controllers
             client.Path = "api/Resident/JoinBuilding";
                 
             string residentId = HttpContext.Session.GetString("residentId");
-           
-            JoinBuildingRequest joinBuildingRequest = new JoinBuildingRequest();
-            joinBuildingRequest.buildingCode = buildingCode;
-            joinBuildingRequest.residentId = residentId;
-
-            bool response = await client.PostAsync(joinBuildingRequest);
+            buildingRequest.ResidentId = residentId;
+          
+            bool response = await client.PostAsync(buildingRequest);
 
             if (response) return RedirectToAction("ViewDashboard");
 
@@ -182,7 +179,7 @@ namespace VecinoWebApplication.Controllers
             ApiResponse<Resident> resident = await client.PostAsyncReturn<LogInViewModel, Resident>(logInViewModel);
 
             if(resident == null || !resident.Success)
-                return View("LoginForm");
+                return View("LoginForm", logInViewModel);
             
             HttpContext.Session.SetString("residentId", resident.Data.ResidentId);
             HttpContext.Session.SetString("residentName", resident.Data.ResidentName);
@@ -250,6 +247,21 @@ namespace VecinoWebApplication.Controllers
 
             return RedirectToAction("HomePage", "Guest");
           
+        }
+
+        public async Task<IActionResult> GetBookingPage(string date)
+        {
+            
+            ApiClient<BookingViewModel> client = new ApiClient<BookingViewModel>();
+            string residentId = HttpContext.Session.GetString("residentId");
+            client.Scheme = "http";
+            client.Host = "localhost";
+            client.Port = 5269;
+            client.Path = "api/Resident/GetAllBookings";
+            client.AddParameter("residentId", residentId);
+            client.AddParameter("date", date);
+            BookingViewModel bookings = await client.GetAsync();
+            return View(bookings);
         }
 
         [HttpPost]

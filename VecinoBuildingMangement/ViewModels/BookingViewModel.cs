@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VecinoBuildingMangement.Models;
 
 namespace VecinoBuildingMangement.ViewModels
 {
-    public class JoinBuildingRequest
+    public class BookingViewModel
     {
-        public string BuildingCode {  get; set; }
-        public string ResidentId { get; set; }  
-
-        public int UnitNumber { get; set; }
+        public List<Booking> Bookings { get; set; }
+        public string SelectedDate { get; set; }
     }
 }

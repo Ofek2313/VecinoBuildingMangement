@@ -1,0 +1,352 @@
+﻿@{
+    ViewData["Title"] = "GetBookingPage";
+    Layout = "~/Views/Shared/MasterResidentPage.cshtml";
+    var mockBooking = new { Room = "Gym", StartHour = 8, EndHour = 12, Note = "Team Training" };
+}
+}
+@using VecinoBuildingMangement.Models;
+@using VecinoBuildingMangement.ViewModels;
+
+@model BookingViewModel
+
+<h1>GetBookingPage</h1>
+
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0
+    }
+
+    :root {
+        --bg: #f5f4f0;
+        --sidebar: #1a1a1a;
+        --sidebar-text: #a8a8a0;
+        --sidebar-active: #e8f5ee;
+        --sidebar-active-text: #1a6644;
+        --card: #ffffff;
+        --card-border: #e8e6e0;
+        --teal: #1d9e75;
+        --teal-dark: #0f6e56;
+        --teal-light: #e1f5ee;
+        --text: #1a1a1a;
+        --text-muted: #888880;
+        --text-faint: #b8b8b0;
+        --slot-hover: rgba(29,158,117,.07);
+        --b1: #9fe1cb;
+        --b1t: #085041;
+        --b2: #CECBF6;
+        --b2t: #26215C;
+        --b3: #FAC775;
+        --b3t: #412402;
+        --b4: #F5C4B3;
+        --b4t: #4A1B0C;
+    }
+
+    body {
+        font-family: 'DM Sans',sans-serif;
+        background: var(--bg);
+        display: flex;
+        min-height: 100vh;
+        color: var(--text)
+    }
+
+    .main {
+        flex: 1;
+        padding: 32px 28px;
+        overflow-y: auto;
+        max-height: 100vh
+    }
+
+    .page-header {
+        margin-bottom: 24px
+    }
+
+        .page-header h1 {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text);
+            letter-spacing: -.4px
+        }
+
+        .page-header p {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-top: 3px
+        }
+
+    /* ── LAYOUT ── */
+    .layout {
+        display: grid;
+        grid-template-columns: 1fr 290px;
+        gap: 18px;
+        align-items: start
+    }
+
+    /* ── SCHEDULE GRID ── */
+    .sched-card {
+        background: var(--card);
+        border: 1px solid var(--card-border);
+        border-radius: 14px;
+        overflow: hidden
+    }
+
+    /* Column structure: 1 narrow column for time, 4 equal columns for rooms */
+    .sched-head {
+        display: grid;
+        grid-template-columns: 65px repeat(4, 1fr);
+        background: var(--bg);
+        border-bottom: 1px solid var(--card-border)
+    }
+
+    .sh-col {
+        padding: 14px 8px;
+        text-align: center;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text-muted);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        border-right: 1px solid var(--card-border);
+    }
+
+        .sh-col:last-child {
+            border-right: none;
+        }
+
+        .sh-col svg {
+            width: 14px;
+            height: 14px
+        }
+
+    .time-row {
+        display: grid;
+        grid-template-columns: 65px repeat(4, 1fr);
+        border-bottom: 1px solid var(--card-border)
+    }
+
+        .time-row:last-child {
+            border-bottom: none
+        }
+
+    .time-cell {
+        padding: 18px 8px;
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--text-muted);
+        border-right: 1px solid var(--card-border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--bg);
+        font-family: 'DM Mono', monospace
+    }
+
+    .slot {
+        border-right: 1px solid var(--card-border);
+        position: relative;
+        min-height: 56px;
+        background: var(--card);
+        transition: background .1s
+    }
+
+        .slot:last-child {
+            border-right: none
+        }
+
+    /* ── STATIC BOOKING BLOCKS (EXAMPLES) ── */
+    .bk {
+        position: absolute;
+        inset: 4px 6px;
+        border-radius: 6px;
+        padding: 6px 8px;
+        z-index: 1;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    .bk-name {
+        font-size: 11px;
+        font-weight: 600;
+        line-height: 1.3
+    }
+
+    .bk-who {
+        font-size: 10px;
+        opacity: .8;
+        margin-top: 1px;
+    }
+
+    /* Room-Specific Styles */
+    .c-gym {
+        background: var(--b1);
+        color: var(--b1t);
+    }
+
+    .c-rooftop {
+        background: var(--b2);
+        color: var(--b2t);
+    }
+
+    .c-lounge {
+        background: var(--b3);
+        color: var(--b3t);
+    }
+
+    .c-bbq {
+        background: var(--b4);
+        color: var(--b4t);
+    }
+
+    /* PANEL & LEGEND */
+    .panel {
+        background: var(--card);
+        border: 1px solid var(--card-border);
+        border-radius: 14px;
+        padding: 20px
+    }
+
+    .my-bk-title {
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: .6px;
+        color: var(--text-muted);
+        margin-bottom: 10px
+    }
+
+    .legend {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .leg-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        color: var(--text)
+    }
+
+    .leg-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 3px
+    }
+</style>
+
+<main class="main">
+    <div class="page-header">
+        <h1>Room Bookings</h1>
+        <p>Reserve shared spaces in your building</p>
+    </div>
+    <h2 id="test">@Model.SelectedDate</h2>
+    <button onclick="moveDateDown(`@Model.SelectedDate`)" >Minus</button>
+    <button onclick="moveDateUp(`@Model.SelectedDate`)">Add</button>
+    <div class="layout">
+        <div class="sched-card">
+            <div class="sched-head">
+                <div class="sh-col" style="background: var(--bg);">Time</div>
+                <div class="sh-col">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064" /></svg>
+                    Gym
+                </div>
+                <div class="sh-col">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
+                    Rooftop
+                </div>
+                <div class="sh-col">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
+                    Lounge
+                </div>
+                <div class="sh-col">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" /></svg>
+                    BBQ
+                </div>
+            </div>
+
+            <div id="sched-body">
+                @for (int hour = 8; hour < 23; hour++)
+                {
+                    string timeDisplay = $"{hour:D2}:00";
+
+                    <div class="time-row">
+                        <div class="time-cell">@timeDisplay</div>
+
+                        <div class="slot" data-hour="@hour" data-room="Gym">
+                            @foreach(Booking booking in Model.Bookings)
+                            {
+                                int startHourInt = int.Parse(booking.StartTime.Split(':')[0]);
+                                int endHourInt = int.Parse(booking.EndTime.Split(':')[0]);
+
+                                @if (startHourInt == hour)
+                                {
+                                    int duration = endHourInt - startHourInt;
+                                    // Calculate height based on how many hours it spans
+
+                                    string heightStyle = $"calc({duration} * 100% - 6px)";
+
+                                    <div class="bk c-gym" style="height: @heightStyle; z-index: 10;">
+                                        <div class="bk-name">@mockBooking.Note</div>
+                                        <div class="bk-who">@booking.StartTime - @booking.EndTime</div>
+                                    </div>
+                                }
+                                
+                            }
+                        </div>
+                        <div class="slot" data-hour="@hour" data-room="Rooftop"></div>
+                        <div class="slot" data-hour="@hour" data-room="Lounge"></div>
+                        <div class="slot" data-hour="@hour" data-room="BBQ"></div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div>
+            <div class="panel">
+                <div class="my-bk-title">Grid Legend</div>
+                <div class="legend">
+                    <div class="leg-item"><div class="leg-dot" style="background:var(--b1)"></div>Gym Operational Window</div>
+                    <div class="leg-item"><div class="leg-dot" style="background:var(--b2)"></div>Rooftop Access Zone</div>
+                    <div class="leg-item"><div class="leg-dot" style="background:var(--b3)"></div>Lounge Community Space</div>
+                    <div class="leg-item"><div class="leg-dot" style="background:var(--b4)"></div>BBQ Grill Area</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<script>
+        function parseDate(dateString)
+    {
+        const parts = dateString.split('/');
+
+        const day = parseInt(parts[0]);
+        const month = parseInt(parts[1]) - 1;
+        const year = parseInt(parts[2]);
+
+        return new Date(year, month, day);
+    }
+       function addDays(date, days) {
+        const newDate = new Date(date);
+        newDate.setDate(newDate.getDate() + days);
+        return newDate;
+    }
+    function moveDateUp(stringDate)
+    {
+   
+        let date = parseDate(stringDate);
+        date = addDays(date,1);
+        console.log(date);
+        window.location.href = `http://localhost:5086/Resident/GetBookingPage?date=${date.toLocaleDateString('en-GB')}`
+    }
+     function moveDateDown(stringDate)
+    {
+        let date = parseDate(stringDate);
+        date = addDays(date,-1);
+        console.log(date);
+        window.location.href = `http://localhost:5086/Resident/GetBookingPage?date=${date.toLocaleDateString('en-GB')}`
+    }
+    
+</script>
