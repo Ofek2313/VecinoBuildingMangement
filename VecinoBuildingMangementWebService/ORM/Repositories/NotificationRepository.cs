@@ -5,7 +5,7 @@ using VecinoBuildingMangementWebService.ORM.ModelCreators;
 
 namespace VecinoBuildingMangementWebService
 {
-    public class NotificationRepository : GenericRepository<Notification>, IRepository<Notification>
+    public class NotificationRepository : GenericRepository<Notification>
     {
         public NotificationRepository(DbHelperOleDb dbHelperOleDb, ModelCreator modelCreator)
             : base(dbHelperOleDb, modelCreator) { }

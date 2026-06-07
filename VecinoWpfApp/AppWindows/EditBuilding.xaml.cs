@@ -73,5 +73,9 @@ namespace VecinoWpfApp.AppWindows
             
             
         }
+        private void CloseButton(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
     }
 }

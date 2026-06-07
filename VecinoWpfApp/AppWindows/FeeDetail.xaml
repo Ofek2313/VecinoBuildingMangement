@@ -11,7 +11,8 @@
         <conv:FeeStatusStyleConverter x:Key="feeStatusStyleConverter"/>
         <BooleanToVisibilityConverter x:Key="VisibilityConverter"/>
         <conv:InverseBooleanToVisibilityConverter x:Key="InverseConverter"/>
-
+       
+        
         <Style x:Key="HeaderEditableTextBoxStyle" TargetType="TextBox">
             <Setter Property="FontFamily" Value="Segoe UI"/>
             <Setter Property="HorizontalAlignment" Value="Right"/>

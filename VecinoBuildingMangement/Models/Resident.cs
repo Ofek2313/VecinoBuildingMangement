@@ -26,19 +26,12 @@ namespace VecinoBuildingMangement.Models
           
         }
 
-
-      
-
-
-
         public string? ResidentId
         {
             get { return residentId; }
             set
             {
-                //if (value == null)
-                //    residentId = "";
-                //else
+                
                     residentId = value;
 
             }
@@ -56,10 +49,8 @@ namespace VecinoBuildingMangement.Models
         }
 
         [Required(ErrorMessage ="Password Can Not Be Empty")]
-        //[StringLength(15,MinimumLength =8,ErrorMessage ="Password Must Be At Least 8 Characters")]
-        //[CapitalLetter(ErrorMessage ="Password Must Include At Least 1 Capital Letter")]
-        //[ContainSymbol(ErrorMessage = "Password Must Include At Least 1 Symbol")]
-       
+        [StringLength(16, MinimumLength = 8, ErrorMessage = "Name Must Be Bettwen 8-16 Characters")]
+
         public string ResidentPassword
         {
             get { return residentPassword; }

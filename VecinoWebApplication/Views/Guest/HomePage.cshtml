@@ -2,9 +2,13 @@
     ViewData["Title"] = "HomePage";
     Layout = "~/Views/Shared/MasterGuestPage.cshtml";
 }
-
+@if (TempData["ErrorMessage"] != null)
+{
+    <script>
+        alert("@TempData["ErrorMessage"]");
+    </script>
+}
 <style>
-    /* ── Reset & tokens (extend navbar's root) ── */
     :root {
         --teal: #14b8a6;
         --teal-dark: #0f9488;
@@ -59,41 +63,36 @@
             right: -80px;
             animation: drift2 14s ease-in-out infinite alternate;
         }
+
     @@keyframes drift1 {
-        to
-
-    {
-        transform: translate(30px, 40px);
+        to {
+            transform: translate(30px, 40px);
+        }
     }
 
-    }
     @@keyframes drift2 {
-        to
-
-    {
-        transform: translate(-30px, -40px);
-    }
-
+        to {
+            transform: translate(-30px, -40px);
+        }
     }
 
     /* ── Hero ── */
     .hero {
         position: relative;
         z-index: 1;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        align-items: center;
-        gap: 3rem;
-        max-width: 1140px;
+        display: flex;
+        flex-direction: column;
+        max-width: 860px;
         margin: 0 auto;
         padding: 5rem 2rem 4rem;
     }
 
-    /* ── Left copy ── */
+    /* ── Copy ── */
     .hero-copy {
         display: flex;
         flex-direction: column;
         gap: 1.75rem;
+        max-width: 620px;
     }
 
     .eyebrow {
@@ -145,7 +144,7 @@
         font-size: 1.05rem;
         line-height: 1.75;
         color: var(--muted);
-        max-width: 480px;
+        max-width: 520px;
         opacity: 0;
         animation: fadeUp 0.6s 0.35s ease forwards;
     }
@@ -250,201 +249,11 @@
             height: 1rem;
         }
 
-    /* ── Right visual ── */
-    .hero-visual {
-        position: relative;
-        opacity: 0;
-        animation: fadeRight 0.7s 0.4s ease forwards;
-    }
-
-    /* Dashboard card mockup */
-    .mockup-card {
-        background: white;
-        border-radius: 1.25rem;
-        border: 1px solid var(--border);
-        box-shadow: 0 20px 60px rgba(0,0,0,0.09), 0 4px 16px rgba(0,0,0,0.04);
-        padding: 1.5rem;
-        position: relative;
-    }
-
-    .mockup-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 1.25rem;
-    }
-
-    .mockup-title {
-        font-size: 0.875rem;
-        font-weight: 700;
-        color: var(--slate);
-    }
-
-    .mockup-badge {
-        font-size: 0.7rem;
-        font-weight: 600;
-        padding: 0.25rem 0.6rem;
-        border-radius: 100px;
-        background: rgba(20,184,166,0.1);
-        color: var(--teal-dark);
-    }
-
-    .mockup-stats {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 0.75rem;
-        margin-bottom: 1.25rem;
-    }
-
-    .mockup-stat {
-        background: var(--surface);
-        border-radius: 0.75rem;
-        padding: 0.875rem;
-        border: 1px solid var(--border);
-    }
-
-    .mockup-stat-label {
-        font-size: 0.68rem;
-        color: var(--muted-light);
-        font-weight: 500;
-        margin-bottom: 0.3rem;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-    }
-
-    .mockup-stat-val {
-        font-size: 1.35rem;
-        font-weight: 700;
-        color: var(--slate);
-    }
-
-        .mockup-stat-val.green {
-            color: #16a34a;
-        }
-
-        .mockup-stat-val.orange {
-            color: #ea580c;
-        }
-
-    .mockup-list {
-        display: flex;
-        flex-direction: column;
-        gap: 0.6rem;
-    }
-
-    .mockup-row {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        padding: 0.6rem 0.75rem;
-        border-radius: 0.6rem;
-        background: var(--surface);
-        border: 1px solid var(--border);
-    }
-
-    .mockup-avatar {
-        width: 30px;
-        height: 30px;
-        border-radius: 50%;
-        flex-shrink: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 0.65rem;
-        font-weight: 700;
-        color: white;
-    }
-
-    .mockup-row-info {
-        flex: 1;
-    }
-
-    .mockup-row-name {
-        font-size: 0.78rem;
-        font-weight: 600;
-        color: var(--slate);
-    }
-
-    .mockup-row-sub {
-        font-size: 0.68rem;
-        color: var(--muted-light);
-    }
-
-    .mockup-chip {
-        font-size: 0.65rem;
-        font-weight: 600;
-        padding: 0.18rem 0.55rem;
-        border-radius: 100px;
-    }
-
-    .chip-paid {
-        background: #dcfce7;
-        color: #16a34a;
-    }
-
-    .chip-unpaid {
-        background: #fee2e2;
-        color: #dc2626;
-    }
-
-    .chip-open {
-        background: #fef9c3;
-        color: #ca8a04;
-    }
-
-    /* Floating accent cards */
-    .float-card {
-        position: absolute;
-        background: white;
-        border-radius: 1rem;
-        border: 1px solid var(--border);
-        box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-        padding: 0.75rem 1rem;
-        display: flex;
-        align-items: center;
-        gap: 0.6rem;
-        font-size: 0.8rem;
-        font-weight: 600;
-        color: var(--slate);
-        animation: floatBob 4s ease-in-out infinite;
-    }
-
-        .float-card .dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            flex-shrink: 0;
-        }
-
-    .float-card-a {
-        top: -1rem;
-        right: -1.5rem;
-        animation-delay: 0s;
-    }
-
-    .float-card-b {
-        bottom: 2rem;
-        left: -1.5rem;
-        animation-delay: 2s;
-    }
-    @@keyframes floatBob {
-        0%,100%
-
-    {
-        transform: translateY(0);
-    }
-
-    50% {
-        transform: translateY(-6px);
-    }
-
-    }
-
     /* ── Feature strip ── */
     .feature-strip {
         position: relative;
         z-index: 1;
-        max-width: 1140px;
+        max-width: 860px;
         margin: 0 auto 4rem;
         padding: 0 2rem;
         display: grid;
@@ -504,56 +313,31 @@
 
     /* ── Animations ── */
     @@keyframes fadeUp {
-        from
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
 
-    {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-
-    }
-    @@keyframes fadeRight {
-        from
-
-    {
-        opacity: 0;
-        transform: translateX(24px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 
     /* ── Responsive ── */
     @@media (max-width: 860px) {
-        .hero
+        .hero {
+            padding: 3rem 1.5rem 2rem;
+        }
 
-    {
-        grid-template-columns: 1fr;
-        padding: 3rem 1.5rem 2rem;
-    }
+        .feature-strip {
+            grid-template-columns: 1fr;
+            padding: 0 1.5rem;
+        }
 
-    .hero-visual {
-        display: none;
-    }
-
-    .feature-strip {
-        grid-template-columns: 1fr;
-        padding: 0 1.5rem;
-    }
-
-    .stats-row {
-        gap: 1.25rem;
-    }
-
+        .stats-row {
+            gap: 1.25rem;
+        }
     }
 </style>
 
@@ -561,8 +345,6 @@
 
     <!-- ── Hero ── -->
     <section class="hero">
-
-        <!-- Left: copy -->
         <div class="hero-copy">
 
             <span class="eyebrow">
@@ -583,13 +365,13 @@
 
             <div class="stats-row">
                 <div class="stat">
-                    <span class="stat-num">100%</span>
-                    <span class="stat-label">Fee transparency</span>
+                    <span class="stat-num">24/7</span>
+                    <span class="stat-label">Always accessible</span>
                 </div>
                 <div class="stat-divider"></div>
                 <div class="stat">
-                    <span class="stat-num">Real‑time</span>
-                    <span class="stat-label">Status updates</span>
+                    <span class="stat-num">Zero</span>
+                    <span class="stat-label">Missed updates</span>
                 </div>
                 <div class="stat-divider"></div>
                 <div class="stat">
@@ -616,74 +398,6 @@
             </div>
 
         </div>
-
-        <!-- Right: mockup dashboard -->
-        <div class="hero-visual">
-
-            <!-- Floating notification chips -->
-            <div class="float-card float-card-a">
-                <div class="dot" style="background:#16a34a"></div>
-                Fee collected · ₪500
-            </div>
-            <div class="float-card float-card-b">
-                <div class="dot" style="background:#3b82f6"></div>
-                New service request
-            </div>
-
-            <div class="mockup-card">
-                <div class="mockup-header">
-                    <span class="mockup-title">Finance Overview</span>
-                    <span class="mockup-badge">Live</span>
-                </div>
-
-                <div class="mockup-stats">
-                    <div class="mockup-stat">
-                        <div class="mockup-stat-label">Collected</div>
-                        <div class="mockup-stat-val green">₪8,617</div>
-                    </div>
-                    <div class="mockup-stat">
-                        <div class="mockup-stat-label">Outstanding</div>
-                        <div class="mockup-stat-val orange">₪43,101</div>
-                    </div>
-                    <div class="mockup-stat">
-                        <div class="mockup-stat-label">Residents Paid</div>
-                        <div class="mockup-stat-val">6</div>
-                    </div>
-                    <div class="mockup-stat">
-                        <div class="mockup-stat-label">Collection Rate</div>
-                        <div class="mockup-stat-val">35%</div>
-                    </div>
-                </div>
-
-                <div class="mockup-list">
-                    <div class="mockup-row">
-                        <div class="mockup-avatar" style="background:linear-gradient(135deg,#14b8a6,#3b82f6)">OC</div>
-                        <div class="mockup-row-info">
-                            <div class="mockup-row-name">Ofek Cohen</div>
-                            <div class="mockup-row-sub">Monthly Fee · Unit 101</div>
-                        </div>
-                        <span class="mockup-chip chip-unpaid">Unpaid</span>
-                    </div>
-                    <div class="mockup-row">
-                        <div class="mockup-avatar" style="background:linear-gradient(135deg,#f59e0b,#ef4444)">JC</div>
-                        <div class="mockup-row-info">
-                            <div class="mockup-row-name">John Cena</div>
-                            <div class="mockup-row-sub">Repair Fee · Unit 101</div>
-                        </div>
-                        <span class="mockup-chip chip-open">Overdue</span>
-                    </div>
-                    <div class="mockup-row">
-                        <div class="mockup-avatar" style="background:linear-gradient(135deg,#8b5cf6,#ec4899)">OA</div>
-                        <div class="mockup-row-info">
-                            <div class="mockup-row-name">Ofek Admin</div>
-                            <div class="mockup-row-sub">Monthly Fee · Unit 101</div>
-                        </div>
-                        <span class="mockup-chip chip-paid">Paid</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
     </section>
 
     <!-- ── Feature strip ── -->

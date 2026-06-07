@@ -2,22 +2,20 @@
 using System.Data;
 using System.Security.Cryptography;
 using System.Text;
+using VecinoBuildingMangement.DTO;
 using VecinoBuildingMangement.Models;
 using VecinoBuildingMangementWebService.ORM.ModelCreators;
 
 namespace VecinoBuildingMangementWebService
 {
-    public class ResidentRepository :GenericRepository<Resident>, IRepository<Resident>
+    public class ResidentRepository :GenericRepository<Resident>
     {
         public ResidentRepository(DbHelperOleDb dbHelperOleDb, ModelCreator modelCreator)
             :base(dbHelperOleDb, modelCreator) { }
-        //public ResidentRepository(DbHelperOleDb dbHelperOleDb,ModelCreators modelCreators)
-        //    : base(dbHelperOleDb,modelCreators) { }
+       
         public override bool Create(Resident model)
         {   
-            //string sql = @$"Insert Into Resident(ResidentName,ResidentPassword,ResidentPhone,ResidentEmail,UnitNumber,BuildingId)
-            //                Values('{model.ResidentName}','{model.ResidentPassword}','{model.ResidentPhone}',
-            //                       '{model.ResidentEmail}',{model.UnitNumber},{model.BuildingId})";
+                              
 
             string sql = @$"Insert Into Resident(ResidentName,ResidentPassword,ResidentPhone,ResidentEmail,UnitNumber,BuildingId,ResidentSalt,ResidentImage)
                             Values(@ResidentName,@ResidentPassword,@ResidentPhone,
@@ -49,56 +47,7 @@ namespace VecinoBuildingMangementWebService
         }
       
 
-        //public bool Delete(string id)
-        //{
-        //    string sql = @"Delete from Resident where ResidentId=@ResidentId";
-        //    this.dbHelperOleDb.AddParameter("@ResidentId", id);
-        //    return this.dbHelperOleDb.Delete(sql) > 0;
-        //}
-
-        //public List<Resident> GetAll()
-        //{
-        //    string sql = "Select * From Resident";
-
-        //    List<Resident> residents = new List<Resident>();
-        //    using (IDataReader reader = this.dbHelperOleDb.Select(sql))
-        //    {
-        //        while (reader.Read())
-        //        {
-
-        //            residents.Add(this.modelCreators.ResidentCreator.CreateModel(reader));
-
-        //        }
-        //    }
-
-        //    return residents;
-        //}
-
-        //public Resident GetById(string id)
-        //{
-        //    string sql = "Select * From Resident Where ResidentId=@ResidentId";
-        //    dbHelperOleDb.AddParameter("@ResidentId", id);
-
-        //    using (IDataReader dataReader = this.dbHelperOleDb.Select(sql))
-        //    {
-        //        dataReader.Read();
-        //        return this.modelCreators.ResidentCreator.CreateModel(dataReader);
-        //    }
-
-        //}
-
-        //public bool Update(Resident model)
-        //{
-        //    string sql = @"Update Resident set ResidentName = @ResidentName,ResidentPassword = @ResidentPassword
-        //                   ResidentPhone = @ResidentPhone,ResidentEmail = @ResidentEmail,UnitNumber=@UnitNumber,BuildingId = @BuildingId";
-        //    this.dbHelperOleDb.AddParameter("@ResidentName", model.ResidentName);
-        //    this.dbHelperOleDb.AddParameter("@ResidentPassword", model.ResidentPassword);
-        //    this.dbHelperOleDb.AddParameter("@ResidentPhone", model.ResidentPhone);
-        //    this.dbHelperOleDb.AddParameter("@ResidentEmail", model.ResidentEmail);
-        //    this.dbHelperOleDb.AddParameter("@UnitNumber", model.UnitNumber);
-        //    this.dbHelperOleDb.AddParameter("@BuildingId", model.BuildingId);
-        //    return this.dbHelperOleDb.Update(sql) > 0;
-        //}
+       
         public string Login(string email, string password)
         {
             string sql = "Select * From Resident where ResidentEmail=@ResidentEmail";
@@ -107,7 +56,7 @@ namespace VecinoBuildingMangementWebService
             using(IDataReader dataReader = this.dbHelperOleDb.Select(sql))
             {
               
-                if (dataReader.Read())
+                if (dataReader.Read()) // Hashes the input password and compares with the hased password in the database
                 {
                     string salt = dataReader["ResidentSalt"].ToString();
                     string hash = dataReader["ResidentPassword"].ToString();
@@ -131,6 +80,23 @@ namespace VecinoBuildingMangementWebService
                 {
 
                     residents.Add(this.modelCreator.CreateModel<Resident>(reader));
+
+                }
+            }
+
+            return residents;
+        }
+        public List<ResidentSummaryDTO> GetResidentSummaryByBuilding(string buildingId) // Gets a list of the resident name, resident image, and id, usefull for not transporting the entire resident model and only the necessary parts.
+        {
+            string sql = "SELECT ResidentId,ResidentName,ResidentImage From Resident Where BuildingId = @BuildingId";
+            this.dbHelperOleDb.AddParameter("@BuildingId", buildingId);
+            List<ResidentSummaryDTO> residents = new List<ResidentSummaryDTO>();
+            using (IDataReader reader = this.dbHelperOleDb.Select(sql))
+            {
+                while (reader.Read())
+                {
+
+                    residents.Add(this.modelCreator.CreateModel<ResidentSummaryDTO>(reader));
 
                 }
             }

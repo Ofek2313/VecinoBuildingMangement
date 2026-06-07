@@ -8,6 +8,7 @@ namespace VecinoBuildingMangement.DTO
 {
     public class ResidentSummaryDTO
     {
+        public string ResidentId {  get; set; }
 
         public string ResidentName { get; set; } = "None";
 

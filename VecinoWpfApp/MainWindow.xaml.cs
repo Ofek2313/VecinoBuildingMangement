@@ -23,7 +23,7 @@ namespace VecinoWpfApp
         Polls polls;
         Residents residents;
         Finance finance;
-
+        Bookings bookings;
         bool isLoggedIn;
 
         public static readonly string BuildingId;
@@ -116,6 +116,12 @@ namespace VecinoWpfApp
                 finance = new Finance();
             this.frameMain.Content = finance;
         }
+        private void ViewBookings()
+        {
+            if(this.bookings == null)
+                bookings = new Bookings();
+            this.frameMain.Content = bookings;
+        }
         private void HyperlinkRequests_Click(object sender, RoutedEventArgs e)
         {
             ViewRequests();
@@ -164,6 +170,11 @@ namespace VecinoWpfApp
             Session.Clear();
            NavigationService.Navigate(new LogInPage());
            
+        }
+
+        private void HyperLinkBookings_Click(object sender, RoutedEventArgs e)
+        {
+            ViewBookings();
         }
     }
 }

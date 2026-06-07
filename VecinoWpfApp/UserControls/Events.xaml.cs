@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 using VecinoBuildingMangement.Models;
 using VecinoBuildingMangement.ViewModels;
 using VecinoWpfApp.AppWindows;
@@ -27,15 +28,33 @@ namespace VecinoWpfApp.UserControls
         ManageEventViewModel eventViewModel;
         NewEvent newEvent;
         EventDetails eventDetails;
+        private DispatcherTimer _dispatcherTimer;
 
         public Events()
         {
             InitializeComponent();
             GetEventsList();
+            InitializetTimer();
+            this.Unloaded += UnLoadedTimer;
+        }
+        private void InitializetTimer()
+        {
+            _dispatcherTimer = new DispatcherTimer();
+            _dispatcherTimer.Interval = TimeSpan.FromSeconds(30);
+            _dispatcherTimer.Tick += Timer_Tick;
+            _dispatcherTimer.Start();
+        }
+        private async void Timer_Tick(object sender, EventArgs e)
+        {
+            await GetEventsList();
+        }
+        private void UnLoadedTimer(object sender, RoutedEventArgs e)
+        {
+            _dispatcherTimer.Stop();
         }
         private async Task GetEventsList()
         {
-            ApiClient<ManageEventViewModel> client = new ApiClient<ManageEventViewModel>();
+            ApiClient<ManageEventViewModel> client = new ApiClient<ManageEventViewModel>(); //Uses Apiclient to contact the api that is hosted on our localhost
             client.Scheme = "http";
             client.Host = "localhost";
             client.Port = 5269;
@@ -106,5 +125,6 @@ namespace VecinoWpfApp.UserControls
             }
               
         }
+        
     }
 }

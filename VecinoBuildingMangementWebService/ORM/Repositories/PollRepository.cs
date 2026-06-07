@@ -8,7 +8,7 @@ using VecinoBuildingMangementWebService.ORM.ModelCreators;
 
 namespace VecinoBuildingMangementWebService
 {
-    public class PollRepository : GenericRepository<Poll>, IRepository<Poll>
+    public class PollRepository : GenericRepository<Poll>
     {
         public PollRepository(DbHelperOleDb dbHelperOleDb, ModelCreator modelCreator)
             : base(dbHelperOleDb, modelCreator) { }
@@ -119,7 +119,7 @@ namespace VecinoBuildingMangementWebService
 
             return polls;
         }
-       public List<PollViewModel> GetPollViewModels(string buildingId,string residentId)
+       public List<PollViewModel> GetPollViewModels(string buildingId,string residentId="0")
         {
             string sql =  @$"SELECT
                             Poll.PollId,
@@ -157,19 +157,7 @@ namespace VecinoBuildingMangementWebService
                 {
 
                     flatRows.Add(this.modelCreator.CreateModel<PollDatabaseFlat>(reader)); //new PollDatabaseFlat
-                    //{
-                    //    PollId = Convert.ToString(reader["PollId"]),
-                    //    PollTitle = Convert.ToString(reader["PollTitle"]),
-                    //    PollDescription = Convert.ToString(reader["PollDescription"]),
-                    //    IsActive = Convert.ToBoolean(reader["IsActive"]),
-                    //    PollDate = Convert.ToString(reader["PollDate"]),
-                    //    BuildingId = Convert.ToString(reader["BuildingId"]),
-                    //    OptionId = Convert.ToString(reader["OptionId"]),
-                    //    OptionText = Convert.ToString(reader["OptionText"]),
-                    //    VoteCount = Convert.ToInt32(reader["VoteCount"]),
-                    //    HasVoted = Convert.ToBoolean(reader["HasVoted"])
-                    //});
-
+                  
                 }
 
             }
@@ -259,6 +247,7 @@ namespace VecinoBuildingMangementWebService
 
             return this.dbHelperOleDb.Update(sql) > 0;
         }
+
 
     }
   

@@ -5,7 +5,7 @@ using VecinoBuildingMangementWebService.ORM.ModelCreators;
 
 namespace VecinoBuildingMangementWebService
 {
-    public class VoteRepository : GenericRepository<Vote>, IRepository<Vote>
+    public class VoteRepository : GenericRepository<Vote>
     {
         public VoteRepository(DbHelperOleDb dbHelperOleDb, ModelCreator modelCreator)
             : base(dbHelperOleDb, modelCreator) { }

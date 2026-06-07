@@ -4,6 +4,12 @@
     ViewData["Title"] = "RegisterForm";
     Layout = "~/Views/Shared/MasterGuestPage.cshtml";
 }
+@if (TempData["ErrorMessage"] != null)
+{
+    <script>
+        alert("@TempData["ErrorMessage"]");
+    </script>
+}
 <style>
     *, *::before, *::after {
         box-sizing: border-box;

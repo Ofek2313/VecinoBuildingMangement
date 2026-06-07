@@ -1,6 +1,7 @@
 ﻿using BuildingManagementWsClient;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 using VecinoBuildingMangement.Models;
 using VecinoBuildingMangement.ViewModels;
 using VecinoWpfApp;
@@ -28,25 +30,37 @@ namespace VecinoWpfApp.UserControls
         ManagePolls managePolls;
         NewPoll newPoll;
         PollDetail pollDetail;
-        
+        List<PollViewModelAdmin> polls;
+        private DispatcherTimer _dispatcherTimer;
+
         public Polls()
         {
             InitializeComponent();
+            
             _ = GetPollsList();
+            InitializetTimer();
+            this.Unloaded += UnLoadedTimer;
+        }
+        private void InitializetTimer()
+        {
+            _dispatcherTimer = new DispatcherTimer();
+            _dispatcherTimer.Interval = TimeSpan.FromSeconds(30);
+            _dispatcherTimer.Tick += Timer_Tick;
+            _dispatcherTimer.Start();
         }
         private async Task GetPollsList()
         {
-            ApiClient<ManagePolls> client = new ApiClient<ManagePolls>();
+            ApiClient<List<PollViewModelAdmin>> client = new ApiClient<List<PollViewModelAdmin>>();
             client.Scheme = "http";
             client.Host = "localhost";
             client.Port = 5269;
             client.Path = "api/Admin/ManagePolls";
             client.AddParameter("buildingId", Session.BuildingId);
-            managePolls = await client.GetAsync();
+            polls = await client.GetAsync();
           
-            listViewPolls.ItemsSource = this.managePolls.PollviewModel;
+            listViewPolls.ItemsSource = polls;
            
-            this.DataContext = this.managePolls;
+     
          
         }
         private bool? ViewCreatePollWindow()
@@ -101,6 +115,60 @@ namespace VecinoWpfApp.UserControls
 
 
 
+        }
+        private async void OpenPollButton_Click(object sender, RoutedEventArgs e)
+        {
+            PollViewModel pollViewModel = (sender as Button).DataContext as PollViewModel;
+            ApiClient<Poll> client = new ApiClient<Poll>();
+            client.Scheme = "http";
+            client.Host = "localhost";
+            client.Port = 5269;
+            client.Path = "api/Admin/OpenPoll";
+            ApiResponse<bool> apiResponse = await client.PostAsyncReturn<Poll, bool>(pollViewModel.poll);
+            if (apiResponse.Success && apiResponse.Data)
+                await GetPollsList();
+            else
+                MessageBox.Show("Unable To Open", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+
+
+
+        }
+        private void FilterButton_Click(object sender, RoutedEventArgs e)
+        {
+
+            string filter = (sender as Button).Tag.ToString();
+            switch(filter)
+            {
+                case "all":
+                    listViewPolls.ItemsSource = polls;
+                    break;
+                case "open":
+                    listViewPolls.ItemsSource = polls.Where(p => p.poll.IsActive && DateTime.ParseExact(p.poll.PollDate, "dd/MM/yyyy", CultureInfo.InvariantCulture) >= DateTime.Today);
+                    break;
+                case "close":
+                    listViewPolls.ItemsSource = polls.Where(p => !p.poll.IsActive || DateTime.ParseExact(p.poll.PollDate, "dd/MM/yyyy", CultureInfo.InvariantCulture) < DateTime.Today);
+                    break;
+
+            }
+          
+
+            Style Active = this.FindResource("FilterButtonActive") as Style;
+            Style NotActive = this.FindResource("FilterButton") as Style;
+            FilterAllButton.Style = NotActive;
+            FilterOpenButton.Style = NotActive;
+            FilterClosedButton.Style = NotActive;
+     
+            (sender as Button).Style = Active;
+
+
+        }
+        private async void Timer_Tick(object sender, EventArgs e)
+        {
+            await GetPollsList();
+        }
+        private void UnLoadedTimer(object sender, RoutedEventArgs e)
+        {
+            _dispatcherTimer.Stop();
         }
     }
 }

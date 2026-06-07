@@ -163,9 +163,13 @@
                     <TextBlock  Style="{StaticResource navText}">
                         <Hyperlink TextDecorations="None" Foreground="#64748b" x:Name="Hyperlinkresident" Click="Hyperlinkresident_Click" >Residents</Hyperlink>
                     </TextBlock>
+                    
                 </StackPanel>
                
             </Border>
+            <TextBlock>
+                <Hyperlink x:Name="HyperLinkBookings" Click="HyperLinkBookings_Click">Bookings</Hyperlink>
+            </TextBlock>    
             <Border Style="{StaticResource navItem}">
                 <StackPanel Orientation="Horizontal">
                     <Viewbox Width="20" Height="20" Margin="0,0,10,0">

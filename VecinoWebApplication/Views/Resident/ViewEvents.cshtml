@@ -6,7 +6,12 @@
     ViewData["Active"] = "event";
     Layout = "~/Views/Shared/MasterResidentPage.cshtml";
 }
-
+@if (TempData["ErrorMessage"] != null)
+{
+    <script>
+        alert("@TempData["ErrorMessage"]");
+    </script>
+}
 <link rel="stylesheet" href="~/css/Event.css">
 <div class="container">
     <div class="header">

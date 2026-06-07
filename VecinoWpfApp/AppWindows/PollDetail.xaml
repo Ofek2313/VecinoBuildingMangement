@@ -155,15 +155,7 @@
                 </StackPanel>
 
                 <!-- Created by -->
-                <StackPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right">
-                    <TextBlock Text="Created by" FontSize="11"
-                               Foreground="{StaticResource TextMuted}" HorizontalAlignment="Right"/>
-                    <TextBlock Text="Admin · Maria Lopez" FontSize="12" FontWeight="SemiBold"
-                               Foreground="{StaticResource TextSecondary}" HorizontalAlignment="Right"/>
-                    <TextBlock Text="Opened 01/09/2025  ·  Closes 30/09/2025"
-                               FontSize="11" Foreground="{StaticResource TextMuted}"
-                               HorizontalAlignment="Right" Margin="0,3,0,0"/>
-                </StackPanel>
+                
             </Grid>
         </Border>
 

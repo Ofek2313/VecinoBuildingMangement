@@ -8,6 +8,12 @@
     Layout = "~/Views/Shared/MasterResidentPage.cshtml";
 }
 <link rel="stylesheet" href="~/css/Service.css">
+@if (TempData["ErrorMessage"] != null)
+{
+    <script>
+        alert("@TempData["ErrorMessage"]");
+    </script>
+}
 <div class="container">
     <div class="header">
         <div class="header-text">
@@ -120,22 +126,76 @@
 </div>
 <div class="overlay" id="overlay"></div>
 <div class="PopOut" id="popout">
-    <h2>Submit A request</h2>
-    <form class="request-submit" asp-controller="Resident" asp-action="CreateServiceRequest" method="post">
+    <div class="popup-accent-bar"></div>
+    <div class="popup-body">
 
-        <input type="text" id="title" class="input title" placeholder="Request Title" asp-for="ServiceRequest.RequestTitle">
-        <span asp-validation-for ="ServiceRequest.RequestTitle" id="titleError"></span>
-        <textarea id="description" class="input description" placeholder="Request Description" asp-for="ServiceRequest.RequestMessage"></textarea>
-        <span asp-validation-for="ServiceRequest.RequestMessage" id="messageError"></span>
-        <Select class="input select" asp-for="ServiceRequest.RequestTypeId">
-            @foreach (RequestTypes requestTypes in Model.RequestTypes)
-            {
-                <option value="@requestTypes.RequestTypeId"> @requestTypes.RequestTypeName</option>
-            }
+        <div class="popup-header">
+            <div class="popup-title">
+                <div class="popup-title-icon">
+                    <svg fill="none" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                    </svg>
+                </div>
+                <div>
+                    <h2>Submit a request</h2>
+                    <p>Tell us what you need help with</p>
+                </div>
+            </div>
+            <button class="popup-close" id="popup-close-btn">✕</button>
+        </div>
 
-        </Select>
-        <button class="sumbitbtn" type="submit" >Submit</button>
-    </form>
+        <form class="request-submit" asp-controller="Resident" asp-action="CreateServiceRequest" method="post">
+
+            <div class="popup-field">
+                <label>Request Title</label>
+                <input type="text" class="input title" placeholder="e.g. Broken hallway light"
+                       asp-for="ServiceRequest.RequestTitle" />
+                <div class="error-wrap">
+                    <svg fill="none" viewBox="0 0 24 24" width="13" height="13" stroke="#dc2626">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                              d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span asp-validation-for="ServiceRequest.RequestTitle" class="error-msg"></span>
+                </div>
+            </div>
+
+            <div class="popup-field">
+                <label>Description</label>
+                <textarea class="input description" placeholder="Describe your issue in detail..."
+                          asp-for="ServiceRequest.RequestMessage"></textarea>
+                <div class="error-wrap">
+                    <svg fill="none" viewBox="0 0 24 24" width="13" height="13" stroke="#dc2626">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                              d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span asp-validation-for="ServiceRequest.RequestMessage" class="error-msg"></span>
+                </div>
+            </div>
+
+            <div class="popup-field">
+                <label>Category</label>
+                <select class="input select" asp-for="ServiceRequest.RequestTypeId">
+                    @foreach (RequestTypes requestTypes in Model.RequestTypes)
+                    {
+                        <option value="@requestTypes.RequestTypeId">@requestTypes.RequestTypeName</option>
+                    }
+                </select>
+            </div>
+
+            <div class="popup-footer">
+                <button type="button" class="btn-cancel" id="popup-close-btn">Cancel</button>
+                <button type="submit" class="sumbitbtn">
+                    <svg fill="none" viewBox="0 0 24 24" width="15" height="15">
+                        <path stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+                    </svg>
+                    Submit Request
+                </button>
+            </div>
+
+        </form>
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
@@ -156,35 +216,6 @@
         overlay.style.display = 'none';
         popout.style.display = 'none';
     });
-    function check() {
-      
-        alert("test");
-
-        const title = document.getElementById('title').value;
-        const message = document.getElementById('description').value;
-        const titleError = document.getElementById('titleError');
-        const messageError = document.getElementById('messageError');
-     
-
-        if (title == "")
-        { 
-            alert("testing");
-            
-        }  
-        if(message == "")
-        {
-            alert("testing");
-        }
-        if(title < 5 || message < 10)
-        {
-            
-          
-            alert("More Characters");
-        }
-        else{
-            document.forms[0].submit();
-        }
-        
-    }
+    
 </script>
 

@@ -169,8 +169,117 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <Style x:Key="OpenPollButton" TargetType="Button">
+            <Setter Property="Background"        Value="Transparent"/>
+            <Setter Property="Foreground"        Value="#FF5CE064"/>
+            <Setter Property="FontSize"          Value="12"/>
+            <Setter Property="FontWeight"        Value="SemiBold"/>
+            <Setter Property="Padding"           Value="12,0"/>
+            <Setter Property="Height"            Value="30"/>
+            <Setter Property="BorderThickness"   Value="1.5"/>
+            <Setter Property="BorderBrush"       Value="#FF5CE064"/>
+            <Setter Property="Cursor"            Value="Hand"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="{TemplateBinding BorderThickness}"
+                CornerRadius="8"
+                Padding="{TemplateBinding Padding}"
+                Height="{TemplateBinding Height}">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock Text="&#xE711;" FontFamily="Segoe MDL2 Assets"
+                           FontSize="11" VerticalAlignment="Center"
+                           Margin="0,0,5,0"
+                           Foreground="{TemplateBinding Foreground}"/>
+                                <ContentPresenter VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background"  Value="#FDEAEA"/>
+                                <Setter Property="BorderBrush" Value="#C04040"/>
+                                <Setter Property="Foreground"  Value="#C04040"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background"  Value="#F5C6C6"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="FilterButton" TargetType="Button">
+            <Setter Property="Background"      Value="{StaticResource CardBg}"/>
+            <Setter Property="Foreground"      Value="{StaticResource TextSecondary}"/>
+            <Setter Property="FontSize"        Value="13"/>
+            <Setter Property="FontWeight"      Value="SemiBold"/>
+            <Setter Property="Padding"         Value="20,0"/>
+            <Setter Property="Height"          Value="38"/>
+            <Setter Property="BorderThickness" Value="1.5"/>
+            <Setter Property="BorderBrush"     Value="{StaticResource DividerColor}"/>
+            <Setter Property="Cursor"          Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="9"
+                                Padding="{TemplateBinding Padding}"
+                                Height="{TemplateBinding Height}">
+                            <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background"  Value="#F0F4FA"/>
+                                <Setter Property="BorderBrush" Value="#B0BAC9"/>
+                                <Setter Property="Foreground"  Value="{StaticResource TextPrimary}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#E2E8F2"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="FilterButtonActive" TargetType="Button">
+            <Setter Property="Background"      Value="{StaticResource AccentTeal}"/>
+            <Setter Property="Foreground"      Value="White"/>
+            <Setter Property="FontSize"        Value="13"/>
+            <Setter Property="FontWeight"      Value="SemiBold"/>
+            <Setter Property="Padding"         Value="20,0"/>
+            <Setter Property="Height"          Value="38"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor"          Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="9"
+                                Padding="{TemplateBinding Padding}"
+                                Height="{TemplateBinding Height}">
+                            <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#3BC99A"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#2DB589"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
         <conv:StatusConverter x:Key="statusConverter"/>
         <conv:PrecentageToWidth x:Key="precentageToWidth"/>
+        <conv:PollButtonConverter x:Key="pollButtons"></conv:PollButtonConverter>
     </UserControl.Resources>
 
     <Grid Background="{StaticResource PageBg}">
@@ -201,7 +310,11 @@
                             VerticalAlignment="Center"
                             Click="ButtonPoll_Click"/>
                 </Grid>
-
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                    <Button x:Name="FilterAllButton"   Tag="all"  Content="All"    Style="{StaticResource FilterButtonActive}" Click="FilterButton_Click"/>
+                    <Button x:Name="FilterOpenButton" Tag="open"   Content="Open"   Style="{StaticResource FilterButton}"       Click="FilterButton_Click"/>
+                    <Button x:Name="FilterClosedButton" Tag="close"  Content="Closed" Style="{StaticResource FilterButton}"       Click="FilterButton_Click"/>
+                </StackPanel>
                 <ListView x:Name="listViewPolls" HorizontalContentAlignment="Stretch"
                           Height="918" Background="Transparent" BorderThickness="0">
                     <ListView.ItemTemplate>
@@ -241,7 +354,25 @@
                                             <Button Content="Close Poll"
                                                Style="{StaticResource ClosePollButton}"
                                              Margin="0,0,8,0" x:Name="ClosePollButton" Click="ClosePollButton_Click"
-                                               />
+                                               >
+                                                <Button.Visibility >
+                                                    <MultiBinding Converter="{StaticResource pollButtons}" ConverterParameter="Close">
+                                                        <Binding Path="poll.PollDate"/>
+                                                        <Binding Path="poll.IsActive"/>
+                                                    </MultiBinding>
+                                                </Button.Visibility>
+                                            </Button>
+                                            <Button Content="Open Poll"
+                                    Style="{StaticResource OpenPollButton}"
+                                  Margin="0,0,8,0" x:Name="OpenPollButton" Click="OpenPollButton_Click"
+                                    >
+                                                <Button.Visibility >
+                                                    <MultiBinding Converter="{StaticResource pollButtons}" ConverterParameter="Open">
+                                                        <Binding Path="poll.PollDate"/>
+                                                        <Binding Path="poll.IsActive"/>
+                                                    </MultiBinding>
+                                                </Button.Visibility>
+                                            </Button>
                                             <Button Content="Show Details"
                                               Style="{StaticResource ShowDetailsButton}" Click="ViewPollDetail_Click"
                                               />
@@ -263,10 +394,7 @@
                                     </Grid>
 
                                     <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
-                                        <TextBlock Text="&#xE8B7;" FontFamily="Segoe MDL2 Assets" FontSize="12"
-                                                   Foreground="{StaticResource TextMuted}"
-                                                   VerticalAlignment="Center" Margin="0,0,5,0"/>
-                                        <TextBlock Text="Amenities" Style="{StaticResource MetaText}" Margin="0,0,16,0"/>
+                                        
 
                                         <TextBlock Text="&#xE823;" FontFamily="Segoe MDL2 Assets" FontSize="12"
                                                    Foreground="{StaticResource TextMuted}"
@@ -276,7 +404,7 @@
                                         <TextBlock Text="&#xE902;" FontFamily="Segoe MDL2 Assets" FontSize="12"
                                                    Foreground="{StaticResource TextMuted}"
                                                    VerticalAlignment="Center" Margin="0,0,5,0"/>
-                                        <TextBlock Text="62 votes" Style="{StaticResource MetaText}"/>
+                                        <TextBlock Text="{Binding TotalVotes,StringFormat={}{0} Votes}" Style="{StaticResource MetaText}"/>
                                     </StackPanel>
 
                                     <Border Height="1" Background="{StaticResource DividerColor}" Margin="0,0,0,18"/>

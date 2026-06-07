@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Globalization;
 using System.Text.Json;
+using VecinoBuildingMangement;
 using VecinoBuildingMangement.DTO;
 using VecinoBuildingMangement.Models;
 using VecinoBuildingMangement.ViewModels;
@@ -17,31 +18,7 @@ namespace VecinoBuildingMangementWebService.Controllers
         {
             this.repositoryUOW = new RepositoryUOW();
         }
-        private bool IsBefore(string date1, string date2)
-        {
-            string[] date1Split = date1.Split('/');
-            string[] date2Split = date2.Split('/');
-            int day1 = Convert.ToInt32(date1Split[0]);
-            int month1 = Convert.ToInt32(date1Split[1]);
-            int year1 = Convert.ToInt32(date1Split[2]);
-
-            int day2 = Convert.ToInt32(date2Split[0]);
-            int month2 = Convert.ToInt32(date2Split[1]);
-            int year2 = Convert.ToInt32(date2Split[2]);
-
-            if (year1 < year2)
-                return true;
-            else if (year2 < year1)
-                return false;
-            if (month1 < month2)
-                return true;
-            else if (month2 < month1)
-                return false;
-            if (day1 < day2)
-                return true;
-
-            return false;
-        }
+       
         [HttpGet]
         public ManagePaymentViewModel GetManagePayment(string residentId, int page = 1)
         {
@@ -594,6 +571,43 @@ namespace VecinoBuildingMangementWebService.Controllers
             }
 
         }
+        [HttpPost]
+        public bool PayBooking([FromQuery] string bookingId)
+        {
+            try
+            {
+                this.repositoryUOW.DbHelperOleDb.OpenConnection();
+                return this.repositoryUOW.BookingRepository.UpdateBookingStauts(bookingId, BookingStatus.CONFIRMED);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return false;
+            }
+            finally
+            {
+                this.repositoryUOW.DbHelperOleDb.CloseConnection();
+            }
+        }
+        [HttpPost]
+        public bool CancelBooking([FromQuery] string bookingId)
+        {
+            try
+            {
+                this.repositoryUOW.DbHelperOleDb.OpenConnection();
+                return this.repositoryUOW.BookingRepository.UpdateBookingStauts(bookingId, BookingStatus.CANCELED);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return false;
+            }
+            finally
+            {
+                this.repositoryUOW.DbHelperOleDb.CloseConnection();
+            }
+        }
+
         [HttpGet]
         public BookingViewModel GetAllBookings(string residentId,string date)
         {
@@ -604,6 +618,7 @@ namespace VecinoBuildingMangementWebService.Controllers
                 Building building = this.repositoryUOW.BuildingRepository.GetBuildingByResidentId(residentId);
                 bookingViewModel.Bookings =  this.repositoryUOW.BookingRepository.GetBookingsByBuildingId(building.BuildingId,date);
                 bookingViewModel.SelectedDate = date;
+                bookingViewModel.MyBookings = this.repositoryUOW.BookingRepository.GetBookingsByResidentId(residentId);
                 return bookingViewModel;
             }
             catch (Exception ex)
@@ -616,6 +631,7 @@ namespace VecinoBuildingMangementWebService.Controllers
                 this.repositoryUOW.DbHelperOleDb.CloseConnection();
             }
         }
+        
 
     }
 }

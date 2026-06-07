@@ -6,7 +6,7 @@ using VecinoBuildingMangementWebService.ORM.ModelCreators;
 
 namespace VecinoBuildingMangementWebService
 {
-    public class FeeRepository : GenericRepository<Fee>, IRepository<Fee>
+    public class FeeRepository : GenericRepository<Fee>
     {
         public FeeRepository(DbHelperOleDb dbHelperOleDb, ModelCreator modelCreator)
             : base(dbHelperOleDb,modelCreator) { }
@@ -312,14 +312,14 @@ namespace VecinoBuildingMangementWebService
         public ResidentFeeStats GetResidentFeeStats(string residentId)
         {
             string sql = @"SELECT
-                Sum(IIF(IsPaid = False, FeeAmount, 0)) AS TotalUnPaidFees,
-                Sum(IIF(IsPaid = True, FeeAmount, 0)) AS TotalPaidFees,
-                SUM(IIF(IsPaid = True, 1, 0)) AS PaidFees,
-                SUM(IIF(IsPaid = False, 1, 0)) AS UnPaidFees
-            FROM
-                Fee
-            WHERE
-                ResidentId = @ResidentId";
+                            IIF(Sum(IIF(IsPaid = False, FeeAmount, 0)) IS NULL, 0, Sum(IIF(IsPaid = False, FeeAmount, 0))) AS TotalUnPaidFees,
+                            IIF(Sum(IIF(IsPaid = True, FeeAmount, 0)) IS NULL, 0, Sum(IIF(IsPaid = True, FeeAmount, 0))) AS TotalPaidFees,
+                            IIF(SUM(IIF(IsPaid = True, 1, 0)) IS NULL, 0, SUM(IIF(IsPaid = True, 1, 0))) AS PaidFees,
+                            IIF(SUM(IIF(IsPaid = False, 1, 0)) IS NULL, 0, SUM(IIF(IsPaid = False, 1, 0))) AS UnPaidFees
+                        FROM
+                            Fee
+                        WHERE
+                            ResidentId = @ResidentId;";
             this.dbHelperOleDb.AddParameter("ResidentId", residentId);
             ResidentFeeStats residentFeeStats = new ResidentFeeStats();
 

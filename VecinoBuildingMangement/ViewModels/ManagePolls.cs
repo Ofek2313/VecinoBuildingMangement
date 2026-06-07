@@ -9,9 +9,8 @@ namespace VecinoBuildingMangement.ViewModels
 {
     public class ManagePolls
     {
-        public int PollNumbers { get; set; }
-        public double ParticipationRate { get; set; }
-
+        
+       
         public List<PollViewModelAdmin> PollviewModel { get; set; }
 
 

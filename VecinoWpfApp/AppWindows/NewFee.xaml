@@ -10,7 +10,9 @@
         Background="Transparent">
 
     <Window.Resources>
+        <conv:UrlConverter x:Key="urlConverter">
 
+        </conv:UrlConverter>
         <Style x:Key="PrimaryButton" TargetType="Button">
             <Setter Property="Background">
                 <Setter.Value>
@@ -295,8 +297,10 @@
                                             <ColumnDefinition Width="Auto"/>
                                         </Grid.ColumnDefinitions>
                                         <Border Grid.Column="0" Width="32" Height="32" CornerRadius="16" Background="#e2e8f0">
-                                            <TextBlock Text="SR" FontSize="11" FontWeight="Bold" Foreground="#64748b"
-HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            <Image Stretch="UniformToFill" Source="{Binding ResidentImage,Converter={StaticResource urlConverter}}" Width="32" Height="32"></Image>
+                                            <Border.Clip>
+                                                <EllipseGeometry Center="16,16" RadiusX="16" RadiusY="16"/>
+                                            </Border.Clip>
                                         </Border>
                                         <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0">
                                             <TextBlock Text="{Binding ResidentName}" FontFamily="Segoe UI" FontSize="13" FontWeight="SemiBold" Foreground="#0f172a"/>

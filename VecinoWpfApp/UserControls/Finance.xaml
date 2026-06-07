@@ -17,8 +17,9 @@
     </UserControl.Background>
 
     <UserControl.Resources>
-        <conv:UrlConverter x:Key="urlConvertor"></conv:UrlConverter>
-        <conv:FeeStatusStyleConverter x:Key="feeStatusStyleConverter"></conv:FeeStatusStyleConverter>
+        <conv:UrlConverter x:Key="urlConvertor"/>
+        <conv:FeeStatusStyleConverter x:Key="feeStatusStyleConverter"/>
+
         <Style x:Key="CardBorder" TargetType="Border">
             <Setter Property="Background" Value="White"/>
             <Setter Property="CornerRadius" Value="16"/>
@@ -97,8 +98,8 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
         <Style x:Key="Badge" TargetType="Border">
-           
             <Setter Property="CornerRadius" Value="10"/>
             <Setter Property="Padding" Value="10,4"/>
         </Style>
@@ -129,6 +130,79 @@
             <Setter Property="Background" Value="#e2e8f0"/>
         </Style>
 
+        <!-- Finance Filter Buttons -->
+        <Style x:Key="FilterButton" TargetType="Button">
+            <Setter Property="Background"      Value="Transparent"/>
+            <Setter Property="Foreground"      Value="#64748b"/>
+            <Setter Property="FontFamily"      Value="Segoe UI"/>
+            <Setter Property="FontWeight"      Value="SemiBold"/>
+            <Setter Property="FontSize"        Value="11"/>
+            <Setter Property="Padding"         Value="12,0"/>
+            <Setter Property="Height"          Value="26"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush"     Value="#e2e8f0"/>
+            <Setter Property="Cursor"          Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="6"
+                                Padding="{TemplateBinding Padding}"
+                                Height="{TemplateBinding Height}">
+                            <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background"  Value="#f1f5f9"/>
+                                <Setter Property="BorderBrush" Value="#cbd5e1"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#e2e8f0"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="FilterButtonActive" TargetType="Button">
+            <Setter Property="FontFamily"      Value="Segoe UI"/>
+            <Setter Property="FontWeight"      Value="SemiBold"/>
+            <Setter Property="FontSize"        Value="11"/>
+            <Setter Property="Foreground"      Value="White"/>
+            <Setter Property="Padding"         Value="12,0"/>
+            <Setter Property="Height"          Value="26"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor"          Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border CornerRadius="6"
+                                Padding="{TemplateBinding Padding}"
+                                Height="{TemplateBinding Height}">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Color="#14b8a6" Offset="0"/>
+                                    <GradientStop Color="#22c55e" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Border.Background>
+                            <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Opacity" Value="0.88"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Opacity" Value="0.75"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
     </UserControl.Resources>
 
     <Canvas>
@@ -147,14 +221,12 @@
         <Button Canvas.Left="1398" Canvas.Top="40"
                 Content="+ Add Fee"
                 Style="{StaticResource PrimaryButton}"
-                Height="42" Width="130" Click="AddFeeButton_Click"
-               />
+                Height="42" Width="130" Click="AddFeeButton_Click"/>
 
         <Button Canvas.Left="1240" Canvas.Top="40"
                 Content="Export Report"
                 Style="{StaticResource SecondaryButton}"
-                Height="42" Width="140"
-                />
+                Height="42" Width="140"/>
 
         <!-- ======= STAT CARDS ======= -->
 
@@ -242,17 +314,15 @@
             </StackPanel>
         </Border>
 
-       
-
         <!-- ======= RESIDENT PAYMENT TABLE ======= -->
-        <Border Canvas.Left="82" Canvas.Top="234 " Width="920" Height="700" Style="{StaticResource CardBorder}">
+        <Border Canvas.Left="82" Canvas.Top="234" Width="920" Height="700" Style="{StaticResource CardBorder}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="54"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <!-- Table Header -->
+                <!-- Table Header with Filter Buttons -->
                 <Border Grid.Row="0" Background="#f8fafc" CornerRadius="16,16,0,0" BorderBrush="#e2e8f0" BorderThickness="0,0,0,1">
                     <Grid Margin="24,0">
                         <Grid.ColumnDefinitions>
@@ -262,15 +332,35 @@
                             <ColumnDefinition Width="120"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
+
                         <TextBlock Grid.Column="0" Text="RESIDENT" FontFamily="Segoe UI" FontSize="11" FontWeight="SemiBold" Foreground="#64748b" VerticalAlignment="Center" Margin="54,0,0,0"/>
                         <TextBlock Grid.Column="1" Text="UNIT"     FontFamily="Segoe UI" FontSize="11" FontWeight="SemiBold" Foreground="#64748b" VerticalAlignment="Center"/>
                         <TextBlock Grid.Column="2" Text="AMOUNT"   FontFamily="Segoe UI" FontSize="11" FontWeight="SemiBold" Foreground="#64748b" VerticalAlignment="Center"/>
                         <TextBlock Grid.Column="3" Text="STATUS"   FontFamily="Segoe UI" FontSize="11" FontWeight="SemiBold" Foreground="#64748b" VerticalAlignment="Center"/>
-                        <TextBlock Grid.Column="4" Text="ACTIONS"  FontFamily="Segoe UI" FontSize="11" FontWeight="SemiBold" Foreground="#64748b" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,8,0"/>
+
+                        <!-- Filter Buttons in the last column -->
+                        <StackPanel Grid.Column="4" Orientation="Horizontal"
+                                    HorizontalAlignment="Right" VerticalAlignment="Center"
+                                    Margin="0,0,8,0">
+                            <Button x:Name="FeeFilterAllButton"
+                                    Content="All"
+                                    Style="{StaticResource FilterButtonActive}"
+                                    Margin="0,0,5,0"
+                                    Click="FilterButton_Click" Tag="all"/>
+                            <Button x:Name="FeeFilterPaidButton"
+                                    Content="Paid"
+                                    Style="{StaticResource FilterButton}"
+                                    Margin="0,0,5,0"
+                                    Click="FilterButton_Click" Tag="paid"/>
+                            <Button x:Name="FeeFilterUnpaidButton"
+                                    Content="Unpaid"
+                                    Style="{StaticResource FilterButton}"
+                                    Click="FilterButton_Click" Tag="unpaid"/>
+                        </StackPanel>
                     </Grid>
                 </Border>
-                
-                <!-- Static Row -->
+
+                <!-- Table Rows -->
                 <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
                     <StackPanel>
                         <ListView x:Name="listViewFees" HorizontalContentAlignment="Stretch" BorderThickness="0" Background="Transparent">
@@ -290,17 +380,17 @@
                                                     <Border.Clip>
                                                         <EllipseGeometry Center="21,21" RadiusX="21" RadiusY="21"/>
                                                     </Border.Clip>
-                                                    <Image Stretch="UniformToFill" Source="{Binding ResidentImage,Converter={StaticResource urlConvertor}}"></Image>
+                                                    <Image Stretch="UniformToFill" Source="{Binding ResidentImage,Converter={StaticResource urlConvertor}}"/>
                                                 </Border>
                                                 <StackPanel VerticalAlignment="Center">
                                                     <TextBlock Text="{Binding ResidentName}" FontFamily="Segoe UI" FontSize="13" FontWeight="SemiBold" Foreground="#0f172a"/>
-                                                    <TextBlock  FontFamily="Segoe UI" FontSize="11" Foreground="#94a3b8">
+                                                    <TextBlock FontFamily="Segoe UI" FontSize="11" Foreground="#94a3b8">
                                                         <TextBlock.Style>
                                                             <Style TargetType="TextBlock">
-                                                                <Setter Property="Text" Value="{Binding Path=Fee.FeeDueDate, StringFormat=Due Date {0}}" />
+                                                                <Setter Property="Text" Value="{Binding Path=Fee.FeeDueDate, StringFormat=Due Date {0}}"/>
                                                                 <Style.Triggers>
                                                                     <DataTrigger Binding="{Binding Fee.IsPaid}" Value="True">
-                                                                        <Setter Property="Text" Value="{Binding Path=Fee.PaymentDate, StringFormat=Payment Date {0}}" />
+                                                                        <Setter Property="Text" Value="{Binding Path=Fee.PaymentDate, StringFormat=Payment Date {0}}"/>
                                                                     </DataTrigger>
                                                                 </Style.Triggers>
                                                             </Style>
@@ -310,37 +400,29 @@
                                             </StackPanel>
                                             <TextBlock Grid.Column="1" Text="101" FontFamily="Segoe UI" FontSize="13" FontWeight="SemiBold" Foreground="#1e293b" VerticalAlignment="Center"/>
                                             <StackPanel Grid.Column="2" VerticalAlignment="Center">
-                                                    <TextBlock Text="{Binding Fee.FeeAmount,StringFormat={}{0}₪}" 
-                                                       FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" 
-                                                       Foreground="#0f172a"/>
-                                                    <TextBlock Text="{Binding Fee.FeeTitle}" 
-                                                       FontFamily="Segoe UI" FontSize="11" 
-                                                       Foreground="#94a3b8"/>
+                                                <TextBlock Text="{Binding Fee.FeeAmount,StringFormat={}{0}₪}"
+                                                           FontFamily="Segoe UI" FontSize="14" FontWeight="Bold"
+                                                           Foreground="#0f172a"/>
+                                                <TextBlock Text="{Binding Fee.FeeTitle}"
+                                                           FontFamily="Segoe UI" FontSize="11"
+                                                           Foreground="#94a3b8"/>
                                             </StackPanel>
                                             <Border Grid.Column="3" Background="{Binding Fee.IsPaid,Converter={StaticResource feeStatusStyleConverter},ConverterParameter=Badge}" Style="{StaticResource Badge}" VerticalAlignment="Center" HorizontalAlignment="Left">
                                                 <TextBlock Text="{Binding Fee.IsPaid,Converter={StaticResource feeStatusStyleConverter},ConverterParameter=Label}" FontFamily="Segoe UI" FontSize="12" FontWeight="SemiBold" Foreground="{Binding Fee.IsPaid,Converter={StaticResource feeStatusStyleConverter},ConverterParameter=Text}"/>
                                             </Border>
                                             <StackPanel Grid.Column="4" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-                                                <Button Content="Remind" Style="{StaticResource RemindButton}" Height="30" Margin="0,0,6,0" Click="SendReminder_Click" />
-                                                <Button x:Name="ViewFeeButton" Content="View" Style="{StaticResource SecondaryButton}" Height="30" Click="ViewFeeButton_Click" />
+                                                <Button Content="Remind" Style="{StaticResource RemindButton}" Height="30" Margin="0,0,6,0" Click="SendReminder_Click"/>
+                                                <Button x:Name="ViewFeeButton" Content="View" Style="{StaticResource SecondaryButton}" Height="30" Click="ViewFeeButton_Click"/>
                                             </StackPanel>
                                         </Grid>
                                     </Border>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
                         </ListView>
-                      
-                        
-
-
-                       
-
                     </StackPanel>
                 </ScrollViewer>
             </Grid>
         </Border>
-
-      
 
         <!-- ======= RECENT TRANSACTIONS CARD ======= -->
         <Border Canvas.Left="1022" Canvas.Top="234" Width="572" Height="700" Style="{StaticResource CardBorder}">

@@ -18,15 +18,23 @@ namespace VecinoWebApplication.Controllers
         [HttpGet]
         public async Task<IActionResult> ViewBuildingCatalogue(int page = 1)
         {
-            ApiClient<BuildingCatalouge> client = new ApiClient<BuildingCatalouge>();
-            client.Scheme = "http";
-            client.Host = "localhost";
-            client.Port = 5269;
-            client.Path = "api/Guest/GetBuildingCatalogue";
-          
-            client.AddParameter("page", page.ToString());
-            BuildingCatalouge buildingCatalouge = await client.GetAsync();
-            return View(buildingCatalouge);
+            try
+            {
+                ApiClient<BuildingCatalouge> client = new ApiClient<BuildingCatalouge>();
+                client.Scheme = "http";
+                client.Host = "localhost";
+                client.Port = 5269;
+                client.Path = "api/Guest/GetBuildingCatalogue";
+
+                client.AddParameter("page", page.ToString());
+                BuildingCatalouge buildingCatalouge = await client.GetAsync();
+                return View(buildingCatalouge);
+            }
+            catch
+            {
+                return RedirectToAction("HomePage");
+            }
+            
         }
 
         [HttpGet]
@@ -39,14 +47,14 @@ namespace VecinoWebApplication.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(Resident resident)
         {
-            
-            if (!ModelState.IsValid)
+            resident.Validate();
+            if (!resident.IsValid)
                 return View("RegisterForm", resident);
      
             ApiClient<Resident> client = new ApiClient<Resident>();
             client.Scheme = "http";
             client.Host = "localhost";
-            client.Port = 5268;
+            client.Port = 5269  ;
             client.Path = "api/Guest/Register";
 
             ApiResponse<Resident> resident1 = await client.PostAsyncReturn<Resident,Resident>(resident);

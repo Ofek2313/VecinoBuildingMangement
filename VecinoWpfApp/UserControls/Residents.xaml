@@ -189,41 +189,7 @@
             </StackPanel>
         </Border>
 
-        <Border Canvas.Left="318" Canvas.Top="178" Width="220" Height="90" Style="{StaticResource CardBorder}">
-            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="20,0">
-                <Border Width="42" Height="42" CornerRadius="10" Margin="0,0,14,0" Background="#dcfce7">
-                    <TextBlock Text="✅" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                </Border>
-                <StackPanel VerticalAlignment="Center">
-                    <TextBlock Text="21" FontSize="26" FontWeight="Bold" Foreground="#16a34a" FontFamily="Segoe UI"/>
-                    <TextBlock Text="Active" FontSize="11" Foreground="#64748b" FontFamily="Segoe UI"/>
-                </StackPanel>
-            </StackPanel>
-        </Border>
-
-        <Border Canvas.Left="554" Canvas.Top="178" Width="220" Height="90" Style="{StaticResource CardBorder}">
-            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="20,0">
-                <Border Width="42" Height="42" CornerRadius="10" Margin="0,0,14,0" Background="#fee2e2">
-                    <TextBlock Text="🚫" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                </Border>
-                <StackPanel VerticalAlignment="Center">
-                    <TextBlock Text="3" FontSize="26" FontWeight="Bold" Foreground="#e11d48" FontFamily="Segoe UI"/>
-                    <TextBlock Text="Inactive" FontSize="11" Foreground="#64748b" FontFamily="Segoe UI"/>
-                </StackPanel>
-            </StackPanel>
-        </Border>
-
-        <Border Canvas.Left="790" Canvas.Top="178" Width="220" Height="90" Style="{StaticResource CardBorder}">
-            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="20,0">
-                <Border Width="42" Height="42" CornerRadius="10" Margin="0,0,14,0" Background="#e0f2fe">
-                    <TextBlock Text="🏠" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                </Border>
-                <StackPanel VerticalAlignment="Center">
-                    <TextBlock Text="18" FontSize="26" FontWeight="Bold" Foreground="#0284c7" FontFamily="Segoe UI"/>
-                    <TextBlock Text="Occupied Units" FontSize="11" Foreground="#64748b" FontFamily="Segoe UI"/>
-                </StackPanel>
-            </StackPanel>
-        </Border>
+        
 
         <!-- Table Card -->
         <Border Canvas.Left="82" Canvas.Top="288" Width="1512" Height="740" Style="{StaticResource CardBorder}">

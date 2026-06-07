@@ -2,14 +2,15 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+using System.Collections.Generic;
 using System.Data.OleDb;
 using System.Globalization;
+using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Transactions;
-using System.IO;
 using VecinoBuildingMangement;
 using VecinoBuildingMangement.DTO;
 using VecinoBuildingMangement.Models;
@@ -304,7 +305,7 @@ namespace VecinoBuildingMangementWebService.Controllers
             }
         }
 
-        [HttpDelete]
+        [HttpPost]
         public bool DeleteServiceRequest(string requestId)
         {
             try
@@ -324,7 +325,7 @@ namespace VecinoBuildingMangementWebService.Controllers
         }
 
         [HttpPost]
-        public bool ChangeRequestStatus([FromBody] StatusViewModel model)
+        public bool ChangeRequestStatus([FromBody] StatusDto model)
         {
             try
             {
@@ -371,6 +372,25 @@ namespace VecinoBuildingMangementWebService.Controllers
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
                 return this.repositoryUOW.ResidentRepository.GetResidentByBuilding(buildingId);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return null;
+            }
+            finally
+            {
+                this.repositoryUOW.DbHelperOleDb.CloseConnection();
+            }
+        }
+
+        [HttpGet]
+        public List<ResidentSummaryDTO> GetResidentsSummary(string buildingId)
+        {
+            try
+            {
+                this.repositoryUOW.DbHelperOleDb.OpenConnection();
+                return this.repositoryUOW.ResidentRepository.GetResidentSummaryByBuilding(buildingId);
             }
             catch (Exception ex)
             {
@@ -566,60 +586,29 @@ namespace VecinoBuildingMangementWebService.Controllers
         //}
 
         [HttpGet]
-        public ManagePolls ManagePolls(string buildingId)
+        public List<PollViewModelAdmin> ManagePolls(string buildingId)
         {
             ManagePolls managePolls = new ManagePolls();
             List<PollViewModelAdmin> pollviewModel = new List<PollViewModelAdmin>();
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
-                List<Poll> polls = this.repositoryUOW.PollRepository.GetPollByBuildingId(buildingId);
-                foreach (Poll poll in polls)
+                int residents = this.repositoryUOW.ResidentRepository.CountResidentByBuildingId(buildingId);
+                List<PollViewModel> baseViewModels = this.repositoryUOW.PollRepository.GetPollViewModels(buildingId);
+                pollviewModel = baseViewModels.Select(p => new PollViewModelAdmin
                 {
-                    PollViewModelAdmin viewModel = new PollViewModelAdmin();
-                    int totalVotes = 0;
-
-                    viewModel.poll = poll;
-                    List<Option> options = this.repositoryUOW.OptionRepository.GetOptionsByPollId(poll.PollId);
-                    foreach (Option option in options)
-                    {
-                        totalVotes += this.repositoryUOW.VoteRepository.CountVoteByOption(option.OptionId);
-                    }
-                    viewModel.TotalVotes = totalVotes;
-                    foreach (Option option in options)
-                    {
-                        OptionViewModel optionViewModel = new OptionViewModel();
-                        optionViewModel.option = option;
-                        optionViewModel.voted = this.repositoryUOW.VoteRepository.CountVoteByOption(option.OptionId);
-                        optionViewModel.residentsVoted = this.repositoryUOW.ResidentRepository.findResidentsByOption(option.OptionId);
-                        //optionViewModel.voted = CalcVote(options, option.OptionId);
-                        if (totalVotes > 0)
-                        {
-                            optionViewModel.percentage = (double)optionViewModel.voted / totalVotes * 100;
-                        }
-                        else
-                        {
-                            optionViewModel.percentage = 0;
-                        }
-                        viewModel.options.Add(optionViewModel);
-                    }
-                    int residents = this.repositoryUOW.ResidentRepository.CountResidentByBuildingId(buildingId);
-                    viewModel.ParticipationRate = (int)Math.Round(((double)totalVotes / residents) * 100);
-                    pollviewModel.Add(viewModel);
+                    poll = p.poll,
+                    options = p.options,
+                    TotalVotes = p.options.Sum(o => o.voted),
+                   
 
 
-                }
-                managePolls.PollviewModel = pollviewModel;
-                managePolls.PollNumbers = pollviewModel.Count;
+                }).ToList();
+                pollviewModel.ForEach(p => p.ParticipationRate = (int)Math.Round(((double)p.TotalVotes / residents) * 100));
 
-                //int residents = this.repositoryUOW.ResidentRepository.CountResidentByBuildingId(buildingId);
-                //int votes = this.repositoryUOW.VoteRepository.CountVotesByBuilding(buildingId);
+                return pollviewModel;
 
-                double participationRate = 0;
-
-                managePolls.ParticipationRate = participationRate;
-
-                return managePolls;
+               
             }
             catch (Exception ex)
             {
@@ -666,7 +655,7 @@ namespace VecinoBuildingMangementWebService.Controllers
             }
         }
 
-        [HttpDelete]
+        [HttpPost]
         public bool DeletePoll(string pollId)
         {
             try
@@ -699,6 +688,26 @@ namespace VecinoBuildingMangementWebService.Controllers
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
                 return this.repositoryUOW.PollRepository.UpdatePollStatus(poll.PollId, false);
+
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return false;
+            }
+            finally
+            {
+                this.repositoryUOW.DbHelperOleDb.CloseConnection();
+            }
+        }
+        [HttpPost]
+        public bool OpenPoll([FromBody] Poll poll)
+        {
+            try
+            {
+                this.repositoryUOW.DbHelperOleDb.OpenConnection();
+                return this.repositoryUOW.PollRepository.UpdatePollStatus(poll.PollId, true);
 
 
             }
@@ -952,21 +961,24 @@ namespace VecinoBuildingMangementWebService.Controllers
         }
 
         [HttpPost]
-        public bool DemoteAdmin([FromBody] AdminToggleDto adminToggleDto) 
+        public IActionResult DemoteAdmin([FromBody] AdminToggleDto adminToggleDto) 
         {
             if(adminToggleDto.ResidentId == adminToggleDto.AdminId)
             {
-                return false;
+                return BadRequest("You cannot demote YourSelf");
             }
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
-                return this.repositoryUOW.ResidentRepository.UpdateAdminRole(adminToggleDto.ResidentId, false);
+                bool ok = this.repositoryUOW.ResidentRepository.UpdateAdminRole(adminToggleDto.ResidentId, false);
+                if (ok)
+                    return Ok();
+                return NotFound( "Update failed — resident not found." );
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
-                return false;
+                return StatusCode(500, "An internal error occurred.");
             }
             finally
             {
@@ -1072,7 +1084,87 @@ namespace VecinoBuildingMangementWebService.Controllers
                 this.repositoryUOW.DbHelperOleDb.CloseConnection();
             }
         }
-      
+
+        [HttpPost]
+        public IActionResult ApproveBooking([FromQuery]string bookingId)
+        {
+            try
+            {
+                this.repositoryUOW.DbHelperOleDb.OpenConnection();
+                bool overLap = this.repositoryUOW.BookingRepository.CheckOverLap(bookingId);
+                if (!overLap)
+                {
+                    bool response = this.repositoryUOW.BookingRepository.UpdateBookingStauts(bookingId, BookingStatus.AWAITING_PAYMENT);
+                    if (response)
+                        return Ok();
+                    else
+                        return BadRequest("Update failed");
+
+                }
+                else
+                    return BadRequest("Booking Slot Is Already Taken");
+
+
+               
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return StatusCode(500, "An internal error occurred.");
+            }
+            finally
+            {
+                this.repositoryUOW.DbHelperOleDb.CloseConnection();
+            }
+        }
+        [HttpPost]
+        public bool RejectBooking([FromQuery] string bookingId)
+        {
+            try
+            {
+                this.repositoryUOW.DbHelperOleDb.OpenConnection();
+                return this.repositoryUOW.BookingRepository.UpdateBookingStauts(bookingId, BookingStatus.REJECTED);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return false;
+            }
+            finally
+            {
+                this.repositoryUOW.DbHelperOleDb.CloseConnection();
+            }
+        }
+        [HttpGet]
+        public ManageBookingsViewModel GetAllBookings(string buildingId)
+        {
+            ManageBookingsViewModel manageBookingsViewModel = new ManageBookingsViewModel();
+            try
+            {
+                this.repositoryUOW.DbHelperOleDb.OpenConnection();
+                List<BookingResidentViewModel> bookings = this.repositoryUOW.BookingRepository.GetBookingsByBuildingId(buildingId);
+                BookingStatsDto bookingStatsDto = this.repositoryUOW.BookingRepository.GetBookingsStats(buildingId);
+                manageBookingsViewModel.AwaitingApproval = bookingStatsDto.AwaitingApproval;
+                manageBookingsViewModel.AwaitingPayment  = bookingStatsDto.AwaitingPayment;
+                manageBookingsViewModel.Rejected = bookingStatsDto.Rejected;
+                manageBookingsViewModel.Confirmed = bookingStatsDto.Confirmed;
+                manageBookingsViewModel.UpComingBookings = bookings.Where( b => DateTime.ParseExact(b.Booking.BookingDate, "dd/MM/yyyy", CultureInfo.InvariantCulture) >= DateTime.Today).OrderBy(b => DateTime.ParseExact(b.Booking.BookingDate, "dd/MM/yyyy", CultureInfo.InvariantCulture)).ToList();
+                manageBookingsViewModel.PastBookings = bookings.Where(b => DateTime.ParseExact(b.Booking.BookingDate, "dd/MM/yyyy", CultureInfo.InvariantCulture) < DateTime.Today).OrderBy(b => DateTime.ParseExact(b.Booking.BookingDate, "dd/MM/yyyy", CultureInfo.InvariantCulture)).ToList();
+                return manageBookingsViewModel;
+            }
+
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return manageBookingsViewModel;
+            }
+            finally
+            {
+                this.repositoryUOW.DbHelperOleDb.CloseConnection();
+            }
+
+
+        }
     }
 }
 

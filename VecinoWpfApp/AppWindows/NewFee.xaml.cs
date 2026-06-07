@@ -24,7 +24,7 @@ namespace VecinoWpfApp.AppWindows
     /// </summary>
     public partial class NewFee : Window
     {
-        List<Resident> Residents;
+        List<ResidentSummaryDTO> Residents;
         private List<ResidentCheckItem> allResidents = new List<ResidentCheckItem>();
         CreateFee createFee = new CreateFee();
         public NewFee()
@@ -37,17 +37,18 @@ namespace VecinoWpfApp.AppWindows
         }
         private async Task GetResidentsList()
         {
-            ApiClient<List<Resident>> client = new ApiClient<List<Resident>>();
+            ApiClient<List<ResidentSummaryDTO>> client = new ApiClient<List<ResidentSummaryDTO>>();
             client.Scheme = "http";
             client.Host = "localhost";
             client.Port = 5269;
-            client.Path = "api/Admin/GetResidents";
+            client.Path = "api/Admin/GetResidentsSummary";
             client.AddParameter("buildingId", Session.BuildingId);
             Residents = await client.GetAsync();
             allResidents = Residents.Select(r => new ResidentCheckItem
             {
                 ResidentId = r.ResidentId,
                 ResidentName = r.ResidentName,
+                ResidentImage = r.ResidentImage,
                 IsChecked=false,
             }).ToList();
             ListViewResidents.ItemsSource = allResidents;

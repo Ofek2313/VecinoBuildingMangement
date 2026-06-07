@@ -14,6 +14,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
+using VecinoBuildingMangement.DTO;
 using VecinoBuildingMangement.Models;
 using VecinoBuildingMangement.ViewModels;
 using VecinoWpfApp.AppWindows;
@@ -27,12 +29,23 @@ namespace VecinoWpfApp.UserControls
     {
         ManageServiceRequestViewModel serviceRequestViewModel;
         ViewRequestDetail requestDetail;
+        private DispatcherTimer _dispatcherTimer;
+
         public Requests()
         {
             InitializeComponent();
+           
             GetRequestList();
+            InitializetTimer();
+            this.Unloaded += UnLoadedTimer;
         }
-
+        private void InitializetTimer()
+        {
+            _dispatcherTimer = new DispatcherTimer();
+            _dispatcherTimer.Interval = TimeSpan.FromSeconds(30);
+            _dispatcherTimer.Tick += Timer_Tick;
+            _dispatcherTimer.Start();
+        }
         private async Task GetRequestList()
         {
             ApiClient<ManageServiceRequestViewModel> client = new ApiClient<ManageServiceRequestViewModel>();
@@ -51,9 +64,9 @@ namespace VecinoWpfApp.UserControls
         private async void ActionRequest_Click(object sender, RoutedEventArgs e)
         {
             ServiceRequestDetail item = (sender as Button).DataContext as ServiceRequestDetail;
-            StatusViewModel viewModel = new StatusViewModel();
+            StatusDto viewModel = new StatusDto();
             
-            ApiClient<StatusViewModel> client = new ApiClient<StatusViewModel>();
+            ApiClient<StatusDto> client = new ApiClient<StatusDto>();
             client.Scheme = "http";
             client.Host = "localhost";
             client.Port = 5269;
@@ -126,6 +139,14 @@ namespace VecinoWpfApp.UserControls
             (sender as Button).Style = Active;
 
 
+        }
+        private async void Timer_Tick(object sender, EventArgs e)
+        {
+            await GetRequestList();
+        }
+        private void UnLoadedTimer(object sender, RoutedEventArgs e)
+        {
+            _dispatcherTimer.Stop();
         }
     }
 }

@@ -12,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using VecinoBuildingMangement.DTO;
 using VecinoBuildingMangement.Models;
 using VecinoBuildingMangement.ViewModels;
 
@@ -41,9 +42,9 @@ namespace VecinoWpfApp.AppWindows
         private async void ActionRequest_Click(object sender, RoutedEventArgs e)
         {
             ServiceRequestDetail item = (sender as Button).DataContext as ServiceRequestDetail;
-            StatusViewModel viewModel = new StatusViewModel();
+            StatusDto viewModel = new StatusDto();
 
-            ApiClient<StatusViewModel> client = new ApiClient<StatusViewModel>();
+            ApiClient<StatusDto> client = new ApiClient<StatusDto>();
             client.Scheme = "http";
             client.Host = "localhost";
             client.Port = 5269;

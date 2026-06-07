@@ -4,7 +4,7 @@ using VecinoBuildingMangementWebService.ORM.ModelCreators;
 
 namespace VecinoBuildingMangementWebService
 {
-    public class CityRepository : GenericRepository<City>, IRepository<City>
+    public class CityRepository : GenericRepository<City>
     {
         public CityRepository(DbHelperOleDb dbHelperOleDb, ModelCreator modelCreator)
             : base(dbHelperOleDb, modelCreator) { }

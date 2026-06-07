@@ -23,7 +23,12 @@
    
 
 }
-
+@if (TempData["ErrorMessage"] != null)
+{
+    <script>
+        alert("@TempData["ErrorMessage"]");
+    </script>
+}
 
 <link href="~/css/dashboard.css" rel="stylesheet" />
 <div class="container">

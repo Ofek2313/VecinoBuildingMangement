@@ -76,7 +76,7 @@ namespace VecinoBuildingMangement.Models
         {
             get { return joinCode; }
             set { joinCode = value;
-                //ValidateProperty(value, "JoinCode");
+               ;
             }
         }
 
@@ -86,6 +86,8 @@ namespace VecinoBuildingMangement.Models
             set { buildingImage = value; }
         }
 
+        [Required(ErrorMessage ="Must enter an Entrance Name")]
+        [StringLength(40,MinimumLength =1,ErrorMessage =("Entrance Name has to be between 1-40 characters"))]
         public string EntranceName
         {
             get { return entranceName; }

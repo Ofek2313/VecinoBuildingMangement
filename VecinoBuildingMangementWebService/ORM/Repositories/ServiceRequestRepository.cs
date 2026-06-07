@@ -5,7 +5,7 @@ using VecinoBuildingMangementWebService.ORM.ModelCreators;
 
 namespace VecinoBuildingMangementWebService
 {
-    public class ServiceRequestRepository : GenericRepository<ServiceRequest>, IRepository<ServiceRequest>
+    public class ServiceRequestRepository : GenericRepository<ServiceRequest>
     {
         public ServiceRequestRepository(DbHelperOleDb dbHelperOleDb,ModelCreator modelCreator)
             : base(dbHelperOleDb, modelCreator) { }

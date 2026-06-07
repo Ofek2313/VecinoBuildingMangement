@@ -22,6 +22,8 @@ namespace VecinoBuildingMangement.DTO
 
         public string EntranceName { get; set; }
 
+
+
         public bool AddressChangedFlag { get; set; }
 
     }

@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 using VecinoBuildingMangement.Models;
 using VecinoBuildingMangement.ViewModels;
 using VecinoWpfApp.AppWindows;
@@ -27,10 +28,22 @@ namespace VecinoWpfApp.UserControls
         //List<Notification> annoucnemnetslist;
         NewAnnouncement newAnnouncement;
         AnnouncementDetails announcementDetails;
+        private DispatcherTimer _dispatcherTimer;
+
         public Announcement()
         {
             InitializeComponent();
+          
             _ =  GetAnnouncementList();
+            InitializetTimer();
+            this.Unloaded += UnLoadedTimer;
+        }
+        private void InitializetTimer()
+        {
+            _dispatcherTimer = new DispatcherTimer();
+            _dispatcherTimer.Interval = TimeSpan.FromSeconds(30);
+            _dispatcherTimer.Tick += Timer_Tick;
+            _dispatcherTimer.Start();
         }
         private async Task GetAnnouncementList()
         {
@@ -81,6 +94,8 @@ namespace VecinoWpfApp.UserControls
                 MessageBox.Show("Deleted");
                 await GetAnnouncementList();
             }
+            else
+                MessageBox.Show("Unable To Delete","Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
         private bool? OpenViewDetailsWindow(Notification model)
         {
@@ -101,6 +116,14 @@ namespace VecinoWpfApp.UserControls
 
 
 
+        }
+        private async void Timer_Tick(object sender, EventArgs e)
+        {
+            await GetAnnouncementList();
+        }
+        private void UnLoadedTimer(object sender, RoutedEventArgs e)
+        {
+            _dispatcherTimer.Stop();
         }
     }
 }

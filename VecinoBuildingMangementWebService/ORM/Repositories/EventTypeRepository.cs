@@ -4,7 +4,7 @@ using VecinoBuildingMangementWebService.ORM.ModelCreators;
 
 namespace VecinoBuildingMangementWebService
 {
-    public class EventTypeRepository : GenericRepository<EventTypes>, IRepository<EventTypes>
+    public class EventTypeRepository : GenericRepository<EventTypes>
     {
         public EventTypeRepository(DbHelperOleDb dbHelperOleDb, ModelCreator modelCreator)
             : base(dbHelperOleDb, modelCreator) { }

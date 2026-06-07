@@ -49,5 +49,9 @@ namespace VecinoBuildingMangement.Models
                 this.bookingDate = value;
             }
         }
+        public BookingStatus BookingStatus { get; set; }
+
+        [Required]
+        public string BookingNote { get; set; }
     }
 }

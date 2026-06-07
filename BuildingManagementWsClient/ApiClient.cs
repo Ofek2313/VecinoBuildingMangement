@@ -42,6 +42,15 @@ namespace BuildingManagementWsClient
             }
         }
 
+       
+
+        public ApiClient()
+        {
+            this.uriBuilder.Scheme = "http";
+            this.uriBuilder.Host = "localhost";
+            this.uriBuilder.Port = 5269;
+        }
+
         public void AddParameter(string key,string value)
         {
             if (this.uriBuilder.Query == string.Empty)
@@ -79,6 +88,7 @@ namespace BuildingManagementWsClient
 
         public async Task<(byte[] bytes,string contentType)> GetFileAsync() // getting data from webservices 
         {
+            //this function is used to pass a file as bytes from the webservice to the clients.
             using (HttpRequestMessage httpRequest = new HttpRequestMessage())
             {
                 httpRequest.Method = HttpMethod.Get;
@@ -88,7 +98,7 @@ namespace BuildingManagementWsClient
                     if (httpResponse.IsSuccessStatusCode)
                     {
                         byte[] result = await httpResponse.Content.ReadAsByteArrayAsync();
-                        string contentType = httpResponse.Content.Headers.ContentType.ToString() ?? "image/jpeg";
+                        string contentType = httpResponse.Content.Headers.ContentType.ToString() ?? "image/jpeg"; // the contentype that is  by deafult is image, since it is always used for images in my project
                         return (result,contentType);
 
                         
@@ -117,21 +127,24 @@ namespace BuildingManagementWsClient
             }
         }
        
-        public async Task<ApiResponse<TResponse>> PostAsyncReturn<TRequest,TResponse>(TRequest model)
+        public async Task<ApiResponse<TResponse>> PostAsyncReturn<TRequest,TResponse>(TRequest model) //post method that returns a value, since in our web service we return true of false we always use this
         {
 
             using (HttpRequestMessage httpRequest = new HttpRequestMessage())
             {
-                ApiResponse<TResponse> response = new ApiResponse<TResponse>();
+                ApiResponse<TResponse> response = new ApiResponse<TResponse>(); 
                 httpRequest.Method = HttpMethod.Post;
                 httpRequest.RequestUri = this.uriBuilder.Uri;
                 string json = JsonSerializer.Serialize<TRequest>(model);
                 StringContent content = new StringContent(json,Encoding.UTF8,"application/json");
                 httpRequest.Content = content;
-                using (HttpResponseMessage httpResponse = await this.httpClient.SendAsync(httpRequest))
+                //constructs an http request using the path, scheme, and port, and sends it.
+                using (HttpResponseMessage httpResponse = await this.httpClient.SendAsync(httpRequest)) 
                 {
                     if (httpResponse.IsSuccessStatusCode)
                     {
+                        //if there was a response it reads, and then serializes it into the type of TResponse.
+                        
                         string result = await httpResponse.Content.ReadAsStringAsync();
                         //if (typeof(TResponse) == typeof(string))
                         //    return result;
@@ -148,16 +161,24 @@ namespace BuildingManagementWsClient
                         
                         response.Success = true;
                         response.Data = value;
-                        return response;
+                        return response; // return a success status of the post, and the data which can be a model, or a bool.
+
                     }
+                    else
+                    {
+                        response.ErrorMessage = await httpResponse.Content.ReadAsStringAsync();
+                    }
+
                 }
                 response.Success = false;
                 response.Data = default(TResponse);
+                
                 return response;
 
             }
             
         }
+        //an overloaded function used to postasync buit with a file.
         public async Task<ApiResponse<TResponse>> PostAsyncReturn<TRequest, TResponse>(TRequest model,Stream file,string fileName)
         {
 
@@ -178,6 +199,7 @@ namespace BuildingManagementWsClient
                 }
                
                 httpRequest.Content = multipartFormDataContent;
+                //constructs a mutlipartform includinga model and a file.
                 using (HttpResponseMessage httpResponse = await this.httpClient.SendAsync(httpRequest))
                 {
                     if (httpResponse.IsSuccessStatusCode)
@@ -198,7 +220,7 @@ namespace BuildingManagementWsClient
 
                         response.Success = true;
                         response.Data = value;
-                        return response;
+                        return response;  // return a success status of the post, and the data which can be a model, or a bool.
                     }
                 }
                 response.Success = false;

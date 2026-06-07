@@ -8,7 +8,7 @@ using VecinoBuildingMangementWebService.ORM.ModelCreators;
 
 namespace VecinoBuildingMangementWebService
 {
-    public class EventRepository : GenericRepository<Event>, IRepository<Event>
+    public class EventRepository : GenericRepository<Event>
     {
         public EventRepository(DbHelperOleDb dbHelperOleDb, ModelCreator modelCreator)
             : base(dbHelperOleDb,modelCreator) { }
@@ -206,7 +206,7 @@ namespace VecinoBuildingMangementWebService
         }
         public List<ResidentSummaryDTO> GetResidentsAttendingEventByEventId(string eventId)
         {
-            string sql = @$"SELECT Resident.ResidentName,Resident.ResidentImage FROM Resident
+            string sql = @$"SELECT Resident.ResidentId,Resident.ResidentName,Resident.ResidentImage FROM Resident
                         INNER JOIN (Event INNER JOIN EventAttendance ON Event.EventId = EventAttendance.EventId)
                         ON Resident.ResidentId = EventAttendance.ResidentId WHERE  Event.EventId = @EventId";
             this.dbHelperOleDb.AddParameter("@EventId", eventId);

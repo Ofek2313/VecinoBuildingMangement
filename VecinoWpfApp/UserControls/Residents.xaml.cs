@@ -14,9 +14,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
+using VecinoBuildingMangement.DTO;
 using VecinoBuildingMangement.Models;
 using VecinoBuildingMangement.ViewModels;
-using VecinoBuildingMangement.DTO;
 
 namespace VecinoWpfApp.UserControls
 {
@@ -27,10 +28,22 @@ namespace VecinoWpfApp.UserControls
     {
         ManageResidentViewModel viewModel;
         List<Resident> residentsList;
+        private DispatcherTimer _dispatcherTimer;
+
         public Residents()
         {
             InitializeComponent();
+            
             GetResidentsList();
+            InitializetTimer();
+            this.Unloaded += UnLoadedTimer;
+        }
+        private void InitializetTimer()
+        {
+            _dispatcherTimer = new DispatcherTimer();
+            _dispatcherTimer.Interval = TimeSpan.FromSeconds(30);
+            _dispatcherTimer.Tick += Timer_Tick;
+            _dispatcherTimer.Start();
         }
         private async Task GetResidentsList()
         {
@@ -108,7 +121,15 @@ namespace VecinoWpfApp.UserControls
             if (apiResponse.Success && apiResponse.Data)
                 await GetResidentsList();
             else
-                MessageBox.Show("Error");
+                MessageBox.Show(apiResponse.ErrorMessage);
+        }
+        private async void Timer_Tick(object sender, EventArgs e)
+        {
+            await GetResidentsList();
+        }
+        private void UnLoadedTimer(object sender, RoutedEventArgs e)
+        {
+            _dispatcherTimer.Stop();
         }
     }
 }

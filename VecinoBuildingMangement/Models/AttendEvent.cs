@@ -10,6 +10,6 @@ namespace VecinoBuildingMangement.Models
     {
         public string eventId { get; set; }
         public string residentId { get; set; }
-        
+
     }
 }

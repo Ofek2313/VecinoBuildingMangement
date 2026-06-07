@@ -21,7 +21,16 @@ namespace VecinoBuildingMangementWebService.ORM.ModelCreators
             foreach (PropertyInfo property in properties)
             {
                 propType = property.PropertyType;
-                property.SetValue(t, Convert.ChangeType(dataReader[$@"{property.Name}"],propType));
+              
+
+                if(propType.IsEnum)
+                {
+                    property.SetValue(t, Enum.ToObject(propType, Convert.ToInt32(dataReader[$@"{property.Name}"])));
+                }
+                else
+                {
+                    property.SetValue(t, Convert.ChangeType(dataReader[$@"{property.Name}"], propType));
+                }
             }
             return t;
         }

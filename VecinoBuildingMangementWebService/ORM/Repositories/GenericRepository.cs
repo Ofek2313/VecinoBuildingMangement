@@ -24,16 +24,16 @@ namespace VecinoBuildingMangementWebService
         {
             string sql = "";
             Type type = typeof(T);
-            var ignore = new[] { "HasErrors", "IsValid", "IsValidationEnabled" };
+            var ignore = new[] { "HasErrors", "IsValid", "IsValidationEnabled" }; //Ignroing validation attributes that are not present in the database
             PropertyInfo[] properties = type.GetProperties().Skip(1).Where(p => !ignore.Contains(p.Name)).ToArray();
             string prop = string.Join(",", properties.Select(p => p.Name));
-            string val = string.Join(",", properties.Select(p => "@" + p.Name));
+            string val = string.Join(",", properties.Select(p => "@" + p.Name)); //Creating sql statement based on the model proporites 
             
             sql = @$"Insert Into {type.Name}({prop})
                             Values({val})";
             foreach (PropertyInfo property in properties)
             {
-                dbHelperOleDb.AddParameter(@$"@{property.Name}", property.GetValue(model));
+                dbHelperOleDb.AddParameter(@$"@{property.Name}", property.GetValue(model)); //protecting againts sql injection
             }
             Console.WriteLine(sql);
             return this.dbHelperOleDb.Insert(sql) > 0;
@@ -43,10 +43,10 @@ namespace VecinoBuildingMangementWebService
         public bool Delete(string id)
         {
             Type type = typeof(T);
-            var ignore = new[] { "HasErrors", "IsValid", "IsValidationEnabled" };
+            var ignore = new[] { "HasErrors", "IsValid", "IsValidationEnabled" }; //Ignroing validation attributes that are not present in the database
             PropertyInfo[] properties = type.GetProperties().Where(p => !ignore.Contains(p.Name)).ToArray();
-            string sql = $@"Delete from {type.Name} where {properties[0].Name}=@{properties[0].Name}";
-            this.dbHelperOleDb.AddParameter($@"@{properties[0].Name}", id);
+            string sql = $@"Delete from {type.Name} where {properties[0].Name}=@{properties[0].Name}";//Creating sql statement based on the model proporites 
+            this.dbHelperOleDb.AddParameter($@"@{properties[0].Name}", id);  //protecting againts sql injection
             return this.dbHelperOleDb.Delete(sql) > 0;
         }
 
@@ -74,10 +74,10 @@ namespace VecinoBuildingMangementWebService
         public T GetById(string id)
         {
             Type type = typeof(T);
-            var ignore = new[] { "HasErrors", "IsValid", "IsValidationEnabled" };
+            var ignore = new[] { "HasErrors", "IsValid", "IsValidationEnabled" }; //Ignroing validation attributes that are not present in the database
             PropertyInfo[] properties = type.GetProperties().Where(p => !ignore.Contains(p.Name)).ToArray();
             string sql = @$"Select * From {type.Name} Where {properties[0].Name}=@{properties[0].Name}";
-            dbHelperOleDb.AddParameter(@$"@{properties[0].Name}", id);
+            dbHelperOleDb.AddParameter(@$"@{properties[0].Name}", id); //protecting againts sql injection
 
             using (IDataReader dataReader = this.dbHelperOleDb.Select(sql))
             {
@@ -90,15 +90,15 @@ namespace VecinoBuildingMangementWebService
         public bool Update(T model)
         {
             Type type = typeof(T);
-            var ignore = new[] { "HasErrors", "IsValid", "IsValidationEnabled" };
+            var ignore = new[] { "HasErrors", "IsValid", "IsValidationEnabled" }; //Ignroing validation attributes that are not present in the database
             PropertyInfo[] properties = type.GetProperties().Skip(1).Where(p => !ignore.Contains(p.Name)).ToArray();
             string sql = $@"Update {type.Name} set ";
             string val = string.Join(", ", properties.Select(p => $@"{p.Name} = @{p.Name}"));
 
             PropertyInfo id = type.GetProperties().Where(p => !ignore.Contains(p.Name)).ToArray()[0];
             sql += val;
-            sql += @$" WHERE {id.Name} = @{id.Name}";
-        
+            sql += @$" WHERE {id.Name} = @{id.Name}"; //Creating sql statement based on the model proporites 
+
             Console.WriteLine(id.GetValue(model));
 
             foreach (PropertyInfo property in properties)

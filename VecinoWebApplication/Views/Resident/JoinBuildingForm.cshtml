@@ -2,11 +2,17 @@
     ViewData["Title"] = "JoinBuildingForm";
     Layout = "~/Views/Shared/MasterGuestPage.cshtml";
 }
+@using VecinoBuildingMangement.DTO
 @using VecinoBuildingMangement.ViewModels;
 
 @model JoinBuildingRequest;
 
-
+@if (TempData["ErrorMessage"] != null)
+{
+    <script>
+        alert("@TempData["ErrorMessage"]");
+    </script>
+}
 
 <link rel="stylesheet" href="~/css/Login.css" />
 

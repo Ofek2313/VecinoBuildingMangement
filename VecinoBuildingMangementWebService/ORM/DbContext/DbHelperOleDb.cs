@@ -25,24 +25,23 @@ namespace VecinoBuildingMangementWebService
             this.oleDbConnection.ConnectionString = $@"Provider=Microsoft.ACE.OLEDB.12.0;Data Source={Directory.GetCurrentDirectory()}\App_Data\\BuildingMangement.accdb;Persist Security Info=True";
 
 
-            // Set the Connection String statically
-            //this.oleDbConnection.ConnectionString =
-            //    $@"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\Users\USER\source\repos\VecinoBuildingMangement\VecinoBuildingMangementWebService\App_Data\BuildingMangement.accdb;Persist Security Info=False";
+      
             this.dbCommand = new OleDbCommand();
             this.dbCommand.Connection = this.oleDbConnection;
         }
 
-        public void CloseConnection()
+        public void CloseConnection() // Closes a conncetion to the database.
         {
            
            this.oleDbConnection.Close();
         }
 
-        public void Commit()
+        public void Commit() //Commit changes that were made while the transcation was open.
         {
             this.dbTransaction.Commit();
         }
 
+        //CRUD Opeartions
         public int Delete(string sql)
         {
             this.dbCommand.CommandText = sql;
@@ -58,24 +57,6 @@ namespace VecinoBuildingMangementWebService
             this.dbCommand.Parameters.Clear();
             return records;
         }
-
-        public void OpenConnection()
-        {
-       
-            this.oleDbConnection.Open();
-        }
-
-        public void OpenTransaction()
-        {
-            this.dbTransaction = this.oleDbConnection.BeginTransaction();
-            this.dbCommand.Transaction = this.dbTransaction;
-        }
-
-        public void RollBack()
-        {
-            this.dbTransaction.Rollback();
-        }
-
         public IDataReader Select(string sql)
         {
             this.dbCommand.CommandText = sql;
@@ -91,7 +72,28 @@ namespace VecinoBuildingMangementWebService
             this.dbCommand.Parameters.Clear();
             return records;
         }
-        public void AddParameter(string name, object value)
+        
+
+        public void OpenConnection() // Open a conncetion to the database.
+        {
+       
+            this.oleDbConnection.Open();
+        }
+
+        // Open Transaction for treating multiple SQL actions as a single unit, that ensures that the database will be in sync.
+        public void OpenTransaction()
+        {
+            this.dbTransaction = this.oleDbConnection.BeginTransaction();
+            this.dbCommand.Transaction = this.dbTransaction;
+        }
+
+        public void RollBack() // Cancel the operations made while the transaction was open.
+        {
+            this.dbTransaction.Rollback();
+        }
+
+       
+        public void AddParameter(string name, object value) // Prevent Sql Injection
         {
             this.dbCommand.Parameters.Add(new OleDbParameter(name, value));
         }
@@ -99,12 +101,12 @@ namespace VecinoBuildingMangementWebService
         {
             this.dbCommand.Parameters.Clear();
         }
-        public string GetLastId(string sql)
+        public string GetLastId(string sql) // used for getting the id of the last inserted row in the database.
         {
             this.dbCommand.CommandText = sql;
             return this.dbCommand.ExecuteScalar().ToString();
         }
-        public object ExecuteScalar(string sql)
+        public object ExecuteScalar(string sql) // Function that returns the first column of the first row of the records. 
         {
             this.dbCommand.CommandText = sql;
 

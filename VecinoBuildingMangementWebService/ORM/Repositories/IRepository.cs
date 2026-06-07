@@ -1,6 +1,6 @@
 ﻿namespace VecinoBuildingMangementWebService
 {
-    public interface IRepository<T> 
+    public interface IRepository<T>  // All the CRUD actions
     {
         bool Create(T model);
         bool Update(T model);

@@ -12,7 +12,12 @@
 
 }
 
-
+@if (TempData["ErrorMessage"] != null)
+{
+    <script>
+        alert("@TempData["ErrorMessage"]");
+    </script>
+}
 
 
 
@@ -118,14 +123,7 @@
 
 
 
-                    <div class="remember">
-
-                        <input type="checkbox" id="remember" />
-
-                        <span>Keep me signed in</span>
-
-                    </div>
-
+                   
 
 
                     <button type="submit" class="btn-submit">
@@ -170,7 +168,7 @@
 
 
 
-    <p class="page-footer">© 2025 Vecino Building Management</p>
+ 
 
 
 

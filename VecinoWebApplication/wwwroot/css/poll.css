@@ -322,6 +322,41 @@ body {
         cursor: not-allowed;
         box-shadow: none;
     }
+.filter-bar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+}
+
+.filter-btn {
+    padding: 8px 20px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1.5px solid #e2e8f0;
+    background: #ffffff;
+    color: #64748b;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+    .filter-btn:hover {
+        background: #f1f5f9;
+        border-color: #cbd5e1;
+        color: #1e293b;
+    }
+
+.filter-btn--active {
+    background: #4DD9AC;
+    border-color: #4DD9AC;
+    color: #ffffff;
+}
+
+    .filter-btn--active:hover {
+        background: #3BC99A;
+        border-color: #3BC99A;
+        color: #ffffff;
+    }
 @media(max-width:900px)
 {
     .container {

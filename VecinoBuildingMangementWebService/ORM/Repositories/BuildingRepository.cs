@@ -9,7 +9,7 @@ using VecinoBuildingMangementWebService.ORM.ModelCreators;
 namespace VecinoBuildingMangementWebService
 {
 
-    public class BuildingRepository : GenericRepository<Building>, IRepository<Building>
+    public class BuildingRepository : GenericRepository<Building>
     {
         public BuildingRepository(DbHelperOleDb dbHelperOleDb, ModelCreator modelCreator)
             : base(dbHelperOleDb, modelCreator) { }

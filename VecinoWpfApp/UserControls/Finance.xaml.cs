@@ -1,6 +1,7 @@
 ﻿using BuildingManagementWsClient;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -14,6 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 using VecinoBuildingMangement.Models;
 using VecinoBuildingMangement.ViewModels;
 using VecinoWpfApp.AppWindows;
@@ -29,10 +31,21 @@ namespace VecinoWpfApp.UserControls
         ManageAdminFinance manageAdminFinance;
         NewFee newFee;
         FeeDetail feeDetail;
+        private DispatcherTimer _dispatcherTimer;
+
         public Finance()
         {
             InitializeComponent();
             LoadFinanceData();
+            InitializetTimer();
+            this.Unloaded += UnLoadedTimer;
+        }
+        private void InitializetTimer()
+        {
+            _dispatcherTimer = new DispatcherTimer();
+            _dispatcherTimer.Interval = TimeSpan.FromSeconds(30);
+            _dispatcherTimer.Tick += Timer_Tick;
+            _dispatcherTimer.Start();
         }
         private async Task LoadFinanceData()
         {
@@ -116,8 +129,45 @@ namespace VecinoWpfApp.UserControls
 
             if (response == true)
                 await LoadFinanceData();
+           
+
+        }
+        private void FilterButton_Click(object sender, RoutedEventArgs e)
+        {
+
+            string filter = (sender as Button).Tag.ToString();
+            switch (filter)
+            {
+                case "all":
+                    listViewFees.ItemsSource = manageAdminFinance.Finances;
+                    break;
+                case "paid":
+                    listViewFees.ItemsSource = manageAdminFinance.Finances.Where(f => f.Fee.IsPaid );
+                    break;
+                case "unpaid":
+                    listViewFees.ItemsSource = manageAdminFinance.Finances.Where(f => !f.Fee.IsPaid);
+                    break;
+
+            }
 
 
+            Style Active = this.FindResource("FilterButtonActive") as Style;
+            Style NotActive = this.FindResource("FilterButton") as Style;
+            FeeFilterAllButton.Style = NotActive;
+            FeeFilterPaidButton.Style = NotActive;
+            FeeFilterUnpaidButton.Style = NotActive;
+
+            (sender as Button).Style = Active;
+
+
+        }
+        private async void Timer_Tick(object sender, EventArgs e)
+        {
+            await LoadFinanceData();
+        }
+        private void UnLoadedTimer(object sender, RoutedEventArgs e)
+        {
+            _dispatcherTimer.Stop();
         }
     }
 }

@@ -1,0 +1,242 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="VecinoBuildingMangement.ViewModels.PayFeeRequest">
+    <Position X="13.75" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DTO\PayFeeRequest.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VecinoBuildingMangement.ViewModels.ActivityViewModel">
+    <Position X="12" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAEAAAAAAAAQAAAAAAAAAAAIABAgAAAA=</HashCode>
+      <FileName>ViewModels\ActivityViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VecinoBuildingMangement.ViewModels.AdminMainPage">
+    <Position X="12" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAAIAAAAAAACAAAAAQAAAAAAAAQAAAAAACAAAA=</HashCode>
+      <FileName>ViewModels\AdminMainPage.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VecinoBuildingMangement.ViewModels.AnnouncementDetailsViewModel">
+    <Position X="17.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAQAAAQAAAAAAQAAAEAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\AnnouncementDetailsViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VecinoBuildingMangement.ViewModels.BookingViewModel">
+    <Position X="19" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAAAAAAQAAAAAAABAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\BookingViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VecinoBuildingMangement.ViewModels.BuildingCatalouge">
+    <Position X="20.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAAAAAQAAAAAGAAAAAAAAAAAAAAAAAAAAAAAQA=</HashCode>
+      <FileName>ViewModels\BuildingCatalouge.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VecinoBuildingMangement.ViewModels.BuildingModel">
+    <Position X="22.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\BuildingModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VecinoBuildingMangement.ViewModels.BuildingViewModel">
+    <Position X="13.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\BuildingViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VecinoBuildingMangement.ViewModels.CreateEvent">
+    <Position X="10.25" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\CreateEvent.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VecinoBuildingMangement.ViewModels.EventViewModel">
+    <Position X="10.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAADA=</HashCode>
+      <FileName>ViewModels\EventViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VecinoBuildingMangement.ViewModels.EventViewModelResident">
+    <Position X="10.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\EventViewModelResident.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VecinoBuildingMangement.ViewModels.JoinBuildingViewModel">
+    <Position X="10.25" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAABAAAAAAAAAAAAAAACAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\JoinBuildingViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VecinoBuildingMangement.ViewModels.LogInViewModel">
+    <Position X="19" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\LogInViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VecinoBuildingMangement.ViewModels.MainpageViewModel">
+    <Position X="6.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAAAAAgAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\MainpageViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VecinoBuildingMangement.ViewModels.ManageAdminFinance">
+    <Position X="22.5" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EACAAAAAAAARAAAAAAAAAAAAAAAAAAAAEAAAAICAAAA=</HashCode>
+      <FileName>ViewModels\ManageAdminFinance.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VecinoBuildingMangement.ViewModels.ManageEventViewModel">
+    <Position X="12" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAABAAAAAAEAAA=</HashCode>
+      <FileName>ViewModels\ManageEventViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VecinoBuildingMangement.ViewModels.ManageFinnaceViewModel">
+    <Position X="15.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAADAAAAgAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\ManageFinnaceViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VecinoBuildingMangement.ViewModels.ManagePaymentViewModel">
+    <Position X="17.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAI=</HashCode>
+      <FileName>ViewModels\ManagePaymentViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VecinoBuildingMangement.ViewModels.ManagePolls">
+    <Position X="26.25" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA=</HashCode>
+      <FileName>ViewModels\ManagePolls.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VecinoBuildingMangement.ViewModels.ManageResidentViewModel">
+    <Position X="20.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAABAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\ManageResidentViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VecinoBuildingMangement.ViewModels.ManageServiceRequestViewModel">
+    <Position X="22.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAAAAAIAAACAAAAAAAAAAAAAAAAAIBAAAAA=</HashCode>
+      <FileName>ViewModels\ManageServiceRequestViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VecinoBuildingMangement.ViewModels.NextEventViewModel">
+    <Position X="13.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAA=</HashCode>
+      <FileName>ViewModels\NextEventViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VecinoBuildingMangement.ViewModels.NotificationsViewModels">
+    <Position X="15.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgACAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\NotificationsViewModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VecinoBuildingMangement.ViewModels.OptionViewModel">
+    <Position X="17.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAQAAAIAAAAAAAEAAAAAAAIAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\OptionViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VecinoBuildingMangement.ViewModels.PollViewModel">
+    <Position X="8.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAgAAAAAAAA=</HashCode>
+      <FileName>ViewModels\PollViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VecinoBuildingMangement.ViewModels.PollViewModelAdmin">
+    <Position X="8.5" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAQAAAEAAAAA=</HashCode>
+      <FileName>ViewModels\PollViewModelAdmin.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VecinoBuildingMangement.ViewModels.ResidentCheckItem">
+    <Position X="20.75" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAACAAAAAAAAAAAAQAAAAAAAAAACAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\ResidentCheckItem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VecinoBuildingMangement.ViewModels.ResidentFeeViewModel">
+    <Position X="6.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAgBAAAAAQAAAAAAAAAACAAAAAAABA=</HashCode>
+      <FileName>ViewModels\ResidentFeeViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VecinoBuildingMangement.ViewModels.SendNotificationViewModel">
+    <Position X="8.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAgAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\SendNotificationViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VecinoBuildingMangement.ViewModels.ServiceRequestDetail">
+    <Position X="13.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAIAAAAAAABQAAAAAAAAAQCAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\ServiceRequestDetail.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VecinoBuildingMangement.ViewModels.ServiceRequestViewModel">
+    <Position X="15.5" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAIIAAACAAAAAAAAAAEAAAAAAIBAAAAA=</HashCode>
+      <FileName>ViewModels\ServiceRequestViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VecinoBuildingMangement.ViewModels.TransactionViewModel">
+    <Position X="19" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAgAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\TransactionViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VecinoBuildingMangement.ViewModels.ViewEventViewModel">
+    <Position X="19" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAgAAAAAAAIAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\ViewEventViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VecinoBuildingMangement.ViewModels.ViewModelAvatar">
+    <Position X="6.75" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\ViewModelAvatar.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

@@ -9,6 +9,9 @@ namespace VecinoBuildingMangement.ViewModels
     public class ResidentCheckItem
     {
         public string ResidentName { get; set; }
+
+        public string ResidentImage { get; set; }
+
         public string ResidentId { get; set; }
 
         public bool IsChecked { get; set; } 

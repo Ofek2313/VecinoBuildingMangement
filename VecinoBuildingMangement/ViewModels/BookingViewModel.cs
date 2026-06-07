@@ -9,7 +9,11 @@ namespace VecinoBuildingMangement.ViewModels
 {
     public class BookingViewModel
     {
-        public List<Booking> Bookings { get; set; }
+        public List<Booking> Bookings { get; set; } = new List<Booking>();
+
+        public List<Booking> MyBookings { get; set; } = new List<Booking>();
         public string SelectedDate { get; set; }
+
+        public Booking Booking { get; set; } = new Booking();
     }
 }
