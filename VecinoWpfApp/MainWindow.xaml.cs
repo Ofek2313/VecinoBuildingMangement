@@ -37,7 +37,7 @@ namespace VecinoWpfApp
             setActive(dashboardNav);
           
         }
-        private void setActive(Border activeBorder)
+        private void setActive(Border activeBorder) // Activiting The Specifc Nav Item that was pressed
         {
            
           
@@ -49,6 +49,7 @@ namespace VecinoWpfApp
             ResetBorder(eventNav);
             ResetBorder(pollNav);
             ResetBorder(resNav);
+            ResetBorder(bookNav);
 
             activeBorder.Style = (Style)FindResource("navItemActive");
 
@@ -60,7 +61,7 @@ namespace VecinoWpfApp
             activePath.Fill = Brushes.White;
             hyperlink.Foreground = Brushes.White;
         }
-        private void ResetBorder(Border resetBorder)
+        private void ResetBorder(Border resetBorder) //Resets the Border every time a new nav item is chosen
         {
             resetBorder.Style = (Style)FindResource("navItem");
             StackPanel activeStack = resetBorder.Child as StackPanel;
@@ -175,6 +176,7 @@ namespace VecinoWpfApp
         private void HyperLinkBookings_Click(object sender, RoutedEventArgs e)
         {
             ViewBookings();
+            setActive(bookNav);
         }
     }
 }

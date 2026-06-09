@@ -90,13 +90,10 @@ namespace VecinoWpfApp.AppWindows
 
 
 
-            //viewModel.Notification.NotificationId = " ";
-            //viewModel.Notification.NotificationMessage = AnnouncementMessage;
-            //viewModel.Notification.NotificationTitle = AnnouncementTitle;
-            viewModel.Notification.NotificationDate = " ";
+           
+            viewModel.Notification.NotificationDate = " "; //Temp Value
             viewModel.Notification.CreatedBy = Session.ResidentId;
-            //viewModel.Notification.Priority = Priority;
-            //viewModel.Notification.IsPinned = IsPinned;
+    
            
 
 
@@ -123,13 +120,6 @@ namespace VecinoWpfApp.AppWindows
             
             
         }
-        private void SetLoading(bool loading)
-        {
-
-            if(loading)
-            {
-                
-            }
-        }
+        
     }
 }

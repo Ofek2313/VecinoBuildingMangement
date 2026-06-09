@@ -10,10 +10,9 @@ using VecinoBuildingMangement.ViewModels;
 
 namespace VecinoWebApplication.Controllers
 {
+    // Handles all resident-related UI actions and communicates with the backend Web API
     public class ResidentController : Controller
     {
-       
-
         [HttpGet]
         public async Task<IActionResult> ViewSerivceRequests()
         {
@@ -21,6 +20,8 @@ namespace VecinoWebApplication.Controllers
             {
                 ApiClient<ServiceRequestViewModel> client = new ApiClient<ServiceRequestViewModel>();
                 string residentId = HttpContext.Session.GetString("residentId");
+
+                // Configure API endpoint for service requests
                 client.Scheme = "http";
                 client.Host = "localhost";
                 client.Port = 5269;
@@ -48,6 +49,8 @@ namespace VecinoWebApplication.Controllers
             {
                 ApiClient<ManagePaymentViewModel> client = new ApiClient<ManagePaymentViewModel>();
                 string residentId = HttpContext.Session.GetString("residentId");
+
+                // Payment pagination request
                 client.Scheme = "http";
                 client.Host = "localhost";
                 client.Port = 5269;
@@ -76,6 +79,8 @@ namespace VecinoWebApplication.Controllers
             {
                 ApiClient<ViewEventViewModel> client = new ApiClient<ViewEventViewModel>();
                 string residentId = HttpContext.Session.GetString("residentId");
+
+                // Load events for current resident
                 client.Scheme = "http";
                 client.Host = "localhost";
                 client.Port = 5269;
@@ -101,7 +106,9 @@ namespace VecinoWebApplication.Controllers
         {
             try
             {
-                ApiClient<bool> client = new ApiClient<bool>(); // The types do not matter since working with a file I dont need any model
+                ApiClient<bool> client = new ApiClient<bool>();
+
+                // Fetch event image from API
                 client.Scheme = "http";
                 client.Host = "localhost";
                 client.Port = 5269;
@@ -116,11 +123,11 @@ namespace VecinoWebApplication.Controllers
             }
             catch
             {
+                // Fallback image if API is unreachable
                 string fallbackPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "image", "event0.png");
                 byte[] fallbackBytes = await System.IO.File.ReadAllBytesAsync(fallbackPath);
                 return File(fallbackBytes, "image/png");
             }
-          
         }
 
         [HttpGet]
@@ -133,12 +140,13 @@ namespace VecinoWebApplication.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateServiceRequest(ServiceRequest serviceRequest)
         {
-            Console.WriteLine($"Incoming serviceRequest.RequestId: '{serviceRequest.RequestId}'");
-
             serviceRequest.ResidentId = HttpContext.Session.GetString("residentId");
+
+            // Default values before sending to API
             serviceRequest.RequestStatus = "Pending";
             serviceRequest.RequestDate = DateTime.Now.ToShortDateString();
             serviceRequest.RequestId = "";
+
             try
             {
                 ApiClient<ServiceRequest> client = new ApiClient<ServiceRequest>();
@@ -154,7 +162,6 @@ namespace VecinoWebApplication.Controllers
             catch
             {
                 TempData["ErrorMessage"] = "NetWork Error";
-                // If submittal fails, drop them back onto the form page they just filled out
                 return RedirectToAction("CreateServiceRequestForm");
             }
         }
@@ -166,6 +173,8 @@ namespace VecinoWebApplication.Controllers
             {
                 ApiClient<List<PollViewModel>> client = new ApiClient<List<PollViewModel>>();
                 string residentId = HttpContext.Session.GetString("residentId");
+
+                // Load polls for resident
                 client.Scheme = "http";
                 client.Host = "localhost";
                 client.Port = 5269;
@@ -192,6 +201,8 @@ namespace VecinoWebApplication.Controllers
             try
             {
                 MainpageViewModel mainpage = await GetTaskMainPage();
+
+                // If session or data invalid, force logout flow
                 if (mainpage != null)
                     return View(mainpage);
                 else
@@ -204,7 +215,7 @@ namespace VecinoWebApplication.Controllers
             catch
             {
                 TempData["ErrorMessage"] = "NetWork Error";
-                return RedirectToAction("HomePage", "Guest"); // Safe fall back if the actual dashboard errors out completely
+                return RedirectToAction("HomePage", "Guest");
             }
         }
 
@@ -212,11 +223,13 @@ namespace VecinoWebApplication.Controllers
         private async Task<MainpageViewModel> GetTaskMainPage()
         {
             ApiClient<MainpageViewModel> client = new ApiClient<MainpageViewModel>();
+
             client.Scheme = "http";
             client.Host = "localhost";
             client.Port = 5269;
             client.Path = "api/Resident/Mainpage";
             client.AddParameter("residentId", HttpContext.Session.GetString("residentId"));
+
             return await client.GetAsync();
         }
 
@@ -231,6 +244,8 @@ namespace VecinoWebApplication.Controllers
             try
             {
                 ApiClient<JoinBuildingRequest> client = new ApiClient<JoinBuildingRequest>();
+
+                // Attach current resident to request
                 client.Scheme = "http";
                 client.Host = "localhost";
                 client.Port = 5269;
@@ -264,20 +279,25 @@ namespace VecinoWebApplication.Controllers
             try
             {
                 ApiClient<LogInViewModel> client = new ApiClient<LogInViewModel>();
+
                 client.Scheme = "http";
                 client.Host = "localhost";
                 client.Port = 5269;
                 client.Path = "api/Resident/Login";
-                ApiResponse<Resident> resident = await client.PostAsyncReturn<LogInViewModel, Resident>(logInViewModel);
+
+                ApiResponse<Resident> resident =
+                    await client.PostAsyncReturn<LogInViewModel, Resident>(logInViewModel);
 
                 if (resident == null || !resident.Success)
                     return View("LoginForm", logInViewModel);
 
-                // Set session variables
+                // Store session data after successful login
                 HttpContext.Session.SetString("residentId", resident.Data.ResidentId);
                 HttpContext.Session.SetString("residentName", resident.Data.ResidentName);
+
                 ViewBag.IsLoggedIn = true;
 
+                // Redirect based on building assignment
                 if (resident.Data.BuildingId != "0")
                     return RedirectToAction("ViewDashboard");
                 else
@@ -296,6 +316,7 @@ namespace VecinoWebApplication.Controllers
             try
             {
                 ApiClient<bool> client = new ApiClient<bool>();
+
                 client.Scheme = "http";
                 client.Host = "localhost";
                 client.Port = 5269;
@@ -329,6 +350,7 @@ namespace VecinoWebApplication.Controllers
             {
                 ApiClient<NotificationsViewModels> client = new ApiClient<NotificationsViewModels>();
                 string residentId = HttpContext.Session.GetString("residentId");
+
                 client.Scheme = "http";
                 client.Host = "localhost";
                 client.Port = 5269;
@@ -356,12 +378,15 @@ namespace VecinoWebApplication.Controllers
             return RedirectToAction("HomePage", "Guest");
         }
 
+    
+
         public async Task<IActionResult> GetBookingPage(string date)
         {
             try
             {
                 ApiClient<BookingViewModel> client = new ApiClient<BookingViewModel>();
                 string residentId = HttpContext.Session.GetString("residentId");
+
                 client.Scheme = "http";
                 client.Host = "localhost";
                 client.Port = 5269;
@@ -390,6 +415,7 @@ namespace VecinoWebApplication.Controllers
             {
                 ApiClient<AttendEvent> client = new ApiClient<AttendEvent>();
                 string residentId = HttpContext.Session.GetString("residentId");
+
                 client.Scheme = "http";
                 client.Host = "localhost";
                 client.Port = 5269;
@@ -397,13 +423,10 @@ namespace VecinoWebApplication.Controllers
 
                 AttendEvent attendEvent = new AttendEvent { eventId = eventId, residentId = residentId };
 
-                ApiResponse<bool> result = await client.PostAsyncReturn<AttendEvent, bool>(attendEvent);
-                if (result.Data && result.Success)
-                {
-                    return Json(new { success = true });
-                }
-                else
-                    return Json(new { success = false });
+                ApiResponse<bool> result =
+                    await client.PostAsyncReturn<AttendEvent, bool>(attendEvent);
+
+                return Json(new { success = result.Data && result.Success });
             }
             catch
             {
@@ -418,6 +441,7 @@ namespace VecinoWebApplication.Controllers
             {
                 ApiClient<AttendEvent> client = new ApiClient<AttendEvent>();
                 string residentId = HttpContext.Session.GetString("residentId");
+
                 client.Scheme = "http";
                 client.Host = "localhost";
                 client.Port = 5269;
@@ -425,13 +449,10 @@ namespace VecinoWebApplication.Controllers
 
                 AttendEvent attendEvent = new AttendEvent { eventId = eventId, residentId = residentId };
 
-                ApiResponse<bool> result = await client.PostAsyncReturn<AttendEvent, bool>(attendEvent);
-                if (result.Data && result.Success)
-                {
-                    return Json(new { success = true });
-                }
-                else
-                    return Json(new { success = false });
+                ApiResponse<bool> result =
+                    await client.PostAsyncReturn<AttendEvent, bool>(attendEvent);
+
+                return Json(new { success = result.Data && result.Success });
             }
             catch
             {
@@ -445,29 +466,31 @@ namespace VecinoWebApplication.Controllers
             try
             {
                 ApiClient<Vote> client = new ApiClient<Vote>();
+
                 client.Scheme = "http";
                 client.Host = "localhost";
                 client.Port = 5269;
                 client.Path = "api/Resident/VoteInPoll";
 
                 string residentId = HttpContext.Session.GetString("residentId");
+
+                //Construct Vote Object
                 Vote vote = new Vote
                 {
                     PollId = voteRequest.PollId,
                     OptionId = voteRequest.OptionId,
                     ResidentId = residentId,
                     VoteDate = DateTime.Now.ToString("dd/MM/yyyy"),
-                    VoteId = "0"
+                    VoteId = "0" //Temp Value
                 };
 
-                ApiResponse<List<OptionViewModel>> apiResponse = await client.PostAsyncReturn<Vote, List<OptionViewModel>>(vote);
+                ApiResponse<List<OptionViewModel>> apiResponse =
+                    await client.PostAsyncReturn<Vote, List<OptionViewModel>>(vote);
 
                 if (apiResponse.Success && apiResponse.Data != null)
-                {
                     return Json(new { success = true, data = apiResponse.Data });
-                }
-                else
-                    return Json(new { success = false });
+
+                return Json(new { success = false });
             }
             catch
             {
@@ -481,6 +504,7 @@ namespace VecinoWebApplication.Controllers
             try
             {
                 ApiClient<VoteDeleteRequest> client = new ApiClient<VoteDeleteRequest>();
+
                 client.Scheme = "http";
                 client.Host = "localhost";
                 client.Port = 5269;
@@ -492,11 +516,13 @@ namespace VecinoWebApplication.Controllers
                     ResidentId = HttpContext.Session.GetString("residentId")
                 };
 
-                ApiResponse<bool> apiResponse = await client.PostAsyncReturn<VoteDeleteRequest, bool>(voteDeleteRequest);
+                ApiResponse<bool> apiResponse =
+                    await client.PostAsyncReturn<VoteDeleteRequest, bool>(voteDeleteRequest);
+
                 if (apiResponse.Success)
                     return Json(new { success = apiResponse.Data });
-                else
-                    return Json(new { success = false });
+
+                return Json(new { success = false });
             }
             catch
             {
@@ -510,18 +536,14 @@ namespace VecinoWebApplication.Controllers
             try
             {
                 ApiClient<PayFeeRequest> client = new ApiClient<PayFeeRequest>();
+
                 client.Scheme = "http";
                 client.Host = "localhost";
                 client.Port = 5269;
                 client.Path = "api/Resident/PayFee";
 
                 bool result = await client.PostAsync(payFeeRequest);
-                if (result)
-                {
-                    return Json(new { success = true });
-                }
-                else
-                    return Json(new { success = false });
+                return Json(new { success = result });
             }
             catch
             {
@@ -536,6 +558,7 @@ namespace VecinoWebApplication.Controllers
             {
                 ApiClient<Resident> client = new ApiClient<Resident>();
                 string residentId = HttpContext.Session.GetString("residentId");
+
                 client.Scheme = "http";
                 client.Host = "localhost";
                 client.Port = 5269;
@@ -556,7 +579,9 @@ namespace VecinoWebApplication.Controllers
         public async Task<IActionResult> UploadPhoto(IFormFile file)
         {
             string residentId = HttpContext.Session.GetString("residentId");
+
             ApiClient<ViewModelAvatar> client = new ApiClient<ViewModelAvatar>();
+
             client.Scheme = "http";
             client.Host = "localhost";
             client.Port = 5269;
@@ -570,11 +595,16 @@ namespace VecinoWebApplication.Controllers
 
             try
             {
-                ApiResponse<bool> result = await client.PostAsyncReturn<ViewModelAvatar, bool>(viewModelAvatar, file.OpenReadStream(), file.FileName);
+                ApiResponse<bool> result =
+                    await client.PostAsyncReturn<ViewModelAvatar, bool>(
+                        viewModelAvatar,
+                        file.OpenReadStream(),
+                        file.FileName);
+
                 if (!result.Success || !result.Data)
                     TempData["ErrorMessage"] = "Upload failed. The server rejected the file.";
             }
-            catch (Exception ex)
+            catch
             {
                 TempData["ErrorMessage"] = "An error occurred while connecting to the server.";
             }
@@ -588,7 +618,8 @@ namespace VecinoWebApplication.Controllers
             try
             {
                 string residentId = HttpContext.Session.GetString("residentId");
-                ApiClient<bool> client = new ApiClient<bool>(); // The types do not matter since working with a file I dont need any model
+                ApiClient<bool> client = new ApiClient<bool>();
+
                 client.Scheme = "http";
                 client.Host = "localhost";
                 client.Port = 5269;
@@ -603,7 +634,7 @@ namespace VecinoWebApplication.Controllers
             }
             catch
             {
-                TempData["ErrorMessage"] = "NetWork Error";
+                // fallback avatar if API fails
                 string fallbackPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "image", "image.png");
                 byte[] fallbackBytes = await System.IO.File.ReadAllBytesAsync(fallbackPath);
                 return File(fallbackBytes, "image/png");
@@ -619,14 +650,18 @@ namespace VecinoWebApplication.Controllers
             try
             {
                 ApiClient<Resident> client2 = new ApiClient<Resident>();
+
                 client2.Scheme = "http";
                 client2.Host = "localhost";
                 client2.Port = 5269;
                 client2.Path = "api/Resident/UpdateResident";
 
-                ApiResponse<bool> response = await client2.PostAsyncReturn<Resident, bool>(resident);
+                ApiResponse<bool> response =
+                    await client2.PostAsyncReturn<Resident, bool>(resident);
+
                 if (response.Success && response.Data)
                 {
+                    // keep session name in sync with updated profile
                     HttpContext.Session.SetString("residentName", resident.ResidentName);
                 }
                 else
@@ -647,21 +682,27 @@ namespace VecinoWebApplication.Controllers
         public async Task<IActionResult> CreateBooking(Booking booking)
         {
             booking.ResidentId = HttpContext.Session.GetString("residentId");
+
+            // normalize date format for backend consistency
             if (DateTime.TryParse(booking.BookingDate, out DateTime parsedDate))
             {
                 booking.BookingDate = parsedDate.ToString("dd/MM/yyyy");
             }
+
             booking.BookingStatus = BookingStatus.AWAITING_APPROVAL;
 
             try
             {
                 ApiClient<Booking> apiClient = new ApiClient<Booking>();
+
                 apiClient.Scheme = "http";
                 apiClient.Host = "localhost";
                 apiClient.Port = 5269;
                 apiClient.Path = "api/Resident/CreateBooking";
 
-                ApiResponse<bool> apiResponse = await apiClient.PostAsyncReturn<Booking, bool>(booking);
+                ApiResponse<bool> apiResponse =
+                    await apiClient.PostAsyncReturn<Booking, bool>(booking);
+
                 if (!apiResponse.Success || !apiResponse.Data)
                     TempData["ErrorMessage"] = "Unable To Create Booking";
 
@@ -680,13 +721,16 @@ namespace VecinoWebApplication.Controllers
             try
             {
                 ApiClient<Booking> apiClient = new ApiClient<Booking>();
+
                 apiClient.Scheme = "http";
                 apiClient.Host = "localhost";
                 apiClient.Port = 5269;
                 apiClient.Path = "api/Resident/CancelBooking";
                 apiClient.AddParameter("bookingId", bookingId);
 
-                ApiResponse<bool> apiResponse = await apiClient.PostAsyncReturn<object, bool>(null);
+                ApiResponse<bool> apiResponse =
+                    await apiClient.PostAsyncReturn<object, bool>(null);
+
                 if (!apiResponse.Success || !apiResponse.Data)
                     TempData["ErrorMessage"] = "Unable To Cancel Booking";
 
@@ -705,13 +749,16 @@ namespace VecinoWebApplication.Controllers
             try
             {
                 ApiClient<Booking> apiClient = new ApiClient<Booking>();
+
                 apiClient.Scheme = "http";
                 apiClient.Host = "localhost";
                 apiClient.Port = 5269;
                 apiClient.Path = "api/Resident/PayBooking";
                 apiClient.AddParameter("bookingId", bookingId);
 
-                ApiResponse<bool> apiResponse = await apiClient.PostAsyncReturn<object, bool>(null);
+                ApiResponse<bool> apiResponse =
+                    await apiClient.PostAsyncReturn<object, bool>(null);
+
                 if (!apiResponse.Success || !apiResponse.Data)
                     TempData["ErrorMessage"] = "Unable To Pay Booking";
 

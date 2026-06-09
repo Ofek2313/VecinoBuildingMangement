@@ -13,10 +13,7 @@
     FontFamily="Segoe UI">
 
     <Window.Resources>
-        <BooleanToVisibilityConverter x:Key="boolToVisibility">
-            
-        </BooleanToVisibilityConverter>
-        <!-- TextBox Style -->
+        <BooleanToVisibilityConverter x:Key="boolToVisibility"/>
         <Style x:Key="FormInputStyle" TargetType="TextBox">
             <Setter Property="Height" Value="52"/>
             <Setter Property="FontSize" Value="15"/>
@@ -46,7 +43,6 @@
             </Setter>
         </Style>
 
-        <!-- DatePicker Style -->
         <Style x:Key="FormDatePickerStyle" TargetType="DatePicker">
             <Setter Property="Height" Value="52"/>
             <Setter Property="FontSize" Value="15"/>
@@ -58,38 +54,24 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="DatePicker">
-                        <Border Background="#f8fafc"
-                                BorderBrush="#cbd5e1"
-                                BorderThickness="1">
+                        <Border Background="#f8fafc" BorderBrush="#cbd5e1" BorderThickness="1">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="40"/>
                                 </Grid.ColumnDefinitions>
-                                <DatePickerTextBox x:Name="PART_TextBox"
-                                                   Grid.Column="0"
-                                                   Background="Transparent"
-                                                   BorderThickness="0"
-                                                   Foreground="#1e293b"
-                                                   FontSize="15"
-                                                   Margin="16,0,0,0"
-                                                   VerticalAlignment="Center"/>
-                                <Button x:Name="PART_Button"
-                                        Grid.Column="1"
-                                        Background="Transparent"
-                                        BorderThickness="0"
-                                        Focusable="False"
-                                        VerticalAlignment="Center"
-                                        HorizontalAlignment="Center">
-                                    <TextBlock Text="&#xE787;"
-                                               FontFamily="Segoe MDL2 Assets"
-                                               FontSize="16"
-                                               Foreground="#64748b"/>
+                                <DatePickerTextBox x:Name="PART_TextBox" Grid.Column="0"
+                                                   Background="Transparent" BorderThickness="0"
+                                                   Foreground="#1e293b" FontSize="15"
+                                                   Margin="16,0,0,0" VerticalAlignment="Center"/>
+                                <Button x:Name="PART_Button" Grid.Column="1"
+                                        Background="Transparent" BorderThickness="0"
+                                        Focusable="False" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                    <TextBlock Text="&#xE787;" FontFamily="Segoe MDL2 Assets"
+                                               FontSize="16" Foreground="#64748b"/>
                                 </Button>
-                                <Popup x:Name="PART_Popup"
-                                       AllowsTransparency="True"
-                                       Placement="Bottom"
-                                       StaysOpen="False">
+                                <Popup x:Name="PART_Popup" AllowsTransparency="True"
+                                       Placement="Bottom" StaysOpen="False">
                                     <Calendar x:Name="PART_Calendar"/>
                                 </Popup>
                             </Grid>
@@ -99,7 +81,6 @@
             </Setter>
         </Style>
 
-        <!-- ComboBox Style -->
         <Style x:Key="FormComboBoxStyle" TargetType="ComboBox">
             <Setter Property="Height" Value="52"/>
             <Setter Property="FontSize" Value="15"/>
@@ -110,26 +91,20 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ComboBox">
-                        <Border Background="#f8fafc"
-                                BorderBrush="#cbd5e1"
-                                BorderThickness="1">
+                        <Border Background="#f8fafc" BorderBrush="#cbd5e1" BorderThickness="1">
                             <Grid>
                                 <ContentPresenter x:Name="ContentSite"
                                         Content="{TemplateBinding SelectionBoxItem}"
                                         Margin="16,12,40,12"
                                         VerticalAlignment="Center"
                                         IsHitTestVisible="False"/>
-                                <ToggleButton Background="Transparent"
-                                              BorderThickness="0"
-                                              Focusable="False"
+                                <ToggleButton Background="Transparent" BorderThickness="0" Focusable="False"
                                               IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
                                     <ToggleButton.Template>
                                         <ControlTemplate TargetType="ToggleButton">
                                             <Border Background="Transparent">
-                                                <TextBlock Text="&#xE70D;"
-                                                           FontFamily="Segoe MDL2 Assets"
-                                                           FontSize="12"
-                                                           Foreground="#64748b"
+                                                <TextBlock Text="&#xE70D;" FontFamily="Segoe MDL2 Assets"
+                                                           FontSize="12" Foreground="#64748b"
                                                            HorizontalAlignment="Right"
                                                            VerticalAlignment="Center"
                                                            Margin="0,0,16,0"/>
@@ -138,12 +113,8 @@
                                     </ToggleButton.Template>
                                 </ToggleButton>
                                 <Popup IsOpen="{TemplateBinding IsDropDownOpen}"
-                                       AllowsTransparency="True"
-                                       Placement="Bottom"
-                                       StaysOpen="False">
-                                    <Border Background="White"
-                                            BorderBrush="#cbd5e1"
-                                            BorderThickness="1">
+                                       AllowsTransparency="True" Placement="Bottom" StaysOpen="False">
+                                    <Border Background="White" BorderBrush="#cbd5e1" BorderThickness="1">
                                         <Border.Effect>
                                             <DropShadowEffect Color="#000000" Opacity="0.08" BlurRadius="12" ShadowDepth="4" Direction="270"/>
                                         </Border.Effect>
@@ -162,8 +133,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        
-        <!-- Label Style -->
+
         <Style x:Key="LabelStyle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
@@ -171,7 +141,6 @@
             <Setter Property="Margin" Value="0,0,0,8"/>
         </Style>
 
-        <!-- Primary Button -->
         <Style x:Key="PrimaryButtonStyle" TargetType="Button">
             <Setter Property="Height" Value="56"/>
             <Setter Property="FontSize" Value="16"/>
@@ -207,7 +176,6 @@
             </Setter>
         </Style>
 
-        <!-- Cancel Button -->
         <Style x:Key="CancelButtonStyle" TargetType="Button">
             <Setter Property="Height" Value="56"/>
             <Setter Property="FontSize" Value="16"/>
@@ -223,8 +191,7 @@
                         <Border Background="{TemplateBinding Background}"
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}"
-                                CornerRadius="8"
-                                Padding="{TemplateBinding Padding}">
+                                CornerRadius="8" Padding="{TemplateBinding Padding}">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                         <ControlTemplate.Triggers>
@@ -236,8 +203,36 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        <conv:StringToDateConverter x:Key="StringToDateConverter"></conv:StringToDateConverter>
-        <BooleanToVisibilityConverter x:Key="VisibilityConverter"></BooleanToVisibilityConverter>
+
+        <Style x:Key="UploadButtonStyle" TargetType="Button">
+            <Setter Property="Height" Value="44"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#e2e8f0"/>
+            <Setter Property="BorderThickness" Value="1.5"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border"
+                                CornerRadius="10"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="#EDE9FE"/>
+                                <Setter TargetName="border" Property="Background" Value="#F5F3FF"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <conv:StringToDateConverter x:Key="StringToDateConverter"/>
+        <BooleanToVisibilityConverter x:Key="VisibilityConverter"/>
     </Window.Resources>
 
     <Grid>
@@ -252,286 +247,290 @@
                 VerticalAlignment="Center"
                 HorizontalAlignment="Center"
                 Background="White"
-                CornerRadius="16"
-                Padding="52,44">
+                CornerRadius="16">
             <Border.Effect>
                 <DropShadowEffect Color="#C4B5FD" BlurRadius="40" ShadowDepth="0" Opacity="0.2"/>
             </Border.Effect>
 
-            <StackPanel>
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel>
 
-                <StackPanel Margin="0,0,0,32" HorizontalAlignment="Center">
-                    <Border Width="60" Height="60" CornerRadius="30"
-                            HorizontalAlignment="Center" Margin="0,0,0,14">
-                        <Border.Background>
-                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                <GradientStop Color="#8B5CF6" Offset="0"/>
-                                <GradientStop Color="#EC4899" Offset="1"/>
-                            </LinearGradientBrush>
-                        </Border.Background>
-                        <TextBlock Text="&#xE787;"
-                                   FontFamily="Segoe MDL2 Assets"
-                                   FontSize="26"
-                                   Foreground="White"
-                                   HorizontalAlignment="Center"
-                                   VerticalAlignment="Center"/>
-                    </Border>
-                    <TextBlock Text="Add Event"
-                               FontSize="28"
-                               FontWeight="Bold"
-                               Foreground="#111827"
-                               HorizontalAlignment="Center"/>
-                    <TextBlock Text="Schedule a new community event"
-                               FontSize="14"
-                               Foreground="#94a3b8"
-                               HorizontalAlignment="Center"
-                               Margin="0,6,0,0"/>
-                </StackPanel>
-
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Event Title" Style="{StaticResource LabelStyle}"/>
-                    <StackPanel Orientation="Horizontal" Margin="5,0,0,4"
- Visibility="{Binding (Validation.HasError),
- Converter={StaticResource VisibilityConverter},
- ElementName=TitleInput}">
-                        <Viewbox Width="14" Height="14" Margin="0,0,5,0" VerticalAlignment="Center">
-                            <Canvas Width="14" Height="14">
-                                <Ellipse Width="13" Height="13" Canvas.Left="0.5" Canvas.Top="0.5"
-            Stroke="#e24b4a" StrokeThickness="1" Fill="Transparent"/>
-                                <Rectangle Width="1.3" Height="3.5" Canvas.Left="6.35" Canvas.Top="3.5"
-            Fill="#e24b4a" RadiusX="0.65" RadiusY="0.65"/>
-                                <Ellipse Width="1.4" Height="1.4" Canvas.Left="6.3" Canvas.Top="9.3"
-            Fill="#e24b4a"/>
-                            </Canvas>
-                        </Viewbox>
-                        <TextBlock Text="{Binding (Validation.Errors)[0].ErrorContent, ElementName=TitleInput}"
-    FontFamily="Segoe UI" FontSize="11.5"
-    Foreground="#a32d2d"
-    VerticalAlignment="Center"/>
+                    <!-- Header -->
+                    <StackPanel Margin="52,44,52,28" HorizontalAlignment="Center">
+                        <Border Width="60" Height="60" CornerRadius="30"
+                                HorizontalAlignment="Center" Margin="0,0,0,14">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Color="#8B5CF6" Offset="0"/>
+                                    <GradientStop Color="#EC4899" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Border.Background>
+                            <TextBlock Text="&#xE787;" FontFamily="Segoe MDL2 Assets"
+                                       FontSize="26" Foreground="White"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <TextBlock Text="Add Event" FontSize="28" FontWeight="Bold"
+                                   Foreground="#111827" HorizontalAlignment="Center"/>
+                        <TextBlock Text="Schedule a new community event" FontSize="14"
+                                   Foreground="#94a3b8" HorizontalAlignment="Center" Margin="0,6,0,0"/>
                     </StackPanel>
-                </StackPanel>
-               
-                <TextBox x:Name="TitleInput"
-                         Style="{StaticResource FormInputStyle}"
-                         Margin="0,0,0,18"
-                         Text="{Binding Event.EventTitle,UpdateSourceTrigger=PropertyChanged}"/>
 
-                <TextBlock Text="Event Date" Style="{StaticResource LabelStyle}"/>
-                <StackPanel Orientation="Horizontal" Margin="0,0,0,4"
-                    Visibility="{Binding (Validation.HasError),
-                    Converter={StaticResource VisibilityConverter},
-                    ElementName=EventDatePicker}">
-                    <Viewbox Width="14" Height="14" Margin="0,0,5,0" VerticalAlignment="Center">
-                        <Canvas Width="14" Height="14">
-                            <Ellipse Width="13" Height="13" Canvas.Left="0.5" Canvas.Top="0.5"
-                            Stroke="#e24b4a" StrokeThickness="1" Fill="Transparent"/>
-                            <Rectangle Width="1.3" Height="3.5" Canvas.Left="6.35" Canvas.Top="3.5"
-                            Fill="#e24b4a" RadiusX="0.65" RadiusY="0.65"/>
-                            <Ellipse Width="1.4" Height="1.4" Canvas.Left="6.3" Canvas.Top="9.3"
-                                Fill="#e24b4a"/>
-                        </Canvas>
-                    </Viewbox>
-                    <TextBlock Text="{Binding (Validation.Errors)[0].ErrorContent, ElementName=EventDatePicker}"
-                   FontFamily="Segoe UI" FontSize="11.5"
-                   Foreground="#a32d2d"
-                   VerticalAlignment="Center"/>
-                </StackPanel>
-                <DatePicker x:Name="EventDatePicker"
-                            Style="{StaticResource FormDatePickerStyle}"
-                            Margin="0,0,0,18" SelectedDate="{Binding Event.EventDate,Converter={StaticResource StringToDateConverter},UpdateSourceTrigger=PropertyChanged}"/>
+                    <!-- Form Fields -->
+                    <StackPanel Margin="52,0,52,0">
 
-                <Grid Margin="0,0,0,18">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="18"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-
-                    <StackPanel Grid.Column="0">
+                        <!-- Event Title -->
                         <StackPanel Orientation="Horizontal">
-                            
-                        
-                        <TextBlock Text="Start Time" Style="{StaticResource LabelStyle}"/>
-                        <StackPanel Orientation="Horizontal" Margin="5,0,0,4"
-    Visibility="{Binding (Validation.HasError),
-    Converter={StaticResource VisibilityConverter},
-    ElementName=StartTimeComboBox}">
+                            <TextBlock Text="Event Title" Style="{StaticResource LabelStyle}"/>
+                            <StackPanel Orientation="Horizontal" Margin="5,0,0,4"
+                                        Visibility="{Binding (Validation.HasError), Converter={StaticResource VisibilityConverter}, ElementName=TitleInput}">
+                                <Viewbox Width="14" Height="14" Margin="0,0,5,0" VerticalAlignment="Center">
+                                    <Canvas Width="14" Height="14">
+                                        <Ellipse Width="13" Height="13" Canvas.Left="0.5" Canvas.Top="0.5" Stroke="#e24b4a" StrokeThickness="1" Fill="Transparent"/>
+                                        <Rectangle Width="1.3" Height="3.5" Canvas.Left="6.35" Canvas.Top="3.5" Fill="#e24b4a" RadiusX="0.65" RadiusY="0.65"/>
+                                        <Ellipse Width="1.4" Height="1.4" Canvas.Left="6.3" Canvas.Top="9.3" Fill="#e24b4a"/>
+                                    </Canvas>
+                                </Viewbox>
+                                <TextBlock Text="{Binding (Validation.Errors)[0].ErrorContent, ElementName=TitleInput}"
+                                           FontFamily="Segoe UI" FontSize="11.5" Foreground="#a32d2d" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </StackPanel>
+                        <TextBox x:Name="TitleInput" Style="{StaticResource FormInputStyle}" Margin="0,0,0,18"
+                                 Text="{Binding Event.EventTitle, UpdateSourceTrigger=PropertyChanged}"/>
+
+                        <!-- Event Date -->
+                        <TextBlock Text="Event Date" Style="{StaticResource LabelStyle}"/>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,4"
+                                    Visibility="{Binding (Validation.HasError), Converter={StaticResource VisibilityConverter}, ElementName=EventDatePicker}">
                             <Viewbox Width="14" Height="14" Margin="0,0,5,0" VerticalAlignment="Center">
                                 <Canvas Width="14" Height="14">
-                                    <Ellipse Width="13" Height="13" Canvas.Left="0.5" Canvas.Top="0.5"
-            Stroke="#e24b4a" StrokeThickness="1" Fill="Transparent"/>
-                                    <Rectangle Width="1.3" Height="3.5" Canvas.Left="6.35" Canvas.Top="3.5"
-            Fill="#e24b4a" RadiusX="0.65" RadiusY="0.65"/>
-                                    <Ellipse Width="1.4" Height="1.4" Canvas.Left="6.3" Canvas.Top="9.3"
-                Fill="#e24b4a"/>
+                                    <Ellipse Width="13" Height="13" Canvas.Left="0.5" Canvas.Top="0.5" Stroke="#e24b4a" StrokeThickness="1" Fill="Transparent"/>
+                                    <Rectangle Width="1.3" Height="3.5" Canvas.Left="6.35" Canvas.Top="3.5" Fill="#e24b4a" RadiusX="0.65" RadiusY="0.65"/>
+                                    <Ellipse Width="1.4" Height="1.4" Canvas.Left="6.3" Canvas.Top="9.3" Fill="#e24b4a"/>
                                 </Canvas>
                             </Viewbox>
-                            <TextBlock Text="{Binding (Validation.Errors)[0].ErrorContent, ElementName=StartTimeComboBox}"
-   FontFamily="Segoe UI" FontSize="11.5"
-   Foreground="#a32d2d"
-   VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding (Validation.Errors)[0].ErrorContent, ElementName=EventDatePicker}"
+                                       FontFamily="Segoe UI" FontSize="11.5" Foreground="#a32d2d" VerticalAlignment="Center"/>
                         </StackPanel>
-                        </StackPanel>
-                        <ComboBox x:Name="StartTimeComboBox" Style="{StaticResource FormComboBoxStyle}" SelectedValuePath="Content" SelectedValue="{Binding Event.StartTime,UpdateSourceTrigger=PropertyChanged}">
-                            <ComboBoxItem Content="Select" IsSelected="True"/>
-                            <ComboBoxItem Content="8:00 AM"/>
-                            <ComboBoxItem Content="9:00 AM"/>
-                            <ComboBoxItem Content="10:00 AM"/>
-                            <ComboBoxItem Content="11:00 AM"/>
-                            <ComboBoxItem Content="12:00 PM"/>
-                            <ComboBoxItem Content="1:00 PM"/>
-                            <ComboBoxItem Content="2:00 PM"/>
-                            <ComboBoxItem Content="3:00 PM"/>
-                            <ComboBoxItem Content="4:00 PM"/>
-                            <ComboBoxItem Content="5:00 PM"/>
-                            <ComboBoxItem Content="6:00 PM"/>
-                            <ComboBoxItem Content="7:00 PM"/>
-                            <ComboBoxItem Content="8:00 PM"/>
-                        </ComboBox>
-                    </StackPanel>
+                        <DatePicker x:Name="EventDatePicker" Style="{StaticResource FormDatePickerStyle}" Margin="0,0,0,18"
+                                    SelectedDate="{Binding Event.EventDate, Converter={StaticResource StringToDateConverter}, UpdateSourceTrigger=PropertyChanged}"/>
 
-                    <StackPanel Grid.Column="2">
+                        <!-- Start Time / End Time -->
+                        <Grid Margin="0,0,0,18">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="18"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Start Time" Style="{StaticResource LabelStyle}"/>
+                                    <StackPanel Orientation="Horizontal" Margin="5,0,0,4"
+                                                Visibility="{Binding (Validation.HasError), Converter={StaticResource VisibilityConverter}, ElementName=StartTimeComboBox}">
+                                        <Viewbox Width="14" Height="14" Margin="0,0,5,0" VerticalAlignment="Center">
+                                            <Canvas Width="14" Height="14">
+                                                <Ellipse Width="13" Height="13" Canvas.Left="0.5" Canvas.Top="0.5" Stroke="#e24b4a" StrokeThickness="1" Fill="Transparent"/>
+                                                <Rectangle Width="1.3" Height="3.5" Canvas.Left="6.35" Canvas.Top="3.5" Fill="#e24b4a" RadiusX="0.65" RadiusY="0.65"/>
+                                                <Ellipse Width="1.4" Height="1.4" Canvas.Left="6.3" Canvas.Top="9.3" Fill="#e24b4a"/>
+                                            </Canvas>
+                                        </Viewbox>
+                                        <TextBlock Text="{Binding (Validation.Errors)[0].ErrorContent, ElementName=StartTimeComboBox}"
+                                                   FontFamily="Segoe UI" FontSize="11.5" Foreground="#a32d2d" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </StackPanel>
+                                <ComboBox x:Name="StartTimeComboBox" Style="{StaticResource FormComboBoxStyle}"
+                                          SelectedValuePath="Content" SelectedValue="{Binding Event.StartTime, UpdateSourceTrigger=PropertyChanged}">
+                                    <ComboBoxItem Content="Select" IsSelected="True"/>
+                                    <ComboBoxItem Content="8:00 AM"/>
+                                    <ComboBoxItem Content="9:00 AM"/>
+                                    <ComboBoxItem Content="10:00 AM"/>
+                                    <ComboBoxItem Content="11:00 AM"/>
+                                    <ComboBoxItem Content="12:00 PM"/>
+                                    <ComboBoxItem Content="1:00 PM"/>
+                                    <ComboBoxItem Content="2:00 PM"/>
+                                    <ComboBoxItem Content="3:00 PM"/>
+                                    <ComboBoxItem Content="4:00 PM"/>
+                                    <ComboBoxItem Content="5:00 PM"/>
+                                    <ComboBoxItem Content="6:00 PM"/>
+                                    <ComboBoxItem Content="7:00 PM"/>
+                                    <ComboBoxItem Content="8:00 PM"/>
+                                </ComboBox>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="End Time" Style="{StaticResource LabelStyle}"/>
+                                    <StackPanel Orientation="Horizontal" Margin="5,0,0,4"
+                                                Visibility="{Binding (Validation.HasError), Converter={StaticResource VisibilityConverter}, ElementName=EndTimeComboBox}">
+                                        <Viewbox Width="14" Height="14" Margin="0,0,5,0" VerticalAlignment="Center">
+                                            <Canvas Width="14" Height="14">
+                                                <Ellipse Width="13" Height="13" Canvas.Left="0.5" Canvas.Top="0.5" Stroke="#e24b4a" StrokeThickness="1" Fill="Transparent"/>
+                                                <Rectangle Width="1.3" Height="3.5" Canvas.Left="6.35" Canvas.Top="3.5" Fill="#e24b4a" RadiusX="0.65" RadiusY="0.65"/>
+                                                <Ellipse Width="1.4" Height="1.4" Canvas.Left="6.3" Canvas.Top="9.3" Fill="#e24b4a"/>
+                                            </Canvas>
+                                        </Viewbox>
+                                        <TextBlock Text="{Binding (Validation.Errors)[0].ErrorContent, ElementName=EndTimeComboBox}"
+                                                   FontFamily="Segoe UI" FontSize="11.5" Foreground="#a32d2d" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </StackPanel>
+                                <ComboBox x:Name="EndTimeComboBox" Style="{StaticResource FormComboBoxStyle}"
+                                          SelectedValuePath="Content" SelectedValue="{Binding Event.EndTime, UpdateSourceTrigger=PropertyChanged}">
+                                    <ComboBoxItem Content="Select" IsSelected="True"/>
+                                    <ComboBoxItem Content="9:00 AM"/>
+                                    <ComboBoxItem Content="10:00 AM"/>
+                                    <ComboBoxItem Content="11:00 AM"/>
+                                    <ComboBoxItem Content="12:00 PM"/>
+                                    <ComboBoxItem Content="1:00 PM"/>
+                                    <ComboBoxItem Content="2:00 PM"/>
+                                    <ComboBoxItem Content="3:00 PM"/>
+                                    <ComboBoxItem Content="4:00 PM"/>
+                                    <ComboBoxItem Content="5:00 PM"/>
+                                    <ComboBoxItem Content="6:00 PM"/>
+                                    <ComboBoxItem Content="7:00 PM"/>
+                                    <ComboBoxItem Content="8:00 PM"/>
+                                    <ComboBoxItem Content="9:00 PM"/>
+                                    <ComboBoxItem Content="10:00 PM"/>
+                                </ComboBox>
+                            </StackPanel>
+                        </Grid>
+
+                        <!-- Type -->
                         <StackPanel Orientation="Horizontal">
-                            
-                        
-                        <TextBlock Text="End Time" Style="{StaticResource LabelStyle}"/>
-                        <StackPanel Orientation="Horizontal" Margin="5,0,0,4"
- Visibility="{Binding (Validation.HasError),
- Converter={StaticResource VisibilityConverter},
- ElementName=EndTimeComboBox}">
-                            <Viewbox Width="14" Height="14" Margin="0,0,5,0" VerticalAlignment="Center">
-                                <Canvas Width="14" Height="14">
-                                    <Ellipse Width="13" Height="13" Canvas.Left="0.5" Canvas.Top="0.5"
-         Stroke="#e24b4a" StrokeThickness="1" Fill="Transparent"/>
-                                    <Rectangle Width="1.3" Height="3.5" Canvas.Left="6.35" Canvas.Top="3.5"
-         Fill="#e24b4a" RadiusX="0.65" RadiusY="0.65"/>
-                                    <Ellipse Width="1.4" Height="1.4" Canvas.Left="6.3" Canvas.Top="9.3"
-             Fill="#e24b4a"/>
-                                </Canvas>
-                            </Viewbox>
-                            <TextBlock Text="{Binding (Validation.Errors)[0].ErrorContent, ElementName=EndTimeComboBox}"
-FontFamily="Segoe UI" FontSize="11.5"
-Foreground="#a32d2d"
-VerticalAlignment="Center"/>
+                            <TextBlock Text="Type" Style="{StaticResource LabelStyle}"/>
+                            <StackPanel Orientation="Horizontal" Margin="5,0,0,4"
+                                        Visibility="{Binding (Validation.HasError), Converter={StaticResource VisibilityConverter}, ElementName=TypeComboBox}">
+                                <Viewbox Width="14" Height="14" Margin="0,0,5,0" VerticalAlignment="Center">
+                                    <Canvas Width="14" Height="14">
+                                        <Ellipse Width="13" Height="13" Canvas.Left="0.5" Canvas.Top="0.5" Stroke="#e24b4a" StrokeThickness="1" Fill="Transparent"/>
+                                        <Rectangle Width="1.3" Height="3.5" Canvas.Left="6.35" Canvas.Top="3.5" Fill="#e24b4a" RadiusX="0.65" RadiusY="0.65"/>
+                                        <Ellipse Width="1.4" Height="1.4" Canvas.Left="6.3" Canvas.Top="9.3" Fill="#e24b4a"/>
+                                    </Canvas>
+                                </Viewbox>
+                                <TextBlock Text="{Binding (Validation.Errors)[0].ErrorContent, ElementName=TypeComboBox}"
+                                           FontFamily="Segoe UI" FontSize="11.5" Foreground="#a32d2d" VerticalAlignment="Center"/>
+                            </StackPanel>
                         </StackPanel>
-                        </StackPanel>
-                        <ComboBox x:Name="EndTimeComboBox" Style="{StaticResource FormComboBoxStyle}" SelectedValuePath="Content" SelectedValue="{Binding Event.EndTime,UpdateSourceTrigger=PropertyChanged}" >
-                            <ComboBoxItem Content="Select" IsSelected="True"/>
-                            <ComboBoxItem Content="9:00 AM"/>
-                            <ComboBoxItem Content="10:00 AM"/>
-                            <ComboBoxItem Content="11:00 AM"/>
-                            <ComboBoxItem Content="12:00 PM"/>
-                            <ComboBoxItem Content="1:00 PM"/>
-                            <ComboBoxItem Content="2:00 PM"/>
-                            <ComboBoxItem Content="3:00 PM"/>
-                            <ComboBoxItem Content="4:00 PM"/>
-                            <ComboBoxItem Content="5:00 PM"/>
-                            <ComboBoxItem Content="6:00 PM"/>
-                            <ComboBoxItem Content="7:00 PM"/>
-                            <ComboBoxItem Content="8:00 PM"/>
-                            <ComboBoxItem Content="9:00 PM"/>
-                            <ComboBoxItem Content="10:00 PM"/>
-                        </ComboBox>
-                    </StackPanel>
-                </Grid>
+                        <ComboBox x:Name="TypeComboBox" Style="{StaticResource FormComboBoxStyle}" Margin="0,0,0,18"
+                                  SelectedValuePath="EventTypeId" DisplayMemberPath="EventTypeName"
+                                  SelectedValue="{Binding Event.EventTypeId, UpdateSourceTrigger=PropertyChanged}"/>
 
-                <StackPanel Orientation="Horizontal">
-                    
-                
-                <TextBlock Text="Type" Style="{StaticResource LabelStyle}"/>
-                <StackPanel Orientation="Horizontal" Margin="5,0,0,4"
-                 Visibility="{Binding (Validation.HasError),
-                 Converter={StaticResource VisibilityConverter},
-                 ElementName=TypeComboBox}">
-                    <Viewbox Width="14" Height="14" Margin="0,0,5,0" VerticalAlignment="Center">
-                        <Canvas Width="14" Height="14">
-                            <Ellipse Width="13" Height="13" Canvas.Left="0.5" Canvas.Top="0.5"
-                            Stroke="#e24b4a" StrokeThickness="1" Fill="Transparent"/>
-                            <Rectangle Width="1.3" Height="3.5" Canvas.Left="6.35" Canvas.Top="3.5"
-                            Fill="#e24b4a" RadiusX="0.65" RadiusY="0.65"/>
-                            <Ellipse Width="1.4" Height="1.4" Canvas.Left="6.3" Canvas.Top="9.3"
-                            Fill="#e24b4a"/>
-                        </Canvas>
-                    </Viewbox>
-                    <TextBlock Text="{Binding (Validation.Errors)[0].ErrorContent, ElementName=TypeComboBox}"
-                    FontFamily="Segoe UI" FontSize="11.5"
-                    Foreground="#a32d2d"
-                    VerticalAlignment="Center"/>
-                </StackPanel>
-                </StackPanel>
-                <ComboBox x:Name="TypeComboBox"
-                          Style="{StaticResource FormComboBoxStyle}"
-                          Margin="0,0,0,18" SelectedValuePath="EventTypeId" DisplayMemberPath="EventTypeName" SelectedValue="{Binding Event.EventTypeId,UpdateSourceTrigger=PropertyChanged}">
-                  
-                </ComboBox>
-                <Button Content="Upload Image" Click="ButtonSelectImage_Click"></Button>
-        
-                
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Description" Style="{StaticResource LabelStyle}"/>
-                    <StackPanel Orientation="Horizontal" Margin="5,0,0,4"
- Visibility="{Binding (Validation.HasError),
- Converter={StaticResource VisibilityConverter},
- ElementName=DescriptionInput}">
-                    <Viewbox Width="14" Height="14" Margin="0,0,5,0" VerticalAlignment="Center">
-                        <Canvas Width="14" Height="14">
-                            <Ellipse Width="13" Height="13" Canvas.Left="0.5" Canvas.Top="0.5"
-            Stroke="#e24b4a" StrokeThickness="1" Fill="Transparent"/>
-                            <Rectangle Width="1.3" Height="3.5" Canvas.Left="6.35" Canvas.Top="3.5"
-            Fill="#e24b4a" RadiusX="0.65" RadiusY="0.65"/>
-                            <Ellipse Width="1.4" Height="1.4" Canvas.Left="6.3" Canvas.Top="9.3"
-            Fill="#e24b4a"/>
-                        </Canvas>
-                    </Viewbox>
-                    <TextBlock Text="{Binding (Validation.Errors)[0].ErrorContent, ElementName=DescriptionInput}"
-    FontFamily="Segoe UI" FontSize="11.5"
-    Foreground="#a32d2d"
-    VerticalAlignment="Center"/>
-                </StackPanel>
-            </StackPanel>
-                <Border Background="#f8fafc"
-                        BorderBrush="#cbd5e1"
-                        BorderThickness="1"
-                        Margin="0,0,0,30">
-                    
-                    <TextBox x:Name="DescriptionInput"
-                             Height="120"
-                             Padding="16,12"
-                             FontSize="15"
-                             Foreground="#1e293b"
-                             Background="Transparent"
-                             BorderThickness="0"
-                             TextWrapping="Wrap"
-                             AcceptsReturn="True"
-                             VerticalScrollBarVisibility="Auto"
-                             VerticalContentAlignment="Top"
-                             Text="{Binding Event.EventDescription,UpdateSourceTrigger=PropertyChanged}"
-                             />
-                </Border>
+                        <!-- Event Image Section -->
+                        <TextBlock Text="Event Image" Style="{StaticResource LabelStyle}"/>
 
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="16"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
+                        <!-- Image preview (like EventDetails style) -->
+                        <Border x:Name="ImagePreviewBorder"
+                                CornerRadius="12"
+                                Height="180"
+                                Margin="0,0,0,0"
+                                ClipToBounds="True"
+                                Cursor="Hand"
+                                >
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Color="#EDE9FE" Offset="0"/>
+                                    <GradientStop Color="#FCE7F3" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Border.Background>
+                            <Grid>
+                                <!-- Placeholder -->
+                                <StackPanel x:Name="PlaceholderPanel"
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Center">
+                                    <TextBlock Text="&#xEB9F;" FontFamily="Segoe MDL2 Assets"
+                                               FontSize="40" Foreground="#C4B5FD"
+                                               HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                                    <TextBlock Text="Click to upload event image"
+                                               FontFamily="Segoe UI" FontSize="13"
+                                               Foreground="#A78BFA" HorizontalAlignment="Center"/>
+                                </StackPanel>
+                                <!-- Preview -->
+                                <Image x:Name="EventImagePreview"
+                                       Stretch="UniformToFill"
+                                       Visibility="Collapsed"/>
+                            </Grid>
+                        </Border>
 
-                    <Button Grid.Column="0"
-                            Content="Cancel"
-                            Style="{StaticResource CancelButtonStyle}"/>
+                        <!-- Upload / Remove buttons -->
+                        <Grid Margin="0,8,0,18">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="12"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Button Grid.Column="0"
+                                    Style="{StaticResource UploadButtonStyle}"
+                                    Padding="16,0"
+                                    >
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="&#xE898;" FontFamily="Segoe MDL2 Assets"
+                                               FontSize="14" Foreground="#8B5CF6"
+                                               VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                    <TextBlock Text="Upload photo" FontFamily="Segoe UI"
+                                               FontSize="13" FontWeight="SemiBold"
+                                               Foreground="#7C3AED" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+                            <Button x:Name="BtnRemoveImage"
+                                    Grid.Column="2"
+                                    Style="{StaticResource UploadButtonStyle}"
+                                    Padding="16,0"
+                                    Visibility="Collapsed"
+                                   >
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="&#xE711;" FontFamily="Segoe MDL2 Assets"
+                                               FontSize="14" Foreground="#e24b4a"
+                                               VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                    <TextBlock Text="Remove photo" FontFamily="Segoe UI"
+                                               FontSize="13" FontWeight="SemiBold"
+                                               Foreground="#a32d2d" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+                        </Grid>
 
-                    <Button Grid.Column="2"
-                            Style="{StaticResource PrimaryButtonStyle}" Click="ButtonAddEvent_Click">
+                        <!-- Description -->
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="&#xE710;" FontFamily="Segoe MDL2 Assets"
-                                       FontSize="14" Foreground="White"
-                                       VerticalAlignment="Center" Margin="0,0,10,0"/>
-                            <TextBlock Text="Add Event" VerticalAlignment="Center"/>
+                            <TextBlock Text="Description" Style="{StaticResource LabelStyle}"/>
+                            <StackPanel Orientation="Horizontal" Margin="5,0,0,4"
+                                        Visibility="{Binding (Validation.HasError), Converter={StaticResource VisibilityConverter}, ElementName=DescriptionInput}">
+                                <Viewbox Width="14" Height="14" Margin="0,0,5,0" VerticalAlignment="Center">
+                                    <Canvas Width="14" Height="14">
+                                        <Ellipse Width="13" Height="13" Canvas.Left="0.5" Canvas.Top="0.5" Stroke="#e24b4a" StrokeThickness="1" Fill="Transparent"/>
+                                        <Rectangle Width="1.3" Height="3.5" Canvas.Left="6.35" Canvas.Top="3.5" Fill="#e24b4a" RadiusX="0.65" RadiusY="0.65"/>
+                                        <Ellipse Width="1.4" Height="1.4" Canvas.Left="6.3" Canvas.Top="9.3" Fill="#e24b4a"/>
+                                    </Canvas>
+                                </Viewbox>
+                                <TextBlock Text="{Binding (Validation.Errors)[0].ErrorContent, ElementName=DescriptionInput}"
+                                           FontFamily="Segoe UI" FontSize="11.5" Foreground="#a32d2d" VerticalAlignment="Center"/>
+                            </StackPanel>
                         </StackPanel>
-                    </Button>
-                </Grid>
+                        <Border Background="#f8fafc" BorderBrush="#cbd5e1" BorderThickness="1" Margin="0,0,0,30">
+                            <TextBox x:Name="DescriptionInput"
+                                     Height="120" Padding="16,12" FontSize="15"
+                                     Foreground="#1e293b" Background="Transparent" BorderThickness="0"
+                                     TextWrapping="Wrap" AcceptsReturn="True"
+                                     VerticalScrollBarVisibility="Auto" VerticalContentAlignment="Top"
+                                     Text="{Binding Event.EventDescription, UpdateSourceTrigger=PropertyChanged}"/>
+                        </Border>
 
-            </StackPanel>
+                        <!-- Footer Buttons -->
+                        <Grid Margin="0,0,0,44">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="16"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Button Grid.Column="0" Content="Cancel" Style="{StaticResource CancelButtonStyle}"/>
+                            <Button Grid.Column="2" Style="{StaticResource PrimaryButtonStyle}" Click="ButtonAddEvent_Click">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="&#xE710;" FontFamily="Segoe MDL2 Assets"
+                                               FontSize="14" Foreground="White"
+                                               VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                    <TextBlock Text="Add Event" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+                        </Grid>
+
+                    </StackPanel>
+                </StackPanel>
+            </ScrollViewer>
         </Border>
     </Grid>
 

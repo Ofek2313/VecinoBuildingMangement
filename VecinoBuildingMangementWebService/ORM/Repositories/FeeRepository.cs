@@ -356,9 +356,16 @@ namespace VecinoBuildingMangementWebService
             return null;
 
         }
-        
+        public bool HasDebt(string residentId)
+        {
+            string sql = "Select 1 From Fee where ResidentId = @ResidentId and IsPaid = False";
+            this.dbHelperOleDb.AddParameter("ResidentId", residentId);
+            return dbHelperOleDb.ExecuteScalar(sql) != null;
 
-       
+
+        }
+
+
     }
        
     

@@ -160,6 +160,7 @@ namespace VecinoBuildingMangementWebService
         public List<ResidentSummaryDTO> GetResidentsNotification(string notificationId)
         {
             string sql = @"SELECT
+                            Resident.ResidentId,
                             Resident.ResidentName,
                             Resident.ResidentImage
                         FROM
@@ -184,6 +185,7 @@ namespace VecinoBuildingMangementWebService
         public ResidentSummaryDTO GetNotificationSender(string notificationId)
         {
             string sql = @"SELECT
+                    Resident.ResidentId,
                     Resident.ResidentName,
                     Resident.ResidentImage
                 FROM

@@ -8,7 +8,7 @@ using VecinoBuildingMangement.Models;
 
 namespace VecinoWpfApp
 {
-    public static class Session
+    public static class Session //Static Session Class To Store Info Across Pages.
     {
 
         public static Building CurrentBuilding { get; set; }

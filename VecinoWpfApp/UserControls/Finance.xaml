@@ -223,10 +223,7 @@
                 Style="{StaticResource PrimaryButton}"
                 Height="42" Width="130" Click="AddFeeButton_Click"/>
 
-        <Button Canvas.Left="1240" Canvas.Top="40"
-                Content="Export Report"
-                Style="{StaticResource SecondaryButton}"
-                Height="42" Width="140"/>
+    
 
         <!-- ======= STAT CARDS ======= -->
 

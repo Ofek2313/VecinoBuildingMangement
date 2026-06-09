@@ -61,9 +61,9 @@ namespace VecinoWpfApp.AppWindows
           
         }
 
-        private async void btnEdit_Click(object sender, RoutedEventArgs e)
+        private async void btnEdit_Click(object sender, RoutedEventArgs e) 
         {
-            if (!_IsEditing)
+            if (!_IsEditing) //Switch Ediitng Mode
             {
                 _IsEditing = true;
             
@@ -73,7 +73,7 @@ namespace VecinoWpfApp.AppWindows
 
 
             }
-            else
+            else // If In Edit Mode Update in database
             {
                 viewModel.Notification.Validate();
                 if(!viewModel.Notification.HasErrors)
@@ -87,7 +87,7 @@ namespace VecinoWpfApp.AppWindows
                     {
                        
                         _IsEditing = true;
-
+                        //If Update Fail Keep Editing
 
                     }
                     else
@@ -97,6 +97,7 @@ namespace VecinoWpfApp.AppWindows
                         NotificationTitleTextBox.IsReadOnly = false;
                         NotificationMessageTextBox.IsReadOnly = false;
                         this.DialogResult = true;
+                        //If Update Success Return To View Model
                     }
                 }
                
@@ -115,7 +116,6 @@ namespace VecinoWpfApp.AppWindows
             client.Host = "localhost";
             client.Port = 5269;
             client.Path = "api/Admin/RemoveNotification";
-            //client.AddParameter("notificationId", notificationIdId);
             ApiResponse<bool> apiResponse = await client.PostAsyncReturn<string, bool>(notificationId);
             if (apiResponse.Success && apiResponse.Data)
             {

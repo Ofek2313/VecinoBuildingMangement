@@ -39,7 +39,7 @@ namespace VecinoWpfApp.AppWindows
         {
             this.Close();
         }
-        private async void ActionRequest_Click(object sender, RoutedEventArgs e)
+        private async void ActionRequest_Click(object sender, RoutedEventArgs e) // Change Service Request Status Based On Current Status 
         {
             ServiceRequestDetail item = (sender as Button).DataContext as ServiceRequestDetail;
             StatusDto viewModel = new StatusDto();
@@ -62,9 +62,9 @@ namespace VecinoWpfApp.AppWindows
                     break;
             }
 
-            bool response = await client.PostAsync(viewModel);
+            ApiResponse<bool> response = await client.PostAsyncReturn<StatusDto,bool>(viewModel);
 
-            if (response)
+            if (response.Success && response.Data)
             {
                 MessageBox.Show("Status Changed");
                 this.DialogResult = true;

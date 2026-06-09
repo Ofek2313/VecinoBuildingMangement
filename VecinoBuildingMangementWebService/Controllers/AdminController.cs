@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -514,18 +515,25 @@ namespace VecinoBuildingMangementWebService.Controllers
                 CordsDto cords = await GeoCodingHelper.GetCoordinatesAsync(buildingDto.Building.Address);
                 buildingDto.Building.Longitude = cords.Longitude;
                 buildingDto.Building.Latitude = cords.Latitude;
+                bool created = false;
                 for (int i = 0; i < 10; i++)
                 {
                     try
                     {
                         buildingDto.Building.JoinCode = GenerateCode();
                         this.repositoryUOW.BuildingRepository.Create(buildingDto.Building);
+                        created = true;
                         break;
                     }
                     catch (OleDbException ex) when (ex.ErrorCode == -2147217900)
                     {
                         continue;
                     }
+                }
+                if(!created)
+                {
+                    this.repositoryUOW.DbHelperOleDb.RollBack();
+                    return null;
                 }
                 
                 string buildingId = this.repositoryUOW.BuildingRepository.GetLastId();
@@ -563,28 +571,7 @@ namespace VecinoBuildingMangementWebService.Controllers
             }
         }
 
-        //[HttpGet]
-        //public AdminMainPage GetAdminMainPage(string residentId)
-        //{
-        //    AdminMainPage building = new AdminMainPage();
-        //    try
-        //    {
-        //        this.repositoryUOW.DbHelperOleDb.OpenConnection();
-        //        return this.repositoryUOW.BuildingRepository.GetAdminOverlay(residentId);
-                
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine(ex.ToString());
-        //        return null;
-        //    }
-        //    finally
-        //    {
-        //        this.repositoryUOW.DbHelperOleDb.CloseConnection();
-        //    }
-
-        //}
-
+    
         [HttpGet]
         public List<PollViewModelAdmin> ManagePolls(string buildingId)
         {
@@ -595,10 +582,18 @@ namespace VecinoBuildingMangementWebService.Controllers
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
                 int residents = this.repositoryUOW.ResidentRepository.CountResidentByBuildingId(buildingId);
                 List<PollViewModel> baseViewModels = this.repositoryUOW.PollRepository.GetPollViewModels(buildingId);
+                Dictionary<string, List<ResidentSummaryDTO>> keyValuePairs = this.repositoryUOW.PollRepository.GetResidentsVotePerPoll(buildingId);
                 pollviewModel = baseViewModels.Select(p => new PollViewModelAdmin
                 {
                     poll = p.poll,
-                    options = p.options,
+                    options = p.options.Select( o => new OptionViewModel
+                    {
+                        option = o.option,
+                        percentage = o.percentage,
+                        voted = o.voted,
+                        residentsVoted = keyValuePairs.GetValueOrDefault(o.option.OptionId,new List<ResidentSummaryDTO>())
+
+                    }).ToList(),
                     TotalVotes = p.options.Sum(o => o.voted),
                    
 
@@ -1086,7 +1081,7 @@ namespace VecinoBuildingMangementWebService.Controllers
         }
 
         [HttpPost]
-        public IActionResult ApproveBooking([FromQuery]string bookingId)
+        public IActionResult ApproveBooking([FromBody] string bookingId)
         {
             try
             {
@@ -1117,8 +1112,9 @@ namespace VecinoBuildingMangementWebService.Controllers
                 this.repositoryUOW.DbHelperOleDb.CloseConnection();
             }
         }
+
         [HttpPost]
-        public bool RejectBooking([FromQuery] string bookingId)
+        public bool RejectBooking([FromBody] string bookingId)
         {
             try
             {

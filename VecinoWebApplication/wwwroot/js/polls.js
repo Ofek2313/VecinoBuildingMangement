@@ -28,6 +28,9 @@ async function vote(pollId, button) {
             handleData(result.data, pollId);
             showResults();
         }
+        else {
+            alert("Error While Voting, Vote Was Rejected")
+        }
     }
     catch (err) {
         console.error(err);

@@ -358,9 +358,7 @@
                                   Color="#000000" Opacity="0.04"/>
             </Border.Effect>
             <Grid>
-                <TextBlock Text="Poll ID: #PL-2025-041  ·  Last updated: 18 Sep 2025, 14:32"
-                           FontSize="11" Foreground="{StaticResource TextMuted}"
-                           VerticalAlignment="Center"/>
+              
                 <Button Content="Close" Style="{StaticResource CloseButton}"
                         HorizontalAlignment="Right"
                         />

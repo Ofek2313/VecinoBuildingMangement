@@ -170,6 +170,8 @@ namespace VecinoBuildingMangementWebService.Controllers
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
                 viewEventViewModel.EventTypes = this.repositoryUOW.EventTypeRepository.GetAll();
                 Building building = this.repositoryUOW.BuildingRepository.GetBuildingByResidentId(residentId);
+                if (building == null)
+                    return null;
                 List<EventViewModelResident> eventsview = this.repositoryUOW.EventRepository.GetEventViewModelsByBuildingIdResident(building.BuildingId, residentId);
                 viewEventViewModel.CurrEvents = eventsview.Where(e => DateTime.ParseExact(e.Event.EventDate, "dd/MM/yyyy", CultureInfo.InvariantCulture) >= DateTime.Today).ToList();
                 viewEventViewModel.PreEvents = eventsview.Where(e => DateTime.ParseExact(e.Event.EventDate, "dd/MM/yyyy", CultureInfo.InvariantCulture) < DateTime.Today).ToList();
@@ -251,7 +253,6 @@ namespace VecinoBuildingMangementWebService.Controllers
         }
 
         [HttpGet]
-        [Produces("application/json")]
         public bool LeaveBuilding(string residentId)
         {
 
@@ -260,6 +261,12 @@ namespace VecinoBuildingMangementWebService.Controllers
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
                 this.repositoryUOW.DbHelperOleDb.OpenTransaction();
 
+                bool hasDebt = this.repositoryUOW.FeeRepository.HasDebt(residentId); // cannot leave if fees not paid
+                if (hasDebt)
+                    return false; 
+                Building building = this.repositoryUOW.BuildingRepository.GetBuildingByResidentId(residentId);
+                if (building == null || building.BuildingId == "0")
+                    return false;
 
                 //Deletes all services request that are related onces the resident left the building
                 this.repositoryUOW.ServiceRequestRepository.DeleteByResidentId(residentId);
@@ -315,6 +322,8 @@ namespace VecinoBuildingMangementWebService.Controllers
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
                 viewModel.Building = this.repositoryUOW.BuildingRepository.GetBuildingByResidentId(residentId);
+                if (viewModel.Building == null)
+                    return null;
                 viewModel.Notifications = this.repositoryUOW.NotificationRepository.GetAllNotificationsByResidentId(residentId);
                 viewModel.events = this.repositoryUOW.EventRepository.GetEventByBuildingId(viewModel.Building.BuildingId);
                 return viewModel;
@@ -338,6 +347,8 @@ namespace VecinoBuildingMangementWebService.Controllers
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
                 Building building = this.repositoryUOW.BuildingRepository.GetBuildingByResidentId(residentId);
+                if (building == null)
+                    return null;
                 string buildingId = building.BuildingId;
 
                 return this.repositoryUOW.PollRepository.GetPollViewModels(buildingId, residentId);
@@ -361,26 +372,37 @@ namespace VecinoBuildingMangementWebService.Controllers
 
 
         [HttpPost]
-
         public List<OptionViewModel> VoteInPoll(Vote vote)
         {
-            List<OptionViewModel> test = new List<OptionViewModel>();
+            List<OptionViewModel> results = new List<OptionViewModel>();
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
+                this.repositoryUOW.DbHelperOleDb.OpenTransaction();
                 if (this.repositoryUOW.VoteRepository.hasVoted(vote.ResidentId, vote.PollId)) // Creates a new vote record only if the resident has not already voted in this poll.
+                    return null;
+                Poll poll = this.repositoryUOW.PollRepository.GetById(vote.PollId);
+                if (poll == null || !poll.IsActive)
+                    return null;
+                DateTime pollDate = DateTime.ParseExact(poll.PollDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                if (pollDate < DateTime.Today)
                     return null;
 
                 bool created = this.repositoryUOW.VoteRepository.Create(vote);
                 if (created)
-                    test = this.repositoryUOW.PollRepository.GetPollResultById(vote.PollId);
-
-                return test;
+                {
+                    results = this.repositoryUOW.PollRepository.GetPollResultById(vote.PollId);
+                    this.repositoryUOW.DbHelperOleDb.Commit();
+                }
+                else
+                    this.repositoryUOW.DbHelperOleDb.RollBack();
+                return results;
             }
             catch (Exception ex)
             {
+                this.repositoryUOW.DbHelperOleDb.RollBack();
                 Console.WriteLine(ex.ToString());
-                return null; ;
+                return null;
             }
             finally
             {
@@ -414,9 +436,12 @@ namespace VecinoBuildingMangementWebService.Controllers
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
-                string id = this.repositoryUOW.BuildingRepository.GetBuildingByResidentId(residentId).BuildingId;
+                Building building = this.repositoryUOW.BuildingRepository.GetBuildingByResidentId(residentId);
+                if (building == null)
+                    return null;
+
                 BuildingModel buildingModel = new BuildingModel();
-                buildingModel.buildingId = id;
+                buildingModel.buildingId = building.BuildingId;
                 return buildingModel;
 
             }
@@ -577,6 +602,13 @@ namespace VecinoBuildingMangementWebService.Controllers
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
+                Booking booking = this.repositoryUOW.BookingRepository.GetById(bookingId);
+                if (booking == null)
+                    return false;
+               
+                if (booking.BookingStatus != BookingStatus.AWAITING_PAYMENT)
+                    return false;
+
                 return this.repositoryUOW.BookingRepository.UpdateBookingStauts(bookingId, BookingStatus.CONFIRMED);
             }
             catch (Exception ex)
@@ -616,6 +648,8 @@ namespace VecinoBuildingMangementWebService.Controllers
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
                 Building building = this.repositoryUOW.BuildingRepository.GetBuildingByResidentId(residentId);
+                if (building == null)
+                    return null;
                 bookingViewModel.Bookings =  this.repositoryUOW.BookingRepository.GetBookingsByBuildingId(building.BuildingId,date);
                 bookingViewModel.SelectedDate = date;
                 bookingViewModel.MyBookings = this.repositoryUOW.BookingRepository.GetBookingsByResidentId(residentId);
@@ -624,7 +658,7 @@ namespace VecinoBuildingMangementWebService.Controllers
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
-                return bookingViewModel;
+                return null;
             }
             finally
             {

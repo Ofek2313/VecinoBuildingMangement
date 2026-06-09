@@ -16,7 +16,7 @@ namespace VecinoWebApplication.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ViewBuildingCatalogue(int page = 1)
+        public async Task<IActionResult> ViewBuildingCatalogue(int page = 1) //Getting the building catalog by page
         {
             try
             {
@@ -38,17 +38,17 @@ namespace VecinoWebApplication.Controllers
         }
 
         [HttpGet]
-        public IActionResult RegisterForm()
+        public IActionResult RegisterForm() //Getting the register page
         {
             Resident resident = new Resident();
             return View(resident);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register(Resident resident)
+        public async Task<IActionResult> Register(Resident resident) //Register Resident into the system
         {
             resident.Validate();
-            if (!resident.IsValid)
+            if (!resident.IsValid) //Validation
                 return View("RegisterForm", resident);
      
             ApiClient<Resident> client = new ApiClient<Resident>();
@@ -73,7 +73,7 @@ namespace VecinoWebApplication.Controllers
 
 
         }
-        public async Task<IActionResult> GetBuildingPhoto(string buildingId)
+        public async Task<IActionResult> GetBuildingPhoto(string buildingId) //Getting the photo fo the building with bytes
         {
             ApiClient<bool> client = new ApiClient<bool>(); // The types does not matter since working with a file I dont need any model
             client.Scheme = "http";
@@ -87,7 +87,7 @@ namespace VecinoWebApplication.Controllers
             return BadRequest();
         }
 
-        [HttpGet]
+        [HttpGet] // Used To get all the relevant building info for map
         public async Task<IActionResult> GetBuildingsMap()
         {
             ApiClient<List<Building>> apiClient = new ApiClient<List<Building>>();

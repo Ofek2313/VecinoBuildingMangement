@@ -75,14 +75,6 @@ namespace VecinoWpfApp.AppWindows
            
             ApiResponse<bool> response = new ApiResponse<bool> { Data = false, Success = false };
 
-
-            //Newevent.EventTitle = TitleInput.Text;
-            //Newevent.EventDescription = DescriptionInput.Text;
-            //Newevent.EventDate = EventDatePicker.SelectedDate?.ToString("dd/MM/yyyy");
-            //Newevent.EventImage = System.IO.Path.GetExtension(this.imagePath);
-            /*     Newevent.EventTypeId = TypeComboBox.SelectedValue.ToString();
-                 Newevent.StartTime = ((ComboBoxItem)StartTimeComboBox.SelectedItem).Content.ToString();
-                 Newevent.EndTime = ((ComboBoxItem)EndTimeComboBox.SelectedItem).Content.ToString();*/
             createEventView.Event.BuildingId = Session.BuildingId;
             createEventView.Event.EventImage = System.IO.Path.GetExtension(this.imagePath);
 

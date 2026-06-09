@@ -309,44 +309,32 @@
                 <Border Style="{StaticResource Card}" Padding="18,16">
                     <StackPanel>
                         <TextBlock Text="Building snapshot" FontFamily="Segoe UI" FontSize="13"
-                                   FontWeight="SemiBold" Foreground="#1e293b" Margin="0,0,0,12"/>
-                        <UniformGrid Columns="2" Rows="2">
-                            <Border Style="{StaticResource InfoTile}" Margin="0,0,5,5">
+                   FontWeight="SemiBold" Foreground="#1e293b" Margin="0,0,0,12"/>
+                        <UniformGrid Columns="3" Rows="1">
+                            <Border Style="{StaticResource InfoTile}" Margin="0,0,5,0">
                                 <StackPanel>
                                     <TextBlock Text="FEES COLLECTED" FontFamily="Segoe UI" FontSize="10"
-                                               FontWeight="SemiBold" Foreground="#94a3b8"/>
+                               FontWeight="SemiBold" Foreground="#94a3b8"/>
                                     <TextBlock Text="{Binding BuildingStats.PaidFees}" FontFamily="Segoe UI"
-                                               FontSize="18" FontWeight="SemiBold" Foreground="#16a34a" Margin="0,4,0,0"/>
+                               FontSize="18" FontWeight="SemiBold" Foreground="#16a34a" Margin="0,4,0,0"/>
                                 </StackPanel>
                             </Border>
-                            <Border Style="{StaticResource InfoTile}" Margin="5,0,0,5">
+                            <Border Style="{StaticResource InfoTile}" Margin="5,0,5,0">
                                 <StackPanel>
                                     <TextBlock Text="OCCUPANCY" FontFamily="Segoe UI" FontSize="10"
-                                               FontWeight="SemiBold" Foreground="#94a3b8"/>
+                               FontWeight="SemiBold" Foreground="#94a3b8"/>
                                     <TextBlock FontFamily="Segoe UI" FontSize="18" FontWeight="SemiBold"
-                                               Foreground="#3b82f6" Margin="0,4,0,0" Text="{Binding BuildingStats.Occupancy}">
-                                        
-                                    </TextBlock>
+                               Foreground="#3b82f6" Margin="0,4,0,0" Text="{Binding BuildingStats.Occupancy}"/>
                                 </StackPanel>
                             </Border>
-                            <Border Style="{StaticResource InfoTile}" Margin="0,5,5,0">
-                                <StackPanel>
-                                    <TextBlock Text="ELEVATOR" FontFamily="Segoe UI" FontSize="10"
-                                               FontWeight="SemiBold" Foreground="#94a3b8"/>
-                                    <TextBlock Text="{Binding ElevatorStatus}" FontFamily="Segoe UI"
-                                               FontSize="13" FontWeight="SemiBold" Foreground="#16a34a" Margin="0,4,0,0"/>
-                                    <TextBlock Text="{Binding ElevatorLastChecked}" FontFamily="Segoe UI"
-                                               FontSize="10" Foreground="#94a3b8" Margin="0,2,0,0"/>
-                                </StackPanel>
-                            </Border>
-                            <Border Style="{StaticResource InfoTile}" Margin="5,5,0,0">
+                            <Border Style="{StaticResource InfoTile}" Margin="5,0,0,0">
                                 <StackPanel>
                                     <TextBlock Text="NOTIFICATIONS" FontFamily="Segoe UI" FontSize="10"
-                                               FontWeight="SemiBold" Foreground="#94a3b8"/>
+                               FontWeight="SemiBold" Foreground="#94a3b8"/>
                                     <TextBlock Text="{Binding BuildingStats.NotificationsSentThisMonth}" FontFamily="Segoe UI"
-                                               FontSize="18" FontWeight="SemiBold" Foreground="#14b8a6" Margin="0,4,0,0"/>
+                               FontSize="18" FontWeight="SemiBold" Foreground="#14b8a6" Margin="0,4,0,0"/>
                                     <TextBlock Text="sent this month" FontFamily="Segoe UI"
-                                               FontSize="10" Foreground="#94a3b8" Margin="0,2,0,0" />
+                               FontSize="10" Foreground="#94a3b8" Margin="0,2,0,0"/>
                                 </StackPanel>
                             </Border>
                         </UniformGrid>

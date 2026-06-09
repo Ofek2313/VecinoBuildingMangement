@@ -73,7 +73,7 @@ namespace VecinoWpfApp.AppWindows
                 return;
             }
 
-            createFee.Fee.FeeId = "";
+            
             createFee.Fee.IsPaid = false;
             createFee.Fee.ResidentId = "";
             createFee.Fee.PaymentDate = "";

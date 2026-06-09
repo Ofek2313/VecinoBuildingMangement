@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VecinoBuildingMangement.DTO;
 using VecinoBuildingMangement.Models;
 
 namespace VecinoBuildingMangement.ViewModels
@@ -15,6 +16,6 @@ namespace VecinoBuildingMangement.ViewModels
 
         public double percentage { get; set; } = 0;
 
-        public List<Resident> residentsVoted { get; set; } = new List<Resident>();
+        public List<ResidentSummaryDTO> residentsVoted { get; set; } = new List<ResidentSummaryDTO>();
     }
 }

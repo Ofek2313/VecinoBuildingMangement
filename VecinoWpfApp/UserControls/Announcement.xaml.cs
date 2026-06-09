@@ -56,7 +56,7 @@ namespace VecinoWpfApp.UserControls
             client.AddParameter("buildingId", Session.BuildingId);
             listViewAnnc.ItemsSource = await client.GetAsync();
 
-            //= this.annoucnemnetslist;
+           
           
         }
 

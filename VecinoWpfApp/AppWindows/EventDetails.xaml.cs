@@ -45,28 +45,13 @@ namespace VecinoWpfApp.AppWindows
             
 
         }
-        //private void BackUpEvent(EventViewModel @event)
-        //{
-        //    _savedEventView = new EventViewModel
-        //    {
-        //        Event = new Event{
-        //              EventTitle = @event.Event.EventTitle,
-        //              EventDescription = @event.Event.EventDescription,
-        //              EventDate = @event.Event.EventDate,
-        //              EventImage = @event.Event.EventImage,
-        //              StartTime = @event.Event.StartTime,
-        //              EndTime = @event.Event.EndTime,
-        //        },
-        //       Attending = @event.Attending,
-
-        //    };
-        //}
+      
         private async void ButtonEditEvent_Click(object sender, RoutedEventArgs e)
         {
             
 
             var viewModel = (EventViewModel)this.DataContext;
-            if (!_IsEditing)
+            if (!_IsEditing) //Switch Between editing mode to view mode
             {
                 _IsEditing = true;
                 _savedEventView = viewModel.Clone();
@@ -98,7 +83,7 @@ namespace VecinoWpfApp.AppWindows
                 viewModel.Event.Validate();
                 if (!viewModel.Event.HasErrors)
                 {
-                    if (_imagePath != null)
+                    if (_imagePath != null) //Update Based on if has picture or not
                     {
                         Stream stream = new FileStream(_imagePath, FileMode.Open, FileAccess.Read);
                         apiResponse = await client.PostAsyncReturn<Event, bool>(viewModel.Event, stream, _imagePath);
@@ -113,6 +98,7 @@ namespace VecinoWpfApp.AppWindows
                         this.DataContext = null;
                         this.DataContext = _savedEventView;
                         _IsEditing = true;
+                        //If Update Failed Restore it back before edit
                     }
                     else
                     {
@@ -121,6 +107,7 @@ namespace VecinoWpfApp.AppWindows
                         UploadImage.Visibility = Visibility.Collapsed;
                         _IsEditing = false;
                         this.DialogResult = true;
+                        
                     }
                 }
                 else
@@ -168,7 +155,6 @@ namespace VecinoWpfApp.AppWindows
 
         private void CloseEvenDetailButton_Click(object sender, RoutedEventArgs e)
         {
-      
 
             this.Close();
 

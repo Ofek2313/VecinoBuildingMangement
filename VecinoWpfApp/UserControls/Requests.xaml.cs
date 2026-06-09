@@ -84,15 +84,13 @@ namespace VecinoWpfApp.UserControls
                     break;
             }
 
-            bool response = await client.PostAsync(viewModel);
+           ApiResponse<bool> response = await client.PostAsyncReturn<StatusDto,bool>(viewModel);
 
-            if (response)
+            if (response.Success && response.Data)
             {
                 MessageBox.Show("Status Changed");
                 await GetRequestList();
             }
-              
-           
             else
                 MessageBox.Show("Status Didn't Changed");
             

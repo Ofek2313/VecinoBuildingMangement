@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.Extensions.Options;
+using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using VecinoBuildingMangement.DTO;
@@ -248,6 +249,39 @@ namespace VecinoBuildingMangementWebService
             return this.dbHelperOleDb.Update(sql) > 0;
         }
 
+        public Dictionary<string, List<ResidentSummaryDTO>> GetResidentsVotePerPoll(string buildingId)
+        {
+            string sql = @"SELECT
+                           Resident.ResidentId,
+                            Resident.ResidentName,
+                            Resident.ResidentImage,
+                            Vote.OptionId
+                        FROM
+                            Resident
+                            INNER JOIN Vote ON Resident.ResidentId = Vote.ResidentId
+                        WHERE
+                            Resident.BuildingId = @BuildingId;";
+            this.dbHelperOleDb.AddParameter("@BuildingId", buildingId);
+            List<flatResidentsList> flats = new List<flatResidentsList>();
+            using (IDataReader reader = this.dbHelperOleDb.Select(sql))
+            {
+                while (reader.Read())
+                {
+
+                    flats.Add(this.modelCreator.CreateModel<flatResidentsList>(reader));
+
+                }
+
+            }
+            Dictionary<string, List<ResidentSummaryDTO>> votersMap = flats.GroupBy(f => f.OptionId).ToDictionary(g => g.Key, g => g.Select(r => new ResidentSummaryDTO
+            {
+                ResidentId = r.ResidentId,
+                ResidentImage = r.ResidentImage,
+                ResidentName = r.ResidentName
+            }).ToList());
+
+            return votersMap;
+        }
 
     }
   

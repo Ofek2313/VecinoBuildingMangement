@@ -19,9 +19,7 @@ using VecinoBuildingMangement.ViewModels;
 
 namespace VecinoWpfApp.UserControls
 {
-    /// <summary>
-    /// Interaction logic for Bookings.xaml
-    /// </summary>
+   
     public partial class Bookings : UserControl
     {
         List<Booking> BookingsList;
@@ -66,8 +64,8 @@ namespace VecinoWpfApp.UserControls
             BookingResidentViewModel booking = (sender as Button).DataContext as BookingResidentViewModel;
             ApiClient<bool> apiClient = new ApiClient<bool>();
             apiClient.Path = "api/Admin/ApproveBooking";
-            apiClient.AddParameter("bookingId", booking.Booking.BookingId);
-            ApiResponse<bool> apiResponse = await apiClient.PostAsyncReturn<object, bool>(null);
+       
+            ApiResponse<bool> apiResponse = await apiClient.PostAsyncReturn<string, bool>(booking.Booking.BookingId);
             if (apiResponse.Success && apiResponse.Data)
                 await LoadBookings();
             else
@@ -82,8 +80,8 @@ namespace VecinoWpfApp.UserControls
             BookingResidentViewModel booking = (sender as Button).DataContext as BookingResidentViewModel;
             ApiClient<bool> apiClient = new ApiClient<bool>();
             apiClient.Path = "api/Admin/RejectBooking";
-            apiClient.AddParameter("bookingId", booking.Booking.BookingId);
-            ApiResponse<bool> apiResponse = await apiClient.PostAsyncReturn<object, bool>(null);
+
+            ApiResponse<bool> apiResponse = await apiClient.PostAsyncReturn<string, bool>(booking.Booking.BookingId);
             if (apiResponse.Success && apiResponse.Data)
                 await LoadBookings();
             else

@@ -76,8 +76,8 @@ namespace VecinoWpfApp.UserControls
             client.Scheme = "http";
             client.Host = "localhost";
             client.Port = 5269;
-            client.Path = "api/Admin/SendNotification";
-            Notification notification = new Notification();
+            client.Path = "api/Admin/SendNotification"; //Uses The Exisitng Send Notification Method that acceepts a list of ids
+            Notification notification = new Notification();  // Deafult Values For A Reminder Notification
             notification.NotificationId = "";
             notification.NotificationMessage = $"Hello {item.ResidentName}, This is a reminder to pay your fee";
             notification.NotificationTitle = "Payment Reminder";
@@ -88,8 +88,8 @@ namespace VecinoWpfApp.UserControls
             ids.Add(item.Fee.ResidentId);
             sendNotificationViewModel.ResidentIds = ids;
             sendNotificationViewModel.Notification = notification;
-            bool response = await client.PostAsync(sendNotificationViewModel);
-            if (response)
+            ApiResponse<bool> response = await client.PostAsyncReturn<SendNotificationViewModel,bool>(sendNotificationViewModel);
+            if (response.Success && response.Data)
                 MessageBox.Show("Reminder Sent");
             else
                 MessageBox.Show("Failed");
@@ -132,7 +132,7 @@ namespace VecinoWpfApp.UserControls
            
 
         }
-        private void FilterButton_Click(object sender, RoutedEventArgs e)
+        private void FilterButton_Click(object sender, RoutedEventArgs e) 
         {
 
             string filter = (sender as Button).Tag.ToString();
