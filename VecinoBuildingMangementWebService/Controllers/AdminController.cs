@@ -1091,7 +1091,7 @@ namespace VecinoBuildingMangementWebService.Controllers
                 {
                     bool response = this.repositoryUOW.BookingRepository.UpdateBookingStauts(bookingId, BookingStatus.AWAITING_PAYMENT);
                     if (response)
-                        return Ok();
+                        return Ok(true);
                     else
                         return BadRequest("Update failed");
 

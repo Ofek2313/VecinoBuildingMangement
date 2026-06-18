@@ -61,6 +61,17 @@ namespace VecinoWpfApp.AppWindows
 
 
         }
+        private void ChkSelectAll_Checked(object sender, RoutedEventArgs e)
+        {
+            allResidents.ForEach(r => r.IsChecked = true);
+            ListViewResidents.Items.Refresh();
+        }
+
+        private void ChkSelectAll_Unchecked(object sender, RoutedEventArgs e)
+        {
+            allResidents.ForEach(r => r.IsChecked = false);
+            ListViewResidents.Items.Refresh();
+        }
 
         private async void Button_Click(object sender, RoutedEventArgs e)
         {

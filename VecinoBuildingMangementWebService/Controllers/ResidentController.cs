@@ -20,20 +20,30 @@ namespace VecinoBuildingMangementWebService.Controllers
         }
        
         [HttpGet]
-        public ManagePaymentViewModel GetManagePayment(string residentId, int page = 1)
+        public ManagePaymentViewModel GetManagePayment(string residentId, int page = 1,int pageUnpaid = 1)
         {
             ManagePaymentViewModel viewModel = new ManagePaymentViewModel();
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
-                viewModel.Fees = repositoryUOW.FeeRepository.GetFeesByResidentIdPage(residentId, 5, page);
+                viewModel.Fees = repositoryUOW.FeeRepository.GetFeesByResidentIdPagePaid(residentId, 5, page);
+                viewModel.UnPaid = repositoryUOW.FeeRepository.GetFeesByResidentIdPageUnPaid(residentId, 5, pageUnpaid);
                 viewModel.ResidentFeeStats = this.repositoryUOW.FeeRepository.GetResidentFeeStats(residentId);
                 viewModel.nextFee = this.repositoryUOW.FeeRepository.GetNextFee(residentId);
 
-                int totalFees = viewModel.ResidentFeeStats.PaidFees + viewModel.ResidentFeeStats.UnPaidFees;
-                viewModel.NumberOfPages = (int)Math.Ceiling(totalFees / 5.0);
+            
+                viewModel.NumberOfPages = (int)Math.Ceiling(viewModel.ResidentFeeStats.PaidFees / 5.0);
+                viewModel.NumberOfPagesUnPaid = (int)Math.Ceiling(viewModel.ResidentFeeStats.UnPaidFees / 5.0);
                 viewModel.CurrentPage = page;
-
+                viewModel.CurrentPageUnPaid = pageUnpaid;
+                if (viewModel.nextFee != null)
+                {
+                    if (DateTime.TryParse(viewModel.nextFee.FeeDueDate, out DateTime end))
+                    {
+                        var span = end - DateTime.Now;
+                        viewModel.DaysLeft = (int)Math.Max(0, Math.Ceiling(span.TotalDays));
+                    }
+                }
 
 
                 return viewModel;
@@ -79,24 +89,10 @@ namespace VecinoBuildingMangementWebService.Controllers
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
                 serviceRequestViewModel.serviceRequests = repositoryUOW.ServiceRequestRepository.GetServiceRequestsByResidentId(residentId);
                 serviceRequestViewModel.RequestTypes = repositoryUOW.RequestTypeRepository.GetAll();
-                foreach (ServiceRequest serviceRequest in serviceRequestViewModel.serviceRequests)
-                {
-                    switch (serviceRequest.RequestStatus)
-                    {
-                        case "Pending":
-                            serviceRequestViewModel.Pending += 1;
-                            break;
-                        case "Completed":
-                            serviceRequestViewModel.Completed += 1;
-                            break;
-                        case "In Progress":
-                            serviceRequestViewModel.InProgress += 1;
-                            break;
-                        default:
-                            break;
-                    }
-                }
-
+                (serviceRequestViewModel.Pending, serviceRequestViewModel.Completed, serviceRequestViewModel.InProgress) =
+                    this.repositoryUOW.ServiceRequestRepository.GetServiceRequestSummaryByResidentId(residentId);
+               
+                
                 return serviceRequestViewModel;
 
             }

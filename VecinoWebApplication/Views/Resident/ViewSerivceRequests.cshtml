@@ -94,11 +94,11 @@
                                 <p class="request-description">@serviceRequest.RequestMessage</p>
                             </div>
                             <div class="badges">
-                                @if (serviceRequest.RequestStatus == "Pending")
+                                @if (serviceRequest.RequestStatus == VecinoBuildingMangement.RequestStatus.Pending)
                                 {
                                     <span class="badge badge-status-pending">@serviceRequest.RequestStatus</span>
                                 }
-                                else if(serviceRequest.RequestStatus == "InProgress")
+                                else if (serviceRequest.RequestStatus == VecinoBuildingMangement.RequestStatus.InProgress)
                                 {
                                     <span class="badge badge-status-in-progress">@serviceRequest.RequestStatus</span>
                                 }

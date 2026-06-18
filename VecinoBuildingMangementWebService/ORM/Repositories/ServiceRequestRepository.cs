@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using VecinoBuildingMangement;
 using VecinoBuildingMangement.Models;
 using VecinoBuildingMangement.ViewModels;
 using VecinoBuildingMangementWebService.ORM.ModelCreators;
@@ -115,7 +116,7 @@ namespace VecinoBuildingMangementWebService
 
             return serviceRequests;
         }
-        public bool UpdateStatus(string status,string requestId)
+        public bool UpdateStatus(RequestStatus status,string requestId)
         {
             string sql = @"Update ServiceRequest set RequestStatus=@RequestStatus where RequestId=@RequestId";
             this.dbHelperOleDb.AddParameter("@RequestStatus", status);
@@ -170,11 +171,30 @@ namespace VecinoBuildingMangementWebService
 
         public (int Pending, int Completed, int InProgress) GetServiceRequestSummary(string buildingId)
         {
-            string sql = @$"SELECT Count(IIF(RequestStatus = 'Pending', 1, NULL)) AS PendingCount,
-                            Count(IIF(RequestStatus = 'Completed', 1, NULL)) AS CompletedCount,
-                            Count(IIF(RequestStatus = 'In Progress', 1, NULL)) AS InProgressCount FROM  ServiceRequest INNER JOIN Resident ON ServiceRequest.ResidentId = Resident.ResidentId
+            string sql = @$"SELECT Count(IIF(RequestStatus = {(int)RequestStatus.Pending}, 1, NULL)) AS PendingCount,
+                            Count(IIF(RequestStatus = {(int)RequestStatus.Completed}, 1, NULL)) AS CompletedCount,
+                            Count(IIF(RequestStatus = {(int)RequestStatus.InProgress}, 1, NULL)) AS InProgressCount FROM  ServiceRequest INNER JOIN Resident ON ServiceRequest.ResidentId = Resident.ResidentId
                              WHERE BuildingId = @BuildingId";
             this.dbHelperOleDb.AddParameter("@BuildingId", buildingId);
+            
+            using (IDataReader reader = this.dbHelperOleDb.Select(sql))
+            {
+                if (reader.Read())
+                {
+
+                    return (Convert.ToInt32(reader["PendingCount"]), Convert.ToInt32(reader["CompletedCount"]), Convert.ToInt32(reader["InProgressCount"]));
+                }
+                else
+                    return (0, 0, 0);
+            }
+        }
+        public (int Pending, int Completed, int InProgress) GetServiceRequestSummaryByResidentId(string residentId)
+        {
+            string sql = @$"SELECT Count(IIF(RequestStatus = {(int)RequestStatus.Pending}, 1, NULL)) AS PendingCount,
+                            Count(IIF(RequestStatus = {(int)RequestStatus.Completed}, 1, NULL)) AS CompletedCount,
+                            Count(IIF(RequestStatus = {(int)RequestStatus.InProgress}, 1, NULL)) AS InProgressCount FROM  ServiceRequest where ResidentId=@ResidentId;";
+            this.dbHelperOleDb.AddParameter("@ResidentId", residentId);
+
             using (IDataReader reader = this.dbHelperOleDb.Select(sql))
             {
                 if (reader.Read())

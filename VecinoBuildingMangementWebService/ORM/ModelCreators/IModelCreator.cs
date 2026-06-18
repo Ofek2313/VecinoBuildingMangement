@@ -2,9 +2,8 @@
 
 namespace VecinoBuildingMangementWebService
 {
-    public interface IModelCreator<T>
+    public interface IModelCreator
     {
-        T CreateModel(IDataReader dataReader);
-
+        T CreateModel<T>(IDataReader dataReader, List<string> extraIgnore = null) where T : new();
     }
 }

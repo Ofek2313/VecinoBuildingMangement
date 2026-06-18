@@ -266,7 +266,7 @@ VerticalAlignment="Center"/>
                                   FontFamily="Segoe UI" FontSize="13" FontWeight="SemiBold"
                                   Foreground="#16a34a"
                                   Content="Select All Residents"
-                                 />
+                                 Checked="ChkSelectAll_Checked" Unchecked="ChkSelectAll_Unchecked"/>
                     </Border>
                     <Border Background="#f8fafc" BorderBrush="#e2e8f0" BorderThickness="1"
         CornerRadius="10" Padding="12,0" Margin="0,0,0,10">

@@ -4,9 +4,9 @@ using VecinoBuildingMangement.Models;
 
 namespace VecinoBuildingMangementWebService.ORM.ModelCreators
 {
-    public class ModelCreator 
+    public class ModelCreator  : IModelCreator
     {
-        public T CreateModel<T>(IDataReader dataReader ,List<string> extraIgnore = null ) where T : new()
+        public T CreateModel<T>  (IDataReader dataReader ,List<string> extraIgnore = null )  where T : new()
         {
             Type type = typeof(T);
             

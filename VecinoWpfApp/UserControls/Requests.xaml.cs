@@ -15,6 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using VecinoBuildingMangement;
 using VecinoBuildingMangement.DTO;
 using VecinoBuildingMangement.Models;
 using VecinoBuildingMangement.ViewModels;
@@ -30,7 +31,7 @@ namespace VecinoWpfApp.UserControls
         ManageServiceRequestViewModel serviceRequestViewModel;
         ViewRequestDetail requestDetail;
         private DispatcherTimer _dispatcherTimer;
-
+        private string currentFilter = "all";
         public Requests()
         {
             InitializeComponent();
@@ -56,7 +57,7 @@ namespace VecinoWpfApp.UserControls
             client.AddParameter("buildingId", Session.BuildingId);
             serviceRequestViewModel = await client.GetAsync();
 
-            listViewRequests.ItemsSource = this.serviceRequestViewModel.serviceRequests;
+            ApplyFilter();
             this.DataContext = this.serviceRequestViewModel;
 
         }
@@ -76,11 +77,11 @@ namespace VecinoWpfApp.UserControls
 
             switch (item.ServiceRequest.RequestStatus)
             {
-                case "Pending":
-                    viewModel.Status = "In Progress";
+                case RequestStatus.Pending:
+                    viewModel.Status = RequestStatus.InProgress;
                     break;
-                case "In Progress":
-                    viewModel.Status = "Completed";
+                case RequestStatus.InProgress:
+                    viewModel.Status = RequestStatus.Completed;
                     break;
             }
 
@@ -120,13 +121,8 @@ namespace VecinoWpfApp.UserControls
         {
 
             string filter = (sender as Button).Tag.ToString();
-            if (filter != "all")
-            {
-                List<ServiceRequestDetail> filteredList = serviceRequestViewModel.serviceRequests.Where(s => s.ServiceRequest.RequestStatus.Equals(filter)).ToList();
-                listViewRequests.ItemsSource = filteredList;
-            }
-            else
-                listViewRequests.ItemsSource = serviceRequestViewModel.serviceRequests;
+            currentFilter = filter;
+            ApplyFilter();
 
             Style Active = this.FindResource("FilterPillActive") as Style;
             Style NotActive = this.FindResource("FilterPill") as Style;
@@ -137,6 +133,39 @@ namespace VecinoWpfApp.UserControls
             (sender as Button).Style = Active;
 
 
+        }
+        private void ApplyFilter()
+        {
+            if (serviceRequestViewModel == null) return;
+
+            List<ServiceRequestDetail> filteredList;
+
+            switch (currentFilter)
+            {
+                case "Pending":
+                    filteredList = serviceRequestViewModel.serviceRequests
+                        .Where(s => s.ServiceRequest.RequestStatus == RequestStatus.Pending)
+                        .ToList();
+                    break;
+
+                case "Completed":
+                    filteredList = serviceRequestViewModel.serviceRequests
+                        .Where(s => s.ServiceRequest.RequestStatus == RequestStatus.Completed)
+                        .ToList();
+                    break;
+
+                case "In Progress":
+                    filteredList = serviceRequestViewModel.serviceRequests
+                        .Where(s => s.ServiceRequest.RequestStatus == RequestStatus.InProgress)
+                        .ToList();
+                    break;
+
+                default:
+                    filteredList = serviceRequestViewModel.serviceRequests;
+                    break;
+            }
+
+            listViewRequests.ItemsSource = filteredList;
         }
         private async void Timer_Tick(object sender, EventArgs e)
         {

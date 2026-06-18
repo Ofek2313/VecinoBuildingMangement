@@ -20,7 +20,7 @@ namespace VecinoBuildingMangementWebService
         BookingRepository bookingRepository;
 
         DbHelperOleDb dbHelperOleDb;
-        ModelCreators modelCreators;
+
 
         ModelCreator modelCreator;
         public RepositoryUOW()
@@ -40,7 +40,7 @@ namespace VecinoBuildingMangementWebService
             {
                 if(buildingRepository == null)
                         buildingRepository = new BuildingRepository(this.dbHelperOleDb,this.modelCreator);
-                    return buildingRepository;
+                return buildingRepository;
             }
         }
 

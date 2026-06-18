@@ -14,8 +14,9 @@ namespace VecinoBuildingMangement.Models
         string requestMessage;
         string requestTypeId;
         string requestDate;
-        string requestStatus;
+        //string requestStatus;
         string residentId;
+        RequestStatus requestStatus;
 
         public ServiceRequest() { }
 
@@ -71,12 +72,12 @@ namespace VecinoBuildingMangement.Models
         }
 
         [Required(ErrorMessage = "Request Status can not be empty")]
-        public string RequestStatus
+        public RequestStatus RequestStatus
         {
-            get { return requestStatus; }
-            set { 
-                
-                   requestStatus = value;
+            get { return  requestStatus; }
+            set {
+
+                requestStatus = value;
                 ValidateProperty(value, "RequestStatus");
             }
         }

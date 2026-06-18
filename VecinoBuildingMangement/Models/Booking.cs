@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace VecinoBuildingMangement.Models
 {
-    public class Booking
+    public class Booking : Model
     {
         string bookingId;
         string residentId;

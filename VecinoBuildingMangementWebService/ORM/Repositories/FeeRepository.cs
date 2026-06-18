@@ -93,7 +93,7 @@ namespace VecinoBuildingMangementWebService
             return fees;
         }
 
-        public List<Fee> GetFeesByResidentIdPage(string residentId, int FeesPerPage, int pageNumber = 1)
+        public List<Fee> GetFeesByResidentIdPagePaid(string residentId, int FeesPerPage, int pageNumber = 1)
         {
             string sql;
             if(pageNumber > 1)
@@ -113,7 +113,7 @@ namespace VecinoBuildingMangementWebService
                                     ORDER BY
                                         FeeId
                                 )
-                                AND ResidentId = @ResidentId;
+                                AND ResidentId = @ResidentId and IsPaid=True;
                            ";
                 this.dbHelperOleDb.AddParameter("ResidentId", residentId);
                 this.dbHelperOleDb.AddParameter("ResidentId", residentId);
@@ -125,12 +125,63 @@ namespace VecinoBuildingMangementWebService
                             FROM
                                 Fee
                             WHERE
-                                ResidentId = @ResidentId
+                                ResidentId = @ResidentId and IsPaid=True
                              ORDER BY
                                         FeeId";
                 this.dbHelperOleDb.AddParameter("ResidentId", residentId);
             }
             
+            List<Fee> fees = new List<Fee>();
+            using (IDataReader reader = this.dbHelperOleDb.Select(sql))
+            {
+                while (reader.Read())
+                {
+
+                    fees.Add(this.modelCreator.CreateModel<Fee>(reader));
+
+                }
+            }
+
+            return fees;
+        }
+        public List<Fee> GetFeesByResidentIdPageUnPaid(string residentId, int FeesPerPage, int pageNumber = 1)
+        {
+            string sql;
+            if (pageNumber > 1)
+            {
+                sql = $@"SELECT
+                                TOP {FeesPerPage} *
+                            FROM
+                                Fee
+                            WHERE
+                                FeeId NOT IN (
+                                    SELECT
+                                        TOP {(pageNumber - 1) * FeesPerPage} FeeId
+                                    FROM
+                                        Fee
+                                    WHERE
+                                        ResidentId = @ResidentId
+                                    ORDER BY
+                                        FeeId
+                                )
+                                AND ResidentId = @ResidentId and IsPaid=False;
+                           ";
+                this.dbHelperOleDb.AddParameter("ResidentId", residentId);
+                this.dbHelperOleDb.AddParameter("ResidentId", residentId);
+            }
+            else
+            {
+                sql = $@"SELECT
+                                TOP {FeesPerPage} *
+                            FROM
+                                Fee
+                            WHERE
+                                ResidentId = @ResidentId and IsPaid=False
+                             ORDER BY
+                                        FeeId";
+                this.dbHelperOleDb.AddParameter("ResidentId", residentId);
+            }
+
             List<Fee> fees = new List<Fee>();
             using (IDataReader reader = this.dbHelperOleDb.Select(sql))
             {

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
+using VecinoBuildingMangement;
 
 namespace VecinoWpfApp
 {
@@ -19,19 +20,19 @@ namespace VecinoWpfApp
             {
                 if(parm == "text")
                 {
-                    if (value is string stats)
+                    if (value is RequestStatus stats)
                     {
                         
                             switch (stats)
                             {
-                                case "Completed":
+                                case RequestStatus.Completed:
                                     return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#b8dfc0"));
 
 
-                                case "In Progress":
+                                case RequestStatus.InProgress:
                                     return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#c5d8f8"));
 
-                                case "Pending":
+                                case RequestStatus.Pending:
                                     return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#ffd4a8"));
                         }
                         
@@ -39,19 +40,19 @@ namespace VecinoWpfApp
                 }
                 else if(parm == "background")
                 {
-                    if (value is string stats)
+                    if (value is RequestStatus stats)
                     {
 
                         switch (stats)
                         {
-                            case "Completed":
+                            case RequestStatus.Completed:
                                 return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#e8f5e9"));
 
 
-                            case "In Progress":
+                            case RequestStatus.InProgress:
                                 return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#e8f0fe"));
 
-                            case "Pending":
+                            case RequestStatus.Pending:
                                 return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#fff0e0"));
                         }
 
@@ -59,15 +60,15 @@ namespace VecinoWpfApp
                 }
             }
 
-            if(value is string Status)
+            if(value is RequestStatus Status)
             {
                 switch(Status)
                 {
-                    case "Pending":
+                    case RequestStatus.Pending:
                         return "Start Work";
-                    case "In Progress":
+                    case RequestStatus.InProgress:
                         return "Finish Work";
-                    case "Completed":
+                    case RequestStatus.Completed:
                         return "Archive";
                 }
             }

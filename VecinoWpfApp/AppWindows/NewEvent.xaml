@@ -451,14 +451,14 @@
                         <!-- Upload / Remove buttons -->
                         <Grid Margin="0,8,0,18">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="12"/>
-                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <Button Grid.Column="0"
                                     Style="{StaticResource UploadButtonStyle}"
                                     Padding="16,0"
-                                    >
+                                    HorizontalAlignment="Stretch" Click="ButtonSelectImage_Click">
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="&#xE898;" FontFamily="Segoe MDL2 Assets"
                                                FontSize="14" Foreground="#8B5CF6"
@@ -472,7 +472,7 @@
                                     Grid.Column="2"
                                     Style="{StaticResource UploadButtonStyle}"
                                     Padding="16,0"
-                                    Visibility="Collapsed"
+                                   Click="RemoveImage"
                                    >
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="&#xE711;" FontFamily="Segoe MDL2 Assets"

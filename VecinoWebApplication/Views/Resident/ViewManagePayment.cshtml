@@ -14,7 +14,7 @@
         alert("@TempData["ErrorMessage"]");
     </script>
 }
-<link  rel="stylesheet" href="~/css/Pay.css"/>
+<link rel="stylesheet" href="~/css/Pay.css" />
 <div class="container">
     <div class="header">
         <h1>My Payments</h1>
@@ -23,26 +23,22 @@
 
     <div class="payment-hero">
         <div class="payment-hero-info">
-         @if(Model.ResidentFeeStats.UnPaidFees > 0)
+            @if (Model.ResidentFeeStats.UnPaidFees > 0)
             {
                 <p>Next Payment Due</p>
                 <h2>@Model.nextFee.FeeAmount₪</h2>
                 <p>Due on @Model.nextFee.FeeDueDate</p>
-                <span class="badge">14 days remaining</span>
+                <span class="badge">@Model.DaysLeft days remaining</span>
             }
             else
             {
                 <h2>No Fees Due</h2>
             }
-         
-            
-           
         </div>
-        @if(Model.ResidentFeeStats.UnPaidFees > 0)
+        @if (Model.ResidentFeeStats.UnPaidFees > 0)
         {
             <button class="pay-btn" id="pay-btn" onclick="OpenPopUp('@Model.nextFee.FeeId')">💳 Pay Now</button>
         }
-        
     </div>
 
     <div class="grid">
@@ -68,69 +64,91 @@
                 <div class="stat-label">
                     💰 Fees Paid
                 </div>
-                <div class="stat-value">@(Model.ResidentFeeStats.PaidFees)/@(Model.ResidentFeeStats.UnPaidFees+Model.ResidentFeeStats.PaidFees)</div>
-
+                <div class="stat-value">@(Model.ResidentFeeStats.PaidFees)/@(Model.ResidentFeeStats.UnPaidFees + Model.ResidentFeeStats.PaidFees)</div>
             </div>
         </div>
-
-
-
 
         <div class="card">
             <h3 class="card-title">Fee History</h3>
 
-            @foreach(Fee fee in Model.Fees)
-            {
-                if(!fee.IsPaid)
-                {
-                    <div class="payment-item unpaid-item">
-                        <div class="payment-icon unpaid-icon">X</div>
-                        <div class="payment-info">
-                            <div class="payment-month">@fee.FeeTitle</div>
-                            <div class="payment-details">@fee.FeeDueDate</div>
-                        </div>
-                        <div class="payment-amount">
-                            
-                             
-                                <div class="amount">@fee.FeeAmount₪</div>
-                            <span class="status-badge unpaid-badge">UnPaid</span>
-
-                            
-                            
-                        </div>
-                        <button class="pay-btn-small" onclick="OpenPopUp('@fee.FeeId')">Pay</button>
-                        
-                    </div>
-                }
-                else
-                {
-                    <div class="payment-item">
-                        <div class="payment-icon">✓</div>
-                        <div class="payment-info">
-                            <div class="payment-month">@fee.FeeTitle</div>
-                            <div class="payment-details">@fee.FeeDueDate</div>
-                        </div>
-                        <div class="payment-amount">
-                            <div class="amount">@fee.FeeAmount₪</div>
-                            <span class="status-badge">Paid</span>
-                        </div>
-                       
-
-                    </div>
-                }
-            }
-
-
-
-            <div class="pagination">
-                @for (int i = 1; i <= Model.NumberOfPages; i++)
-                {
-                    <a href="/Resident/ViewManagePayment?page=@i" class="page-btn @(i == Model.CurrentPage ? "active" : "")">@i</a>
-                }
-            </div>
            
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+
+                <div>
+                    
+
+                    @foreach (Fee fee in Model.UnPaid)
+                    {
+                        <div class="payment-item unpaid-item">
+                            <div class="payment-icon unpaid-icon">X</div>
+                            <div class="payment-info">
+                                <div class="payment-month">@fee.FeeTitle</div>
+                                <div class="payment-details">@fee.FeeDueDate</div>
+                            </div>
+                            <div class="payment-amount">
+                                <div class="amount">@fee.FeeAmount₪</div>
+                                <span class="status-badge unpaid-badge">UnPaid</span>
+                            </div>
+                            <button class="pay-btn-small" onclick="OpenPopUp('@fee.FeeId')">Pay</button>
+                        </div>
+                    }
+
+                    @if (!Model.UnPaid.Any())
+                    {
+                        <p style="color: #64748b; font-size: 0.875rem;">No unpaid fees 🎉</p>
+                    }
+                </div>
+
+                <div>
+                   
+
+                    @foreach (Fee fee in Model.Fees)
+                    {
+                        <div class="payment-item">
+                            <div class="payment-icon">✓</div>
+                            <div class="payment-info">
+                                <div class="payment-month">@fee.FeeTitle</div>
+                                <div class="payment-details">@fee.FeeDueDate</div>
+                            </div>
+                            <div class="payment-amount">
+                                <div class="amount">@fee.FeeAmount₪</div>
+                                <span class="status-badge">Paid</span>
+                            </div>
+                        </div>
+                    }
+
+                    @if (!Model.Fees.Any())
+                    {
+                        <p style="color: #64748b; font-size: 0.875rem;">No paid fees yet.</p>
+                    }
+                </div>
+
+            </div>
+
+            <div class="pagination-wraper">
+
+           
+                <div class="pagination">
+                    @for (int i = 1; i <= Model.NumberOfPagesUnPaid; i++)
+                    {
+                        <a href="/Resident/ViewManagePayment?page=1&pageUnpaid=@i"
+                           class="page-btn @(i == Model.CurrentPageUnPaid ? "active" : "")">@i</a>
+                    }
+                </div>
+                <div class="pagination">
+                    @for (int i = 1; i <= Model.NumberOfPages; i++)
+                    {
+                      
+                        <a href="/Resident/ViewManagePayment?page=@i&pageUnpaid=1"
+                           class="page-btn @(i == Model.CurrentPage ? "active" : "")">@i</a>
+                    }
+                </div>
+            </div>
         </div>
+
     </div>
+
     <div id="overlay" class="overlay">
         <div class="popout" id="popout">
 
@@ -170,14 +188,11 @@
 
             <div class="modal-actions">
                 <button class="modal-cancel" onclick="document.getElementById('overlay').style.display='none'">Cancel</button>
-                <button class="modal-confirm" id="confirm-btn" onclick="Payfee()" >💳 Pay Now</button>
+                <button class="modal-confirm" id="confirm-btn" onclick="Payfee()">💳 Pay Now</button>
             </div>
 
         </div>
     </div>
 
 </div>
-<script src="~/js/payment.js">
-   
-</script>
-
+<script src="~/js/payment.js"></script>

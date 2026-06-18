@@ -107,6 +107,12 @@ namespace VecinoWpfApp.UserControls
 
         private async void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
+            MessageBoxResult result = MessageBox.Show(
+      "Are you sure you want to permanently delete this Event?",
+      "Confirm Delete",
+      MessageBoxButton.YesNo, MessageBoxImage.Warning);
+
+            if (result != MessageBoxResult.Yes) return;
             EventViewModel model = (sender as Button).DataContext as EventViewModel;
             string eventId = model.Event.EventId;
             //RemoveEvent

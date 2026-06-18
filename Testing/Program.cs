@@ -14,19 +14,19 @@ namespace Testing
 {
     internal class Program
     {
-        static void CheckCreator()
-        {
-            string sql = "Select * from Resident where ResidentId = 1";
-            DbHelperOleDb dbHelperOleDb = new DbHelperOleDb();
-            dbHelperOleDb.OpenConnection();
-            IDataReader dataReader = dbHelperOleDb.Select(sql);
-            dataReader.Read();
-            ModelCreators modelCreators = new ModelCreators();
-            Resident resident = modelCreators.ResidentCreator.CreateModel(dataReader);
-            dbHelperOleDb.CloseConnection();
-            Console.WriteLine($"{resident.ResidentName}, {resident.ResidentEmail}");
+        //static void CheckCreator()
+        //{
+        //    string sql = "Select * from Resident where ResidentId = 1";
+        //    DbHelperOleDb dbHelperOleDb = new DbHelperOleDb();
+        //    dbHelperOleDb.OpenConnection();
+        //    IDataReader dataReader = dbHelperOleDb.Select(sql);
+        //    dataReader.Read();
+        //    ModelCreators modelCreators = new ModelCreators();
+        //    Resident resident = modelCreators.ResidentCreator.CreateModel(dataReader);
+        //    dbHelperOleDb.CloseConnection();
+        //    Console.WriteLine($"{resident.ResidentName}, {resident.ResidentEmail}");
 
-        }
+        //}
         static void CheckInsert()
         {
 
@@ -97,7 +97,11 @@ namespace Testing
             Console.WriteLine(response);
 
         }
-
+        public static void Foo( ref int x)
+        {
+            x += 1;
+            Console.WriteLine(x);
+        }
         static void Main(string[] args)
         {
 
@@ -105,7 +109,9 @@ namespace Testing
 
 
 
-            Console.ReadLine();
+            int x = 5;
+            Foo(ref x);
+            Console.WriteLine(x);
             
             Console.ReadLine();
 

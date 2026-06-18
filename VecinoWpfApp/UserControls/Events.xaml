@@ -240,6 +240,7 @@
                                         </StackPanel>
                                         <Border Height="1" Margin="16,12,0,15" Background="#E5E7EB" Opacity="0.7"/>
                                         <Button Content="Delete" Style="{StaticResource DeleteEventButton}" Width="89" HorizontalAlignment="Right" Margin="0,0,15,0" Height="30" Click="DeleteButton_Click"/>
+                                        <Button x:Name="ViewEventDetailsButton" Content="View Detail" Style="{StaticResource DeleteEventButton}" Width="120" HorizontalAlignment="Right" Margin="0,0,15,0" Height="30" Click="ViewEventDetailsButton_Click"/>
                                     </StackPanel>
                                 </Grid>
                             </Border>

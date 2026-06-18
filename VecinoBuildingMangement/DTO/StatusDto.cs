@@ -8,7 +8,7 @@ namespace VecinoBuildingMangement.DTO
 {
     public class StatusDto
     {
-        public string Status { get; set; }
+        public RequestStatus Status { get; set; }
         public string RequestId { get; set; }
     }
 }

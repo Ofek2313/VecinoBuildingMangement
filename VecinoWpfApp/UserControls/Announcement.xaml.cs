@@ -78,6 +78,12 @@ namespace VecinoWpfApp.UserControls
 
         private async void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
+            MessageBoxResult result = MessageBox.Show(
+      "Are you sure you want to permanently delete this Announcement?",
+      "Confirm Delete",
+      MessageBoxButton.YesNo, MessageBoxImage.Warning);
+
+            if (result != MessageBoxResult.Yes) return;
             Notification model = (sender as Button).DataContext as Notification;
             string notificationIdId = model.NotificationId;
             

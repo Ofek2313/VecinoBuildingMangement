@@ -39,6 +39,7 @@ namespace VecinoWpfApp.AppPages
             
            
             resident.IsAdmin = true;
+         
             resident.Validate();
             if(!resident.HasErrors)
             {

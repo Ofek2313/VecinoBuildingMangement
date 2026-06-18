@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using System.Data;
+using VecinoBuildingMangement;
 using VecinoBuildingMangement.DTO;
 using VecinoBuildingMangement.Models;
 using VecinoBuildingMangement.ViewModels;
@@ -122,7 +123,7 @@ namespace VecinoBuildingMangementWebService
         }
         public BuildingStats GetBuildingStats(string buildingId)
         {
-            string sql = @"SELECT
+            string sql = $@"SELECT
                         (
                             SELECT
                                 COUNT(*)
@@ -145,7 +146,7 @@ namespace VecinoBuildingMangementWebService
                             FROM
                                 ServiceRequest
                             WHERE
-                                RequestStatus = 'Pending'
+                                RequestStatus = {(int)RequestStatus.Pending}
                                 AND ResidentId IN (
                                     SELECT
                                         ResidentId
@@ -364,6 +365,7 @@ namespace VecinoBuildingMangementWebService
                         Building
                     INNER JOIN
                         City ON Building.CityId = City.CityId
+                    Where Building.BuildingId <> 0
                     ORDER BY
                         Building.BuildingId;";
                 

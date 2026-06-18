@@ -43,7 +43,7 @@ namespace VecinoWebApplication.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ViewManagePayment(int page = 1)
+        public async Task<IActionResult> ViewManagePayment(int page = 1,int pageUnpaid = 1)
         {
             try
             {
@@ -57,7 +57,7 @@ namespace VecinoWebApplication.Controllers
                 client.Path = "api/Resident/GetManagePayment";
                 client.AddParameter("residentId", residentId);
                 client.AddParameter("page", page.ToString());
-
+                client.AddParameter("pageUnpaid", pageUnpaid.ToString());
                 ManagePaymentViewModel managePaymentViewModel = await client.GetAsync();
                 if (managePaymentViewModel != null)
                     return View(managePaymentViewModel);
@@ -143,7 +143,7 @@ namespace VecinoWebApplication.Controllers
             serviceRequest.ResidentId = HttpContext.Session.GetString("residentId");
 
             // Default values before sending to API
-            serviceRequest.RequestStatus = "Pending";
+            serviceRequest.RequestStatus = RequestStatus.Pending;
             serviceRequest.RequestDate = DateTime.Now.ToShortDateString();
             serviceRequest.RequestId = "";
 
@@ -682,7 +682,7 @@ namespace VecinoWebApplication.Controllers
         public async Task<IActionResult> CreateBooking(Booking booking)
         {
             booking.ResidentId = HttpContext.Session.GetString("residentId");
-
+            
             // normalize date format for backend consistency
             if (DateTime.TryParse(booking.BookingDate, out DateTime parsedDate))
             {
@@ -690,7 +690,7 @@ namespace VecinoWebApplication.Controllers
             }
 
             booking.BookingStatus = BookingStatus.AWAITING_APPROVAL;
-
+            
             try
             {
                 ApiClient<Booking> apiClient = new ApiClient<Booking>();

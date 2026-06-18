@@ -17,6 +17,6 @@ namespace VecinoBuildingMangement.ViewModels
         public int InProgress { get; set; } = 0;
         public int Completed { get; set; } = 0;
 
-        public ServiceRequest ServiceRequest { get; set; }
+        public ServiceRequest ServiceRequest { get; set; } = new ServiceRequest();
     }
 }

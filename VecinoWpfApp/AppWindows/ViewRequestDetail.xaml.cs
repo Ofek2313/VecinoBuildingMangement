@@ -12,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using VecinoBuildingMangement;
 using VecinoBuildingMangement.DTO;
 using VecinoBuildingMangement.Models;
 using VecinoBuildingMangement.ViewModels;
@@ -54,11 +55,11 @@ namespace VecinoWpfApp.AppWindows
 
             switch (item.ServiceRequest.RequestStatus)
             {
-                case "Pending":
-                    viewModel.Status = "In Progress";
+                case RequestStatus.Pending:
+                    viewModel.Status = RequestStatus.InProgress;
                     break;
-                case "In Progress":
-                    viewModel.Status = "Completed";
+                case RequestStatus.InProgress:
+                    viewModel.Status = RequestStatus.Completed;
                     break;
             }
 

@@ -97,6 +97,7 @@
 
         </conv:RequestStatusConverter>
         <conv:UrlConverter x:Key="urlConverter"></conv:UrlConverter>
+        <conv:ServiceRequestStatusToVisibilty x:Key="ServiceRequestStatusToVisibilty"></conv:ServiceRequestStatusToVisibilty>
     </Window.Resources>
 
     <!-- ── Drop shadow wrapper ── -->
@@ -298,7 +299,7 @@
                     <StackPanel Grid.Column="1" Orientation="Horizontal">
                         <Button Content="{Binding ServiceRequest.RequestStatus,Converter={StaticResource requestStatusConverter}}"
                                 Style="{StaticResource ActionBtn}"
-                                Margin="0,0,10,0" Click="ActionRequest_Click"/>
+                                Margin="0,0,10,0" Click="ActionRequest_Click" Visibility="{Binding ServiceRequest.RequestStatus,Converter={StaticResource ServiceRequestStatusToVisibilty}}"/>
                         <Button Content="Close"
                                 Style="{StaticResource SecondaryBtn}"
                                 x:Name="btnCloseFooter"

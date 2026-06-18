@@ -283,7 +283,7 @@ Visibility="{Binding (Validation.HasError),
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,4"
 Visibility="{Binding (Validation.HasError),
      Converter={StaticResource VisibilityConverter},
-     ElementName=NameTextBox}">
+     ElementName=PasswordTextBox}">
                                 <Viewbox Width="14" Height="14" Margin="0,0,5,0" VerticalAlignment="Center">
                                     <Canvas Width="14" Height="14">
                                         <Ellipse Width="13" Height="13" Canvas.Left="0.5" Canvas.Top="0.5"
@@ -294,14 +294,14 @@ Visibility="{Binding (Validation.HasError),
  Fill="#e24b4a"/>
                                     </Canvas>
                                 </Viewbox>
-                                <TextBlock Text="{Binding (Validation.Errors)[0].ErrorContent, ElementName=NameTextBox}"
+                                <TextBlock Text="{Binding (Validation.Errors)[0].ErrorContent, ElementName=PasswordTextBox}"
                        FontFamily="Segoe UI" FontSize="11.5"
                        Foreground="#a32d2d"
                        VerticalAlignment="Center"/>
                             </StackPanel>
-                            <PasswordBox x:Name="PasswordTextBox"
-                                         Style="{StaticResource PasswordField}" Height="50"/>
-                            
+                            <TextBox x:Name="PasswordTextBox"
+                                         Style="{StaticResource InputField}" Height="50" Text="{Binding ResidentPassword,UpdateSourceTrigger=PropertyChanged}" />
+                           
                         </StackPanel>
 
                         <StackPanel Grid.Column="2">

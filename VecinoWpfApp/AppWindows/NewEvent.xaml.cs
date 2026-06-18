@@ -63,10 +63,16 @@ namespace VecinoWpfApp.AppWindows
                 imagePath = fileName;
                 Uri uri = new Uri(fileName);
                 BitmapImage bitmapImage = new BitmapImage(uri);
-                
-                //ImageEvent.Source = bitmapImage;
+
+                EventImagePreview.Source = bitmapImage;
+                EventImagePreview.Visibility = Visibility.Visible;
             }
 
+        }
+        private void RemoveImage(object sender, RoutedEventArgs e)
+        {
+            EventImagePreview.Visibility = Visibility.Collapsed;
+            imagePath = null;
         }
      
 
@@ -86,9 +92,16 @@ namespace VecinoWpfApp.AppWindows
                 client.Host = "localhost";
                 client.Port = 5269;
                 client.Path = "api/Admin/AddUpComingEvent";
-                Stream stream = new FileStream(this.imagePath,FileMode.Open,FileAccess.Read);
-                
-               response = await client.PostAsyncReturn<Event,bool>(createEventView.Event, stream,imagePath);
+                if(imagePath != null)
+                {
+                    Stream stream = new FileStream(this.imagePath, FileMode.Open, FileAccess.Read);
+
+                    response = await client.PostAsyncReturn<Event, bool>(createEventView.Event, stream, imagePath);
+                }
+                else
+                {
+                    response = await client.PostAsyncReturn<Event, bool>(createEventView.Event, null, null);
+                }
             }
             if(response.Data && response.Success)
             {

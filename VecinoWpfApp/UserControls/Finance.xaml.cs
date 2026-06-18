@@ -16,6 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using VecinoBuildingMangement;
 using VecinoBuildingMangement.Models;
 using VecinoBuildingMangement.ViewModels;
 using VecinoWpfApp.AppWindows;
@@ -32,6 +33,7 @@ namespace VecinoWpfApp.UserControls
         NewFee newFee;
         FeeDetail feeDetail;
         private DispatcherTimer _dispatcherTimer;
+        private string currentFilter = "all";
 
         public Finance()
         {
@@ -84,6 +86,7 @@ namespace VecinoWpfApp.UserControls
             notification.NotificationDate = DateTime.Now.ToShortDateString();
             notification.Priority = "Urgent";
             notification.IsPinned = false;
+            notification.CreatedBy = Session.ResidentId; // The Resident If Of an Admin
             List<string> ids = new List<string>();
             ids.Add(item.Fee.ResidentId);
             sendNotificationViewModel.ResidentIds = ids;
@@ -136,19 +139,8 @@ namespace VecinoWpfApp.UserControls
         {
 
             string filter = (sender as Button).Tag.ToString();
-            switch (filter)
-            {
-                case "all":
-                    listViewFees.ItemsSource = manageAdminFinance.Finances;
-                    break;
-                case "paid":
-                    listViewFees.ItemsSource = manageAdminFinance.Finances.Where(f => f.Fee.IsPaid );
-                    break;
-                case "unpaid":
-                    listViewFees.ItemsSource = manageAdminFinance.Finances.Where(f => !f.Fee.IsPaid);
-                    break;
-
-            }
+            currentFilter = filter;
+            ApplyFilter();
 
 
             Style Active = this.FindResource("FilterButtonActive") as Style;
@@ -160,6 +152,32 @@ namespace VecinoWpfApp.UserControls
             (sender as Button).Style = Active;
 
 
+        }
+        private void ApplyFilter()
+        {
+            if (manageAdminFinance == null) return;
+
+            List<ResidentFeeViewModel> filteredList;
+
+            switch (currentFilter)
+            {
+                case "paid":
+                    filteredList = manageAdminFinance.Finances.Where(f => f.Fee.IsPaid).ToList();
+                        
+                    break;
+
+                case "unpaid":
+                    filteredList = manageAdminFinance.Finances.Where(f => !f.Fee.IsPaid ).ToList();
+                    break;
+
+                
+
+                default:
+                    filteredList = manageAdminFinance.Finances;
+                    break;
+            }
+
+            listViewFees.ItemsSource = filteredList;
         }
         private async void Timer_Tick(object sender, EventArgs e)
         {

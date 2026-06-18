@@ -32,7 +32,7 @@ namespace VecinoWpfApp.UserControls
         PollDetail pollDetail;
         List<PollViewModelAdmin> polls;
         private DispatcherTimer _dispatcherTimer;
-
+        private string currentFilter;
         public Polls()
         {
             InitializeComponent();
@@ -137,19 +137,8 @@ namespace VecinoWpfApp.UserControls
         {
 
             string filter = (sender as Button).Tag.ToString();
-            switch(filter)
-            {
-                case "all":
-                    listViewPolls.ItemsSource = polls;
-                    break;
-                case "open":
-                    listViewPolls.ItemsSource = polls.Where(p => p.poll.IsActive && DateTime.ParseExact(p.poll.PollDate, "dd/MM/yyyy", CultureInfo.InvariantCulture) >= DateTime.Today);
-                    break;
-                case "close":
-                    listViewPolls.ItemsSource = polls.Where(p => !p.poll.IsActive || DateTime.ParseExact(p.poll.PollDate, "dd/MM/yyyy", CultureInfo.InvariantCulture) < DateTime.Today);
-                    break;
-
-            }
+            currentFilter = filter;
+            ApplyFilter();
           
 
             Style Active = this.FindResource("FilterButtonActive") as Style;
@@ -161,6 +150,30 @@ namespace VecinoWpfApp.UserControls
             (sender as Button).Style = Active;
 
 
+        }
+        private void ApplyFilter()
+        {
+            if (polls == null) return;
+
+            List<PollViewModelAdmin> filteredList;
+
+            switch (currentFilter)
+            {
+                case "open":
+                    filteredList = polls.Where(p => p.poll.IsActive && DateTime.ParseExact(p.poll.PollDate, "dd/MM/yyyy", CultureInfo.InvariantCulture) >= DateTime.Today).ToList();
+                    break;
+
+                case "close":
+                    filteredList = polls.Where(p => !p.poll.IsActive || DateTime.ParseExact(p.poll.PollDate, "dd/MM/yyyy", CultureInfo.InvariantCulture) < DateTime.Today).ToList();
+                    break;
+
+
+                default:
+                    filteredList = polls;
+                    break;
+            }
+
+            listViewPolls.ItemsSource = filteredList;
         }
         private async void Timer_Tick(object sender, EventArgs e)
         {
