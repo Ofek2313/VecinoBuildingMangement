@@ -338,21 +338,9 @@
                                     </StackPanel>
                                 </StackPanel>
                                 <ComboBox x:Name="StartTimeComboBox" Style="{StaticResource FormComboBoxStyle}"
-                                          SelectedValuePath="Content" SelectedValue="{Binding Event.StartTime, UpdateSourceTrigger=PropertyChanged}">
-                                    <ComboBoxItem Content="Select" IsSelected="True"/>
-                                    <ComboBoxItem Content="8:00 AM"/>
-                                    <ComboBoxItem Content="9:00 AM"/>
-                                    <ComboBoxItem Content="10:00 AM"/>
-                                    <ComboBoxItem Content="11:00 AM"/>
-                                    <ComboBoxItem Content="12:00 PM"/>
-                                    <ComboBoxItem Content="1:00 PM"/>
-                                    <ComboBoxItem Content="2:00 PM"/>
-                                    <ComboBoxItem Content="3:00 PM"/>
-                                    <ComboBoxItem Content="4:00 PM"/>
-                                    <ComboBoxItem Content="5:00 PM"/>
-                                    <ComboBoxItem Content="6:00 PM"/>
-                                    <ComboBoxItem Content="7:00 PM"/>
-                                    <ComboBoxItem Content="8:00 PM"/>
+                                       SelectedValue="{Binding Event.StartTime, UpdateSourceTrigger=PropertyChanged}">
+                                    
+                                    
                                 </ComboBox>
                             </StackPanel>
                             <StackPanel Grid.Column="2">
@@ -372,22 +360,9 @@
                                     </StackPanel>
                                 </StackPanel>
                                 <ComboBox x:Name="EndTimeComboBox" Style="{StaticResource FormComboBoxStyle}"
-                                          SelectedValuePath="Content" SelectedValue="{Binding Event.EndTime, UpdateSourceTrigger=PropertyChanged}">
-                                    <ComboBoxItem Content="Select" IsSelected="True"/>
-                                    <ComboBoxItem Content="9:00 AM"/>
-                                    <ComboBoxItem Content="10:00 AM"/>
-                                    <ComboBoxItem Content="11:00 AM"/>
-                                    <ComboBoxItem Content="12:00 PM"/>
-                                    <ComboBoxItem Content="1:00 PM"/>
-                                    <ComboBoxItem Content="2:00 PM"/>
-                                    <ComboBoxItem Content="3:00 PM"/>
-                                    <ComboBoxItem Content="4:00 PM"/>
-                                    <ComboBoxItem Content="5:00 PM"/>
-                                    <ComboBoxItem Content="6:00 PM"/>
-                                    <ComboBoxItem Content="7:00 PM"/>
-                                    <ComboBoxItem Content="8:00 PM"/>
-                                    <ComboBoxItem Content="9:00 PM"/>
-                                    <ComboBoxItem Content="10:00 PM"/>
+                                          SelectedValue="{Binding Event.EndTime, UpdateSourceTrigger=PropertyChanged}">
+                                   
+                                    
                                 </ComboBox>
                             </StackPanel>
                         </Grid>

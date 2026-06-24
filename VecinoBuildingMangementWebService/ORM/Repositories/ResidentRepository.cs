@@ -191,6 +191,12 @@ namespace VecinoBuildingMangementWebService
             this.dbHelperOleDb.AddParameter("@ResidentId", residentId);
             return this.dbHelperOleDb.Update(sql) > 0;
         }
-
+        public bool EmailOrPhoneExists(string residentEmail,string residentPhone)
+        {
+            string sql = @$"Select 1 From Resident Where ResidentEmail=@ResidentEmail Or ResidentPhone=@ResidentPhone";
+            this.dbHelperOleDb.AddParameter("@ResidentEmail", residentEmail);
+            this.dbHelperOleDb.AddParameter("@ResidentPhone", residentPhone);
+            return dbHelperOleDb.ExecuteScalar(sql) != null;
+        }
     }
 }

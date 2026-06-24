@@ -222,6 +222,10 @@ namespace BuildingManagementWsClient
                         response.Data = value;
                         return response;  // return a success status of the post, and the data which can be a model, or a bool.
                     }
+                    else
+                    {
+                        response.ErrorMessage = await httpResponse.Content.ReadAsStringAsync();
+                    }
                 }
                 response.Success = false;
                 response.Data = default(TResponse);

@@ -28,7 +28,7 @@ namespace VecinoWpfApp.AppWindows
         public FeeDetail(ResidentFeeViewModel residentFee)
         {
             InitializeComponent();
-            residentFee.Fee.IsValidationEnabled = true;
+            
             this.DataContext = residentFee;
             
         }
@@ -76,6 +76,7 @@ namespace VecinoWpfApp.AppWindows
                         FeeAmountTextBox.IsReadOnly = true;
                         _IsEditing = false;
                         this.DialogResult = true;
+                        viewModel.Fee.IsValidationEnabled  = false;
                     }
                 }
                 else

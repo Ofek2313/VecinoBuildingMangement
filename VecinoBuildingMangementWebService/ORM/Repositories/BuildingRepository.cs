@@ -58,7 +58,7 @@ namespace VecinoBuildingMangementWebService
             this.dbHelperOleDb.AddParameter("@BuildingId", buildingId);
             return this.dbHelperOleDb.Update(sql) > 0;
         }
-        public string GetBuildingIdByCode(string buildingCode)
+        public Building GetBuildingByCode(string buildingCode)
         {
             string sql = "Select * From Building Where JoinCode=@JoinCode";
             dbHelperOleDb.AddParameter("@JoinCode", buildingCode);
@@ -66,7 +66,7 @@ namespace VecinoBuildingMangementWebService
             using (IDataReader dataReader = this.dbHelperOleDb.Select(sql))
             {
                 if (dataReader.Read())
-                    return dataReader["BuildingId"].ToString();
+                    return this.modelCreator.CreateModel<Building>(dataReader);
                 else
                     return null;
             }

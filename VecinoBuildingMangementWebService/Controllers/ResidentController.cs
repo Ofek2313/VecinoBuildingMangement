@@ -232,9 +232,9 @@ namespace VecinoBuildingMangementWebService.Controllers
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
 
-                string buildingId = this.repositoryUOW.BuildingRepository.GetBuildingIdByCode(joinBuildingRequest.BuildingCode);
-                if (buildingId != null)
-                    return this.repositoryUOW.ResidentRepository.JoinBuildingUpdate(joinBuildingRequest.ResidentId, buildingId, joinBuildingRequest.UnitNumber);
+                Building building = this.repositoryUOW.BuildingRepository.GetBuildingByCode(joinBuildingRequest.BuildingCode);
+                if (building != null && joinBuildingRequest.UnitNumber >= building.TotalUnits)
+                    return this.repositoryUOW.ResidentRepository.JoinBuildingUpdate(joinBuildingRequest.ResidentId, building.BuildingId, joinBuildingRequest.UnitNumber);
                 else
                     return false;
             }
@@ -573,18 +573,24 @@ namespace VecinoBuildingMangementWebService.Controllers
         }
 
         [HttpPost]
-        public bool CreateBooking([FromBody] Booking booking)
+        public IActionResult CreateBooking([FromBody] Booking booking)
         {
+            TimeSpan t1 = TimeSpan.Parse(booking.EndTime);
+            TimeSpan t2 = TimeSpan.Parse(booking.StartTime);
+            if (t2 > t1)
+                return BadRequest("Start Time must be before End Time");
             try
             {
+                
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
-                return this.repositoryUOW.BookingRepository.Create(booking);
+                bool response =  this.repositoryUOW.BookingRepository.Create(booking);
+                return Ok(response);
             }
             catch (Exception ex)
             {
 
                 Console.WriteLine(ex.ToString());
-                return false;
+                return StatusCode(500, "Internal server error");
             }
             finally
             {

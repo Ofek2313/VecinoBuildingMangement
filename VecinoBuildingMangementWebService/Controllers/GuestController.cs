@@ -49,22 +49,24 @@ namespace VecinoBuildingMangementWebService.Controllers
         }
 
         [HttpPost]
-        public Resident Register([FromBody] Resident resident)
+        public IActionResult Register([FromBody] Resident resident)
         {
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
+                if (this.repositoryUOW.ResidentRepository.EmailOrPhoneExists(resident.ResidentEmail, resident.ResidentPhone))
+                    return BadRequest("An account with this email or phone number already exists");
                 if (this.repositoryUOW.ResidentRepository.Create(resident))
                 {
                     string residentId =  this.repositoryUOW.ResidentRepository.GetLastId();
                     resident.ResidentId = residentId;
-                    return resident;
+                    return Ok(resident);
 
                 }
                 else
                 {
                   
-                    return null;
+                    return BadRequest("Failed To Create Account");
                 }
                     
 
@@ -72,7 +74,7 @@ namespace VecinoBuildingMangementWebService.Controllers
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
-                return null;
+                return StatusCode(500, "Internal server error");
             }
             finally
             {

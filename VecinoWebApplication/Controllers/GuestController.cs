@@ -47,7 +47,8 @@ namespace VecinoWebApplication.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(Resident resident) //Register Resident into the system
         {
-            resident.Validate();
+            resident.IsValidationEnabled = false;
+            resident.UnitNumber = 1;
             if (!resident.IsValid) //Validation
                 return View("RegisterForm", resident);
      
@@ -58,8 +59,11 @@ namespace VecinoWebApplication.Controllers
             client.Path = "api/Guest/Register";
 
             ApiResponse<Resident> resident1 = await client.PostAsyncReturn<Resident,Resident>(resident);
-            if (resident1 == null || !resident1.Success )
-                return View("RegisterForm",resident);
+            if (resident1.Data == null || !resident1.Success )
+            {
+                TempData["ErrorMessage"] = resident1.ErrorMessage;
+                return View("RegisterForm", resident);
+            }
             if (resident1.Data.ResidentId != null && resident1.Data.ResidentId != "")
             {
                 HttpContext.Session.SetString("residentId", resident1.Data.ResidentId);

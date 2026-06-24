@@ -235,12 +235,15 @@ namespace VecinoWebApplication.Controllers
 
         public IActionResult JoinBuildingForm()
         {
-            return View();
+            return View(new JoinBuildingRequest());
         }
 
         [HttpPost]
         public async Task<IActionResult> JoinBuilding(JoinBuildingRequest buildingRequest)
         {
+            if (buildingRequest.UnitNumber <= 0)
+                return View("JoinBuildingForm", buildingRequest);
+            
             try
             {
                 ApiClient<JoinBuildingRequest> client = new ApiClient<JoinBuildingRequest>();
@@ -644,6 +647,8 @@ namespace VecinoWebApplication.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateProfile(Resident resident)
         {
+            resident.IsValidationEnabled = true; // Validation For Unit Number
+      
             if (!ModelState.IsValid)
                 return View("ViewProfile", resident);
 
@@ -676,6 +681,10 @@ namespace VecinoWebApplication.Controllers
                 TempData["ErrorMessage"] = "NetWork Error";
                 return RedirectToAction("ViewProfile");
             }
+            finally
+            {
+                
+            }
         }
 
         [HttpPost]
@@ -704,7 +713,7 @@ namespace VecinoWebApplication.Controllers
                     await apiClient.PostAsyncReturn<Booking, bool>(booking);
 
                 if (!apiResponse.Success || !apiResponse.Data)
-                    TempData["ErrorMessage"] = "Unable To Create Booking";
+                    TempData["ErrorMessage"] = apiResponse.ErrorMessage;
 
                 return RedirectToAction("GetBookingPage", new { date = booking.BookingDate });
             }

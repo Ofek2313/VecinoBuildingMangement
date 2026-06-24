@@ -29,6 +29,7 @@ namespace VecinoWpfApp.AppPages
         }
         private async void btnSignIn_Click(object sender, RoutedEventArgs e)
         {
+            btnSignIn.IsEnabled = false;
             LogInViewModel logInViewModel = new LogInViewModel();
 
             if (string.IsNullOrWhiteSpace(txtEmail.Text))
@@ -55,14 +56,14 @@ namespace VecinoWpfApp.AppPages
                 {
                     Session.ResidentId = apiResponse.Data.ResidentId;
                     NavigationService.Navigate(new CreateBuilding());
-                    
+                    btnSignIn.IsEnabled = true;
                     return;
                 }
                   
                 if (!apiResponse.Data.IsAdmin)
                 {
                     MessageBox.Show("Only Admins are allowed Entrances");
-       
+                    btnSignIn.IsEnabled = true;
                     return;
                 }
                 Session.BuildingId = apiResponse.Data.BuildingId;
@@ -73,10 +74,11 @@ namespace VecinoWpfApp.AppPages
             }
             else
             {
+
                 MessageBox.Show("Unsuccessful");
             }
 
-
+            btnSignIn.IsEnabled = true;
         }
 
         private void CreateBuildingButton_Click(object sender, RoutedEventArgs e)

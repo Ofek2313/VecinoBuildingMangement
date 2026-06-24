@@ -39,7 +39,7 @@ namespace VecinoBuildingMangement.Models
 
         [Required(ErrorMessage = "Name Can Not Be Empty")]
         [StringLength(20, MinimumLength = 2, ErrorMessage = "Name Must Be Bettwen 2-20 Characters")]
-        [FirstLetterCapital(ErrorMessage = "The First Letter Must Be Capitalized")]
+        [RegularExpression(@"^[a-zA-ZÀ-ÿ' -]+$", ErrorMessage = "Name can only contain letters, spaces, hyphens, and apostrophes")]
         public string ResidentName
         {
             get { return residentName; }
@@ -81,12 +81,13 @@ namespace VecinoBuildingMangement.Models
             }
         }
 
-        [Required(ErrorMessage ="Unit Number Can Not Be Empty")]
+        [Range(1, int.MaxValue, ErrorMessage = "Unit number cannot be negative or zero.")]
         public int UnitNumber
         {
             get { return unitNumber; }
             set { unitNumber = value;
-                ValidateProperty(value, "UnitNumber");
+                if(IsValidationEnabled)
+                    ValidateProperty(value, "UnitNumber");
             }
         }
         public string? BuildingId

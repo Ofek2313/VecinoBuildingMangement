@@ -2,7 +2,9 @@
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -12,11 +14,10 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.IO;
 using System.Windows.Shapes;
+using VecinoBuildingMangement.DTO;
 using VecinoBuildingMangement.Models;
 using VecinoBuildingMangement.ViewModels;
-using System.Runtime.CompilerServices;
 
 namespace VecinoWpfApp.AppWindows
 {
@@ -33,6 +34,9 @@ namespace VecinoWpfApp.AppWindows
         {
             InitializeComponent();
             GetEventTypes();
+            var timeslots = GenerateTimeSlots();
+            StartTimeComboBox.ItemsSource = timeslots;
+            EndTimeComboBox.ItemsSource = timeslots;
         }
         private async void GetEventTypes()
         {
@@ -74,7 +78,15 @@ namespace VecinoWpfApp.AppWindows
             EventImagePreview.Visibility = Visibility.Collapsed;
             imagePath = null;
         }
-     
+        private List<string> GenerateTimeSlots()
+        {
+            List<String> timeslots = new List<String>();
+            for (int i = 0; i < 24; i++)
+            {
+                timeslots.Add((i.ToString()) + ":00");
+            }
+            return timeslots;
+        }
 
         private async void ButtonAddEvent_Click(object sender, RoutedEventArgs e)
         {
@@ -100,16 +112,26 @@ namespace VecinoWpfApp.AppWindows
                 }
                 else
                 {
-                    response = await client.PostAsyncReturn<Event, bool>(createEventView.Event, null, null);
+                    response = await client.PostAsyncReturn<Event, bool>(createEventView.Event,null,null); //still using the same function to not replicate same function
                 }
             }
-            if(response.Data && response.Success)
+            else
+            {
+                
+                 MessageBox.Show(" The event details are invalid. Please check your input. ", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                 return;
+                
+            }
+            if (response.Data && response.Success)
             {
                 MessageBox.Show("Event Added Successfully");
                 this.DialogResult = true;
                 this.Close();
             }
-            
+            else
+            {
+                MessageBox.Show(response.ErrorMessage);
+            }
 
         }
     }

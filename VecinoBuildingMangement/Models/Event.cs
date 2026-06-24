@@ -87,14 +87,14 @@ namespace VecinoBuildingMangement.Models
         public string StartTime
         {
             get { return startTime; }
-            set { this.startTime = value; }
+            set { this.startTime = value; ValidateProperty(value, "StartTime"); }
         }
 
         [Required(ErrorMessage = "Please Choose an End Time")]
         public string EndTime
         {
             get{ return endTime; }
-            set { this.endTime = value; }
+            set { this.endTime = value; ValidateProperty(value, "EndTime"); }
         }
 
         public string BuildingId

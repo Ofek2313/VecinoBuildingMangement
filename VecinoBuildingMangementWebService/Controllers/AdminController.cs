@@ -134,26 +134,36 @@ namespace VecinoBuildingMangementWebService.Controllers
         }
 
         [HttpPost]
-        public bool AddUpComingEvent([FromForm] string model, IFormFile file)
+        public IActionResult AddUpComingEvent([FromForm] string model, IFormFile? file)
         {
             Event @event = JsonSerializer.Deserialize<Event>(model);
+
             try
             {
+                TimeSpan t1 = TimeSpan.Parse(@event.EndTime);
+                TimeSpan t2 = TimeSpan.Parse(@event.StartTime);
+                if (t2 >= t1)
+                    return BadRequest("Start Time must be before End Time");
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
                 this.repositoryUOW.DbHelperOleDb.OpenTransaction();
+              
                 this.repositoryUOW.EventRepository.Create(@event);
                 string eventId = this.repositoryUOW.EventRepository.GetLastId();
-                string ext = Path.GetExtension(file.FileName).TrimStart('.').ToLower();
-                bool response = this.repositoryUOW.EventRepository.UpdatePhotoById(eventId, ext);
-
-                string fileName = "event" + eventId + "." + ext;
-                string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images", fileName);
-                using (FileStream fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))
+                if(file != null)
                 {
-                    file.CopyTo(fileStream);
+                    string ext = Path.GetExtension(file.FileName).TrimStart('.').ToLower();
+                    bool response = this.repositoryUOW.EventRepository.UpdatePhotoById(eventId, ext);
+
+                    string fileName = "event" + eventId + "." + ext;
+                    string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images", fileName);
+                    using (FileStream fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))
+                    {
+                        file.CopyTo(fileStream);
+                    }
                 }
+               
                 this.repositoryUOW.DbHelperOleDb.Commit();
-                return true;
+                return Ok(true);
 
 
 
@@ -162,7 +172,7 @@ namespace VecinoBuildingMangementWebService.Controllers
             {
                 this.repositoryUOW.DbHelperOleDb.RollBack();
                 Console.WriteLine(ex.ToString());
-                return false;
+                return StatusCode(500, "Internal server error");
             }
             finally
             {
@@ -202,15 +212,19 @@ namespace VecinoBuildingMangementWebService.Controllers
         }
 
         [HttpPost]
-        public bool UpdateEvent([FromForm] string model, IFormFile? file)
+        public IActionResult UpdateEvent([FromForm] string model, IFormFile? file)
         {
             Event @event = JsonSerializer.Deserialize<Event>(model);
             bool response = false;
             try
             {
-                
+                TimeSpan t1 = TimeSpan.Parse(@event.EndTime);
+                TimeSpan t2 = TimeSpan.Parse(@event.StartTime);
+                if (t2 > t1)
+                    return BadRequest("Start Time must be before End Time");
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
-                if(file != null)
+           
+                if (file != null)
                 {
                     string deletePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images", @event.EventImage);
                     if (System.IO.File.Exists(deletePath))
@@ -231,13 +245,13 @@ namespace VecinoBuildingMangementWebService.Controllers
                 {
                     response = this.repositoryUOW.EventRepository.Update(@event);
                 }
-                return response;
+                return Ok(response);
                 
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
-                return false;
+                return StatusCode(500, "Internal server error");
             }
             finally
             {

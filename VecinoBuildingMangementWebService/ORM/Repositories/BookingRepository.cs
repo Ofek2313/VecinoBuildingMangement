@@ -126,19 +126,15 @@ namespace VecinoBuildingMangementWebService.ORM.Repositories
 
         public bool CheckOverLap(string bookingId)
         {
-            string sql = @"SELECT
-                            1
-                        FROM
-                            Booking AS b1,
-                            Booking AS b2
-                        WHERE
-                            b2.BookingId = @BookingId
-                            AND b1.StartTime < b2.EndTime
-                            AND b1.EndTime > b2.StartTime
+            string sql = @"SELECT 1
+                            FROM Booking AS b1, Booking AS b2
+                            WHERE b2.BookingId = @BookingId
+                            AND CDate(b1.StartTime) < CDate(b2.EndTime)
+                            AND CDate(b1.EndTime) > CDate(b2.StartTime)
                             AND b1.BookingDate = b2.BookingDate
                             AND b1.BookingId <> @BookingId 
-                            AND b1.BookingStatus <> 0"
-                            ;
+                            AND b1.BookingStatus <> 0";
+                            
             this.dbHelperOleDb.AddParameter("@BookingId", bookingId);
             this.dbHelperOleDb.AddParameter("@BookingId", bookingId);
             return dbHelperOleDb.ExecuteScalar(sql) != null;

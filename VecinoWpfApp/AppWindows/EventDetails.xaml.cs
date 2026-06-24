@@ -38,9 +38,11 @@ namespace VecinoWpfApp.AppWindows
         {
             InitializeComponent();
 
-            @event.Event.IsValidationEnabled = true;
+        
             LoadAttending(@event.Event.EventId);
-  
+            var timeSlots = GenerateTimeSlots();
+            StartTimeBox.ItemsSource = timeSlots;
+            EndTimeBox.ItemsSource = timeSlots;
             this.DataContext = @event;
             
 
@@ -55,7 +57,7 @@ namespace VecinoWpfApp.AppWindows
             {
                 _IsEditing = true;
                 _savedEventView = viewModel.Clone();
-                
+                @event.Event.IsValidationEnabled = true;
                 EventDescriptionText.IsReadOnly = false;
                 EventTitleText.IsReadOnly=false;
                 UploadImage.Visibility = Visibility.Visible;
@@ -63,7 +65,8 @@ namespace VecinoWpfApp.AppWindows
                 MainButton.Text = "Update";
                 DueDatePicker.Visibility = Visibility.Visible;
                 EventDateText.Visibility = Visibility.Collapsed;
-
+                EventTimeText.Visibility = Visibility.Collapsed;
+                TimeEditPanel.Visibility = Visibility.Visible;
 
             }
             else
@@ -99,12 +102,15 @@ namespace VecinoWpfApp.AppWindows
                         this.DataContext = _savedEventView;
                         _IsEditing = true;
                         //If Update Failed Restore it back before edit
+                        MessageBox.Show(apiResponse.ErrorMessage);
                     }
                     else
                     {
                         EventDescriptionText.IsReadOnly = true;
                         EventTitleText.IsReadOnly = true;
                         UploadImage.Visibility = Visibility.Collapsed;
+                        EventTimeText.Visibility = Visibility.Visible;
+                        TimeEditPanel.Visibility = Visibility.Collapsed;
                         _IsEditing = false;
                         this.DialogResult = true;
                         
@@ -131,6 +137,15 @@ namespace VecinoWpfApp.AppWindows
             client.AddParameter("eventId", eventId);
             AttendeesListControl.ItemsSource = await client.GetAsync();
 
+        }
+        private List<string> GenerateTimeSlots()
+        {
+            List<String> timeslots = new List<String>();
+            for (int i = 0; i < 24; i++)
+            {
+                timeslots.Add((i.ToString())+":00");
+            }
+            return timeslots; 
         }
 
         private void UploadImage_Click(object sender, RoutedEventArgs e)

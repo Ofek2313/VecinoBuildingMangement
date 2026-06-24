@@ -184,6 +184,17 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <Style x:Key="TimeComboBoxStyle" TargetType="ComboBox">
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="#0f172a"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#cbd5e1"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="6,4"/>
+            <Setter Property="Width" Value="100"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
         <conv:UrlConverter x:Key="urlConverter">
 
         </conv:UrlConverter>
@@ -393,20 +404,20 @@ ElementName=EventTitleText}">
                             </StackPanel>
                         </Border>
 
-                        <!-- Start Time -->
                         <Border Grid.Column="2" Style="{StaticResource InfoCardStyle}">
                             <StackPanel>
                                 <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
                                     <TextBlock Text="&#xE917;"
-                                               FontFamily="Segoe MDL2 Assets"
-                                               FontSize="14" Foreground="#8B5CF6"
-                                               VerticalAlignment="Center" Margin="0,0,6,0"/>
+                       FontFamily="Segoe MDL2 Assets"
+                       FontSize="14" Foreground="#8B5CF6"
+                       VerticalAlignment="Center" Margin="0,0,6,0"/>
                                     <TextBlock Text="TIME" Style="{StaticResource LabelStyle}" Margin="0"/>
                                 </StackPanel>
+
+                                <!-- Read-only combined display -->
                                 <TextBlock x:Name="EventTimeText"
-                                          
-                                           Style="{StaticResource ValueStyle}"
-                                           FontWeight="SemiBold">
+                   Style="{StaticResource ValueStyle}"
+                   FontWeight="SemiBold">
                                     <TextBlock.Text>
                                         <MultiBinding StringFormat="{}{0} - {1}">
                                             <Binding Path="Event.StartTime"/>
@@ -414,6 +425,20 @@ ElementName=EventTitleText}">
                                         </MultiBinding>
                                     </TextBlock.Text>
                                 </TextBlock>
+
+                                <!-- Editable Start/End time dropdowns (shown only in edit mode) -->
+                                <StackPanel x:Name="TimeEditPanel" Orientation="Horizontal" Visibility="Collapsed">
+                                    <ComboBox x:Name="StartTimeBox" Focusable="False"
+                      Style="{StaticResource TimeComboBoxStyle}"
+                      IsEditable="True"
+                      Text="{Binding Event.StartTime, UpdateSourceTrigger=PropertyChanged}"/>
+                                    <TextBlock Text=" - " VerticalAlignment="Center"
+                       FontWeight="SemiBold" Foreground="#94a3b8" Margin="4,0"/>
+                                    <ComboBox x:Name="EndTimeBox" Focusable="False"
+                      Style="{StaticResource TimeComboBoxStyle}"
+                      IsEditable="True"
+                      Text="{Binding Event.EndTime, UpdateSourceTrigger=PropertyChanged}"/>
+                                </StackPanel>
                             </StackPanel>
                         </Border>
 

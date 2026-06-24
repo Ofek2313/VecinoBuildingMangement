@@ -60,6 +60,7 @@ namespace VecinoBuildingMangement
 
         public void ValidateProperty(object value, [CallerMemberName] string propertyName = null)
         {
+    
             lock (threadLock)
             {
                 var validationContext = new ValidationContext(this, null, null);
