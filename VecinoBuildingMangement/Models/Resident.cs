@@ -49,7 +49,7 @@ namespace VecinoBuildingMangement.Models
         }
 
         [Required(ErrorMessage ="Password Can Not Be Empty")]
-        [StringLength(16, MinimumLength = 8, ErrorMessage = "Name Must Be Bettwen 8-16 Characters")]
+        [MinLength(8, ErrorMessage = "Password must be at least 8 characters long.")]
 
         public string ResidentPassword
         {
@@ -81,6 +81,7 @@ namespace VecinoBuildingMangement.Models
             }
         }
 
+        [Required(ErrorMessage = "Unit Number is Required")]
         [Range(1, int.MaxValue, ErrorMessage = "Unit number cannot be negative or zero.")]
         public int UnitNumber
         {

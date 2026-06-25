@@ -166,7 +166,11 @@ namespace BuildingManagementWsClient
                     }
                     else
                     {
-                        response.ErrorMessage = await httpResponse.Content.ReadAsStringAsync();
+                        string error = await httpResponse.Content.ReadAsStringAsync();
+                        JsonSerializerOptions options = new JsonSerializerOptions();
+                        options.PropertyNameCaseInsensitive = true;
+                        ApiError apiError = JsonSerializer.Deserialize<ApiError>(error, options);
+                        response.ErrorMessage = apiError.ErrorMessage;
                     }
 
                 }
@@ -224,7 +228,12 @@ namespace BuildingManagementWsClient
                     }
                     else
                     {
-                        response.ErrorMessage = await httpResponse.Content.ReadAsStringAsync();
+                        string error = await httpResponse.Content.ReadAsStringAsync();
+                        JsonSerializerOptions options = new JsonSerializerOptions();
+                        options.PropertyNameCaseInsensitive = true;
+                        ApiError apiError = JsonSerializer.Deserialize<ApiError>(error,options);
+                        response.ErrorMessage = apiError.ErrorMessage;
+
                     }
                 }
                 response.Success = false;

@@ -22,9 +22,10 @@ namespace VecinoBuildingMangement.DTO
 
         public string EntranceName { get; set; }
 
-
+        public string BuildingImage { get; set; }
 
         public bool AddressChangedFlag { get; set; }
 
+        public bool PhotoRemoved {  get; set; } 
     }
 }

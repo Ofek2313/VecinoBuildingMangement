@@ -83,7 +83,9 @@ namespace VecinoBuildingMangement.Models
         public string BuildingImage
         {
             get { return buildingImage; }
-            set { buildingImage = value; }
+            set { if (buildingImage == null)
+                    buildingImage = "building0.jpg";
+                buildingImage = value; }
         }
 
         [Required(ErrorMessage ="Must enter an Entrance Name")]

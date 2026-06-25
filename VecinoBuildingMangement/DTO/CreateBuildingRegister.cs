@@ -10,7 +10,7 @@ namespace VecinoBuildingMangement.DTO
     public class CreateBuildingRegister
     {
 
-        public Building Building { get; set; }
+        public Building Building { get; set; } = new Building();
 
         public Resident Resident { get; set; }
 

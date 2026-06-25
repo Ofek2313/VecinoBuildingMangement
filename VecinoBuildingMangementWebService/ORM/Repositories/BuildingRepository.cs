@@ -323,6 +323,14 @@ namespace VecinoBuildingMangementWebService
 
             return this.dbHelperOleDb.Update(sql) > 0;
         }
+        public bool UpdateBuildingImageById(string buildingId,string buildingImage)
+        {
+            string sql = $@"Update Building Set BuildingImage=@BuildingImage Where BuildingId=@BuildingId";
+            this.dbHelperOleDb.AddParameter("@BuildingImage", buildingImage);
+            this.dbHelperOleDb.AddParameter("@BuildingId", buildingId);
+            return this.dbHelperOleDb.Update(sql) > 0;
+        }
+
         public int GetBuildingStats()
         {
             string sql = @"Select Count(*) From Building";

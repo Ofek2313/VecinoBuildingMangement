@@ -75,6 +75,7 @@
             </Setter>
         </Style>
         <BooleanToVisibilityConverter x:Key="VisibilityConverter"></BooleanToVisibilityConverter>
+        <conv:UrlConverter x:Key="urlConverter"></conv:UrlConverter>
     </Window.Resources>
 
     <Border CornerRadius="14" Background="White"
@@ -123,7 +124,58 @@
 
             <!-- Body -->
             <StackPanel Grid.Row="1" Margin="24,20">
+                <TextBlock Text="BUILDING COVER" Style="{StaticResource SectionLabel}" Margin="0,0,0,12"/>
 
+                <Border x:Name="ImagePreviewBorder"
+            CornerRadius="12"
+            Height="180"
+            Margin="0,0,0,0"
+            ClipToBounds="True"
+            Cursor="Hand"
+           >
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#e0f2f1" Offset="0"/>
+                            <GradientStop Color="#dbeafe" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <Grid>
+                        <StackPanel x:Name="PlaceholderPanel" VerticalAlignment="Center" HorizontalAlignment="Center" >
+                            <TextBlock Text="&#xEB9F;" FontFamily="Segoe MDL2 Assets" 
+                           FontSize="40" Foreground="#94a3b8" 
+                           HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                            <TextBlock Text="upload building photo" FontFamily="Segoe UI" 
+                           FontSize="13" Foreground="#64748b" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                        <Image x:Name="BuildingImagePreview"  Stretch="UniformToFill" Source="{Binding BuildingImage,Converter={StaticResource urlConverter},ConverterParameter=Building}"/>
+                    </Grid>
+                </Border>
+
+                <Grid Margin="0,8,0,18">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="12"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="0" Style="{StaticResource FooterButton}" Background="White"
+                Padding="16,0" Click="UploadImage_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="&#xE898;" FontFamily="Segoe MDL2 Assets" FontSize="14" Foreground="#2563eb"
+                           VerticalAlignment="Center" Margin="0,0,8,0"/>
+                            <TextBlock Text="Upload photo" FontSize="13" FontWeight="SemiBold" Foreground="#1e293b"/>
+                        </StackPanel>
+                    </Button>
+
+                    <Button x:Name="BtnRemoveImage" Grid.Column="2" Style="{StaticResource FooterButton}" Background="White"
+                Padding="16,0"  Click="RemoveImage">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="&#xE711;" FontFamily="Segoe MDL2 Assets" FontSize="14" Foreground="#e24b4a"
+                           VerticalAlignment="Center" Margin="0,0,8,0"/>
+                            <TextBlock Text="Remove" FontSize="13" FontWeight="SemiBold" Foreground="#a32d2d"/>
+                        </StackPanel>
+                    </Button>
+                </Grid>
                 <TextBlock Text="GENERAL" Style="{StaticResource SectionLabel}"/>
 
                 <!-- Address + City -->

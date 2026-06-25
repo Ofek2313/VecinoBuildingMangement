@@ -81,8 +81,10 @@ namespace VecinoWpfApp.UserControls
             this.editBuilding.Owner = Window.GetWindow(this);
             bool? response = this.editBuilding.ShowDialog();
             this.editBuilding = null;
-           
+            if (response == true)
+                await LoadBuilding();
         }
+
         private async void Timer_Tick(object sender, EventArgs e)
         {
             await LoadBuilding();

@@ -78,7 +78,7 @@
                                    FontFamily="Segoe UI" FontSize="15" FontWeight="SemiBold"
                                    Foreground="White" VerticalAlignment="Center" Margin="10,0,0,0"/>
                     </StackPanel>
-                    <Button x:Name="btnClose" HorizontalAlignment="Right" Cursor="Hand">
+                    <Button x:Name="btnClose" HorizontalAlignment="Right" Cursor="Hand" Click="btnCloseFooter_Click">
                         <Button.Template>
                             <ControlTemplate TargetType="Button">
                                 <Border CornerRadius="13" Width="26" Height="26">
@@ -261,9 +261,12 @@
                        Foreground="#94a3b8" Margin="0,0,0,6"/>
                                 <StackPanel Orientation="Horizontal">
                                     <Border Width="28" Height="28" CornerRadius="14" Background="#e0e7ff">
-                                        <TextBlock Text="JR" FontFamily="Segoe UI" FontSize="11"
-                               FontWeight="SemiBold" Foreground="#4338ca"
-                               HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        <Border.Clip>
+                                            <EllipseGeometry Center="14,14" RadiusX="14" RadiusY="14"/>
+                                        </Border.Clip>
+                                        <Image Source="{Binding Admin.ResidentImage,Converter={StaticResource urlConverter}}" Stretch="UniformToFill">
+                                            
+                                        </Image>
                                     </Border>
                                     <TextBlock Text="{Binding Admin.ResidentName}" FontFamily="Segoe UI" FontSize="13"
                            FontWeight="SemiBold" Foreground="#0f172a"

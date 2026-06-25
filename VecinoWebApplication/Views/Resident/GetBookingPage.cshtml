@@ -249,7 +249,7 @@
             <div class="field">
                 <label>Date</label>
                 <input type="date" asp-for="Booking.BookingDate" />
-                <span asp-validation-for="Booking.BookingDate"></span>
+                <span asp-validation-for="Booking.BookingDate" class="error-msg"></span>
             </div>
 
             <div class="field">
@@ -273,9 +273,9 @@
             </div>
 
             <div class="field">
-                <label>Note <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:10px">(optional)</span></label>
+                <label>Note</label>
                 <input type="text" asp-for="Booking.BookingNote"/>
-                <span asp-validation-for="Booking.BookingNote"></span>
+                <span asp-validation-for="Booking.BookingNote" class="error-msg"></span>
             </div>
 
             <button class="drawer-submit" type="submit">Confirm booking</button>

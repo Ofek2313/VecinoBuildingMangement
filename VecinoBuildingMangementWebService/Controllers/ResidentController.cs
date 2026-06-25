@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using BuildingManagementWsClient;
+using Microsoft.AspNetCore.Mvc;
 using System.Globalization;
 using System.Text.Json;
 using VecinoBuildingMangement;
@@ -226,22 +227,30 @@ namespace VecinoBuildingMangementWebService.Controllers
 
         }
         [HttpPost]
-        public bool JoinBuilding([FromBody] JoinBuildingRequest joinBuildingRequest)
+        public IActionResult JoinBuilding([FromBody] JoinBuildingRequest joinBuildingRequest)
         {
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
 
                 Building building = this.repositoryUOW.BuildingRepository.GetBuildingByCode(joinBuildingRequest.BuildingCode);
-                if (building != null && joinBuildingRequest.UnitNumber >= building.TotalUnits)
-                    return this.repositoryUOW.ResidentRepository.JoinBuildingUpdate(joinBuildingRequest.ResidentId, building.BuildingId, joinBuildingRequest.UnitNumber);
+                if (building != null && joinBuildingRequest.UnitNumber <= building.TotalUnits)
+                {
+                    bool response = this.repositoryUOW.ResidentRepository.JoinBuildingUpdate(joinBuildingRequest.ResidentId, building.BuildingId, joinBuildingRequest.UnitNumber);
+                    if (response)
+                        return Ok(response);
+                    else
+                        return BadRequest(new ApiError { ErrorMessage = "Unable To Join Building" });
+                }
+                   
                 else
-                    return false;
+                    return BadRequest(new ApiError { ErrorMessage = "Unit Number not in building please choose a different number" });
             }
             catch (Exception ex)
             {
-                return false;
+                return StatusCode(500, new ApiError { ErrorMessage = "Internal server error" });
             }
+      
             finally
             {
                 this.repositoryUOW.DbHelperOleDb.CloseConnection();
@@ -320,8 +329,8 @@ namespace VecinoBuildingMangementWebService.Controllers
                 viewModel.Building = this.repositoryUOW.BuildingRepository.GetBuildingByResidentId(residentId);
                 if (viewModel.Building == null)
                     return null;
-                viewModel.Notifications = this.repositoryUOW.NotificationRepository.GetAllNotificationsByResidentId(residentId);
-                viewModel.events = this.repositoryUOW.EventRepository.GetEventByBuildingId(viewModel.Building.BuildingId);
+                viewModel.Notifications = this.repositoryUOW.NotificationRepository.GetAllNotificationsByResidentIdTop(residentId);
+                viewModel.events = this.repositoryUOW.EventRepository.GetEventByBuildingIdTop(viewModel.Building.BuildingId);
                 return viewModel;
             }
             catch (Exception ex)
@@ -502,7 +511,7 @@ namespace VecinoBuildingMangementWebService.Controllers
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
-                return StatusCode(500, "Image Failed To Load");
+                return StatusCode(500, new ApiError { ErrorMessage = "Image Failed To Load" });
             }
             finally
             {
@@ -527,7 +536,7 @@ namespace VecinoBuildingMangementWebService.Controllers
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
-                return StatusCode(500, "Image Failed To Load");
+                return StatusCode(500, new ApiError { ErrorMessage = "Image Failed To Load" });
             }
             finally
             {
@@ -554,17 +563,27 @@ namespace VecinoBuildingMangementWebService.Controllers
             }
         }
         [HttpPost]
-        public bool UpdateResident([FromBody] Resident resident)
+        public IActionResult UpdateResident([FromBody] Resident resident)
         {
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
-                return this.repositoryUOW.ResidentRepository.Update(resident);
+                Building building = this.repositoryUOW.BuildingRepository.GetBuildingByResidentId(resident.ResidentId);
+                if(building != null)
+                {
+                    if (resident.UnitNumber > building.TotalUnits)
+                    {
+                        return BadRequest(new ApiError { ErrorMessage = "Unit Number Not In Range" });
+                    }
+                    else
+                        return Ok(this.repositoryUOW.ResidentRepository.Update(resident));
+                }
+                return NotFound(new ApiError { ErrorMessage = "Building Not Found" });
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
-                return false;
+                return StatusCode(500, new ApiError { ErrorMessage = "Server Error" });
             }
             finally
             {
@@ -578,7 +597,7 @@ namespace VecinoBuildingMangementWebService.Controllers
             TimeSpan t1 = TimeSpan.Parse(booking.EndTime);
             TimeSpan t2 = TimeSpan.Parse(booking.StartTime);
             if (t2 > t1)
-                return BadRequest("Start Time must be before End Time");
+                return BadRequest(new ApiError { ErrorMessage = "Start Time must be before End Time" });
             try
             {
                 
@@ -590,7 +609,7 @@ namespace VecinoBuildingMangementWebService.Controllers
             {
 
                 Console.WriteLine(ex.ToString());
-                return StatusCode(500, "Internal server error");
+                return StatusCode(500, new ApiError { ErrorMessage = "Internal server error" });
             }
             finally
             {

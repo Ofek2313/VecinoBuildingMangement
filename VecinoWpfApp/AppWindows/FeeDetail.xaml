@@ -11,8 +11,10 @@
         <conv:FeeStatusStyleConverter x:Key="feeStatusStyleConverter"/>
         <BooleanToVisibilityConverter x:Key="VisibilityConverter"/>
         <conv:InverseBooleanToVisibilityConverter x:Key="InverseConverter"/>
-       
-        
+        <conv:UrlConverter x:Key="urlConverter">
+
+        </conv:UrlConverter>
+
         <Style x:Key="HeaderEditableTextBoxStyle" TargetType="TextBox">
             <Setter Property="FontFamily" Value="Segoe UI"/>
             <Setter Property="HorizontalAlignment" Value="Right"/>
@@ -128,9 +130,12 @@
                         </Grid.ColumnDefinitions>
 
                         <Border Grid.Column="0" Width="50" Height="50" CornerRadius="14" Background="#d1fae5" Margin="0,0,14,0">
-                            <TextBlock x:Name="TxtInitials" Text="YK" FontFamily="Segoe UI" FontSize="16"
-                                       FontWeight="SemiBold" Foreground="#065f46"
-                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <Image Source="{Binding ResidentImage,Converter={StaticResource urlConverter}}" Stretch="UniformToFill">
+                                <Image.Clip>
+                                    <RectangleGeometry RadiusX="14" RadiusY="14" Rect="0,0,50,50" />
+                                </Image.Clip>
+                            </Image>
+                            
                         </Border>
 
                         <StackPanel Grid.Column="1" VerticalAlignment="Center">
@@ -302,7 +307,7 @@
                     </Grid.ColumnDefinitions>
 
                     <!-- Close -->
-                    <Button Content="Close" Grid.Column="0" x:Name="CloseButton" >
+                    <Button Content="Close" Grid.Column="0" x:Name="CloseButton" Click="CloseButton_Click"  >
                         <Button.Style>
                             <Style TargetType="Button" BasedOn="{StaticResource ActionButtonStyle}">
                                 <Style.Triggers>

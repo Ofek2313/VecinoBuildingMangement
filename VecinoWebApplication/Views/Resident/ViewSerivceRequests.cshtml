@@ -142,7 +142,7 @@
                     <p>Tell us what you need help with</p>
                 </div>
             </div>
-            <button class="popup-close" id="popup-close-btn">✕</button>
+            <button class="popup-close" id="popup-close-btn2">✕</button>
         </div>
 
         <form class="request-submit" asp-controller="Resident" asp-action="CreateServiceRequest" method="post">
@@ -205,6 +205,8 @@
     const popout = document.getElementById('popout');
     const overlay = document.getElementById('overlay');
     const openbtn = document.getElementById('openbtn');
+    const closebtn = document.getElementById(`popup-close-btn`);
+        const closebtn2 = document.getElementById(`popup-close-btn2`);
     openbtn.addEventListener('click',function()
     {
         popout.style.display = 'block';
@@ -216,6 +218,14 @@
         overlay.style.display = 'none';
         popout.style.display = 'none';
     });
-    
+    closebtn.addEventListener('click', function()  {
+        overlay.style.display = 'none';
+        popout.style.display = 'none';
+    });
+     closebtn2.addEventListener('click', function()  {
+        overlay.style.display = 'none';
+        popout.style.display = 'none';
+    });
+
 </script>
 

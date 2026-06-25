@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BuildingManagementWsClient\BuildingManagementWsClient.csproj" />
     <ProjectReference Include="..\VecinoBuildingMangement\VecinoBuildingMangement.csproj" />
   </ItemGroup>
 

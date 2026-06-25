@@ -124,7 +124,7 @@
             <button class="popup-close" id="popup-close-btn">✕</button>
         </div>
 
-        <form asp-controller="Resident" asp-action="UpdateProfile">
+        <form asp-controller="Resident" asp-action="UpdateProfile" method="post">
             <div class="popup-field">
                 <label>Full Name</label>
                 <div class="input-wrap">
@@ -183,12 +183,13 @@
             </div>
 
             <div class="popup-footer">
-                <button type="button" class="btn-cancel" id="popup-close-btn">Cancel</button>
+                <button type="button" class="btn-cancel" id="popup-close-btn-footer">Cancel</button>
                 <button type="submit" class="sumbitbtn">
                     <svg fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
                     Save Changes
                 </button>
             </div>
+           
         </form>
     </div>
 </div>
@@ -203,6 +204,7 @@
     const overlay = document.getElementById('overlay');
     const openbtn = document.getElementById('btn-primary');
     const closebtn = document.getElementById('popup-close-btn');
+     const closebtn2 = document.getElementById('popup-close-btn-footer');
     openbtn.addEventListener('click',function()
     {
         popout.style.display = 'block';
@@ -215,6 +217,11 @@
         popout.style.display = 'none';
     });
     closebtn.addEventListener('click',function()
+    {
+        overlay.style.display = 'none';
+        popout.style.display = 'none';
+    });
+    closebtn2.addEventListener('click',function()
     {
         overlay.style.display = 'none';
         popout.style.display = 'none';

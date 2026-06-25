@@ -257,10 +257,11 @@ namespace VecinoWebApplication.Controllers
                 string residentId = HttpContext.Session.GetString("residentId");
                 buildingRequest.ResidentId = residentId;
 
-                bool response = await client.PostAsync(buildingRequest);
+                ApiResponse<bool> response = await client.PostAsyncReturn<JoinBuildingRequest,bool>(buildingRequest);
 
-                if (response) return RedirectToAction("ViewDashboard");
+                if (response.Success && response.Data) return RedirectToAction("ViewDashboard");
 
+                TempData["ErrorMessage"] = response.ErrorMessage;
                 return View("JoinBuildingForm");
             }
             catch
@@ -399,8 +400,12 @@ namespace VecinoWebApplication.Controllers
 
                 BookingViewModel bookings = await client.GetAsync();
                 if (bookings != null)
+                {
+                  
                     return View(bookings);
-
+                }
+                  
+                
                 TempData["ErrorMessage"] = "Unable To Load Page";
                 return RedirectToAction("ViewDashboard");
             }
@@ -648,9 +653,26 @@ namespace VecinoWebApplication.Controllers
         public async Task<IActionResult> UpdateProfile(Resident resident)
         {
             resident.IsValidationEnabled = true; // Validation For Unit Number
-      
-            if (!ModelState.IsValid)
+
+
+            ApiClient<Resident> client = new ApiClient<Resident>();
+            string residentId = HttpContext.Session.GetString("residentId");
+
+            client.Scheme = "http";
+            client.Host = "localhost";
+            client.Port = 5269;
+            client.Path = "api/Resident/GetResident";
+            client.AddParameter("residentId", residentId);
+
+            Resident resident2 = await client.GetAsync();
+            resident2.ResidentEmail = resident.ResidentEmail;
+            resident2.ResidentPhone = resident.ResidentPhone;
+            resident2.ResidentName = resident.ResidentName;
+            resident2.UnitNumber = resident.UnitNumber;
+            resident2.Validate();
+            if (!resident2.IsValid)
                 return View("ViewProfile", resident);
+
 
             try
             {
@@ -662,7 +684,7 @@ namespace VecinoWebApplication.Controllers
                 client2.Path = "api/Resident/UpdateResident";
 
                 ApiResponse<bool> response =
-                    await client2.PostAsyncReturn<Resident, bool>(resident);
+                    await client2.PostAsyncReturn<Resident, bool>(resident2);
 
                 if (response.Success && response.Data)
                 {
@@ -671,7 +693,7 @@ namespace VecinoWebApplication.Controllers
                 }
                 else
                 {
-                    TempData["ErrorMessage"] = "Update failed";
+                    TempData["ErrorMessage"] = response.ErrorMessage;
                 }
 
                 return RedirectToAction("ViewProfile");
@@ -681,10 +703,7 @@ namespace VecinoWebApplication.Controllers
                 TempData["ErrorMessage"] = "NetWork Error";
                 return RedirectToAction("ViewProfile");
             }
-            finally
-            {
-                
-            }
+            
         }
 
         [HttpPost]

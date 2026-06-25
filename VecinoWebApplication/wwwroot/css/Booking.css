@@ -745,3 +745,8 @@ body {
     display: flex;
     flex-direction: row;
 }
+.error-msg {
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: #dc2626;
+}

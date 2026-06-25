@@ -17,38 +17,52 @@ namespace VecinoBuildingMangementWebService.Helpers
         }
         public static async Task<CordsDto> GetCoordinatesAsync(string address)
         {
-            
-            var request = new HttpRequestMessage
+            try
             {
-                Method = HttpMethod.Get,
-                RequestUri = new Uri($"https://api.geoapify.com/v1/geocode/search?text={Uri.EscapeDataString(address)}&apiKey={_apiKey}")
-            };
-            using (var response = await _httpClient.SendAsync(request))
-            {
-                response.EnsureSuccessStatusCode(); 
-                var body = await response.Content.ReadAsStringAsync();
-
-                GeoApifyReponse apifyReponse = JsonSerializer.Deserialize<GeoApifyReponse>(body);
-                if(apifyReponse != null)
+                var request = new HttpRequestMessage
                 {
-                    if (apifyReponse.features != null && apifyReponse.features.Count > 0  )
+                    Method = HttpMethod.Get,
+                    RequestUri = new Uri($"https://api.geoapify.com/v1/geocode/search?text={Uri.EscapeDataString(address)}&apiKey={_apiKey}")
+                };
+                using (var response = await _httpClient.SendAsync(request))
+                {
+                    response.EnsureSuccessStatusCode();
+                    var body = await response.Content.ReadAsStringAsync();
+
+                    GeoApifyReponse apifyReponse = JsonSerializer.Deserialize<GeoApifyReponse>(body);
+                    if (apifyReponse != null)
                     {
-                        
-                        if (apifyReponse.features[0].geometry?.coordinates != null && apifyReponse.features[0].geometry.coordinates.Count >= 2)
+                        if (apifyReponse.features != null && apifyReponse.features.Count > 0)
                         {
-                            return new CordsDto
+
+                            if (apifyReponse.features[0].geometry?.coordinates != null && apifyReponse.features[0].geometry.coordinates.Count >= 2)
                             {
-                                Longitude = apifyReponse.features[0].geometry.coordinates[0],
-                                Latitude = apifyReponse.features[0].geometry.coordinates[1]
-                            };
+                                return new CordsDto
+                                {
+                                    Longitude = apifyReponse.features[0].geometry.coordinates[0],
+                                    Latitude = apifyReponse.features[0].geometry.coordinates[1]
+                                };
+                            }
                         }
+
                     }
-                       
+
+
                 }
-                
-                
+                return new CordsDto
+                {
+                    Latitude = 0,
+                    Longitude = 0,
+                };
             }
-            return null;
+            catch
+            {
+                return new CordsDto
+                {
+                    Latitude = 0,
+                    Longitude = 0,
+                };
+            }
         }
     }
 }

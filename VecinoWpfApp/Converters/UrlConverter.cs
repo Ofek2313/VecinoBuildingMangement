@@ -12,8 +12,19 @@ namespace VecinoWpfApp
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            string url = $"http://localhost:5269/Images/{value.ToString()}";
-            return url;
+            string tag = parameter?.ToString();
+            if (tag == "Building")
+            {
+                string url =  $"http://localhost:5269/Images/BuildingImages/{value.ToString()}";
+                return url;
+            }
+            else
+            {
+                string url = $"http://localhost:5269/Images/{value.ToString()}";
+                return url;
+            }
+               
+       
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

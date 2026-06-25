@@ -31,6 +31,7 @@ namespace VecinoWpfApp.AppPages
             InitializeComponent();
             _imagepath = imagepath;
             _createBuildingRegister = createBuildingRegister;
+            resident.IsValidationEnabled = true;
             this.DataContext = resident;
         }
 
@@ -49,9 +50,16 @@ namespace VecinoWpfApp.AppPages
                 client.Host = "localhost";
                 client.Port = 5269;
                 client.Path = "api/Admin/CreateBuildingAndRegister";
-
-                Stream stream = new FileStream(_imagepath, FileMode.Open, FileAccess.Read);
-                ApiResponse<BuildingResponse> apiResponse = await client.PostAsyncReturn<CreateBuildingRegister, BuildingResponse>(_createBuildingRegister, stream, _imagepath);
+                ApiResponse<BuildingResponse> apiResponse;
+                if (_imagepath != null)
+                {
+                    Stream stream = new FileStream(_imagepath, FileMode.Open, FileAccess.Read);
+                    apiResponse = await client.PostAsyncReturn<CreateBuildingRegister, BuildingResponse>(_createBuildingRegister, stream, _imagepath);
+                }
+                else
+                {
+                    apiResponse = await client.PostAsyncReturn<CreateBuildingRegister, BuildingResponse>(_createBuildingRegister, null, null);
+                }
 
                 if (apiResponse.Data != null && apiResponse.Success)
                 {
@@ -59,6 +67,10 @@ namespace VecinoWpfApp.AppPages
 
                     Session.ResidentId = apiResponse.Data.ResidentId;
                     NavigationService.Navigate(new MainWindow());
+                }
+                else
+                {
+                    MessageBox.Show(apiResponse.ErrorMessage);
                 }
             }
             else

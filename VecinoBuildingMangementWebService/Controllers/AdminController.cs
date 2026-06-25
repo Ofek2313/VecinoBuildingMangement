@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using BuildingManagementWsClient;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -7,12 +8,14 @@ using System.Collections.Generic;
 using System.Data.OleDb;
 using System.Globalization;
 using System.IO;
+using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Transactions;
 using VecinoBuildingMangement;
+
 using VecinoBuildingMangement.DTO;
 using VecinoBuildingMangement.Models;
 using VecinoBuildingMangement.ViewModels;
@@ -142,8 +145,8 @@ namespace VecinoBuildingMangementWebService.Controllers
             {
                 TimeSpan t1 = TimeSpan.Parse(@event.EndTime);
                 TimeSpan t2 = TimeSpan.Parse(@event.StartTime);
-                if (t2 >= t1)
-                    return BadRequest("Start Time must be before End Time");
+                if (t2 >= t1)    
+                    return BadRequest(new ApiError {ErrorMessage = "Start Time must be before End Time" } );
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
                 this.repositoryUOW.DbHelperOleDb.OpenTransaction();
               
@@ -172,7 +175,7 @@ namespace VecinoBuildingMangementWebService.Controllers
             {
                 this.repositoryUOW.DbHelperOleDb.RollBack();
                 Console.WriteLine(ex.ToString());
-                return StatusCode(500, "Internal server error");
+                return StatusCode(500, new ApiError { ErrorMessage = "Internal server error" });
             }
             finally
             {
@@ -221,7 +224,7 @@ namespace VecinoBuildingMangementWebService.Controllers
                 TimeSpan t1 = TimeSpan.Parse(@event.EndTime);
                 TimeSpan t2 = TimeSpan.Parse(@event.StartTime);
                 if (t2 > t1)
-                    return BadRequest("Start Time must be before End Time");
+                    return BadRequest( new ApiError { ErrorMessage = "Start Time must be before End Time" });
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
            
                 if (file != null)
@@ -251,7 +254,7 @@ namespace VecinoBuildingMangementWebService.Controllers
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
-                return StatusCode(500, "Internal server error");
+                return StatusCode(500, new ApiError { ErrorMessage = "Internal server error" });
             }
             finally
             {
@@ -857,21 +860,35 @@ namespace VecinoBuildingMangementWebService.Controllers
         }
 
         [HttpPost]
-        public async  Task<BuildingResponse> CreateBuildingAndRegister([FromForm] string model, IFormFile file)
+        public async  Task<IActionResult> CreateBuildingAndRegister([FromForm] string model, IFormFile? file)
         {
             CreateBuildingRegister createBuildingRegister = JsonSerializer.Deserialize<CreateBuildingRegister>(model);
+            bool responseBuilding = true;
+            if (createBuildingRegister.Resident.UnitNumber > createBuildingRegister.Building.TotalUnits)
+                return BadRequest(new ApiError { ErrorMessage = "Unit Number not present in building" });
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
                 this.repositoryUOW.DbHelperOleDb.OpenTransaction();
+                if(this.repositoryUOW.ResidentRepository.EmailOrPhoneExists(createBuildingRegister.Resident.ResidentEmail,createBuildingRegister.Resident.ResidentPhone))
+                {
+                    this.repositoryUOW.DbHelperOleDb.RollBack();
+                    return BadRequest(new ApiError { ErrorMessage = "Email Or Phone Already Exist" });
+                }
+                
                 CordsDto cords = await GeoCodingHelper.GetCoordinatesAsync(createBuildingRegister.Building.Address);
                 createBuildingRegister.Building.Longitude = cords.Longitude;
                 createBuildingRegister.Building.Latitude = cords.Latitude;
-                for(int i = 0; i < 10; i++)
+                if (file == null)
+                {
+                    createBuildingRegister.Building.BuildingImage = "building0.jpg";
+                }
+                for (int i = 0; i < 10; i++)
                 {
                     try
                     {
                         createBuildingRegister.Building.JoinCode = GenerateCode();
+                        
                         this.repositoryUOW.BuildingRepository.Create(createBuildingRegister.Building);
                         break;
                     }
@@ -881,19 +898,24 @@ namespace VecinoBuildingMangementWebService.Controllers
                     }
                 }
                
+               
                 string buildingId = this.repositoryUOW.BuildingRepository.GetLastId();
-                string ext = Path.GetExtension(file.FileName).TrimStart('.').ToLower();
-                string fileName = "building" + buildingId + "." + ext;
-                bool responseBuilding = this.repositoryUOW.BuildingRepository.UpdatePhotoById(buildingId, fileName);
-
-                string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images", "BuildingImages", fileName);
-                using (FileStream fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))
+                if (file != null)
                 {
-                    file.CopyTo(fileStream);
+                    string ext = Path.GetExtension(file.FileName).TrimStart('.').ToLower();
+                    string fileName = "building" + buildingId + "." + ext;
+                    responseBuilding = this.repositoryUOW.BuildingRepository.UpdatePhotoById(buildingId, fileName);
+
+                    string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images", "BuildingImages", fileName);
+                    using (FileStream fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))
+                    {
+                        file.CopyTo(fileStream);
+                    }
                 }
-                createBuildingRegister.Resident.BuildingId = buildingId;
+               
+                    createBuildingRegister.Resident.BuildingId = buildingId;
                 bool responseRegister = this.repositoryUOW.ResidentRepository.Create(createBuildingRegister.Resident);
-              ;
+              
                 if (responseRegister && responseBuilding)
                 {
                     BuildingResponse buildingResponse = new BuildingResponse
@@ -902,10 +924,10 @@ namespace VecinoBuildingMangementWebService.Controllers
                         ResidentId = this.repositoryUOW.ResidentRepository.GetLastId()
                     };
                     this.repositoryUOW.DbHelperOleDb.Commit();
-                    return buildingResponse;
+                    return Ok(buildingResponse);
                 }
                 this.repositoryUOW.DbHelperOleDb.RollBack();
-                return null;
+                return BadRequest(new ApiError { ErrorMessage = "Error Creating Building" });
 
 
 
@@ -974,7 +996,7 @@ namespace VecinoBuildingMangementWebService.Controllers
         {
             if(adminToggleDto.ResidentId == adminToggleDto.AdminId)
             {
-                return BadRequest("You cannot demote YourSelf");
+                return BadRequest(new ApiError { ErrorMessage = "You cannot demote YourSelf" });
             }
             try
             {
@@ -982,12 +1004,12 @@ namespace VecinoBuildingMangementWebService.Controllers
                 bool ok = this.repositoryUOW.ResidentRepository.UpdateAdminRole(adminToggleDto.ResidentId, false);
                 if (ok)
                     return Ok();
-                return NotFound( "Update failed — resident not found." );
+                return NotFound( new ApiError { ErrorMessage = "Update failed — resident not found." } );
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
-                return StatusCode(500, "An internal error occurred.");
+                return StatusCode(500, new ApiError { ErrorMessage = "An internal error occurred." });
             }
             finally
             {
@@ -1051,21 +1073,64 @@ namespace VecinoBuildingMangementWebService.Controllers
                 this.repositoryUOW.DbHelperOleDb.CloseConnection();
             }
         }
-        [HttpPost]
-        public async Task<bool> UpdateBuilding([FromBody] BuildingUpdateDto building)
+        private void DeleteFile(string buildingImage)
         {
+            if(buildingImage != "building0.jpg")
+            {
+                string deletePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images", "BuildingImages", buildingImage);
+                if (System.IO.File.Exists(deletePath))
+                {
+                    System.IO.File.Delete(deletePath);
+                    Console.WriteLine("File deleted successfully.");
+                }
+            }
+          
+        }
+        [HttpPost]
+        public async Task<bool> UpdateBuilding([FromForm] string model,IFormFile? file)
+        {
+            BuildingUpdateDto building = JsonSerializer.Deserialize<BuildingUpdateDto>(model);
+            bool response = false;
             try
             {
                 this.repositoryUOW.DbHelperOleDb.OpenConnection();
+                this.repositoryUOW.DbHelperOleDb.OpenTransaction();
                 CordsDto cords = null;
                 if (building.AddressChangedFlag)
                     cords = await GeoCodingHelper.GetCoordinatesAsync(building.Address);
-                return this.repositoryUOW.BuildingRepository.UpdateBuildingWithCords(building, cords);
+               
+                if(building.PhotoRemoved)
+                {
+                   
+                     response = this.repositoryUOW.BuildingRepository.UpdatePhotoById(building.BuildingId, "building0.jpg");
+                    DeleteFile(building.BuildingImage);
+                }
+                else
+                {
+                    DeleteFile(building.BuildingImage);
 
+                    if (file != null)
+                    {
+                        string ext = Path.GetExtension(file.FileName).TrimStart('.').ToLower();
+                        string fileName = "building" + building.BuildingId + "." + ext;
+                        response = this.repositoryUOW.BuildingRepository.UpdatePhotoById(building.BuildingId, fileName);
+
+                        string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images", "BuildingImages", fileName);
+                        using (FileStream fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))
+                        {
+                            file.CopyTo(fileStream);
+                        }
+                    }
+                   
+                }
+                bool response2 =  this.repositoryUOW.BuildingRepository.UpdateBuildingWithCords(building, cords);
+                this.repositoryUOW.DbHelperOleDb.Commit();
+                return response2 && response;
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
+                this.repositoryUOW.DbHelperOleDb.RollBack();
                 return false;
             }
             finally
@@ -1107,11 +1172,11 @@ namespace VecinoBuildingMangementWebService.Controllers
                     if (response)
                         return Ok(true);
                     else
-                        return BadRequest("Update failed");
+                        return BadRequest(new ApiError { ErrorMessage = "Update failed" });
 
                 }
                 else
-                    return BadRequest("Booking Slot Is Already Taken");
+                    return BadRequest(new ApiError { ErrorMessage = "Booking Slot Is Already Taken" });
 
 
                
@@ -1119,7 +1184,7 @@ namespace VecinoBuildingMangementWebService.Controllers
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
-                return StatusCode(500, "An internal error occurred.");
+                return StatusCode(500, new ApiError { ErrorMessage = "An internal error occurred." });
             }
             finally
             {

@@ -57,7 +57,7 @@ namespace VecinoWpfApp.AppWindows
             {
                 _IsEditing = true;
                 _savedEventView = viewModel.Clone();
-                @event.Event.IsValidationEnabled = true;
+                viewModel.Event.IsValidationEnabled = true;
                 EventDescriptionText.IsReadOnly = false;
                 EventTitleText.IsReadOnly=false;
                 UploadImage.Visibility = Visibility.Visible;
@@ -125,7 +125,7 @@ namespace VecinoWpfApp.AppWindows
                 //UpdateEvent
             }
         }
-     
+       
         private async void LoadAttending(string eventId)
         {
            

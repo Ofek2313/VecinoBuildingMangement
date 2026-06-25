@@ -45,6 +45,24 @@ namespace VecinoBuildingMangementWebService
 
             return events;
         }
+        public List<Event> GetEventByBuildingIdTop(string buildingId)
+        {
+            string sql = "Select TOP 5 * From Event Where BuildingId = @BuildingId";
+            this.dbHelperOleDb.AddParameter("@BuildingId", buildingId);
+
+            List<Event> events = new List<Event>();
+            using (IDataReader reader = this.dbHelperOleDb.Select(sql))
+            {
+                while (reader.Read())
+                {
+                    if (!HasHappend(this.modelCreator.CreateModel<Event>(reader).EventDate))
+                        events.Add(this.modelCreator.CreateModel<Event>(reader));
+
+                }
+            }
+
+            return events;
+        }
         private bool HasHappend(string date)
         {
             string[] date1Split = date.Split('/');

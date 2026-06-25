@@ -359,7 +359,7 @@
                     </Grid.ColumnDefinitions>
                     <Button Grid.Column="0" Content="Cancel"
                             Style="{StaticResource CancelButton}"
-                            x:Name="BtnCancel" />
+                            x:Name="BtnCancel" Click="BtnCancel_Click" />
                     <Button Grid.Column="2" Content="Publish Announcement"
                             Style="{StaticResource PrimaryButton}"
                             x:Name="BtnPublish" Click="BtnPublish_Click" />
