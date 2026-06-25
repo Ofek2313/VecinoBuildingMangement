@@ -256,14 +256,14 @@
                 <label>From → To</label>
                 <div class="time-pair">
                     <select asp-for="Booking.StartTime">
-                        @for (int h = 8; h <= 21; h++)
+                        @for (int h = 8; h <= 22; h++)
                         {
                             <option value="@($"{h:D2}:00")">@($"{h:D2}:00")</option>
                         }
                     </select>
                     <span asp-validation-for="Booking.StartTime"></span>
                     <select asp-for="Booking.EndTime">
-                        @for (int h = 9; h <= 22; h++)
+                        @for (int h = 9; h <= 23; h++)
                         {
                             <option value="@($"{h:D2}:00")">@($"{h:D2}:00")</option>
                         }
